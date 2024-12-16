@@ -1,2 +1,2 @@
-# phase2
+# Phase 2
 Interactive High-level Problem Solving
