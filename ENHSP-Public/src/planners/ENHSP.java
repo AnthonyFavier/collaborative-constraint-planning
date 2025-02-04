@@ -186,7 +186,7 @@ public class ENHSP {
     public void planning() {
 
         try {
-            printStats();
+            // printStats();
             setHeuristic();
             if (autoAnytime){
                 conf.add(new AnytimeConfigurations("lazygbfs","hmrp", true, "4"));
@@ -581,12 +581,12 @@ public class ENHSP {
         }
         System.out.println("Metric (Search):" + plan.gValueAtTheEnd());
         System.out.println("Planning Time (msec): " + overallPlanningTime);
-        System.out.println("Heuristic Time (msec): " + plan.stats().heuristicTime());
-        System.out.println("Search Time (msec): " + plan.stats().searchTime());
-        System.out.println("Expanded Nodes:" + plan.stats().nodesExpanded());
-        System.out.println("States Evaluated:" + plan.stats().nodesEvaluated());
-        System.out.println("Number of Dead-Ends detected:" + plan.stats().deadEnds());
-        System.out.println("Number of Duplicates detected:" + plan.stats().duplicates());
+        // System.out.println("Heuristic Time (msec): " + plan.stats().heuristicTime());
+        // System.out.println("Search Time (msec): " + plan.stats().searchTime());
+        // System.out.println("Expanded Nodes:" + plan.stats().nodesExpanded());
+        // System.out.println("States Evaluated:" + plan.stats().nodesEvaluated());
+        // System.out.println("Number of Dead-Ends detected:" + plan.stats().deadEnds());
+        // System.out.println("Number of Duplicates detected:" + plan.stats().duplicates());
 
     }
 

@@ -4,8 +4,8 @@ from tools import verifyEncoding, updateProblem, filterEncoding, initialFixes
 from NumericTCORE.bin.ntcore import main as ntcore
 
 ###
-DOMAIN_FILE = "NumericTCORE/benchmark/ZenoTravel/domain.pddl"
-PROBLEM_FILE = "NumericTCORE/benchmark/ZenoTravel/pfile3.pddl"
+DOMAIN_FILE = "NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl"
+PROBLEM_FILE = "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"
 ###
 # DOMAIN_FILE = "logistics_domain.pddl"
 # PROBLEM_FILE = "logistics_pfile1.pddl"
@@ -54,9 +54,11 @@ while True:
         
         # 1 # Encode the preferences
         if i==0: # first time
+            print("Encoding...")
             encodedPref = encodePrefs(domain, problem, pref)
         else: # re-encoding 
-            input()
+            # input()
+            print("Re-Encoding...")
             encodedPref = reencodePrefs(feedback)
             
         # 2 # Update the problem and verify the encoding
@@ -86,7 +88,7 @@ while True:
             continue
         
         # 5 # Plan using the compiled problem
-        os.system(f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE}") # add planner option, opti or satisficing?
+        os.system(f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner opt-hrmax") # add -planner option, opti (opt-hrmax) or satisficing (sat-hmrp) ?
         success = True # how to check if successfully planned? 
         break
     

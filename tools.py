@@ -53,8 +53,6 @@ def updateProblem(problem, filteredEncoding):
 
 def verifyEncoding(updatedProblem, filteredEncoding: str):
     """
-    Currently MOCK
-    
     Should look for action_name, specific unsupported constraints (e.g. imply)
     """
 

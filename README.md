@@ -19,17 +19,17 @@ Create a python3.10 environment for NTCORE before activating it and installing t
 ```
 python3.10 -m venv ./env_NTCORE
 source env_NTCORE/bin/activate
-pip install wheel click sympy unified_planning==1.0.0.29.dev1 --no-cache-dir
+pip install anthropic wheel click sympy unified_planning==1.0.0.29.dev1 --no-cache-dir
 ```
 
-Remove conflicting command line management in NTCORE, comment `@click.command()`:
+[Only if using NTCORE source] Remove conflicting command line management in NTCORE, comment `@click.command()`:
 ```
-cd NumericTCORE/
-nano bin/ntcore.py
+nano NumericTCORE/bin/ntcore.py
 ```
 
 Then, install the package:
 ```
+cd NumericTCORE/
 pip install .
 ```
 
@@ -69,7 +69,7 @@ source env_NTCORE/bin/activate
 
 Run the main process:
 ```
-python3.10 main.py
+python main.py
 ```
 
 ## Run independently

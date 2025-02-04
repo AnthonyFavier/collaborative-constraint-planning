@@ -1,6 +1,6 @@
 
 for i in range(1,23):
-    with open(f'/home/afavier/NeedAGoodName/NumericTCORE/benchmark/ZenoTravel/pfile{i}.pddl', 'r+') as f:
+    with open(f'/home/afavier/NeedAGoodName/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile{i}.pddl', 'r+') as f:
         data = f.read()
         
         i_s = data.find('(:constraints')
