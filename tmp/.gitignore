@@ -1,0 +1,4 @@
+# Here to keep folder in git and avoid saving temporary files
+compiled_dom.pddl
+compiled_prob.pddl
+updatedProblem.pddl

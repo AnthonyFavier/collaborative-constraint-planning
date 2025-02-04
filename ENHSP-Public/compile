@@ -1,0 +1,4 @@
+#!/bin/bash
+mkdir out 2> /dev/null
+javac -encoding utf8 -d out -classpath "libs/*" src/planners/*.java src/*.java
+jar --create --file  enhsp.jar --manifest manifest.mf -C out/ . 
