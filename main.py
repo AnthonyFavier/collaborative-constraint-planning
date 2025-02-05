@@ -1,4 +1,5 @@
-import os
+#!/usr/bin/env python3.10
+import subprocess
 from claude import encodePrefs, reencodePrefs, clear_message_history
 from tools import verifyEncoding, updateProblem, filterEncoding, initialFixes
 from NumericTCORE.bin.ntcore import main as ntcore
@@ -6,9 +7,6 @@ from NumericTCORE.bin.ntcore import main as ntcore
 ###
 DOMAIN_FILE = "NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl"
 PROBLEM_FILE = "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"
-###
-# DOMAIN_FILE = "logistics_domain.pddl"
-# PROBLEM_FILE = "logistics_pfile1.pddl"
 ###
 
 COMPILED_DOMAIN_FILE = "tmp/compiled_dom.pddl"
@@ -40,25 +38,17 @@ while True:
     # Preferences should be given incrementally if possible? 
     # Only one big sentence, LLM tends to forget parts of it.......
     
-    # Whole system seems more and more challenging to put together...
-    # Theoretical framework, then focus on specific aspect of it. 
-    
-    # So far not that much interesting... Use LLM to avoid human writting PDDL but can't be too general
-    # Just set of tricks to do translation
-    
-
-    
     success = False
     MAX_ENCODING_TRY = 4
     for i in range(MAX_ENCODING_TRY):
         
         # 1 # Encode the preferences
         if i==0: # first time
-            print("Encoding...")
+            print("\nEncoding...")
             encodedPref = encodePrefs(domain, problem, pref)
         else: # re-encoding 
             # input()
-            print("Re-Encoding...")
+            print("\nRe-Encoding...")
             encodedPref = reencodePrefs(feedback)
             
         # 2 # Update the problem and verify the encoding
@@ -80,6 +70,7 @@ while True:
         # 4 # Compile the updated problem
             # If error, re-encode
         try:
+            print("\nCompiling...")
             ntcore(DOMAIN_FILE, UPDATED_PROBLEM_FILE, "tmp/", achiever_strategy=NTCORE_STRATEGY["delta"], verbose=False)
         except Exception as error:
             print(error)
@@ -88,14 +79,27 @@ while True:
             continue
         
         # 5 # Plan using the compiled problem
-        os.system(f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner opt-hrmax") # add -planner option, opti (opt-hrmax) or satisficing (sat-hmrp) ?
-        success = True # how to check if successfully planned? 
+            # add -planner option, opti (opt-hrmax) or satisficing (sat-hmrp) ?
+        print("\nPlanning...")
+        result = subprocess.run(
+            [f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner sat-hmrp"], shell=True, capture_output=True, text=True
+        )
+        result = result.stdout.splitlines()
+        if result[-1] == 'Unsolvable Problem':
+            print('Unsolvable Problem')
+            feedback = f"The encoding made the problem unsolvable. Fix it."
+            continue
+        
+        for l in result[result.index('Found Plan:'):]:
+            print(l)
+        
+        success = True 
+        print('\n"' + pref + '"' + filteredEncoding)
         break
     
-    print(filteredEncoding)
-    
     if not success:
-        print("Maximum tries reached unsuccessfully.")
+        print("Failure: Maximum tries reached unsuccessfully...")
     
     clear_message_history()
-    success = False
+    print('\n=======================')
+    print('=======================\n')
