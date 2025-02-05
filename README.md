@@ -5,15 +5,14 @@ CAI
 
 ## Overview
 
-<!-- ![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true) -->
-
+![plot](./rsc/overview.jpg "Overview")
 
 Preliminary version for ONR CAI
 Mix of Phase 2 and 3
 
 ## Installation
 
-### NTCORE: Numeric constraints compilation
+#### > NTCORE: Numeric constraints compilation
 
 Create a python3.10 environment for NTCORE before activating it and installing the relevant dependencies:
 ```
@@ -33,12 +32,7 @@ cd NumericTCORE/
 pip install .
 ```
 
-Note: to deactivate the python environment simply run:
-```
-deactivate
-```
-
-### ENHSP: Planner 
+#### > ENHSP: Planner 
 
 Install the java dependencies
 ```
@@ -51,16 +45,23 @@ cd ENHSP-Public
 ./compile
 ```
 
-### LLM API: Set up Claude API key
+#### > LLM API: Set up Claude API key
 
-Replace _**KEY**_ with the correct API key in `set_claude_api_key.sh`:  _export ANTHROPIC_API_KEY='**KEY**'_
+Replace `REPLACE_WITH_YOUR_KEY` in `script_generate_set_key.py`.  
+Then run the python script to initialize your setup script:
+```
+python script_generate_set_key.py
+```
+You can now remove you API key from `script_generate_set_key.py`
 
-Then set up the key by running:
+**IMPORTANT: Never share an API key publicly, e.g., pushed on git!**
+
+## Run main
+
+Set the LLM API key by running (once per shell):
 ```
 source set_claude_api_key.sh
 ```
-
-## Run main
 
 Activate virtual environment:
 ```
@@ -71,6 +72,14 @@ Run the main process:
 ```
 python main.py
 ```
+
+*Note: to deactivate the python environment simply run:*
+```
+deactivate
+```
+
+---
+---
 
 ## Run independently
 
