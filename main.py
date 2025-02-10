@@ -14,7 +14,7 @@ COMPILED_PROBLEM_FILE = "tmp/compiled_prob.pddl"
 UPDATED_PROBLEM_FILE = "tmp/updatedProblem.pddl"
 
 NTCORE_STRATEGY = {"naive":"naive", "regression":"regression", "delta":"delta"}
-
+PLAN_MODE = {'sat':'sat-hmrp', 'opt':'opt-hrmax'}
 
 ###
 with open(DOMAIN_FILE, "r") as f:
@@ -82,7 +82,7 @@ while True:
             # add -planner option, opti (opt-hrmax) or satisficing (sat-hmrp) ?
         print("\nPlanning...")
         result = subprocess.run(
-            [f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner sat-hmrp"], shell=True, capture_output=True, text=True
+            [f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner {PLAN_MODE['opt']}"], shell=True, capture_output=True, text=True
         )
         result = result.stdout.splitlines()
         if result[-1] == 'Unsolvable Problem':
