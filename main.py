@@ -39,7 +39,7 @@ while True:
     # Only one big sentence, LLM tends to forget parts of it.......
     
     success = False
-    MAX_ENCODING_TRY = 4
+    MAX_ENCODING_TRY = 5
     for i in range(MAX_ENCODING_TRY):
         
         # 1 # Encode the preferences
