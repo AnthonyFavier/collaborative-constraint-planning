@@ -85,20 +85,25 @@ while True:
             [f"java -jar ENHSP-Public/enhsp.jar -o {COMPILED_DOMAIN_FILE} -f {COMPILED_PROBLEM_FILE} -planner {PLAN_MODE['opt']}"], shell=True, capture_output=True, text=True
         )
         result = result.stdout.splitlines()
-        if result[-1] == 'Unsolvable Problem':
+        
+        try: # if successful
+            # print plan
+            for l in result[result.index('Found Plan:'):]:
+                print(l)
+            # print initial input and encoding
+            print('\n"' + pref + '"' + filteredEncoding)
+            # stop loop
+            success = True 
+            break
+        
+        except:
             print('Unsolvable Problem')
             feedback = f"The encoding made the problem unsolvable. Fix it."
             continue
         
-        for l in result[result.index('Found Plan:'):]:
-            print(l)
-        
-        success = True 
-        print('\n"' + pref + '"' + filteredEncoding)
-        break
     
     if not success:
-        print("Failure: Maximum tries reached unsuccessfully...")
+        print("Failure: Maximum attempts reached unsuccessfully...")
     
     clear_message_history()
     print('\n=======================')
