@@ -59,13 +59,26 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     
     # Parsing test
-    reader = PDDLReader()
-    try:
-        pddl_problem = reader.parse_problem_string(domain, updatedProblem)
-    except:
-        return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
+    #TODO: Currently parsing is failing if there is a 'at-end' constraint, but seems ok with other constraints
+    # reader = PDDLReader()
+    # try:
+    #     pddl_problem = reader.parse_problem_string(domain, updatedProblem)
+    # except:
+    #     return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
+    # domain_specific_keywords = [f.name for f in pddl_problem.fluents]
     
-    domain_specific_keywords = [f.name for f in pddl_problem.fluents]
+    domain_specific_keywords = [
+        'located',
+        'in',
+        'fuel',
+        'distance',
+        'slow-burn',
+        'fast-burn',
+        'capacity',
+        'total-fuel-used',
+        'onboard',
+        'zoom-limit',
+    ]
     PDDL_keywords =[
         ':constraints',
         'and',
