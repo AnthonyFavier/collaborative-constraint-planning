@@ -12,7 +12,7 @@ PROBLEMS = {
     "Zeno_23" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
 }
 
-DOMAIN_FILE, PROBLEM_FILE = PROBLEMS["Zeno_8"]
+DOMAIN_FILE, PROBLEM_FILE = PROBLEMS["Zeno_5"]
 
 COMPILED_DOMAIN_FILE = "tmp/compiled_dom.pddl"
 COMPILED_PROBLEM_FILE = "tmp/compiled_prob.pddl"
@@ -83,7 +83,7 @@ def main():
             filteredEncoding = initialFixes(filteredEncoding)
             print(filteredEncoding)
             updatedProblem = updateProblem(problem, filteredEncoding)
-            encodingOK, feedback = verifyEncoding(updatedProblem, filteredEncoding)
+            encodingOK, feedback = verifyEncoding(updatedProblem, domain, filteredEncoding)
             if not encodingOK:
                 print("Verifier: Encoding not OK")
                 print(feedback)
