@@ -1,4 +1,5 @@
-from unified_planning.io import PDDLReader
+from numeric_tcore.parsing_extensions import *
+
 
 def filterEncoding(encodedPref):
     i = i_s = encodedPref.find('(:constraints')
@@ -59,26 +60,22 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     
     # Parsing test
-    #TODO: Currently parsing is failing if there is a 'at-end' constraint, but seems ok with other constraints
-    # reader = PDDLReader()
-    # try:
-    #     pddl_problem = reader.parse_problem_string(domain, updatedProblem)
-    # except:
-    #     return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
-    # domain_specific_keywords = [f.name for f in pddl_problem.fluents]
+    # from NTCORE
+    try:
+        reader = PDDLReader()
+        parser_extensions = ParserExtension()
+        reader._trajectory_constraints["at-end"] = parser_extensions.parse_atend
+        reader._trajectory_constraints["within"] = parser_extensions.parse_within
+        reader._trajectory_constraints["hold-after"] = parser_extensions.parse_holdafter
+        reader._trajectory_constraints["hold-during"] = parser_extensions.parse_holdduring
+        reader._trajectory_constraints["always-within"] = parser_extensions.parse_alwayswithin
+        problem = reader.parse_problem_string(domain, updatedProblem)
+        quantitative_constrants = parser_extensions.constraints
+        parsed = PDDL3QuantitativeProblem(problem, quantitative_constrants)
+    except:
+        return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
+    domain_specific_keywords = [f.name for f in parsed.problem.fluents]
     
-    domain_specific_keywords = [
-        'located',
-        'in',
-        'fuel',
-        'distance',
-        'slow-burn',
-        'fast-burn',
-        'capacity',
-        'total-fuel-used',
-        'onboard',
-        'zoom-limit',
-    ]
     PDDL_keywords =[
         ':constraints',
         'and',
