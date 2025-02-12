@@ -122,10 +122,12 @@ def main():
     
 if __name__ == '__main__':
     if len(sys.argv)>1:
-        if sys.argv[1]=='opt':
-            plan(domain=DOMAIN_FILE, problem=PROBLEM_FILE, plan_mode=PLAN_MODE["opt"])
-        if sys.argv[1]=='comp':
-            plan(domain=COMPILED_DOMAIN_FILE, problem=COMPILED_PROBLEM_FILE, plan_mode=PLAN_MODE["opt"])
+        try:
+            files_arg = {'ori': (DOMAIN_PATH, PROBLEM_PATH), 'comp': (COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH)}
+            plan(domain=files_arg[sys.argv[1]][0], problem=files_arg[sys.argv[1]][1], plan_mode=PLAN_MODE[sys.argv[2]])
+            exit()
+        except:
+            print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode')
         exit()
         
     main()
