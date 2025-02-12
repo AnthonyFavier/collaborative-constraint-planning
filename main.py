@@ -52,15 +52,18 @@ def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=P
 
 def main():
     
+    # Show selected problem
+    print(f"Problem:\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}\n")
+    
     # Try parsing the initial problem
     try:
         tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
     except:
-        raise Exception(f"Unable to parse the initial problem described in:\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+        raise Exception(f"Unable to parse the initial problem.")
     
     while True:
         
-        #  User Strategy to test
+        #  Input of user Strategy to test
         print("Enter your preferences:\n")
         pref = input()
         if pref=="exit":
