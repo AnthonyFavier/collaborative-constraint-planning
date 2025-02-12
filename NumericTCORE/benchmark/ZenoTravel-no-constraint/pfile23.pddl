@@ -1433,21 +1433,6 @@
 
 
 
-(:constraints (and (sometime (>= (onboard plane1) 1))
-(sometime (>= (onboard plane2) 1))
-(sometime (>= (onboard plane3) 1))
-(sometime (>= (onboard plane4) 1))
-(sometime (>= (onboard plane5) 1))
 
-    (always 
-		(forall (?p1 - aircraft) 
-			(<= (onboard ?p1) 20)
-		)
-	)
-(always (>= (fuel plane1) (* 0.2 (capacity plane1))))
-(always (>= (fuel plane2) (* 0.2 (capacity plane2))))
-(always (>= (fuel plane3) 53))
-(always (>= (fuel plane4) 92))
-(always (>= (fuel plane5) 15))))
 
 )
