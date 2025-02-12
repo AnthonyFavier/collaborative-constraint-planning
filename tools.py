@@ -1,5 +1,4 @@
-from numeric_tcore.parsing_extensions import *
-
+import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
 def filterEncoding(encodedPref):
     i = i_s = encodedPref.find('(:constraints')
@@ -53,6 +52,24 @@ def updateProblem(problem, filteredEncoding):
     
     return updatedProblem
 
+def parse_pddl3(domain_path, problem_path):
+    return ntcore_parsing_ext.parse_pddl3(domain_path, problem_path)
+
+def parse_pddl3_str(domain, updatedProblem):
+    """
+    Adapted from NTCORE parsing_extensions to take string as input instead of file_paths
+    """
+    reader = ntcore_parsing_ext.PDDLReader()
+    parser_extensions = ntcore_parsing_ext.ParserExtension()
+    reader._trajectory_constraints["at-end"] = parser_extensions.parse_atend
+    reader._trajectory_constraints["within"] = parser_extensions.parse_within
+    reader._trajectory_constraints["hold-after"] = parser_extensions.parse_holdafter
+    reader._trajectory_constraints["hold-during"] = parser_extensions.parse_holdduring
+    reader._trajectory_constraints["always-within"] = parser_extensions.parse_alwayswithin
+    problem = reader.parse_problem_string(domain, updatedProblem)
+    quantitative_constrants = parser_extensions.constraints
+    return ntcore_parsing_ext.PDDL3QuantitativeProblem(problem, quantitative_constrants)
+
 def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     Should look for action_name, specific unsupported constraints (e.g. imply)
@@ -60,18 +77,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     
     # Parsing test
-    # from NTCORE
     try:
-        reader = PDDLReader()
-        parser_extensions = ParserExtension()
-        reader._trajectory_constraints["at-end"] = parser_extensions.parse_atend
-        reader._trajectory_constraints["within"] = parser_extensions.parse_within
-        reader._trajectory_constraints["hold-after"] = parser_extensions.parse_holdafter
-        reader._trajectory_constraints["hold-during"] = parser_extensions.parse_holdduring
-        reader._trajectory_constraints["always-within"] = parser_extensions.parse_alwayswithin
-        problem = reader.parse_problem_string(domain, updatedProblem)
-        quantitative_constrants = parser_extensions.constraints
-        parsed = PDDL3QuantitativeProblem(problem, quantitative_constrants)
+        parsed = parse_pddl3_str(domain, updatedProblem)
     except:
         return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
     domain_specific_keywords = [f.name for f in parsed.problem.fluents]

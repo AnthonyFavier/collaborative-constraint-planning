@@ -51,6 +51,13 @@ def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=P
     return feedback
 
 def main():
+    
+    # Try parsing the initial problem
+    try:
+        tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+    except:
+        raise Exception(f"Unable to parse the initial problem described in:\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+    
     while True:
         
         #  User Strategy to test
@@ -114,7 +121,7 @@ def main():
         llm.clear_message_history()
         print('\n=======================')
         print('=======================\n')
-    
+
 
 
 if __name__ == '__main__':
@@ -125,6 +132,6 @@ if __name__ == '__main__':
             exit()
         except:
             print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode')
-        exit()
+            exit()
         
     main()
