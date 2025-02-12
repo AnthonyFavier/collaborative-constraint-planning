@@ -131,13 +131,20 @@ def main():
 
 
 if __name__ == '__main__':
-    if len(sys.argv)>1:
+
+    # Main interactive loop (w/o arguments)
+    if len(sys.argv)==1:
+        main()
+        
+    # Only planning (w/ arguments)
+    else:
         try:
             files_arg = {'ori': (DOMAIN_PATH, PROBLEM_PATH), 'comp': (COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH)}
-            plan(domain=files_arg[sys.argv[1]][0], problem=files_arg[sys.argv[1]][1], plan_mode=PLAN_MODE[sys.argv[2]])
-            exit()
+            d = files_arg[sys.argv[1]][0]
+            p = files_arg[sys.argv[1]][1]
+            pm = PLAN_MODE[sys.argv[2]]
         except:
             print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode')
             exit()
+        plan(domain=d, problem=p, plan_mode=pm)
         
-    main()
