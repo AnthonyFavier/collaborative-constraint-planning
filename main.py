@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.10
 import subprocess
-from claude import encodePrefs, reencodePrefs, clear_message_history
-from tools import verifyEncoding, updateProblem, filterEncoding, initialFixes
+import claude as llm
+import tools
 from NumericTCORE.bin.ntcore import main as ntcore
 import sys
 
@@ -12,25 +12,26 @@ PROBLEMS = {
     "Zeno_23" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
 }
 
-DOMAIN_FILE, PROBLEM_FILE = PROBLEMS["Zeno_5"]
+DOMAIN_PATH, PROBLEM_PATH = PROBLEMS["Zeno_5"]
 
-COMPILED_DOMAIN_FILE = "tmp/compiled_dom.pddl"
-COMPILED_PROBLEM_FILE = "tmp/compiled_prob.pddl"
-UPDATED_PROBLEM_FILE = "tmp/updatedProblem.pddl"
+COMPILED_DOMAIN_PATH = "tmp/compiled_dom.pddl"
+COMPILED_PROBLEM_PATH = "tmp/compiled_prob.pddl"
+UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
 
 NTCORE_STRATEGY = {"naive":"naive", "regression":"regression", "delta":"delta"}
 PLAN_MODE = {'sat':'sat-hmrp', 'opt':'opt-hrmax'}
 
 ###
-with open(DOMAIN_FILE, "r") as f:
+with open(DOMAIN_PATH, "r") as f:
     domain = f.read()
     
-with open(PROBLEM_FILE, "r") as f:
+with open(PROBLEM_PATH, "r") as f:
     problem = f.read()
 ###
 
-def plan(domain=COMPILED_DOMAIN_FILE, problem=COMPILED_PROBLEM_FILE, plan_mode=PLAN_MODE['opt']):
-    print("\nPlanning...")
+def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=PLAN_MODE['opt']):
+    mode = [key for key, val in PLAN_MODE.items() if val == plan_mode][0]
+    print(f"\nPlanning ({mode}) ...")
     result = subprocess.run(
         [f"java -jar ENHSP-Public/enhsp.jar -o {domain} -f {problem} -planner {plan_mode}"], shell=True, capture_output=True, text=True
     )
@@ -57,12 +58,6 @@ def main():
         pref = input()
         if pref=="exit":
             exit()
-        # pref="If plane1 visits city1 then it should visit city2 sometime after"
-        # print(pref)
-        # input("Press Return to validate...")
-        
-        # Preferences should be given incrementally if possible? 
-        # Only one big sentence, LLM tends to forget parts of it.......
         
         success = False
         MAX_ENCODING_TRY = 5
@@ -71,33 +66,33 @@ def main():
             # 1 # Encode the preferences
             if i==0: # first time
                 print("\nEncoding...")
-                encodedPref = encodePrefs(domain, problem, pref)
+                encodedPref = llm.encodePrefs(domain, problem, pref)
             else: # re-encoding 
                 # input()
                 print("\nRe-Encoding...")
-                encodedPref = reencodePrefs(feedback)
+                encodedPref = llm.reencodePrefs(feedback)
                 
             # 2 # Update the problem and verify the encoding
                 # If error, re-encode with feedback
-            filteredEncoding = filterEncoding(encodedPref)
-            filteredEncoding = initialFixes(filteredEncoding)
+            filteredEncoding = tools.filterEncoding(encodedPref)
+            filteredEncoding = tools.initialFixes(filteredEncoding)
             print(filteredEncoding)
-            updatedProblem = updateProblem(problem, filteredEncoding)
-            encodingOK, feedback = verifyEncoding(updatedProblem, domain, filteredEncoding)
+            updatedProblem = tools.updateProblem(problem, filteredEncoding)
+            encodingOK, feedback = tools.verifyEncoding(updatedProblem, domain, filteredEncoding)
             if not encodingOK:
                 print("Verifier: Encoding not OK")
                 print(feedback)
                 continue
             
             # 3 # Save updated problem in a file
-            with open(UPDATED_PROBLEM_FILE, "w") as f:
+            with open(UPDATED_PROBLEM_PATH, "w") as f:
                 f.write(updatedProblem)
 
             # 4 # Compile the updated problem
                 # If error, re-encode
             try:
                 print("\nCompiling...")
-                ntcore(DOMAIN_FILE, UPDATED_PROBLEM_FILE, "tmp/", achiever_strategy=NTCORE_STRATEGY["delta"], verbose=False)
+                ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NTCORE_STRATEGY["delta"], verbose=False)
             except Exception as error:
                 print(error)
                 print("NTCORE: Failed to compile updated problem...")
@@ -116,10 +111,12 @@ def main():
         if not success:
             print("Failure: Maximum attempts reached unsuccessfully...")
         
-        clear_message_history()
+        llm.clear_message_history()
         print('\n=======================')
         print('=======================\n')
     
+
+
 if __name__ == '__main__':
     if len(sys.argv)>1:
         try:
