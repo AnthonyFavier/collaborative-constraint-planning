@@ -70,19 +70,18 @@ def parse_pddl3_str(domain, updatedProblem):
     quantitative_constrants = parser_extensions.constraints
     return ntcore_parsing_ext.PDDL3QuantitativeProblem(problem, quantitative_constrants)
 
+fluent_names = []
+def set_fluent_names(names):
+    global fluent_names
+    fluent_names = names
+    
 def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     Should look for action_name, specific unsupported constraints (e.g. imply)
     return encodingOk: Bool, error_description: str
     """
     
-    # Parsing test
-    try:
-        parsed = parse_pddl3_str(domain, updatedProblem)
-    except:
-        return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
-    domain_specific_keywords = [f.name for f in parsed.problem.fluents]
-    
+    # Keyword test
     PDDL_keywords =[
         ':constraints',
         'and',
@@ -110,7 +109,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         'hold-after',
         'at-end',
     ]
-    authorized_keywords = PDDL_keywords + domain_specific_keywords
+    authorized_keywords = PDDL_keywords + fluent_names
 
     # Split into a list
     A = filteredEncoding.split(' ')
@@ -146,6 +145,12 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
                     continue
                 
                 return False, f"{w_next} isn't a known PDDL keyword or part of the domain description. Re-encode correctly."
+            
+    # Parsing test
+    try:
+        parse_pddl3_str(domain, updatedProblem)
+    except:
+        return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
             
     # encodingOk, error_description
     return True, ""

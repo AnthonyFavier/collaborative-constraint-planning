@@ -57,9 +57,12 @@ def main():
     
     # Try parsing the initial problem
     try:
-        tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
     except:
         raise Exception(f"Unable to parse the initial problem.")
+
+    # Set extracted fluent names (used during verification)
+    tools.set_fluent_names([f.name for f in parsed.problem.fluents])
     
     while True:
         
