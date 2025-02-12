@@ -12,6 +12,8 @@ Mix of Phase 2 and 3
 
 ## Installation
 
+Tested on Ubuntu 20.04
+
 #### > NTCORE: Numeric constraints compilation
 
 Create a python3.10 environment for NTCORE before activating it and installing the relevant dependencies:
