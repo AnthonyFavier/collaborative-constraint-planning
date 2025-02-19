@@ -5,11 +5,18 @@ import tools
 from NumericTCORE.bin.ntcore import main as ntcore
 import sys
 
-
 PROBLEMS = {
     "Zeno_5" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"),
+    "Zeno_5_bis" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5_bis.pddl"),
     "Zeno_8" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile8.pddl"),
+    "Zeno_15" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile15.pddl"),
     "Zeno_23" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
+    "sailing_1" : ("ENHSP-Public/ijcai18_benchmarks/sailing_ln/domain.pddl", "ENHSP-Public/ijcai18_benchmarks/sailing_ln/instance_1_1_1229.pddl"),
+    "satellite_1" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile1"),
+    "satellite_3" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile3"),
+    "satellite_4" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile4"),
+    "satellite_5" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile5"),
+    "satellite_15" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile15"),
 }
 
 DOMAIN_PATH, PROBLEM_PATH = PROBLEMS["Zeno_5"]

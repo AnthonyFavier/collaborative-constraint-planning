@@ -35,16 +35,17 @@ def initialFixes(filteredEncoding):
     return filteredEncoding
 
 def updateProblem(problem, filteredEncoding):
-    """
-    Currently MOCK
-    """
     updatedProblem = None 
     
-    # Find position to insert (last parenthesis)
+    # Find position to insert 
+    ## find metric
+    i_metric = problem.find("(:metric")
+    if i_metric!=-1:
+        i_insert = i_metric
+    ## Else, insert before last parenthesis
+    else:
     i_insert=len(problem)-1
-    while True:
-        if problem[i_insert]==')':
-            break
+        while problem[i_insert]!=')':
         i_insert-=1
     
     # Insert constraints into problem

@@ -82,8 +82,7 @@
 	))
 
 
-
-
+(:metric minimize (total-fuel-used))
 
 
 )

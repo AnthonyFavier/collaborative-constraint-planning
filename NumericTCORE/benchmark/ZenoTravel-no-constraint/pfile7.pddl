@@ -62,6 +62,7 @@
 	(located person6 city2)
 	))
 
+(:metric minimize (total-fuel-used))
 
 
 

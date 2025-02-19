@@ -1,5 +1,13 @@
 ;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)
 
+; Fuel is consumed to point at a target (which is actually slew-time)
+; Satellite can use instrument it has on board
+; Instruments must be switch on to be used
+; Only one instrument can be powered on at a time
+; Each instrument has an associated target to be calibrated
+; Instruments can be calibrated when sat is pointing to associated target and instru powered on
+; Images of a direction in a given mode can be taken with the proper instrument. I.e. if the instrument supports the mode, is powered on, calibrated, and if sat is pointing at direction, has enough data space
+
 (define (domain satellite)
 ;  (:requirements :typing :fluents :equality)
  (:types satellite direction instrument mode)
