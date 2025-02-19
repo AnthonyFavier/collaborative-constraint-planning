@@ -44,9 +44,9 @@ def updateProblem(problem, filteredEncoding):
         i_insert = i_metric
     ## Else, insert before last parenthesis
     else:
-    i_insert=len(problem)-1
+        i_insert=len(problem)-1
         while problem[i_insert]!=')':
-        i_insert-=1
+            i_insert-=1
     
     # Insert constraints into problem
     updatedProblem = problem[:i_insert] + filteredEncoding + problem[i_insert:]
@@ -71,10 +71,10 @@ def parse_pddl3_str(domain, updatedProblem):
     quantitative_constrants = parser_extensions.constraints
     return ntcore_parsing_ext.PDDL3QuantitativeProblem(problem, quantitative_constrants)
 
-fluent_names = []
+g_fluent_names = []
 def set_fluent_names(names):
-    global fluent_names
-    fluent_names = names
+    global g_fluent_names
+    g_fluent_names = names
     
 def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
@@ -110,7 +110,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         'hold-after',
         'at-end',
     ]
-    authorized_keywords = PDDL_keywords + fluent_names
+    authorized_keywords = PDDL_keywords + g_fluent_names
 
     # Split into a list
     A = filteredEncoding.split(' ')

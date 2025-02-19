@@ -26,7 +26,7 @@ COMPILED_PROBLEM_PATH = "tmp/compiled_prob.pddl"
 UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
 
 NTCORE_STRATEGY = {"naive":"naive", "regression":"regression", "delta":"delta"}
-PLAN_MODE = {'sat':'sat-hmrp', 'opt':'opt-hrmax'}
+PLAN_MODE = {'sat':'sat-hmrp', 'opt':'opt-hrmax', 'def':'def'}
 
 ###
 with open(DOMAIN_PATH, "r") as f:
@@ -39,8 +39,9 @@ with open(PROBLEM_PATH, "r") as f:
 def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=PLAN_MODE['opt']):
     mode = [key for key, val in PLAN_MODE.items() if val == plan_mode][0]
     print(f"\nPlanning ({mode}) ...")
+    planner = f'-planner {plan_mode}' if plan_mode!='def' else ''
     result = subprocess.run(
-        [f"java -jar ENHSP-Public/enhsp.jar -o {domain} -f {problem} -planner {plan_mode}"], shell=True, capture_output=True, text=True
+        [f"java -jar ENHSP-Public/enhsp.jar -o {domain} -f {problem} {planner}"], shell=True, capture_output=True, text=True
     )
     result = result.stdout.splitlines()
     
@@ -151,7 +152,10 @@ if __name__ == '__main__':
             p = files_arg[sys.argv[1]][1]
             pm = PLAN_MODE[sys.argv[2]]
         except:
-            print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode')
+            print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat, def]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode\n\tdef: plan in default satisficing mode')
             exit()
+            
+        # Show selected problem
+        print(f"Problem:\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}\n")
         plan(domain=d, problem=p, plan_mode=pm)
         
