@@ -66,7 +66,8 @@ def main():
     # Try parsing the initial problem
     try:
         parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
-    except:
+    except Exception as e:
+        print("ERROR", e)
         raise Exception(f"Unable to parse the initial problem.")
 
     # Set extracted fluent names (used during verification)
@@ -131,6 +132,8 @@ def main():
         
         if not success:
             print("Failure: Maximum attempts reached unsuccessfully...")
+            print('\n"' + pref + '"')
+            
         
         llm.clear_message_history()
         print('\n=======================')

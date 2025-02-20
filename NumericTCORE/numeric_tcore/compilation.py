@@ -136,7 +136,7 @@ class NumericCompiler(engines.engine.Engine, CompilerMixin):
         """
 
         count_true = False
-        print("COUNT TRUE = {}".format(count_true))
+        # print("COUNT TRUE = {}".format(count_true))
 
         logger = Logger()
 
