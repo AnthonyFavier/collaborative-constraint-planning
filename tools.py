@@ -112,40 +112,20 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     ]
     authorized_keywords = PDDL_keywords + g_fluent_names
 
-    # Split into a list
-    A = filteredEncoding.split(' ')
-
-    B = []
-    for t in A:
-        B += t.split('\n')
-    A = B
-    
-    B = []
-    for t in A:
-        if t != '':
-            B += [t]
-    A = B
-
-    B = []
-    for t in A:
-        if t[0]=='(':
-            B += [t[0]] + [t[1:]]
-        else:
-            B += [t]
-    A = B
-
-    del B, t
+    L = filteredEncoding
+    L = " ( ".join(L.split('('))
+    L = " ) ".join(L.split(')'))
+    L = " ".join(L.split())
+    L = L.split()
 
 
-    for i in range(len(A)):
-        w = A[i]
-        if w=='(':
-            w_next = A[i+1]
-            if w_next not in authorized_keywords:
-                if w_next[0]=='?':
+    for i in range(len(L)):
+        if L[i]=='(':
+            if L[i+1] not in authorized_keywords:
+                if L[i+1][0]=='?':
                     continue
                 
-                return False, f"{w_next} isn't a known PDDL keyword or part of the domain description. Re-encode correctly."
+                return False, f"{L[i+1]} isn't a known PDDL keyword or part of the domain description. Re-encode correctly."
             
     # Parsing test
     try:
