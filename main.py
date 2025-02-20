@@ -17,27 +17,34 @@ class color:
    END = '\033[0m'
 
 PROBLEMS = {
-    "Zeno_5" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"),
-    "Zeno_5_bis" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5_bis.pddl"),
-    "Zeno_8" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile8.pddl"),
-    "Zeno_15" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile15.pddl"),
-    "Zeno_23" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
-    "sailing_1" : ("ENHSP-Public/ijcai18_benchmarks/sailing_ln/domain.pddl", "ENHSP-Public/ijcai18_benchmarks/sailing_ln/instance_1_1_1229.pddl"),
-    "satellite_1" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile1"),
-    "satellite_3" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile3"),
-    "satellite_4" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile4"),
-    "satellite_5" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile5"),
-    "satellite_15" : ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl", "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile15"),
+    "Zeno_5":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"),
+    "Zeno_5_bis":   ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5_bis.pddl"),
+    "Zeno_8":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile8.pddl"),
+    "Zeno_15":      ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile15.pddl"),
+    "Zeno_23":      ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
+    "sailing_1":    ("ENHSP-Public/ijcai18_benchmarks/sailing_ln/domain.pddl",              "ENHSP-Public/ijcai18_benchmarks/sailing_ln/instance_1_1_1229.pddl"),
+    "satellite_1":  ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile1"),
+    "satellite_3":  ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile3"),
+    "satellite_4":  ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile4"),
+    "satellite_5":  ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile5"),
+    "satellite_15": ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile15"),
+    "rover1":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile1"),
+    "rover3":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile3"),
+    "rover3_bis":   ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile3_bis"),
+    "rover4":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile4"),
+    "rover10":      ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile10"),
+    "sar1":         ("ENHSP-Public/handcraft/domain.pddl",                                  "ENHSP-Public/handcraft/pfile1.pddl"),
 }
 
-DOMAIN_PATH, PROBLEM_PATH = PROBLEMS["Zeno_5"]
+DOMAIN_PATH, PROBLEM_PATH, PLAN_MODE = (*PROBLEMS["Zeno_5_bis"], 'opt')
+# DOMAIN_PATH, PROBLEM_PATH, PLAN_MODE = (*PROBLEMS["Zeno_5_bis"], 'def')
 
 COMPILED_DOMAIN_PATH = "tmp/compiled_dom.pddl"
 COMPILED_PROBLEM_PATH = "tmp/compiled_prob.pddl"
 UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
 
 NTCORE_STRATEGY = {"naive":"naive", "regression":"regression", "delta":"delta"}
-PLAN_MODE = {'sat':'sat-hmrp', 'opt':'opt-hrmax', 'def':'def'}
+PLAN_MODES = {'sat':'sat-hmrp', 'opt':'opt-hrmax', 'def':'def'}
 
 ###
 with open(DOMAIN_PATH, "r") as f:
@@ -47,8 +54,8 @@ with open(PROBLEM_PATH, "r") as f:
     problem = f.read()
 ###
 
-def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=PLAN_MODE['opt']):
-    mode = [key for key, val in PLAN_MODE.items() if val == plan_mode][0]
+def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=PLAN_MODES['opt']):
+    mode = [key for key, val in PLAN_MODES.items() if val == plan_mode][0]
     print(color.BOLD + f"\nPlanning ({mode}) ..." + color.END)
     planner = f'-planner {plan_mode}' if plan_mode!='def' else ''
     result = subprocess.run(
@@ -133,7 +140,7 @@ def main():
                 continue
             
             # 5 # Plan using the compiled problem
-            feedback = plan()
+            feedback = plan(plan_mode=PLAN_MODES[PLAN_MODE])
             # print initial input and encoding
             print('\n"' + pref + '"' + filteredEncoding)
             success = feedback=='success'
@@ -164,7 +171,7 @@ if __name__ == '__main__':
             files_arg = {'ori': (DOMAIN_PATH, PROBLEM_PATH), 'comp': (COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH)}
             d = files_arg[sys.argv[1]][0]
             p = files_arg[sys.argv[1]][1]
-            pm = PLAN_MODE[sys.argv[2]]
+            pm = PLAN_MODES[sys.argv[2]]
         except:
             print('Usage:\n  - python main.py: run interactive loop\n  - python main.py [ori, comp] [opt, sat, def]\n\tori: plan using original files\n\tcomp: plan using the compiled files\n\topti: plan in optimal mode\n\tsat: plan in satisficing mode\n\tdef: plan in default satisficing mode')
             exit()
