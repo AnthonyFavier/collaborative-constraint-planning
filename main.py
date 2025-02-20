@@ -4,6 +4,17 @@ import claude as llm
 import tools
 from NumericTCORE.bin.ntcore import main as ntcore
 import sys
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
 
 PROBLEMS = {
     "Zeno_5" : ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl", "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"),
@@ -38,7 +49,7 @@ with open(PROBLEM_PATH, "r") as f:
 
 def plan(domain=COMPILED_DOMAIN_PATH, problem=COMPILED_PROBLEM_PATH, plan_mode=PLAN_MODE['opt']):
     mode = [key for key, val in PLAN_MODE.items() if val == plan_mode][0]
-    print(f"\nPlanning ({mode}) ...")
+    print(color.BOLD + f"\nPlanning ({mode}) ..." + color.END)
     planner = f'-planner {plan_mode}' if plan_mode!='def' else ''
     result = subprocess.run(
         [f"java -jar ENHSP-Public/enhsp.jar -o {domain} -f {problem} {planner}"], shell=True, capture_output=True, text=True
@@ -76,7 +87,7 @@ def main():
     while True:
         
         #  Input of user Strategy to test
-        print("Enter your preferences:\n")
+        print(color.BOLD + "Enter your preferences:\n" + color.END)
         pref = input()
         if pref=="exit":
             exit()
@@ -87,11 +98,11 @@ def main():
             
             # 1 # Encode the preferences
             if i==0: # first time
-                print("\nEncoding...")
+                print(color.BOLD + "\nEncoding..." + color.END)
                 encodedPref = llm.encodePrefs(domain, problem, pref)
             else: # re-encoding 
                 # input()
-                print("\nRe-Encoding...")
+                print(color.BOLD + "\nRe-Encoding..." + color.END)
                 encodedPref = llm.reencodePrefs(feedback)
                 
             # 2 # Update the problem and verify the encoding
@@ -113,7 +124,7 @@ def main():
             # 4 # Compile the updated problem
                 # If error, re-encode
             try:
-                print("\nCompiling...")
+                print(color.BOLD + "\nCompiling..." + color.END)
                 ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NTCORE_STRATEGY["delta"], verbose=False)
             except Exception as error:
                 print(error)
