@@ -58,7 +58,7 @@ You can now remove you API key from `script_generate_set_key.py`
 
 **IMPORTANT: Never share an API key publicly, e.g., pushed on git!**
 
-## Run main
+## Run CAI
 
 Set the LLM API key by running (once per shell):
 ```
@@ -72,23 +72,38 @@ source env_NTCORE/bin/activate
 
 Run the main process:
 ```
-python main.py
+python cai.py [OPTIONS] PROBLEM_NAME
 ```
 
-*Note: to deactivate the python environment simply run:*
+Problems and options can be listed using `python cai.py --help`.
+
+To add new problems, see `defs.py`.
+
+The planning mode used (i.e. optimal, satisficing, default) can be used using the respective options `-o`, `-s`, `-d`.
+
+
+*Note: to deactivate the python environment simply run: `deactivate`*
+
+---
+
+
+### Run Planner Only
+
+You can also directly run the planner, only.
 ```
-deactivate
+python planner.py [OPTIONS] PROBLEM_NAME
 ```
+
+Problems and options can be listed using `python planner.py --help`
+
+You can either use the original files corresponding to the given problem name or plan using the last compiled files using `-c`.
+
+The planning mode used (i.e. optimal, satisficing, default) can be used using the respective options `-o`, `-s`, `-d`.
 
 ---
 ---
 
-## Run independently
-
-
-### 1. Encode User strategy into PDDL3 constraints with LLM
-
-### 2. Compile the updated problem with NTCORE
+### How to use directly NTCORE 
 
 Use `--delta_mode` (NTCORE+)? 
 
@@ -98,7 +113,9 @@ python3.10 NumericTCORE/bin/ntcore.py domain.pddl problem.pddl NumericTCORE/.
 deactivate
 ```
 
-### 3. Plan using ENHSP
+A mode can be specified: `--delta_mode`, `--naive_mode`, `--regression_mode`
+
+### How to use directly ENHSP 
 ```
 java -jar ENHSP-Public/enhsp.jar -o NumericTCORE/compiled_dom.pddl -f NumericTCORE/compiled_prob.pddl 
 ```

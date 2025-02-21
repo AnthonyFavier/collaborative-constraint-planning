@@ -164,6 +164,7 @@ def encodePrefs(domain, problem, preferences):
             {"role": "user", "content": domain + '\n' + problem},   
             {"role": "assistant", "content": "Got it now share with me the human preferences to translate."},
             {"role": "user", "content": preferences},
+            # {"role": "user", "content":  f"Here are the huma preferences: {preferences}. First, reformule the preferences in two different manner. After, give me the encoding for the given preferences."},
         ]
     
     # Call LLM
@@ -171,6 +172,8 @@ def encodePrefs(domain, problem, preferences):
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
+    
+    # print('LLM:', message.content[0].text)
     
     return message.content[0].text
 
