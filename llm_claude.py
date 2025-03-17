@@ -158,13 +158,13 @@ def encodePrefs(domain, problem, preferences):
             # {"role": "user", "content": "I will share with you a text describing how PDDL3.0 constraints works. After I will share a PDDL domain followed by a corresponding PDDL problem. After that I will start to share human preferences to translate."},
             # {"role": "user", "content": new_pddl_constraints_description},
             
-            {"role": "user", "content": "When translating natural language inputs into PDDL3.0 constraints, only use the following keywords: 'and','or','not','=','<','<=','>','>=','+','-','*','/','forall','exists','always','sometime','within','at-most-once','sometime-after','sometime-before','always-within','holding-during','hold-after','at-end'. After I will share a PDDL domain followed by a corresponding PDDL problem. After that I will start to share human preferences to translate."},
+            {"role": "user", "content": "When translating natural language inputs into PDDL3.0 constraints, only use the following keywords: 'and','or','not','=','<','<=','>','>=','+','-','*','/','forall','exists','always','sometime','within','at-most-once','sometime-after','sometime-before','always-within','holding-during','hold-after','at-end'. After, I will share a PDDL domain followed by a corresponding PDDL problem. After that, I will share human preferences to translate."},
         
             {"role": "assistant", "content": "Got it now share with me the PDDL domain and problem."},
             {"role": "user", "content": domain + '\n' + problem},   
             {"role": "assistant", "content": "Got it now share with me the human preferences to translate."},
             {"role": "user", "content": preferences},
-            # {"role": "user", "content":  f"Here are the huma preferences: {preferences}. First, reformule the preferences in two different manner. After, give me the encoding for the given preferences."},
+            # {"role": "user", "content":  "First, reformule and rephrase the preferences in two different manners to better understand it and remove ambiguities. After, give me the encoding for the given preferences."},
         ]
     
     # Call LLM
@@ -173,7 +173,7 @@ def encodePrefs(domain, problem, preferences):
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
     
-    # print('LLM:', message.content[0].text)
+    print('LLM:', message.content[0].text, "[END LLM]")
     
     return message.content[0].text
 
