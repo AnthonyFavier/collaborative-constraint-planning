@@ -15,7 +15,7 @@ PROBLEMS = {
     "rover3_bis":   ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile3_bis"),
     "rover4":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile4"),
     "rover10":      ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile10"),
-    "sar1":         ("ENHSP-Public/handcraft/domain.pddl",                                  "ENHSP-Public/handcraft/pfile1.pddl"),
+    "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                                  "ENHSP-Public/handcraft/pfile1.pddl"),
 }
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
 
