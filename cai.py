@@ -6,6 +6,8 @@ from NumericTCORE.bin.ntcore import main as ntcore
 import click
 from planner import planner
 from defs import *
+from updatePDSimPlan import main as updatePDSimPlan
+
 
 def CAI(problem_name, planning_mode):
     
@@ -85,6 +87,8 @@ def CAI(problem_name, planning_mode):
                 print(plan)
                 # print initial input and encoding
                 print('\n"' + pref + '"' + filteredEncoding)
+                # update pdsim plan
+                updatePDSimPlan(plan)
                 break
             
         
