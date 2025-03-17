@@ -88,7 +88,7 @@ def CAI(problem_name, planning_mode):
                 # print initial input and encoding
                 print('\n"' + pref + '"' + filteredEncoding)
                 # update pdsim plan
-                updatePDSimPlan(plan)
+                # updatePDSimPlan(plan)
                 break
             
         
