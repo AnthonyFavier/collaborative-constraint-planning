@@ -16,18 +16,19 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT):
         [f"java -jar ENHSP-Public/enhsp.jar -o {DOMAIN_PATH} -f {PROBLEM_PATH} {planner}"], shell=True, capture_output=True, text=True
     )
     result = result.stdout.splitlines()
+    plan = ""
     
     try: # if successful
         # print plan
         for l in result[result.index('Found Plan:'):]:
-            print(l)
+            plan += l + '\n'
         feedback = "success"
     
     except:
         print('Unsolvable Problem')
         feedback = f"The encoding made the problem unsolvable. Fix it."
         
-    return feedback
+    return feedback, plan
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')

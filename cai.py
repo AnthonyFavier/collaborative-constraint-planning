@@ -79,11 +79,12 @@ def CAI(problem_name, planning_mode):
                 continue
             
             # 5 # Plan using the compiled problem
-            feedback = planner(PlanFiles.COMPILED, plan_mode=planning_mode)
-            # print initial input and encoding
-            print('\n"' + pref + '"' + filteredEncoding)
+            feedback, plan = planner(PlanFiles.COMPILED, plan_mode=planning_mode)
             success = feedback=='success'
             if success:
+                print(plan)
+                # print initial input and encoding
+                print('\n"' + pref + '"' + filteredEncoding)
                 break
             
         
