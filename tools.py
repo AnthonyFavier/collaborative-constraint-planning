@@ -1,5 +1,38 @@
 import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
+def newfilterEncoding(encodedPref):
+    """
+    same as filterEncoding but without the '(:constraints'
+    """
+    i = i_s = encodedPref.find('(:constraints')
+    with_constraints = True
+    
+    if i_s == -1:
+        i = i_s = encodedPref.find('(')
+        with_constraints = False
+        
+    if i_s == -1:
+        raise Exception("tools:updateProblem: Can't find encoded contraints in text...")
+    
+    n=1
+    while True:
+        i+=1
+        if encodedPref[i]=='(':
+            n+=1
+        if encodedPref[i]==')':
+            n-=1
+        if n==0:
+            break
+        
+    if not with_constraints:
+        filteredEncoding = encodedPref[i_s:i+1]
+    else:
+        filteredEncoding = encodedPref[i_s+len('(:constraints'):i+1]
+        
+        
+        
+    return filteredEncoding
+
 def filterEncoding(encodedPref):
     i = i_s = encodedPref.find('(:constraints')
     with_constraints = True
