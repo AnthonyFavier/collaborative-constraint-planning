@@ -395,9 +395,9 @@ def CAI(problem_name, planning_mode):
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
-@click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, default=True, help="Set the planning mode to 'Optimal' (default)")
+@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, default=True, help="Set the planning mode to 'Default' (default)")
+@click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
-@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
 def main(problem_name, planning_mode):
     
     if not problem_name in PROBLEMS:
