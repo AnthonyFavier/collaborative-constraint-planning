@@ -61,19 +61,35 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         self.updateLastStateCheckboxes()
         
         self.hideEncodings()
-                
+        self.show_encodings = False
+        self.hideCheckboxes()
+        self.show_checkboxes = False
+        
+        self.updateLabels()
+            
+            
+        # To remove
         self.button_toggle_checkboxes = customtkinter.CTkButton(self, text="Toggle checkboxes", command=self.toggleCheckboxes)
         self.button_toggle_checkboxes.grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        self.show_checkboxes = False
         i_row+=1
-        
-        self.hideCheckboxes()
         
         self.button_toggle_encodings = customtkinter.CTkButton(self, text="Toggle encodings", command=self.toggleEncodings, width=30)
         self.button_toggle_encodings.grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        self.show_encodings = False
         i_row+=1
-        
+    
+    def updateLabels(self):
+        activated_str = ''
+        deactivated_str = '*** '
+        for k,x in self.constraint_labels.items():
+            x.configure(text=x.cget('text').replace(activated_str, '').replace(deactivated_str, ''))
+            
+        for symbol in self.constraint_labels:
+            l = self.constraint_labels[symbol]
+            if self.CM.constraints[symbol].isActivated():
+                l.configure(text=activated_str + l.cget("text"))
+            else:
+                l.configure(text=deactivated_str + l.cget("text"))
+    
     def updateLastStateCheckboxes(self):
         for symbol in self.checkboxes:
             self.last_checkboxes_state[symbol] = self.checkboxes[symbol].get()
@@ -120,37 +136,44 @@ class ConstraintsFrame(customtkinter.CTkFrame):
             self.hideCheckboxes()
         else:
             self.showCheckboxes()
-        self.show_checkboxes = not self.show_checkboxes
     def showCheckboxes(self):
         # Delect all first
         for symbol in self.checkboxes:
             self.checkboxes[symbol].deselect()
         self.updateLastStateCheckboxes()
-        
         for k,cb in self.checkboxes.items():
             cb.grid()
+        self.show_checkboxes = True
     def hideCheckboxes(self):
         for k,cb in self.checkboxes.items():
             cb.grid_remove()
+        self.show_checkboxes = False
                     
     def toggleEncodings(self):
         if self.show_encodings:
             self.hideEncodings()
         else:
             self.showEncodings()
-        self.show_encodings = not self.show_encodings
     def showEncodings(self):
         for k,x in self.encoding_labels.items():
             x.grid()
+        self.show_encodings = True
     def hideEncodings(self):
         for k,x in self.encoding_labels.items():
             x.grid_remove()
+        self.show_encodings = False
         
 class ButtonsFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+        self.master = master
         self.title = "Constraint actions"
         self.buttons = {}
+        
+        self.confirm_function = None
+        self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
+        self.confirm_button.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.confirm_button.grid_remove()
         
         self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add)
         self.buttons["Add"].grid(row=0, column=0, padx=10, pady=10, sticky="ew")
@@ -166,15 +189,72 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.plan)
         self.buttons["Plan"].grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+    
+    def confirm(self):
+        self.confirm_function()
         
+    def showConfirmButton(self):
+        self.confirm_button.grid()
+    def hideConfirmButton(self):
+        self.confirm_button.grid_remove()
+        
+    def hideButtons(self):
+        for k,x in self.buttons.items():
+            x.grid_remove()
+    def showButtons(self):
+        for k,x in self.buttons.items():
+            x.grid()
+    
     def add(self):
         pass
     def delete(self):
         pass
+    
     def activate(self):
-        pass
+        # TODO: Do differently, could initialze Checkboxes with current activated constraints, then check/uncheck desired constrint and update accordingly
+        self.master.constraints_frame.showCheckboxes()
+        self.hideButtons()
+        self.showConfirmButton()
+        self.confirm_function = self.activateConfirm
+    def activateConfirm(self):
+        # Get Selection
+        selection = []
+        for k,x in self.master.constraints_frame.checkboxes.items():
+            if x.get()==1:
+                selection.append(k)
+        
+        # Activate selected constraints
+        for symbol in selection:
+            self.master.constraints_frame.CM.constraints[symbol].activate()
+        
+        self.hideConfirmButton()
+        self.showButtons()
+        self.master.constraints_frame.hideCheckboxes()
+        self.master.constraints_frame.updateLabels()
+        self.confirm_function = None
+        
     def deactivate(self):
-        pass
+        self.master.constraints_frame.showCheckboxes()
+        self.hideButtons()
+        self.showConfirmButton()
+        self.confirm_function = self.deactivateConfirm
+    def deactivateConfirm(self):
+        # Get Selection
+        selection = []
+        for k,x in self.master.constraints_frame.checkboxes.items():
+            if x.get()==1:
+                selection.append(k)
+        
+        # Deactivate selected constraints
+        for symbol in selection:
+            self.master.constraints_frame.CM.constraints[symbol].deactivate()
+        
+        self.hideConfirmButton()
+        self.showButtons()
+        self.master.constraints_frame.hideCheckboxes()
+        self.master.constraints_frame.updateLabels()
+        self.confirm_function = None
+        
     def plan(self):
         pass
         
