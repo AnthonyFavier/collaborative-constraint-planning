@@ -227,26 +227,44 @@ def planWithConstraints():
         if c.isActivated():
             activated_encodings.append(c.encoding)
             
-    updatedProblem = tools.newUpdateProblem(g_problem, activated_encodings)
+    if not len(activated_encodings):
+        print("No active constraints: Planning without constraints")
+        
+        # Plan using the original problem
+        feedback, plan = planner(g_problem_name, plan_mode=g_planning_mode)
+        success = feedback=='success'
+        if success:
+            print(plan)
+            # update pdsim plan
+            # updatePDSimPlan(plan)
+            return plan
+        else:
+            print("Failed to plan:\n", feedback)
+            return "Failed to plan:\n" + feedback
     
-    # Save updated problem in a file
-    with open(UPDATED_PROBLEM_PATH, "w") as f:
-        f.write(updatedProblem)
-    
-    # Compile the updated problem
-    print(color.BOLD + "\nCompiling..." + color.END)
-    ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-    
-    
-    # Plan using the compiled problem
-    feedback, plan = planner(PlanFiles.COMPILED, plan_mode=g_planning_mode)
-    success = feedback=='success'
-    if success:
-        print(plan)
-        # update pdsim plan
-        # updatePDSimPlan(plan)
     else:
-        print("Failed to plan:\n", feedback)
+        updatedProblem = tools.newUpdateProblem(g_problem, activated_encodings)
+        
+        # Save updated problem in a file
+        with open(UPDATED_PROBLEM_PATH, "w") as f:
+            f.write(updatedProblem)
+        
+        # Compile the updated problem
+        print(color.BOLD + "\nCompiling..." + color.END)
+        ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+        
+        
+        # Plan using the compiled problem
+        feedback, plan = planner(PlanFiles.COMPILED, plan_mode=g_planning_mode)
+        success = feedback=='success'
+        if success:
+            print(plan)
+            # update pdsim plan
+            # updatePDSimPlan(plan)
+            return plan
+        else:
+            print("Failed to plan:\n", feedback)
+            return "Failed to plan:\n" + feedback
 
 def CAI():
     
