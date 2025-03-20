@@ -32,6 +32,7 @@ def addConstraints(domain, problem):
         r = CM.createRaw(nl_constraint)
         new_r.append(r)
         
+        print(color.BOLD + "\nDecomposing constraints..." + color.END)
         result = llm_NL_decomposition.decompose(domain, problem, nl_constraint)
         result = llm_NL_decomposition.removeFormating(result)
         
@@ -51,36 +52,63 @@ def addConstraints(domain, problem):
     
     # Encoding
     print(color.BOLD + "\nEncoding..." + color.END)
+    r_to_delete = []
     for r in new_r:
         for c in r.children:
+            encodingOK = False
+            MAX_ENCODING_TRY = 5
+            i=0
+            while not encodingOK and i<MAX_ENCODING_TRY:
+                
+                # 1 # Encode the preferences
+                if i==0: # first time
+                    print(f"\tencoding {c.symbol}...")
             encodedPref = llm_NL_decomposition.encodePrefs(domain, problem, c.nl_constraint)
+                else: # Re-encoding
+                    print(f"\tre-encoding {c.symbol}...")
+                    encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
             filteredEncoding = tools.newfilterEncoding(encodedPref)
             filteredEncoding = tools.initialFixes(filteredEncoding)
-            # TODO: Verify encoding somehow ?
+                print(filteredEncoding)
+                    
+                # 2 # Update the problem and verify the encoding
+                    # If error, re-encode with feedback
+                updatedProblem = tools.newUpdateProblem(problem, [filteredEncoding])
+                encodingOK, feedback = tools.verifyEncoding(updatedProblem, domain, filteredEncoding)
+                if encodingOK:
             c.encoding = filteredEncoding
-        
-def deleteConstraints():
-    # ask which id to remove
-    # if R# remove raw constraint and all decomposed associated
-    # if D# remove only decompose from general list and from parent children
+                    llm_NL_decomposition.clear_message_history()
+                else:
+                    print("Verifier: Encoding not OK")
+                    print(feedback)
+                i+=1
+            
+            if not encodingOK:
+                print(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
+                r_to_delete.append(r.symbol)
     
+    if len(r_to_delete):
+        deleteConstraints(r_to_delete)
+                
+            
+def deleteConstraintsAsk():
     loop = True
     while loop:
         loop = False
-        x = input("Which constraints you want to delete? (type symbol, separated by commas or space, leave empty to cancel)\n> ")
-        if x=='':
+        constraint_symbols = input("Which constraints you want to delete? (type symbol, separated by commas or space, leave empty to cancel)\n> ")
+        if constraint_symbols=='':
             print("Deletion aborted.")
             return None
         
-        x = " ".join(x.split(',')).upper()
-        x = x.split()
-        for c in x:
+        constraint_symbols = " ".join(constraint_symbols.split(',')).upper()
+        constraint_symbols = constraint_symbols.split()
+        for c in constraint_symbols:
             if not c in CM.constraints:
                 print("One or more constraints not recognized.\n")
                 loop = True
                 break
     
-    print('\n' + ", ".join(x) + " will be deleted.")
+    print('\n' + ", ".join(constraint_symbols) + " will be deleted.")
     while True:
         answer = input("Confirm (y/n)? ")
         if answer in ['y', 'n']:
@@ -88,9 +116,14 @@ def deleteConstraints():
                 print("Deletion aborted.")
                 return None
             break
+        
+    deleteConstraints(constraint_symbols)
+def deleteConstraints(constraint_symbols):
+    # if R# remove raw constraint and all decomposed associated
+    # if D# remove only decompose from general list and from parent children
             
     # Deletion
-    for symbol in x:
+    for symbol in constraint_symbols:
         if symbol not in CM.constraints:
             # already deleted
             continue
