@@ -86,6 +86,26 @@ def updateProblem(problem, filteredEncoding):
     
     return updatedProblem
 
+def newUpdateProblem(problem, encodings):
+    updatedProblem = None 
+    
+    # Find position to insert 
+    ## find metric
+    i_metric = problem.find("(:metric")
+    if i_metric!=-1:
+        i_insert = i_metric
+    ## Else, insert before last parenthesis
+    else:
+        i_insert=len(problem)-1
+        while problem[i_insert]!=')':
+            i_insert-=1
+    
+    # Insert constraints into problem
+    encodings_str = "\n".join(encodings)
+    updatedProblem = problem[:i_insert] + "\n(:constraints\n" + encodings_str + '\n)\n' + problem[i_insert:]
+    
+    return updatedProblem
+
 def parse_pddl3(domain_path, problem_path):
     return ntcore_parsing_ext.parse_pddl3(domain_path, problem_path)
 
