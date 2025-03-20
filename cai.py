@@ -10,11 +10,10 @@ from defs import *
 from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from UserOption import UserOption
-import gui
         
 CM = Constraints.ConstraintManager()
 
-def addConstraints(domain, problem):
+def addConstraintsAsk():
     nl_constraints = []
     while True:
         if not len(nl_constraints):
@@ -27,14 +26,16 @@ def addConstraints(domain, problem):
             break
         else:
             nl_constraints.append(t)
-    
+            
+    addConstraints(nl_constraints)
+def addConstraints(nl_constraints):
     new_r = []
     for nl_constraint in nl_constraints:
         r = CM.createRaw(nl_constraint)
         new_r.append(r)
         
         print(color.BOLD + "\nDecomposing constraints..." + color.END)
-        result = llm_NL_decomposition.decompose(domain, problem, nl_constraint)
+        result = llm_NL_decomposition.decompose(g_domain, g_problem, nl_constraint)
         result = llm_NL_decomposition.removeFormating(result)
         
         # for c in constraints:
@@ -64,7 +65,7 @@ def addConstraints(domain, problem):
                 # 1 # Encode the preferences
                 if i==0: # first time
                     print(f"\tencoding {c.symbol}...")
-                    encodedPref = llm_NL_decomposition.encodePrefs(domain, problem, c.nl_constraint)
+                    encodedPref = llm_NL_decomposition.encodePrefs(g_domain, g_problem, c.nl_constraint)
                 else: # Re-encoding
                     print(f"\tre-encoding {c.symbol}...")
                     encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
@@ -74,8 +75,8 @@ def addConstraints(domain, problem):
                     
                 # 2 # Update the problem and verify the encoding
                     # If error, re-encode with feedback
-                updatedProblem = tools.newUpdateProblem(problem, [filteredEncoding])
-                encodingOK, feedback = tools.verifyEncoding(updatedProblem, domain, filteredEncoding)
+                updatedProblem = tools.newUpdateProblem(g_problem, [filteredEncoding])
+                encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
                 if encodingOK:
                     c.encoding = filteredEncoding
                     llm_NL_decomposition.clear_message_history()
@@ -214,7 +215,7 @@ def deactivateConstraints():
     for symbol in x:
         CM.constraints[symbol].deactivate()
 
-def planWithConstraints(DOMAIN_PATH, problem, planning_mode):
+def planWithConstraints():
     # get activated constraints
     # update problem with activated constraints
     # compile problem
@@ -226,7 +227,7 @@ def planWithConstraints(DOMAIN_PATH, problem, planning_mode):
         if c.isActivated():
             activated_encodings.append(c.encoding)
             
-    updatedProblem = tools.newUpdateProblem(problem, activated_encodings)
+    updatedProblem = tools.newUpdateProblem(g_problem, activated_encodings)
     
     # Save updated problem in a file
     with open(UPDATED_PROBLEM_PATH, "w") as f:
@@ -238,7 +239,7 @@ def planWithConstraints(DOMAIN_PATH, problem, planning_mode):
     
     
     # Plan using the compiled problem
-    feedback, plan = planner(PlanFiles.COMPILED, plan_mode=planning_mode)
+    feedback, plan = planner(PlanFiles.COMPILED, plan_mode=g_planning_mode)
     success = feedback=='success'
     if success:
         print(plan)
@@ -247,29 +248,8 @@ def planWithConstraints(DOMAIN_PATH, problem, planning_mode):
     else:
         print("Failed to plan:\n", feedback)
 
-def CAI(problem_name, planning_mode):
+def CAI():
     
-    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[problem_name]
-    
-    # Show selected problem
-    print(f"{planning_mode}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}\n")
-    
-    # Try parsing the initial problem
-    try:
-        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
-    except Exception as e:
-        print("ERROR", e)
-        raise Exception(f"Unable to parse the initial problem.")
-
-    # Set extracted fluent names (used during verification)
-    tools.set_fluent_names([f.name for f in parsed.problem.fluents])
-    
-    # Open initial problem
-    with open(DOMAIN_PATH, "r") as f:
-        domain = f.read()
-    with open(PROBLEM_PATH, "r") as f:
-        problem = f.read()
-        
     # Testing initialized CM
     """
     R0 - never use plane1
@@ -313,15 +293,15 @@ def CAI(problem_name, planning_mode):
         user_input = UO.ask()
         
         if "ADD"==user_input:
-            addConstraints(domain, problem)
+            addConstraintsAsk()
         elif "DEL"==user_input:
-            deleteConstraints()
+            deleteConstraintsAsk()
         elif "ACT"==user_input:
             activateConstraints()
         elif "DEA"==user_input:
             deactivateConstraints()
         elif "PLAN"==user_input:
-            planWithConstraints(DOMAIN_PATH, problem, planning_mode)
+            planWithConstraints()
         
         
     exit()
@@ -390,6 +370,36 @@ def CAI(problem_name, planning_mode):
         print('\n=======================')
         print('=======================\n')
 
+def init(problem_name, planning_mode):
+    global g_problem_name, g_domain, g_problem, g_planning_mode
+    global DOMAIN_PATH, PROBLEM_PATH
+    
+    if not problem_name in PROBLEMS:
+        click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
+        exit()
+    
+    g_problem_name = problem_name
+    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    g_planning_mode = planning_mode
+    
+    # Show selected problem
+    print(f"{planning_mode}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}\n")
+    
+    # Try parsing the initial problem
+    try:
+        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+    except Exception as e:
+        print("ERROR", e)
+        raise Exception(f"Unable to parse the initial problem.")
+
+    # Set extracted fluent names (used during verification)
+    tools.set_fluent_names([f.name for f in parsed.problem.fluents])
+    
+    # Open initial problem
+    with open(DOMAIN_PATH, "r") as f:
+        g_domain = f.read()
+    with open(PROBLEM_PATH, "r") as f:
+        g_problem = f.read()
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
@@ -398,11 +408,9 @@ def CAI(problem_name, planning_mode):
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
 def main(problem_name, planning_mode):
     
-    if not problem_name in PROBLEMS:
-        click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
-        exit()
+    init(problem_name, planning_mode)
     
-    CAI(problem_name, planning_mode)
+    CAI()
 
 if __name__ == '__main__':
     sys.argv += ["zeno5_bis"]
