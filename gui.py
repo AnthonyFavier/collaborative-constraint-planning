@@ -3,60 +3,92 @@ import Constraints
 import typing
 import time
 from defs import *
+import cai
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 class ConstraintsFrame(customtkinter.CTkFrame):
-    def __init__(self, master, CM: Constraints.ConstraintManager):
+    def __init__(self, master):
         super().__init__(master)
-        self.CM = CM
+        
         self.checkboxes = {}
-        self.last_checkboxes_state = {}
         self.constraint_labels = {}
         self.encoding_labels = {}
+        self.frames = {}
         self.height_checkbox_frame = 20
         self.width_checkbox_frame = 31
+        self.last_checkboxes_state = {}
+        
+        
+        self.updateFrame()
+        
+    def clear(self):
+        # Delete current grid and widgets
+        l = self.grid_slaves()
+        for x in self.grid_slaves():
+            x.destroy()
+        
+        keys = set(self.checkboxes.keys())
+        for k in keys:
+            del self.checkboxes[k]
+        keys = set(self.constraint_labels.keys())
+        for k in keys:
+            del self.constraint_labels[k]
+        keys = set(self.encoding_labels.keys())
+        for k in keys:
+            del self.encoding_labels[k]
+        keys = set(self.last_checkboxes_state.keys())
+        for k in keys:
+            del self.last_checkboxes_state[k]
+        
+    def updateFrame(self):
+        # Delete current grid and widgets
+        self.clear()
         
         i_row = 0
-        for k,r in CM.raw_constraints.items():
-            
-            frame = customtkinter.CTkFrame(self, fg_color="transparent")
-            frame.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
-            
-            framecb = customtkinter.CTkFrame(frame, fg_color="transparent", height=self.height_checkbox_frame, width=self.width_checkbox_frame)
-            framecb.grid(row=0, column=0, padx=0, pady=0)
-            
-            self.checkboxes[r.symbol] = customtkinter.CTkCheckBox(framecb, text='', width=0, command=self.checkboxHandler)
-            self.checkboxes[r.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
-            
-            self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}")
-            self.constraint_labels[r.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
-            
-            i_row+=1
-            
-            xpadding = 30
-            for c in r.children:
+        
+        if cai.CM.constraints == {}:
+            label = customtkinter.CTkLabel(self, text="No constraints")
+            label.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
+            i_row += 1
+        else:
+            for k,r in cai.CM.raw_constraints.items():
+                
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
-                frame.grid(row=i_row, column=0, padx=xpadding, pady=0, sticky="w")
-            
+                frame.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
+                
                 framecb = customtkinter.CTkFrame(frame, fg_color="transparent", height=self.height_checkbox_frame, width=self.width_checkbox_frame)
                 framecb.grid(row=0, column=0, padx=0, pady=0)
                 
-                self.checkboxes[c.symbol] = customtkinter.CTkCheckBox(framecb, text="", width=0, command=self.checkboxHandler)
-                self.checkboxes[c.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
-            
-                self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}")
-                self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
-            
-                self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}")
-                self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
+                self.checkboxes[r.symbol] = customtkinter.CTkCheckBox(framecb, text='', width=0, command=self.checkboxHandler)
+                self.checkboxes[r.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
+                
+                self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}")
+                self.constraint_labels[r.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
                 i_row+=1
                 
-        
-        print(self.constraint_labels['R0'].cget('font'))
+                xpadding = 30
+                for c in r.children:
+                    frame = customtkinter.CTkFrame(self, fg_color="transparent")
+                    frame.grid(row=i_row, column=0, padx=xpadding, pady=0, sticky="w")
                 
+                    framecb = customtkinter.CTkFrame(frame, fg_color="transparent", height=self.height_checkbox_frame, width=self.width_checkbox_frame)
+                    framecb.grid(row=0, column=0, padx=0, pady=0)
+                    
+                    self.checkboxes[c.symbol] = customtkinter.CTkCheckBox(framecb, text="", width=0, command=self.checkboxHandler)
+                    self.checkboxes[c.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
+                
+                    self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}")
+                    self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
+                
+                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}")
+                    self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
+                    
+                    i_row+=1
+                    
+        
         # Initialize last checkboxes state
         self.updateLastStateCheckboxes()
         
@@ -76,6 +108,8 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         self.button_toggle_encodings = customtkinter.CTkButton(self, text="Toggle encodings", command=self.toggleEncodings, width=30)
         self.button_toggle_encodings.grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
         i_row+=1
+        
+        
     
     def updateLabels(self):
         activated_str = ''
@@ -85,7 +119,7 @@ class ConstraintsFrame(customtkinter.CTkFrame):
             
         for symbol in self.constraint_labels:
             l = self.constraint_labels[symbol]
-            if self.CM.constraints[symbol].isActivated():
+            if cai.CM.constraints[symbol].isActivated():
                 l.configure(text=activated_str + l.cget("text"))
             else:
                 l.configure(text=deactivated_str + l.cget("text"))
@@ -102,8 +136,8 @@ class ConstraintsFrame(customtkinter.CTkFrame):
                 checked = self.checkboxes[symbol].get()==1
         
         # If raw
-        if checkbox in self.CM.raw_constraints:
-            for child in self.CM.raw_constraints[checkbox].children:
+        if checkbox in cai.CM.raw_constraints:
+            for child in cai.CM.raw_constraints[checkbox].children:
                 if checked:
                     # Then check all children 
                     self.checkboxes[child.symbol].select()
@@ -112,8 +146,8 @@ class ConstraintsFrame(customtkinter.CTkFrame):
                     self.checkboxes[child.symbol].deselect()
                 
         # If decomposed
-        elif checkbox in self.CM.decomposed_constraints:
-            parent = self.CM.constraints[checkbox].parent
+        elif checkbox in cai.CM.decomposed_constraints:
+            parent = cai.CM.constraints[checkbox].parent
             
             if checked:
                 # If all decomposed of associated raw are checked then check raw
@@ -206,9 +240,35 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.grid()
     
     def add(self):
-        pass
+        cai.addConstraintsAsk()
+        self.master.constraints_frame.updateFrame()
+        
     def delete(self):
-        pass
+        # Version shell ask
+        # cai.deleteConstraintsAsk()
+        # self.master.constraints_frame.updateFrame()
+        
+        # Version selection
+        self.master.constraints_frame.showCheckboxes()
+        self.hideButtons()
+        self.showConfirmButton()
+        self.confirm_function = self.deleteConfirm
+    def deleteConfirm(self):
+        # Get selection
+        selection = []
+        for k,x in self.master.constraints_frame.checkboxes.items():
+            if x.get()==1:
+                selection.append(k)
+                
+        # Delete selected constraints
+        cai.deleteConstraints(selection)
+        
+        self.hideConfirmButton()
+        self.showButtons()
+        self.master.constraints_frame.hideCheckboxes()
+        self.confirm_function = None
+        
+        self.master.constraints_frame.updateFrame()
     
     def activate(self):
         # TODO: Do differently, could initialze Checkboxes with current activated constraints, then check/uncheck desired constrint and update accordingly
@@ -225,7 +285,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         # Activate selected constraints
         for symbol in selection:
-            self.master.constraints_frame.CM.constraints[symbol].activate()
+            cai.CM.constraints[symbol].activate()
         
         self.hideConfirmButton()
         self.showButtons()
@@ -247,7 +307,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         # Deactivate selected constraints
         for symbol in selection:
-            self.master.constraints_frame.CM.constraints[symbol].deactivate()
+            cai.CM.constraints[symbol].deactivate()
         
         self.hideConfirmButton()
         self.showButtons()
@@ -256,7 +316,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_function = None
         
     def plan(self):
-        pass
+        cai.planWithConstraints()
         
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -269,7 +329,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
 class App(customtkinter.CTk):
-    def __init__(self, CM: Constraints.ConstraintManager):
+    def __init__(self):
         super().__init__()
 
         self.title("my app")
@@ -278,7 +338,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
-        self.constraints_frame = ConstraintsFrame(self, CM)
+        self.constraints_frame = ConstraintsFrame(self)
         self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         
         self.buttons_frame = ButtonsFrame(self)
@@ -291,21 +351,22 @@ class App(customtkinter.CTk):
     # print(event.char, event.keysym, event.keycode)
 
 if __name__=="__main__":
-    CM = Constraints.ConstraintManager()
-    r = CM.createRaw("never use plane1")
-    d = CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")
+    r = cai.CM.createRaw("never use plane1")
+    d = cai.CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")
     d.encoding = "(always (and (not (in person1 plane1)) (not (in person2 plane1)) (not (in person3 plane1)) (not (in person4 plane1))))"
-    d = CM.createDecomposed(r, "Plane1 should remain at its initial location (city1) throughout the plan.")
+    d = cai.CM.createDecomposed(r, "Plane1 should remain at its initial location (city1) throughout the plan.")
     d.encoding = "(always (located plane1 city1))"
-    d = CM.createDecomposed(r, "The number of people onboard plane1 should always be zero.")
+    d = cai.CM.createDecomposed(r, "The number of people onboard plane1 should always be zero.")
     d.encoding = "(always (= (onboard plane1) 0))"
-    d = CM.createDecomposed(r, "The fuel level of plane1 should remain unchanged from its initial value.")
+    d = cai.CM.createDecomposed(r, "The fuel level of plane1 should remain unchanged from its initial value.")
     d.encoding = "(always (= (fuel plane1) 174))"
-    r = CM.createRaw("plane2 should be in city2 at the end")
-    d = CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
+    r = cai.CM.createRaw("plane2 should be in city2 at the end")
+    d = cai.CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
     d.encoding = "(at-end (located plane2 city2))"
     
-    app = App(CM)
+    cai.init('zeno5_bis', PlanMode.DEFAULT)
+    
+    app = App()
     app.bind("<Escape>", lambda x: exit())
     # app.bind("<Key>", key_handler)
     # app.bind("beef", lambda x: print("ooh yummy!"))
