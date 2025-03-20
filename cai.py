@@ -163,20 +163,56 @@ def deleteConstraints(constraint_symbols):
             del constraint
             
 def activateConstraints():
-    print("activateConstraints: TODO")
     # Constraints are activated by default
     # ask which constraints to activate
     # R# will activate all children D#
     # D# will activate the corresponding decomposed constraint
+    
+    loop = True
+    while loop:
+        loop = False
+        x = input("Which constraints you want to activate? (type symbol, separated by commas or space, leave empty to cancel)\n> ")
+        if x=='':
+            print("Activation aborted.")
+            return None
+        
+        x = " ".join(x.split(',')).upper()
+        x = x.split()
+        for c in x:
+            if not c in CM.constraints:
+                print("One or more constraints not recognized.\n")
+                loop = True
+                break
+    
+    # Activation
+    for symbol in x:
+        CM.constraints[symbol].activate()
         
 def deactivateConstraints():
-    print("deactivateConstraints: TODO")
     # ask which constraints to deactivate
     # R# will deactivate all children D#
     # D# will deactivate the corresponding decomposed constraint
 
-def planWithConstraints():
-    print("planWithConstraints: TODO")   
+    loop = True
+    while loop:
+        loop = False
+        x = input("Which constraints you want to deactivate? (type symbol, separated by commas or space, leave empty to cancel)\n> ")
+        if x=='':
+            print("Deactivation aborted.")
+            return None
+        
+        x = " ".join(x.split(',')).upper()
+        x = x.split()
+        for c in x:
+            if not c in CM.constraints:
+                print("One or more constraints not recognized.\n")
+                loop = True
+                break
+    
+    # Deactivation
+    for symbol in x:
+        CM.constraints[symbol].deactivate()
+
     # update problem with activated constraints
     # compile problem
     # Solve it
