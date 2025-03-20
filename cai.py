@@ -10,6 +10,7 @@ from defs import *
 from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from UserOption import UserOption
+import gui
         
 CM = Constraints.ConstraintManager()
 
@@ -63,12 +64,12 @@ def addConstraints(domain, problem):
                 # 1 # Encode the preferences
                 if i==0: # first time
                     print(f"\tencoding {c.symbol}...")
-            encodedPref = llm_NL_decomposition.encodePrefs(domain, problem, c.nl_constraint)
+                    encodedPref = llm_NL_decomposition.encodePrefs(domain, problem, c.nl_constraint)
                 else: # Re-encoding
                     print(f"\tre-encoding {c.symbol}...")
                     encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
-            filteredEncoding = tools.newfilterEncoding(encodedPref)
-            filteredEncoding = tools.initialFixes(filteredEncoding)
+                filteredEncoding = tools.newfilterEncoding(encodedPref)
+                filteredEncoding = tools.initialFixes(filteredEncoding)
                 print(filteredEncoding)
                     
                 # 2 # Update the problem and verify the encoding
@@ -76,7 +77,7 @@ def addConstraints(domain, problem):
                 updatedProblem = tools.newUpdateProblem(problem, [filteredEncoding])
                 encodingOK, feedback = tools.verifyEncoding(updatedProblem, domain, filteredEncoding)
                 if encodingOK:
-            c.encoding = filteredEncoding
+                    c.encoding = filteredEncoding
                     llm_NL_decomposition.clear_message_history()
                 else:
                     print("Verifier: Encoding not OK")
@@ -121,7 +122,7 @@ def deleteConstraintsAsk():
 def deleteConstraints(constraint_symbols):
     # if R# remove raw constraint and all decomposed associated
     # if D# remove only decompose from general list and from parent children
-            
+    
     # Deletion
     for symbol in constraint_symbols:
         if symbol not in CM.constraints:
@@ -192,7 +193,7 @@ def deactivateConstraints():
     # ask which constraints to deactivate
     # R# will deactivate all children D#
     # D# will deactivate the corresponding decomposed constraint
-
+    
     loop = True
     while loop:
         loop = False

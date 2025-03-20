@@ -58,6 +58,15 @@ You can now remove you API key from `script_generate_set_key.py`
 
 **IMPORTANT: Never share an API key publicly, e.g., pushed on git!**
 
+#### > GUI 
+
+Install the gui dependencies
+```
+sudo apt-source env_NTCORE/bin/activate
+sudo apt-get install python3.10-tk
+pip install customtkinter
+```
+
 ## Run CAI
 
 Set the LLM API key by running (once per shell):
