@@ -34,7 +34,10 @@ class RawConstraint(Constraint):
                 print("\t\t" + c.encoding)
         
     def __repr__(self):
-        return f"{self.symbol} - {self.nl_constraint}"
+        symbol_str = self.symbol 
+        if self.isActivated():
+            symbol_str = color.BOLD + symbol_str + color.END
+        return f"{symbol_str} - {self.nl_constraint}"
         
 class DecomposedConstraint(Constraint):
     def __init__(self, parent, nl_constraint):
@@ -52,7 +55,10 @@ class DecomposedConstraint(Constraint):
         return self._activated
     
     def __repr__(self):
-        return f"{self.symbol} - {self.nl_constraint}"
+        symbol_str = self.symbol 
+        if self.isActivated():
+            symbol_str = color.BOLD + symbol_str + color.END
+        return f"{symbol_str} - {self.nl_constraint}"
 
 class ConstraintManager:
     def __init__(self):
