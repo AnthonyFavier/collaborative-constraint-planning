@@ -99,12 +99,11 @@ def removeFormating(text):
         
     return newtext
 
+systemMsg="You are a PDDL planning expert. Your purpose is to translate natural language constraints into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with consise and accurate PDDL language. PDDL3.0 constraints should only concer predicates and functions, they cannot refer directly to actions."
 def encodePrefs(domain, problem, constraint):
     global g_message_history
     
     # Setup request
-    systemMsg="You are a PDDL planning expert. Your purpose is to translate natural language constraints into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with consise and accurate PDDL language. PDDL3.0 constraints should only concer predicates and functions, they cannot refer directly to actions."
-    
     messages=[
             {"role": "user", "content": "When translating natural language inputs into PDDL3.0 constraints, only use the following keywords: 'and','or','not','=','<','<=','>','>=','+','-','*','/','forall','exists','always','sometime','within','at-most-once','sometime-after','sometime-before','always-within','holding-during','hold-after','at-end'. After, I will share a PDDL domain followed by a corresponding PDDL problem. After that, I will share a contraint to translate."},
         
@@ -119,6 +118,22 @@ def encodePrefs(domain, problem, constraint):
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
+    
+    print('LLM:', message.content[0].text, "[END LLM]")
+    
+    return message.content[0].text
+
+def reencoding(feedback):
+    global g_message_history
+    messages=[
+            {"role": "user", "content": "Your last translation is incorrect. Carefully generate a new correct translation considering the following failure feedback: "+feedback},
+        ]
+    
+     # Call LLM
+    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages=g_message_history + messages)
+    
+    # Update history with request and LLM answer
+    g_message_history += messages + [{"role": "assistant", "content": message.content[0].text},]
     
     print('LLM:', message.content[0].text, "[END LLM]")
     
