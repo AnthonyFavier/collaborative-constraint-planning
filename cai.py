@@ -213,9 +213,38 @@ def deactivateConstraints():
     for symbol in x:
         CM.constraints[symbol].deactivate()
 
+def planWithConstraints(DOMAIN_PATH, problem, planning_mode):
+    # get activated constraints
     # update problem with activated constraints
     # compile problem
     # Solve it
+    
+    # Get activated constraints
+    activated_encodings = []
+    for k,c in CM.decomposed_constraints.items():
+        if c.isActivated():
+            activated_encodings.append(c.encoding)
+            
+    updatedProblem = tools.newUpdateProblem(problem, activated_encodings)
+    
+    # Save updated problem in a file
+    with open(UPDATED_PROBLEM_PATH, "w") as f:
+        f.write(updatedProblem)
+    
+    # Compile the updated problem
+    print(color.BOLD + "\nCompiling..." + color.END)
+    ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+    
+    
+    # Plan using the compiled problem
+    feedback, plan = planner(PlanFiles.COMPILED, plan_mode=planning_mode)
+    success = feedback=='success'
+    if success:
+        print(plan)
+        # update pdsim plan
+        # updatePDSimPlan(plan)
+    else:
+        print("Failed to plan:\n", feedback)
 
 def CAI(problem_name, planning_mode):
     
@@ -294,7 +323,7 @@ def CAI(problem_name, planning_mode):
         elif "DEA"==user_input:
             deactivateConstraints()
         elif "PLAN"==user_input:
-            planWithConstraints()
+            planWithConstraints(DOMAIN_PATH, problem, planning_mode)
         
         
     exit()
