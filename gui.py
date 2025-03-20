@@ -316,17 +316,58 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_function = None
         
     def plan(self):
-        cai.planWithConstraints()
+        txt = cai.planWithConstraints()
+        # Update planframe with txt
+        self.master.plan_frame.label.configure(text=txt)
         
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+        self.grid_columnconfigure(0, weight=1)
         
         self.label = customtkinter.CTkLabel(self, text="CTkLabel", fg_color="transparent")
         self.label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
         
         self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
         self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+class PlanFrame(customtkinter.CTkScrollableFrame):
+    def __init__(self, master, title):
+        super().__init__(master, label_text=title)
+        self.grid_columnconfigure(0, weight=1)
+        
+        plan_str = \
+"""0.0: (board_person4_plane4_city1)
+1.0: (flyslow_plane4_city1_city3)
+2.0: (board_person3_plane3_city0)
+3.0: (flyslow_plane3_city0_city3)
+4.0: (refuel_plane2)
+5.0: (debark_person3_plane3_city3)
+6.0: (board_person1_plane3_city3)
+7.0: (board_person3_plane4_city3)
+8.0: (refuel_plane3)
+9.0: (flyfast_plane3_city3_city2)
+10.0: (debark_person3_plane4_city3)
+11.0: (debark_person1_plane3_city2)
+12.0: (refuel_plane4)
+13.0: (flyslow_plane3_city2_city0)
+14.0: (board_person1_plane2_city2)
+15.0: (board_person2_plane3_city0)
+16.0: (refuel_plane3)
+17.0: (flyslow_plane3_city0_city3)
+18.0: (debark_person2_plane3_city3)
+19.0: (flyfast_plane3_city3_city1)
+20.0: (refuel_plane3)
+21.0: (debark_person4_plane4_city3)
+22.0: (flyslow_plane4_city3_city1)
+23.0: (debark_person1_plane2_city2)
+
+Plan-Length:24
+Metric (Search):12543.0
+Planning Time (msec): 327"""
+        
+        self.label = customtkinter.CTkLabel(self, text=plan_str, justify='left', state='disabled')
+        self.label.grid(row=0, column=0, padx=0, pady=0, sticky='we')
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -346,6 +387,9 @@ class App(customtkinter.CTk):
         
         self.display_frame = DisplayFrame(self)
         self.display_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+        
+        self.plan_frame = PlanFrame(self, title="Plan")
+        self.plan_frame.grid(row=0, column=3, rowspan=2, padx=10, pady=10, sticky='nsew')
 
 # def key_handler(event):
     # print(event.char, event.keysym, event.keycode)
