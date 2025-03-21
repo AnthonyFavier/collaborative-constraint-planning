@@ -241,17 +241,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.grid()
     
     def add(self):
-        # Version shell
-        # cai.addConstraintsAsk()
-        # self.master.constraints_frame.updateFrame()
-        
-        # Version gui
         self.hideButtons()
         self.master.display_frame.prompt("Enter your first constraint:")
         self.master.display_frame.entry.configure(state="normal")
         self.master.display_frame.entry.focus()
         self.master.display_frame.entry_function = self.add2
-        
     def add2(self):
         # Show input
         c = self.master.display_frame.entry_text
@@ -283,11 +277,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 self.showButtons()
         
     def delete(self):
-        # Version shell ask
-        # cai.deleteConstraintsAsk()
-        # self.master.constraints_frame.updateFrame()
-        
-        # Version selection
         self.master.constraints_frame.showCheckboxes()
         self.hideButtons()
         self.showConfirmButton()
@@ -298,6 +287,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
                 selection.append(k)
+        if selection==[]:
+            return None
                 
         # Delete selected constraints
         cai.deleteConstraints(selection)
@@ -388,7 +379,6 @@ class DisplayFrame(customtkinter.CTkFrame):
         if self.entry.cget("state") == 'disabled':
             return None
         self.entry_text = self.entry.get()
-        print("Entry validated: ", self.entry_text)
         self.entry.delete(0, customtkinter.END)
         self.entry_function()
 
@@ -436,6 +426,7 @@ class App(customtkinter.CTk):
         
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
+        self.bind("<KP_Enter>", self.display_frame.validateEntry)
         # self.bind("<Key>", key_handler)
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
