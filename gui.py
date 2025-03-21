@@ -171,9 +171,6 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         else:
             self.showCheckboxes()
     def showCheckboxes(self):
-        # Delect all first
-        for symbol in self.checkboxes:
-            self.checkboxes[symbol].deselect()
         self.updateLastStateCheckboxes()
         for k,cb in self.checkboxes.items():
             cb.grid()
@@ -182,6 +179,12 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         for k,cb in self.checkboxes.items():
             cb.grid_remove()
         self.show_checkboxes = False
+    def selectActivatedCheckboxes(self):
+        for symbol,cb in self.checkboxes.items():
+            if cai.CM.constraints[symbol].isActivated():
+                cb.select()
+            else:
+                cb.deselect()
                     
     def toggleEncodings(self):
         if self.show_encodings:
@@ -216,11 +219,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete)
         self.buttons["Delete"].grid(row=1, column=0, padx=10, pady=10, sticky="ew")
         
-        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate", command=self.activate)
+        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", command=self.activate)
         self.buttons["Activate"].grid(row=2, column=0, padx=10, pady=10, sticky="ew")
-        
-        self.buttons["Deactivate"] = customtkinter.CTkButton(self, text="Deactivate", command=self.deactivate)
-        self.buttons["Deactivate"].grid(row=3, column=0, padx=10, pady=10, sticky="ew")
         
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.plan)
         self.buttons["Plan"].grid(row=4, column=0, padx=10, pady=10, sticky="ew")
@@ -280,6 +280,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.constraints_frame.showCheckboxes()
         self.hideButtons()
         self.showConfirmButton()
+        # TODO: Select/Deselect ALL
         self.confirm_function = self.deleteConfirm
     def deleteConfirm(self):
         # Get selection
@@ -301,44 +302,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.constraints_frame.updateFrame()
     
     def activate(self):
-        # TODO: Do differently, could initialze Checkboxes with current activated constraints, then check/uncheck desired constrint and update accordingly
+        self.master.constraints_frame.selectActivatedCheckboxes()
         self.master.constraints_frame.showCheckboxes()
         self.hideButtons()
+        # TODO: Select/Deselect ALL
         self.showConfirmButton()
         self.confirm_function = self.activateConfirm
     def activateConfirm(self):
-        # Get Selection
-        selection = []
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
-                selection.append(k)
-        
-        # Activate selected constraints
-        for symbol in selection:
-            cai.CM.constraints[symbol].activate()
-        
-        self.hideConfirmButton()
-        self.showButtons()
-        self.master.constraints_frame.hideCheckboxes()
-        self.master.constraints_frame.updateLabels()
-        self.confirm_function = None
-        
-    def deactivate(self):
-        self.master.constraints_frame.showCheckboxes()
-        self.hideButtons()
-        self.showConfirmButton()
-        self.confirm_function = self.deactivateConfirm
-    def deactivateConfirm(self):
-        # Get Selection
-        selection = []
-        for k,x in self.master.constraints_frame.checkboxes.items():
-            if x.get()==1:
-                selection.append(k)
-        
-        # Deactivate selected constraints
-        for symbol in selection:
-            cai.CM.constraints[symbol].deactivate()
-        
+                cai.CM.constraints[k].activate()
+            else:
+                cai.CM.constraints[k].deactivate()
+                
         self.hideConfirmButton()
         self.showButtons()
         self.master.constraints_frame.hideCheckboxes()
