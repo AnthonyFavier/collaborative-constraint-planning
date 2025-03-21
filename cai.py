@@ -13,13 +13,30 @@ from UserOption import UserOption
         
 CM = Constraints.ConstraintManager()
 
+PRINTS = True
+GUI_PROMPT = True
+
+prompt = lambda x: None
+
+def mprint(txt):
+    if PRINTS:
+        print(txt)
+    if GUI_PROMPT:
+        txt = txt.replace(color.BOLD, '')
+        txt = txt.replace(color.END, '')
+        prompt(txt)
+
+def setPromptFunction(prompt_function):
+    global prompt
+    prompt = prompt_function
+
 def addConstraintsAsk():
     nl_constraints = []
     while True:
         if not len(nl_constraints):
-            print(color.BOLD + "\nEnter your first constraint:\n> " + color.END, end="")
+            mprint(color.BOLD + "\nEnter your first constraint:\n> " + color.END, end="")
         else:
-            print(color.BOLD + "\nPress Enter to validate or type another constraint:\n> " + color.END, end="")
+            mprint(color.BOLD + "\nPress Enter to validate or type another constraint:\n> " + color.END, end="")
             
         t = input()
         if t=="":
@@ -34,17 +51,17 @@ def addConstraints(nl_constraints):
         r = CM.createRaw(nl_constraint)
         new_r.append(r)
         
-        print(color.BOLD + "\nDecomposing constraints..." + color.END)
+        mprint(color.BOLD + "\nDecomposing constraints..." + color.END)
         result = llm_NL_decomposition.decompose(g_domain, g_problem, nl_constraint)
         result = llm_NL_decomposition.removeFormating(result)
         
         # for c in constraints:
         for c in result.splitlines():
             CM.createDecomposed(r, c)
-            
-        r.showWithChildren()
         
-        input("is ok?")
+        mprint(r.strWithChildren())
+        
+        # input("is ok?")
         
         # TODO: Ask if decomposition ok?
         # otherwise retry
@@ -53,7 +70,7 @@ def addConstraints(nl_constraints):
     # When all ok, encode the decomposed of all new r
     
     # Encoding
-    print(color.BOLD + "\nEncoding..." + color.END)
+    mprint(color.BOLD + "\nEncoding..." + color.END)
     r_to_delete = []
     for r in new_r:
         for c in r.children:
@@ -64,14 +81,14 @@ def addConstraints(nl_constraints):
                 
                 # 1 # Encode the preferences
                 if i==0: # first time
-                    print(f"\tencoding {c.symbol}...")
+                    mprint(f"\tencoding {c.symbol}...")
                     encodedPref = llm_NL_decomposition.encodePrefs(g_domain, g_problem, c.nl_constraint)
                 else: # Re-encoding
-                    print(f"\tre-encoding {c.symbol}...")
+                    mprint(f"\tre-encoding {c.symbol}...")
                     encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
                 filteredEncoding = tools.newfilterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
-                print(filteredEncoding)
+                mprint(filteredEncoding)
                     
                 # 2 # Update the problem and verify the encoding
                     # If error, re-encode with feedback
@@ -81,12 +98,12 @@ def addConstraints(nl_constraints):
                     c.encoding = filteredEncoding
                     llm_NL_decomposition.clear_message_history()
                 else:
-                    print("Verifier: Encoding not OK")
-                    print(feedback)
+                    mprint("Verifier: Encoding not OK")
+                    mprint(feedback)
                 i+=1
             
             if not encodingOK:
-                print(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
+                mprint(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
                 r_to_delete.append(r.symbol)
     
     if len(r_to_delete):

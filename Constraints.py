@@ -26,12 +26,16 @@ class RawConstraint(Constraint):
                 return False
         return True
         
-    def showWithChildren(self):
-        print(self)
+    def strWithChildren(self):
+        txt = str(self)+'\n'
         for c in self.children:
-            print("\t" + str(c))
+            txt += "\t" + str(c) + '\n'
             if c.encoding!='':
                 print("\t\t" + c.encoding)
+                txt += "\t\t" + c.encoding
+        return txt
+    def showWithChildren(self):
+        print(self.strWithChildren())
         
     def __repr__(self):
         symbol_str = self.symbol 

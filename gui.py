@@ -211,6 +211,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add)
         self.buttons["Add"].grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.add_nl_constraints = []
         
         self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete)
         self.buttons["Delete"].grid(row=1, column=0, padx=10, pady=10, sticky="ew")
@@ -240,8 +241,46 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.grid()
     
     def add(self):
-        cai.addConstraintsAsk()
-        self.master.constraints_frame.updateFrame()
+        # Version shell
+        # cai.addConstraintsAsk()
+        # self.master.constraints_frame.updateFrame()
+        
+        # Version gui
+        self.hideButtons()
+        self.master.display_frame.prompt("Enter your first constraint:")
+        self.master.display_frame.entry.configure(state="normal")
+        self.master.display_frame.entry.focus()
+        self.master.display_frame.entry_function = self.add2
+        
+    def add2(self):
+        # Show input
+        c = self.master.display_frame.entry_text
+        
+        if c!='':
+            self.master.display_frame.prompt("> " + c + "\n")
+            
+            # Store constraint
+            self.add_nl_constraints.append(c)
+            # repeat
+            self.master.display_frame.prompt("Press Enter to validate or type another constraint:")
+            self.master.display_frame.entry_function = self.add2
+        
+        else: # if no constraint entered
+            # first time: abort
+            if self.add_nl_constraints==[]:
+                self.master.display_frame.prompt("Aborted\n")
+                self.showButtons()
+                self.master.display_frame.entry_function = None
+                self.master.display_frame.entry.configure(state="disabled")
+                
+            else: # no additional constraint: add current ones
+                cai.addConstraints(self.add_nl_constraints)
+                self.master.display_frame.entry_function = None
+                self.master.display_frame.entry.configure(state="disabled")
+                # TODO deal with question if decomposition ok
+                # ask yes or no, enter possible feedback
+                self.master.constraints_frame.updateFrame()
+                self.showButtons()
         
     def delete(self):
         # Version shell ask
@@ -320,7 +359,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         # Update planframe with txt
         self.master.plan_frame.showText(txt)
         
-        
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -328,16 +366,31 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='word')
+        self.textbox.configure(state='disabled')
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        N = 5
+        self.prompt("\n" * N)
         
         self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntfffry")
+        self.entry.configure(state='disabled')
         self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.entry_function = None
+        self.entry_text = ''
         
     def prompt(self, text):
         self.textbox.configure(state='normal')
         self.textbox.insert(customtkinter.END, '\n'+text)
         self.textbox.see('end')
         self.textbox.configure(state='disabled')
+        self.master.update()
+        
+    def validateEntry(self, event):
+        if self.entry.cget("state") == 'disabled':
+            return None
+        self.entry_text = self.entry.get()
+        print("Entry validated: ", self.entry_text)
+        self.entry.delete(0, customtkinter.END)
+        self.entry_function()
 
 class PlanFrame(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -357,8 +410,8 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
         self.textbox.configure(state='disabled')
-        
-        
+
+
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -380,9 +433,15 @@ class App(customtkinter.CTk):
         
         self.plan_frame = PlanFrame(self)
         self.plan_frame.grid(row=0, column=3, rowspan=2, padx=10, pady=10, sticky='nsew')
+        
+        self.bind("<Escape>", lambda x: exit())
+        self.bind("<Return>", self.display_frame.validateEntry)
+        # self.bind("<Key>", key_handler)
+        # self.bind("beef", lambda x: print("ooh yummy!"))
+        
 
-# def key_handler(event):
-    # print(event.char, event.keysym, event.keycode)
+def key_handler(event):
+    print(event.char, event.keysym, event.keycode)
 
 if __name__=="__main__":
     r = cai.CM.createRaw("never use plane1")
@@ -401,7 +460,4 @@ if __name__=="__main__":
     cai.init('zeno5_bis', PlanMode.DEFAULT)
     
     app = App()
-    app.bind("<Escape>", lambda x: exit())
-    # app.bind("<Key>", key_handler)
-    # app.bind("beef", lambda x: print("ooh yummy!"))
     app.mainloop()
