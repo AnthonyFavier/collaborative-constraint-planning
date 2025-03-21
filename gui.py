@@ -234,7 +234,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     
     def add(self):
         self.hideButtons()
-        self.master.display_frame.prompt("Enter your first constraint:")
+        self.master.display_frame.prompt("\nEnter your first constraint:")
         self.master.display_frame.entry.configure(state="normal")
         self.master.display_frame.entry.focus()
         self.master.display_frame.entry_function = self.add2
@@ -243,12 +243,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
         c = self.master.display_frame.entry_text
         
         if c!='':
-            self.master.display_frame.prompt("> " + c + "\n")
+            self.master.display_frame.prompt("> " + c )
             
             # Store constraint
             self.add_nl_constraints.append(c)
             # repeat
-            self.master.display_frame.prompt("Press Enter to validate or type another constraint:")
+            self.master.display_frame.prompt("\nPress Enter to validate or type another constraint:")
             self.master.display_frame.entry_function = self.add2
         
         else: # if no constraint entered
@@ -280,19 +280,17 @@ class ButtonsFrame(customtkinter.CTkFrame):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
                 selection.append(k)
-        if selection==[]:
-            return None
                 
-        # Delete selected constraints
-        cai.deleteConstraints(selection)
+        if selection!=[]:
+            # Delete selected constraints
+            cai.deleteConstraints(selection)
+            self.master.constraints_frame.updateFrame()
         
         self.hideConfirmButton()
         self.showButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.confirm_function = None
         
-        self.master.constraints_frame.updateFrame()
-    
     def activate(self):
         self.master.constraints_frame.selectActivatedCheckboxes()
         self.master.constraints_frame.showCheckboxes()
@@ -321,16 +319,17 @@ class ButtonsFrame(customtkinter.CTkFrame):
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+        
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='word')
         self.textbox.configure(state='disabled')
-        self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
-        N = 5
+        self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
+        N = 20
         self.prompt("\n" * N)
         
-        self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntfffry")
+        self.entry = customtkinter.CTkEntry(self, placeholder_text="")
         self.entry.configure(state='disabled')
         self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
         self.entry_function = None
@@ -361,7 +360,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='char')
         self.textbox.configure(state='disabled')
-        self.textbox.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+        self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         
     def showText(self, txt):
         self.textbox.configure(state='normal')
@@ -376,7 +375,9 @@ class App(customtkinter.CTk):
 
         self.title("my app")
         self.geometry("1200x800")
+        
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(2, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
@@ -390,7 +391,7 @@ class App(customtkinter.CTk):
         self.display_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
         
         self.plan_frame = PlanFrame(self)
-        self.plan_frame.grid(row=0, column=3, rowspan=2, padx=10, pady=10, sticky='nsew')
+        self.plan_frame.grid(row=0, column=2, rowspan=2, padx=10, pady=10, sticky='nsew')
         
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
