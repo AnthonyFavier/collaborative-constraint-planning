@@ -48,3 +48,20 @@ class NtcoreStrategy:
     NAIVE = 'naive'
     REGRESSION = 'regression'
     DELTA = 'delta'
+    
+    
+PRINTS = True
+GUI_PROMPT = True
+
+prompt = lambda x: None
+
+def mprint(txt):
+    if PRINTS:
+        print(txt)
+    if GUI_PROMPT:
+        txt = txt.replace(color.BOLD, '')
+        txt = txt.replace(color.END, '')
+        prompt(txt)
+def setPromptFunction(prompt_function):
+    global prompt
+    prompt = prompt_function

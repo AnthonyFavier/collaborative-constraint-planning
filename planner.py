@@ -10,7 +10,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT):
     else:
         DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[problem_name]
     
-    print(color.BOLD + f"\nPlanning ({plan_mode}) ..." + color.END)
+    mprint(color.BOLD + f"\nPlanning ({plan_mode}) ..." + color.END)
     planner = f'-planner {plan_mode}' if plan_mode!=PlanMode.DEFAULT else ''
     result = subprocess.run(
         [f"java -jar ENHSP-Public/enhsp.jar -o {DOMAIN_PATH} -f {PROBLEM_PATH} {planner}"], shell=True, capture_output=True, text=True
@@ -25,8 +25,9 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT):
         feedback = "success"
     
     except:
-        print('Unsolvable Problem')
-        feedback = f"The encoding made the problem unsolvable. Fix it."
+        # mprint('Unsolvable Problem')
+        # feedback = f"The encoding made the problem unsolvable. Fix it."
+        feedback = result
         
     return feedback, plan
 

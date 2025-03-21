@@ -2,7 +2,6 @@ import cai
 import gui
 from defs import *
 
-
 if __name__=="__main__":
     
     r = cai.CM.createRaw("never use plane1")
@@ -18,9 +17,10 @@ if __name__=="__main__":
     d = cai.CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
     d.encoding = "(at-end (located plane2 city2))"
     
-    cai.init('zeno5_bis', PlanMode.DEFAULT)
+    
     
     app = gui.App()
-    cai.setPromptFunction(app.display_frame.prompt)
+    setPromptFunction(app.display_frame.prompt)
+    cai.init('zeno5_bis', PlanMode.DEFAULT)
     
     app.mainloop()

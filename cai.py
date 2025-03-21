@@ -13,22 +13,6 @@ from UserOption import UserOption
         
 CM = Constraints.ConstraintManager()
 
-PRINTS = True
-GUI_PROMPT = True
-
-prompt = lambda x: None
-
-def mprint(txt):
-    if PRINTS:
-        print(txt)
-    if GUI_PROMPT:
-        txt = txt.replace(color.BOLD, '')
-        txt = txt.replace(color.END, '')
-        prompt(txt)
-
-def setPromptFunction(prompt_function):
-    global prompt
-    prompt = prompt_function
 
 def addConstraintsAsk():
     nl_constraints = []
@@ -243,23 +227,14 @@ def planWithConstraints():
     for k,c in CM.decomposed_constraints.items():
         if c.isActivated():
             activated_encodings.append(c.encoding)
-            
-    if not len(activated_encodings):
-        print("No active constraints: Planning without constraints")
         
-        # Plan using the original problem
-        feedback, plan = planner(g_problem_name, plan_mode=g_planning_mode)
-        success = feedback=='success'
-        if success:
-            print(plan)
-            # update pdsim plan
-            # updatePDSimPlan(plan)
-            return plan
-        else:
-            print("Failed to plan:\n", feedback)
-            return "Failed to plan:\n" + feedback
+    if not len(activated_encodings):
+        mprint("\nNo active constraints: Planning without constraints")
+        problem_name = g_problem_name
     
     else:
+        problem_name = PlanFiles.COMPILED
+        
         updatedProblem = tools.newUpdateProblem(g_problem, activated_encodings)
         
         # Save updated problem in a file
@@ -267,21 +242,22 @@ def planWithConstraints():
             f.write(updatedProblem)
         
         # Compile the updated problem
-        print(color.BOLD + "\nCompiling..." + color.END)
+        mprint(color.BOLD + "\nCompiling..." + color.END)
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
         
-        
-        # Plan using the compiled problem
-        feedback, plan = planner(PlanFiles.COMPILED, plan_mode=g_planning_mode)
-        success = feedback=='success'
-        if success:
-            print(plan)
-            # update pdsim plan
-            # updatePDSimPlan(plan)
-            return plan
-        else:
-            print("Failed to plan:\n", feedback)
-            return "Failed to plan:\n" + feedback
+    # Plan
+    feedback, plan = planner(problem_name, plan_mode=g_planning_mode)
+    success = feedback=='success'
+    if success:
+        mprint("\nSuccessful planning")
+        print(plan)
+        # update pdsim plan
+        # updatePDSimPlan(plan)
+        return plan
+    else:
+        mprint("\nFailed to plan")
+        print("Failed to plan:\n", feedback)
+        return "Failed to plan:\n" + feedback
 
 def CAI():
     
@@ -418,7 +394,7 @@ def init(problem_name, planning_mode):
     g_planning_mode = planning_mode
     
     # Show selected problem
-    print(f"{planning_mode}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}\n")
+    mprint(f"Planning mode: {planning_mode}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
     
     # Try parsing the initial problem
     try:
