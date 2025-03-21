@@ -99,17 +99,6 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         
         self.updateLabels()
             
-            
-        # To remove
-        self.button_toggle_checkboxes = customtkinter.CTkButton(self, text="Toggle checkboxes", command=self.toggleCheckboxes)
-        self.button_toggle_checkboxes.grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        i_row+=1
-        
-        self.button_toggle_encodings = customtkinter.CTkButton(self, text="Toggle encodings", command=self.toggleEncodings, width=30)
-        self.button_toggle_encodings.grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        i_row+=1
-        
-        
     
     def updateLabels(self):
         activated_str = ''
@@ -224,6 +213,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.plan)
         self.buttons["Plan"].grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+        
+        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle encodings", command=self.master.constraints_frame.toggleEncodings)
+        self.buttons["ShowEncodings"].grid(row=5, column=0, padx=10, pady=10, sticky="w")
     
     def confirm(self):
         self.confirm_function()
