@@ -1,5 +1,6 @@
 
-PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/PDSim/Assets/Scenes/Blocks/Data/PdSimInstance.asset"
+# PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/PDSim/Assets/Scenes/Blocks/Data/PdSimInstance.asset"
+PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/simplified zenotravel/Data/PdSimInstance.asset"
 
 def createActionStr(name, *parameters):
     
@@ -22,7 +23,15 @@ def convertPlanIntoActionTuples(plan):
     
     actions = []
     
-    plan = plan.split('\n')[1:-4]
+    plan = plan.split('\n')
+    
+    for i in range(len(plan)):
+        if plan[i].find("Found Plan:"):
+            i_s = i+1
+        if plan[i].find("Plan-Length:")
+            i_e = i-1
+            
+    plan = plan[i_s:i_e]
     
     for l in plan:
         l = l[l.find("(")+1 : l.find(")") ]
@@ -52,24 +61,24 @@ def main(plan):
     #     ('stack', 'd', 'c'),
     # ]
     
-    actions = [
-        ('pick-up', 'b'),
-        ('stack', 'b', 'a'),
-        ('pick-up', 'c'),
-        ('stack', 'c', 'b'),
-        ('pick-up', 'd'),
-        ('stack', 'd', 'c'),
-        ('pick-up', 'a'),
-        ('stack', 'a', 'd'),
-        ('pick-up', 'b'),
-        ('stack', 'b', 'a'),
-        ('pick-up', 'c'),
-        ('stack', 'c', 'b'),
-        ('pick-up', 'd'),
-        ('stack', 'd', 'c'),
-    ]
+    # actions = [
+    #     ('pick-up', 'b'),
+    #     ('stack', 'b', 'a'),
+    #     ('pick-up', 'c'),
+    #     ('stack', 'c', 'b'),
+    #     ('pick-up', 'd'),
+    #     ('stack', 'd', 'c'),
+    #     ('pick-up', 'a'),
+    #     ('stack', 'a', 'd'),
+    #     ('pick-up', 'b'),
+    #     ('stack', 'b', 'a'),
+    #     ('pick-up', 'c'),
+    #     ('stack', 'c', 'b'),
+    #     ('pick-up', 'd'),
+    #     ('stack', 'd', 'c'),
+    # ]
     
-    actions = convertPlanIntoActionTuples(p)
+    actions = convertPlanIntoActionTuples(plan)
     
     new_plan = ""
     for a in actions:

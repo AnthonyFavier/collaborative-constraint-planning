@@ -72,7 +72,7 @@ def addConstraints(nl_constraints):
                     encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
                 filteredEncoding = tools.newfilterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
-                mprint(filteredEncoding)
+                # mprint(filteredEncoding)
                     
                 # 2 # Update the problem and verify the encoding
                     # If error, re-encode with feedback
@@ -82,8 +82,8 @@ def addConstraints(nl_constraints):
                     c.encoding = filteredEncoding
                     llm_NL_decomposition.clear_message_history()
                 else:
-                    mprint("Verifier: Encoding not OK")
-                    mprint(feedback)
+                    mprint("\t\tVerifier: Encoding not OK.")
+                    # mprint(feedback)
                 i+=1
             
             if not encodingOK:
@@ -250,14 +250,14 @@ def planWithConstraints():
     success = feedback=='success'
     if success:
         mprint("\nSuccessful planning")
-        print(plan)
+        # print(plan)
         # update pdsim plan
         # updatePDSimPlan(plan)
         return plan
     else:
         mprint("\nFailed to plan")
         print("Failed to plan:\n", feedback)
-        return "Failed to plan:\n" + feedback
+        return "Failed to plan:\n" + str(feedback)
 
 def CAI():
     

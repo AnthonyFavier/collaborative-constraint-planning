@@ -19,9 +19,14 @@ def call_llm(systemMsg, messages):
     for i in range(MAX_TRY_OVERLOAD):
         try:
             message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+            
+            # print('[LLM]\n', message.content[0].text, "\n[END LLM]")
+            
             return message
         except Exception as err:
-            if err.message.find("overloaded_error"):
+            if err.args[0].find("not resolve authentication method"):
+                raise err
+            if err.args[0].find("overloaded_error"):
                 if i<MAX_TRY_OVERLOAD-1:
                     mprint("API Overloaded, trying again in 2 seconds...")
                     time.sleep(2)
@@ -50,8 +55,6 @@ def decompose(domain, problem, constraint):
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
     
-    print('[LLM]\n', message.content[0].text, "\n[END LLM]")
-    
     return message.content[0].text
 
 def oldremoveFormating(text):
@@ -65,10 +68,6 @@ def oldremoveFormating(text):
     
     # Call LLM
     message = call_llm(systemMsg, messages)
-    
-    print('[LLM]\n', message.content[0].text, "\n[END LLM]")
-    
-    # t = [ f'{l}\n' for l in message.content[0].text.splitlines() ]
     
     return message.content[0].text
 
@@ -135,11 +134,9 @@ def encodePrefs(domain, problem, constraint):
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
     
-    print('LLM:', message.content[0].text, "[END LLM]")
-    
     return message.content[0].text
 
-def reencoding(feedback):
+def reencodePrefs(feedback):
     global g_message_history
     messages=[
             {"role": "user", "content": "Your last translation is incorrect. Carefully generate a new correct translation considering the following failure feedback: "+feedback},
@@ -151,29 +148,7 @@ def reencoding(feedback):
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text},]
     
-    print('LLM:', message.content[0].text, "[END LLM]")
-    
     return message.content[0].text
 
 if __name__=='__main__':
-    text = """
-    # Decomposition of "Never use plane1" constraint
-
-    This constraint needs to be decomposed into lower-level constraints that prevent the use of plane1 in any capacity:
-
-    1. **Plane1 should never have any person on board**
-    - This means: The predicate `(in ?p - person plane1)` should never be true for any person
-    - This prevents anyone from boarding plane1
-
-    2. **Plane1 should never change its location**
-    - This means: The predicate `(located plane1 ?c - city)` should remain unchanged from its initial value
-    - This prevents plane1 from flying between cities
-
-    3. **The onboard count for plane1 should always remain at 0**
-    - This means: The function `(onboard plane1)` should always equal 0
-    - This ensures no boarding actions are performed with plane1
-
-    These constraints collectively ensure that plane1 is never used for transportation, refueling, or any other purpose in the solution plan. 
-    """
-
-    print(removeFormating(text))
+    pass

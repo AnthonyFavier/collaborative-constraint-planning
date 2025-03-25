@@ -4,6 +4,7 @@ import typing
 import time
 from defs import *
 import cai
+from updatePDSimPlan import main as updatePDSimPlan
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -234,6 +235,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     
     def add(self):
         self.hideButtons()
+        self.add_nl_constraints = []
         self.master.display_frame.prompt("\nEnter your first constraint:")
         self.master.display_frame.entry.configure(state="normal")
         self.master.display_frame.entry.focus()
@@ -260,13 +262,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 self.master.display_frame.entry.configure(state="disabled")
                 
             else: # no additional constraint: add current ones
+                try:
                 cai.addConstraints(self.add_nl_constraints)
+                except Exception as err:
+                    self.master.quit()
+                    raise err
                 self.master.display_frame.entry_function = None
                 self.master.display_frame.entry.configure(state="disabled")
                 # TODO deal with question if decomposition ok
                 # ask yes or no, enter possible feedback
                 self.master.constraints_frame.updateFrame()
                 self.showButtons()
+                
+                mprint("\nConstraints added")
         
     def delete(self):
         self.master.constraints_frame.showCheckboxes()
@@ -363,6 +371,16 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox = customtkinter.CTkTextbox(self, wrap='char')
         self.textbox.configure(state='disabled')
         self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        
+        self.buttons_frame = customtkinter.CTkFrame(self)
+        self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton)
+        self.update_sim_button.grid(row=0, column=0, padx=10, pady=10)
+        
+    def updateSimButton(self):
+        plan = self.textbox.get("0.0", "end")
+        updatePDSimPlan(plan)
+        
         
     def showText(self, txt):
         self.textbox.configure(state='normal')

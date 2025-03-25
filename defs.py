@@ -1,6 +1,7 @@
 PROBLEMS = {
     "zeno5":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"),
     "zeno5_bis":    ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5_bis.pddl"),
+    "zeno5_n":      ("NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",              "NumericTCORE/benchmark/ZenoTravel-n/pfile5_n.pddl"),
     "zeno8":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile8.pddl"),
     "zeno15":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile15.pddl"),
     "zeno23":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
@@ -51,13 +52,13 @@ class NtcoreStrategy:
     DELTA = 'delta'
     
     
-PRINTS = True
+SHELL_PRINTS = False
 GUI_PROMPT = True
 
 prompt = lambda x: None
 
 def mprint(txt):
-    if PRINTS:
+    if SHELL_PRINTS:
         print(txt)
     if GUI_PROMPT:
         txt = txt.replace(color.BOLD, '')
