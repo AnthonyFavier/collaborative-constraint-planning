@@ -271,6 +271,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def delete(self):
         self.master.constraints_frame.showCheckboxes()
         self.hideButtons()
+        self.confirm_button.configure(text="Delete")
         self.showConfirmButton()
         # TODO: Select/Deselect ALL
         self.confirm_function = self.deleteConfirm
@@ -287,6 +288,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.master.constraints_frame.updateFrame()
         
         self.hideConfirmButton()
+        self.confirm_button.configure(text="Confirm")
         self.showButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.confirm_function = None
@@ -367,7 +369,6 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
         self.textbox.configure(state='disabled')
-
 
 class App(customtkinter.CTk):
     def __init__(self):
