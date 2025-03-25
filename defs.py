@@ -38,6 +38,7 @@ UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
 class PlanFiles:
     ORIGINAL = 'original'
     COMPILED = 'compiled'
+    PATH = 'path'
 
 class PlanMode:
     OPTIMAL = 'opt-hrmax'
