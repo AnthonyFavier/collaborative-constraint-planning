@@ -4,6 +4,7 @@ import typing
 import time
 from defs import *
 import cai
+from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
@@ -263,7 +264,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
             else: # no additional constraint: add current ones
                 try:
-                cai.addConstraints(self.add_nl_constraints)
+                    cai.addConstraints(self.add_nl_constraints)
                 except Exception as err:
                     self.master.quit()
                     raise err
@@ -392,8 +393,13 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("my app")
+        self.title("CAI")
         self.geometry("1200x800")
+        
+        # self.iconbitmap("rsc/icon.ico")
+        im = Image.open('rsc/icon.png')
+        photo = ImageTk.PhotoImage(im)
+        self.wm_iconphoto(True, photo)
         
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(2, weight=1)
