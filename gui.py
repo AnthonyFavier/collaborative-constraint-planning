@@ -216,8 +216,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.plan)
         self.buttons["Plan"].grid(row=4, column=0, padx=10, pady=10, sticky="ew")
         
+        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", command=self.changePlanMode)
+        self.buttons["ChangePlanningMode"].grid(row=5, column=0, padx=10, pady=10, sticky="ew")
+        
         self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle encodings", command=self.master.constraints_frame.toggleEncodings)
-        self.buttons["ShowEncodings"].grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        self.buttons["ShowEncodings"].grid(row=6, column=0, padx=10, pady=10, sticky="w")
     
     def confirm(self):
         self.confirm_function()
@@ -239,6 +242,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.add_nl_constraints = []
         self.master.display_frame.prompt("\nEnter your first constraint:")
         self.master.display_frame.entry.configure(state="normal")
+        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
         self.master.display_frame.entry.focus()
         self.master.display_frame.entry_function = self.add2
     def add2(self):
@@ -270,6 +274,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                     raise err
                 self.master.display_frame.entry_function = None
                 self.master.display_frame.entry.configure(state="disabled")
+                self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
                 # TODO deal with question if decomposition ok
                 # ask yes or no, enter possible feedback
                 self.master.constraints_frame.updateFrame()
@@ -327,6 +332,41 @@ class ButtonsFrame(customtkinter.CTkFrame):
         # Update planframe with txt
         self.master.plan_frame.showText(txt)
         
+    def changePlanMode(self):
+        mprint(' ')
+        mprint(f"Current planning mode: {cai.g_planning_mode}")
+        mprint(f"Select a planning mode:\n\t1 - {PlanMode.DEFAULT}\n\t2 - {PlanMode.OPTIMAL}\n\t3 - {PlanMode.SATISFICING}")
+        
+        self.master.display_frame.entry.configure(state="normal")
+        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
+        self.master.display_frame.entry.focus()
+        self.master.display_frame.entry_function = self.changePlanMode2
+    def changePlanMode2(self):
+        c = self.master.display_frame.entry_text
+        
+        if c!='':
+            self.master.display_frame.prompt("> " + c )
+            
+            # Check if correct
+            if c in ['1', '2', '3']:
+                if c=='1':
+                    cai.g_planning_mode=PlanMode.DEFAULT
+                if c=='2':
+                    cai.g_planning_mode=PlanMode.OPTIMAL
+                if c=='3':
+                    cai.g_planning_mode=PlanMode.SATISFICING
+                
+                mprint(f"\nPlanning mode set to: {cai.g_planning_mode}")
+            else:
+                mprint("Incorrect input")
+                mprint("Aborted\n")
+        else:
+            mprint("Aborted\n")
+            
+        self.master.display_frame.entry_function = None
+        self.master.display_frame.entry.configure(state="disabled")
+        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
+                
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -345,6 +385,10 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
         self.entry_function = None
         self.entry_text = ''
+        self.entry_dark = ('#F9F9FA', '#343638')
+        self.entry_light = ('#F9F9FA', '#585a5c')
+        # self.entry.configure(fg_color=self.entry_light)
+        
         
     def prompt(self, text):
         self.textbox.configure(state='normal')
@@ -394,7 +438,7 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("CAI")
-        self.geometry("1200x800")
+        self.geometry("1400x900")
         
         # self.iconbitmap("rsc/icon.ico")
         im = Image.open('rsc/icon.png')
@@ -429,20 +473,4 @@ def key_handler(event):
     print(event.char, event.keysym, event.keycode)
 
 if __name__=="__main__":
-    r = cai.CM.createRaw("never use plane1")
-    d = cai.CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")
-    d.encoding = "(always (and (not (in person1 plane1)) (not (in person2 plane1)) (not (in person3 plane1)) (not (in person4 plane1))))"
-    d = cai.CM.createDecomposed(r, "Plane1 should remain at its initial location (city1) throughout the plan.")
-    d.encoding = "(always (located plane1 city1))"
-    d = cai.CM.createDecomposed(r, "The number of people onboard plane1 should always be zero.")
-    d.encoding = "(always (= (onboard plane1) 0))"
-    d = cai.CM.createDecomposed(r, "The fuel level of plane1 should remain unchanged from its initial value.")
-    d.encoding = "(always (= (fuel plane1) 174))"
-    r = cai.CM.createRaw("plane2 should be in city2 at the end")
-    d = cai.CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
-    d.encoding = "(at-end (located plane2 city2))"
-    
-    cai.init('zeno5_bis', PlanMode.DEFAULT)
-    
-    app = App()
-    app.mainloop()
+    pass

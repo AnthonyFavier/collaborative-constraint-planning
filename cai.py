@@ -256,7 +256,7 @@ def planWithConstraints():
         return plan
     else:
         mprint("\nFailed to plan")
-        print("Failed to plan:\n", feedback)
+        # print("Failed to plan:\n", feedback)
         return "Failed to plan:\n" + str(feedback)
 
 def CAI():

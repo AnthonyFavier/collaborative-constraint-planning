@@ -26,16 +26,17 @@ def convertPlanIntoActionTuples(plan):
     plan = plan.split('\n')
     
     for i in range(len(plan)):
-        if plan[i].find("Found Plan:"):
+        if plan[i].find("Found Plan:")!=-1:
             i_s = i+1
-        if plan[i].find("Plan-Length:")
+        if plan[i].find("Plan-Length:")!=-1:
             i_e = i-1
             
     plan = plan[i_s:i_e]
     
     for l in plan:
         l = l[l.find("(")+1 : l.find(")") ]
-        l = l.split('_')
+        l = ' '.join(l.split('_'))
+        l = l.split(' ')
         name = l[0]
         params = l[1:]
         
