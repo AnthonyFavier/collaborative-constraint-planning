@@ -1,3 +1,5 @@
+import time
+from defs import *
 import anthropic
 client = anthropic.Anthropic(
     api_key=None
@@ -5,13 +7,27 @@ client = anthropic.Anthropic(
 MAX_TOKEN=5000
 TEMPERATURE=0.0
 MODEL="claude-3-7-sonnet-20250219"
-
+MAX_TRY_OVERLOAD = 3
 
 g_message_history = []
 def clear_message_history():
     global g_message_history
     g_message_history = []
 
+
+def call_llm(systemMsg, messages):
+    for i in range(MAX_TRY_OVERLOAD):
+        try:
+            message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+            return message
+        except Exception as err:
+            if err.message.find("overloaded_error"):
+                if i<MAX_TRY_OVERLOAD-1:
+                    mprint("API Overloaded, trying again in 2 seconds...")
+                    time.sleep(2)
+                else:
+                    raise err
+                
 def decompose(domain, problem, constraint):
     global g_message_history
     
@@ -29,7 +45,7 @@ def decompose(domain, problem, constraint):
         ]
     
     # Call LLM
-    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+    message = call_llm(systemMsg, messages)
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
@@ -48,7 +64,7 @@ def oldremoveFormating(text):
         ]
     
     # Call LLM
-    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+    message = call_llm(systemMsg, messages)
     
     print('[LLM]\n', message.content[0].text, "\n[END LLM]")
     
@@ -114,7 +130,7 @@ def encodePrefs(domain, problem, constraint):
         ]
     
     # Call LLM
-    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+    message = call_llm(systemMsg, messages)
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
@@ -130,8 +146,8 @@ def reencoding(feedback):
         ]
     
      # Call LLM
-    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages=g_message_history + messages)
-    
+    message = call_llm(systemMsg, g_message_history + messages)
+
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text},]
     
