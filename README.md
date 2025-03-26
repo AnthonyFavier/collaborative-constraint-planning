@@ -23,6 +23,11 @@ pip install -r requirements.txt --no-cache-dir
 sudo apt-get install openjdk-17-jdk python3.10-tk
 ```
 
+Run a small patch for unified_planning to also handle default _real_ and _int_ values:
+```
+python patch_unified_planning_default_values.py 
+```
+
 **Note**: to deactivate the python environment simply run: `deactivate`
 
 #### > NTCORE: Numeric constraints compilation
