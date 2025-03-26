@@ -273,7 +273,7 @@ def askChangePlanMode():
             print("Aborted\n")
     else:
         print("Aborted\n")
-
+        
 g_last_plan = None
 def CAI():
     global g_last_plan

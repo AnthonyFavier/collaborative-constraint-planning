@@ -1,0 +1,8 @@
+anthropic
+wheel
+click
+sympy
+unified_planning==1.0.0.29.dev1
+customtkinter
+pillow
+python-dotenv

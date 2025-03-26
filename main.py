@@ -1,8 +1,15 @@
 import CAI
 import GUI
 from defs import *
+import click
+import sys
 
-if __name__=="__main__":
+@click.command(help=f"{KNOWN_PROBLEMS_STR}")
+@click.argument('problem_name')
+@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, default=True, help="Set the planning mode to 'Default' (default)")
+@click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
+@click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
+def main(problem_name, planning_mode):
     
     # r = cai.CM.createRaw("never use plane1")
     # d = cai.CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")
@@ -17,10 +24,11 @@ if __name__=="__main__":
     # d = cai.CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
     # d.encoding = "(at-end (located plane2 city2))"
     
-    
     app = GUI.App()
     setPromptFunction(app.display_frame.prompt)
-    CAI.init('zeno5_n', PlanMode.DEFAULT)
-    # cai.init('zeno5_bis', PlanMode.DEFAULT)
-    
+    CAI.init(problem_name, planning_mode)
     app.mainloop()
+if __name__ == '__main__':
+    # sys.argv.append('zeno5_n')
+    # sys.argv.append('zeno5_bis')
+    main()
