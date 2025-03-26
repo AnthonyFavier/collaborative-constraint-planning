@@ -1,4 +1,3 @@
-#!/usr/bin/env python3.10
 import sys
 import LLM
 import tools
