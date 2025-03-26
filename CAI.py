@@ -253,6 +253,26 @@ def planWithConstraints():
     else:
         mprint("\nFailed to plan")
         return "Failed to plan:\n" + str(feedback)
+def askChangePlanMode():
+    print(f"Current planning mode: {g_planning_mode}")
+    print(f"Select a planning mode:\n\t1 - {PlanMode.DEFAULT}\n\t2 - {PlanMode.OPTIMAL}\n\t3 - {PlanMode.SATISFICING}")
+    c = input("> ")
+    if c!='':
+        # Check if correct
+        if c in ['1', '2', '3']:
+            if c=='1':
+                g_planning_mode=PlanMode.DEFAULT
+            if c=='2':
+                g_planning_mode=PlanMode.OPTIMAL
+            if c=='3':
+                g_planning_mode=PlanMode.SATISFICING
+            
+            print(f"\nPlanning mode set to: {g_planning_mode}")
+        else:
+            print("Incorrect input")
+            print("Aborted\n")
+    else:
+        print("Aborted\n")
 
 g_last_plan = None
 def CAI():
@@ -270,6 +290,7 @@ def CAI():
         UO.addOption("ACT", "Activate constraints")
         UO.addOption("DEA", "Deactivate constraints")
         UO.addOption("PLAN", "Plan with constraints")
+        UO.addOption("CHANGEPLANMODE", "Change planning mode")
         UO.addOption("UPDATESIM", "Update Sim")
         user_input = UO.ask()
         
@@ -283,6 +304,8 @@ def CAI():
             deactivateConstraints()
         elif "PLAN"==user_input:
             g_last_plan = planWithConstraints()
+        elif "CHANGEPLANMODE"==user_input:
+            askChangePlanMode()
         elif "UPDATESIM"==user_input:
             if g_last_plan!= None and g_last_plan.find("Failed to plan:")!=-1:
                 updatePDSimPlan(g_last_plan)
