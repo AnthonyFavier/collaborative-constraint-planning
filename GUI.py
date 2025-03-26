@@ -435,7 +435,7 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("CAI")
-        self.geometry("1400x900")
+        self.geometry("1700x956")
         
         # self.iconbitmap("rsc/icon.ico")
         im = Image.open('rsc/icon.png')
