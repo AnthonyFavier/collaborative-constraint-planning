@@ -1,9 +1,6 @@
 import customtkinter
-import Constraints
-import typing
-import time
 from defs import *
-import cai
+import CAI
 from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
 
@@ -50,12 +47,12 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         
         i_row = 0
         
-        if cai.CM.constraints == {}:
+        if CAI.CM.constraints == {}:
             label = customtkinter.CTkLabel(self, text="No constraints")
             label.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
             i_row += 1
         else:
-            for k,r in cai.CM.raw_constraints.items():
+            for k,r in CAI.CM.raw_constraints.items():
                 
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
                 frame.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
@@ -110,7 +107,7 @@ class ConstraintsFrame(customtkinter.CTkFrame):
             
         for symbol in self.constraint_labels:
             l = self.constraint_labels[symbol]
-            if cai.CM.constraints[symbol].isActivated():
+            if CAI.CM.constraints[symbol].isActivated():
                 l.configure(text=activated_str + l.cget("text"))
             else:
                 l.configure(text=deactivated_str + l.cget("text"))
@@ -127,8 +124,8 @@ class ConstraintsFrame(customtkinter.CTkFrame):
                 checked = self.checkboxes[symbol].get()==1
         
         # If raw
-        if checkbox in cai.CM.raw_constraints:
-            for child in cai.CM.raw_constraints[checkbox].children:
+        if checkbox in CAI.CM.raw_constraints:
+            for child in CAI.CM.raw_constraints[checkbox].children:
                 if checked:
                     # Then check all children 
                     self.checkboxes[child.symbol].select()
@@ -137,8 +134,8 @@ class ConstraintsFrame(customtkinter.CTkFrame):
                     self.checkboxes[child.symbol].deselect()
                 
         # If decomposed
-        elif checkbox in cai.CM.decomposed_constraints:
-            parent = cai.CM.constraints[checkbox].parent
+        elif checkbox in CAI.CM.decomposed_constraints:
+            parent = CAI.CM.constraints[checkbox].parent
             
             if checked:
                 # If all decomposed of associated raw are checked then check raw
@@ -172,7 +169,7 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         self.show_checkboxes = False
     def selectActivatedCheckboxes(self):
         for symbol,cb in self.checkboxes.items():
-            if cai.CM.constraints[symbol].isActivated():
+            if CAI.CM.constraints[symbol].isActivated():
                 cb.select()
             else:
                 cb.deselect()
@@ -268,7 +265,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
             else: # no additional constraint: add current ones
                 try:
-                    cai.addConstraints(self.add_nl_constraints)
+                    CAI.addConstraints(self.add_nl_constraints)
                 except Exception as err:
                     self.master.quit()
                     raise err
@@ -298,7 +295,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
         if selection!=[]:
             # Delete selected constraints
-            cai.deleteConstraints(selection)
+            CAI.deleteConstraints(selection)
             self.master.constraints_frame.updateFrame()
         
         self.hideConfirmButton()
@@ -317,9 +314,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def activateConfirm(self):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
-                cai.CM.constraints[k].activate()
+                CAI.CM.constraints[k].activate()
             else:
-                cai.CM.constraints[k].deactivate()
+                CAI.CM.constraints[k].deactivate()
                 
         self.hideConfirmButton()
         self.showButtons()
@@ -328,13 +325,13 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_function = None
         
     def plan(self):
-        txt = cai.planWithConstraints()
+        txt = CAI.planWithConstraints()
         # Update planframe with txt
         self.master.plan_frame.showText(txt)
         
     def changePlanMode(self):
         mprint(' ')
-        mprint(f"Current planning mode: {cai.g_planning_mode}")
+        mprint(f"Current planning mode: {CAI.g_planning_mode}")
         mprint(f"Select a planning mode:\n\t1 - {PlanMode.DEFAULT}\n\t2 - {PlanMode.OPTIMAL}\n\t3 - {PlanMode.SATISFICING}")
         
         self.master.display_frame.entry.configure(state="normal")
@@ -350,13 +347,13 @@ class ButtonsFrame(customtkinter.CTkFrame):
             # Check if correct
             if c in ['1', '2', '3']:
                 if c=='1':
-                    cai.g_planning_mode=PlanMode.DEFAULT
+                    CAI.g_planning_mode=PlanMode.DEFAULT
                 if c=='2':
-                    cai.g_planning_mode=PlanMode.OPTIMAL
+                    CAI.g_planning_mode=PlanMode.OPTIMAL
                 if c=='3':
-                    cai.g_planning_mode=PlanMode.SATISFICING
+                    CAI.g_planning_mode=PlanMode.SATISFICING
                 
-                mprint(f"\nPlanning mode set to: {cai.g_planning_mode}")
+                mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")
             else:
                 mprint("Incorrect input")
                 mprint("Aborted\n")
@@ -468,9 +465,5 @@ class App(customtkinter.CTk):
         # self.bind("<Key>", key_handler)
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
-
 def key_handler(event):
     print(event.char, event.keysym, event.keycode)
-
-if __name__=="__main__":
-    pass

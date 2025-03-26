@@ -27,8 +27,6 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, show_plan=False):
             print(plan)
     
     except:
-        # mprint('Unsolvable Problem')
-        # feedback = f"The encoding made the problem unsolvable. Fix it."
         feedback = result
         
     return feedback, plan

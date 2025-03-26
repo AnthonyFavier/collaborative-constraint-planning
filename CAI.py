@@ -1,7 +1,6 @@
 #!/usr/bin/env python3.10
 import sys
-import llm_claude
-import llm_NL_decomposition
+import LLM
 import tools
 from NumericTCORE.bin.ntcore import main as ntcore
 import click
@@ -36,8 +35,8 @@ def addConstraints(nl_constraints):
         new_r.append(r)
         
         mprint(color.BOLD + "\nDecomposing constraints..." + color.END)
-        result = llm_NL_decomposition.decompose(g_domain, g_problem, nl_constraint)
-        result = llm_NL_decomposition.removeFormating(result)
+        result = LLM.decompose(g_domain, g_problem, nl_constraint)
+        result = LLM.removeFormating(result)
         
         # for c in constraints:
         for c in result.splitlines():
@@ -66,21 +65,21 @@ def addConstraints(nl_constraints):
                 # 1 # Encode the preferences
                 if i==0: # first time
                     mprint(f"\tencoding {c.symbol}...")
-                    encodedPref = llm_NL_decomposition.encodePrefs(g_domain, g_problem, c.nl_constraint)
+                    encodedPref = LLM.encodePrefs(g_domain, g_problem, c.nl_constraint)
                 else: # Re-encoding
                     mprint(f"\tre-encoding {c.symbol}...")
-                    encodedPref = llm_NL_decomposition.reencodePrefs(feedback)
-                filteredEncoding = tools.newfilterEncoding(encodedPref)
+                    encodedPref = LLM.reencodePrefs(feedback)
+                filteredEncoding = tools.filterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
                 # mprint(filteredEncoding)
                     
                 # 2 # Update the problem and verify the encoding
                     # If error, re-encode with feedback
-                updatedProblem = tools.newUpdateProblem(g_problem, [filteredEncoding])
+                updatedProblem = tools.updateProblem(g_problem, [filteredEncoding])
                 encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
                 if encodingOK:
                     c.encoding = filteredEncoding
-                    llm_NL_decomposition.clear_message_history()
+                    LLM.clear_message_history()
                 else:
                     mprint("\t\tVerifier: Encoding not OK.")
                     # mprint(feedback)
@@ -235,7 +234,7 @@ def planWithConstraints():
     else:
         problem_name = PlanFiles.COMPILED
         
-        updatedProblem = tools.newUpdateProblem(g_problem, activated_encodings)
+        updatedProblem = tools.updateProblem(g_problem, activated_encodings)
         
         # Save updated problem in a file
         with open(UPDATED_PROBLEM_PATH, "w") as f:
@@ -250,44 +249,14 @@ def planWithConstraints():
     success = feedback=='success'
     if success:
         mprint("\nSuccessful planning")
-        # print(plan)
-        # update pdsim plan
-        # updatePDSimPlan(plan)
         return plan
     else:
         mprint("\nFailed to plan")
-        # print("Failed to plan:\n", feedback)
         return "Failed to plan:\n" + str(feedback)
 
+g_last_plan = None
 def CAI():
-    
-    # Testing initialized CM
-    """
-    R0 - never use plane1
-        D1 - Person1, person2, person3, and person4 should never be in plane1.
-                (always (and (not (in person1 plane1)) (not (in person2 plane1)) (not (in person3 plane1)) (not (in person4 plane1))))
-        D2 - Plane1 should remain at its initial location (city1) throughout the plan.
-                (always (located plane1 city1))
-        D3 - The number of people onboard plane1 should always be zero.
-                (always (= (onboard plane1) 0))
-        D4 - The fuel level of plane1 should remain unchanged from its initial value.
-                (always (= (fuel plane1) 174))
-    R5 - plane2 should be in city2 at the end
-            D6 - plane2 must be located in city2 in the final state
-                (at-end (located plane2 city2))
-    """
-    # r = CM.createRaw("never use plane1")
-    # d = CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")
-    # d.encoding = "(always (and (not (in person1 plane1)) (not (in person2 plane1)) (not (in person3 plane1)) (not (in person4 plane1))))"
-    # d = CM.createDecomposed(r, "Plane1 should remain at its initial location (city1) throughout the plan.")
-    # d.encoding = "(always (located plane1 city1))"
-    # d = CM.createDecomposed(r, "The number of people onboard plane1 should always be zero.")
-    # d.encoding = "(always (= (onboard plane1) 0))"
-    # d = CM.createDecomposed(r, "The fuel level of plane1 should remain unchanged from its initial value.")
-    # d.encoding = "(always (= (fuel plane1) 174))"
-    # r = CM.createRaw("plane2 should be in city2 at the end")
-    # d = CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
-    # d.encoding = "(at-end (located plane2 city2))"
+    global g_last_plan
     
     while True:
         
@@ -301,6 +270,7 @@ def CAI():
         UO.addOption("ACT", "Activate constraints")
         UO.addOption("DEA", "Deactivate constraints")
         UO.addOption("PLAN", "Plan with constraints")
+        UO.addOption("UPDATESIM", "Update Sim")
         user_input = UO.ask()
         
         if "ADD"==user_input:
@@ -312,74 +282,12 @@ def CAI():
         elif "DEA"==user_input:
             deactivateConstraints()
         elif "PLAN"==user_input:
-            planWithConstraints()
-        
-        
-    exit()
-###########################################################################################################################
-###########################################################################################################################
-    
-    while True:
-        success = False
-        MAX_ENCODING_TRY = 5
-        for i in range(MAX_ENCODING_TRY):
-            
-            # 1 # Encode the preferences
-            if i==0: # first time
-                print(color.BOLD + "\nEncoding..." + color.END)
-                encodedPref = llm_claude.encodePrefs(domain, problem, pref)
-            else: # re-encoding 
-                # input()
-                print(color.BOLD + "\nRe-Encoding..." + color.END)
-                encodedPref = llm_claude.reencodePrefs(feedback)
-                
-            # 2 # Update the problem and verify the encoding
-                # If error, re-encode with feedback
-            filteredEncoding = tools.filterEncoding(encodedPref)
-            filteredEncoding = tools.initialFixes(filteredEncoding)
-            print(filteredEncoding)
-            updatedProblem = tools.updateProblem(problem, filteredEncoding)
-            encodingOK, feedback = tools.verifyEncoding(updatedProblem, domain, filteredEncoding)
-            if not encodingOK:
-                print("Verifier: Encoding not OK")
-                print(feedback)
-                continue
-            
-            # 3 # Save updated problem in a file
-            with open(UPDATED_PROBLEM_PATH, "w") as f:
-                f.write(updatedProblem)
-
-            # 4 # Compile the updated problem
-                # If error, re-encode
-            try:
-                print(color.BOLD + "\nCompiling..." + color.END)
-                ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-            except Exception as error:
-                print(error)
-                print("NTCORE: Failed to compile updated problem...")
-                feedback = f"There is the following error in the encoding: {error}. Fix it."
-                continue
-            
-            # 5 # Plan using the compiled problem
-            feedback, plan = planner(PlanFiles.COMPILED, plan_mode=planning_mode)
-            success = feedback=='success'
-            if success:
-                print(plan)
-                # print initial input and encoding
-                print('\n"' + pref + '"' + filteredEncoding)
-                # update pdsim plan
-                # updatePDSimPlan(plan)
-                break
-            
-        
-        if not success:
-            print("Failure: Maximum attempts reached unsuccessfully...")
-            print('\n"' + pref + '"')
-            
-        
-        llm_claude.clear_message_history()
-        print('\n=======================')
-        print('=======================\n')
+            g_last_plan = planWithConstraints()
+        elif "UPDATESIM"==user_input:
+            if g_last_plan!= None and g_last_plan.find("Failed to plan:")!=-1:
+                updatePDSimPlan(g_last_plan)
+            else:
+                mprint("No current valid plan")
 
 def init(problem_name, planning_mode):
     global g_problem_name, g_domain, g_problem, g_planning_mode
@@ -418,11 +326,7 @@ def init(problem_name, planning_mode):
 @click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
 def main(problem_name, planning_mode):
-    
     init(problem_name, planning_mode)
-    
     CAI()
-
 if __name__ == '__main__':
-    sys.argv += ["zeno5_bis"]
     main()

@@ -1,5 +1,5 @@
-import cai
-import gui
+import CAI
+import GUI
 from defs import *
 
 if __name__=="__main__":
@@ -18,10 +18,9 @@ if __name__=="__main__":
     # d.encoding = "(at-end (located plane2 city2))"
     
     
-    
-    app = gui.App()
+    app = GUI.App()
     setPromptFunction(app.display_frame.prompt)
-    cai.init('zeno5_n', PlanMode.DEFAULT)
+    CAI.init('zeno5_n', PlanMode.DEFAULT)
     # cai.init('zeno5_bis', PlanMode.DEFAULT)
     
     app.mainloop()

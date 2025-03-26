@@ -1,9 +1,6 @@
 import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
-def newfilterEncoding(encodedPref):
-    """
-    same as filterEncoding but without the '(:constraints'
-    """
+def filterEncoding(encodedPref):
     i = i_s = encodedPref.find('(:constraints')
     with_constraints = True
     
@@ -33,33 +30,6 @@ def newfilterEncoding(encodedPref):
         
     return filteredEncoding
 
-def filterEncoding(encodedPref):
-    i = i_s = encodedPref.find('(:constraints')
-    with_constraints = True
-    
-    if i_s == -1:
-        i = i_s = encodedPref.find('(')
-        with_constraints = False
-        
-    if i_s == -1:
-        raise Exception("tools:updateProblem: Can't find encoded contraints in text...")
-    
-    n=1
-    while True:
-        i+=1
-        if encodedPref[i]=='(':
-            n+=1
-        if encodedPref[i]==')':
-            n-=1
-        if n==0:
-            break
-        
-    if not with_constraints:
-        filteredEncoding = '\n(:constraints ' + encodedPref[i_s:i+1] + ')\n'
-    else:
-        filteredEncoding = '\n' + encodedPref[i_s:i+1] + '\n'
-    return filteredEncoding
-
 def initialFixes(filteredEncoding):
     i = filteredEncoding.find('at end')
     if i!=-1:
@@ -67,26 +37,7 @@ def initialFixes(filteredEncoding):
         print('Fixed at end -> at-end')
     return filteredEncoding
 
-def updateProblem(problem, filteredEncoding):
-    updatedProblem = None 
-    
-    # Find position to insert 
-    ## find metric
-    i_metric = problem.find("(:metric")
-    if i_metric!=-1:
-        i_insert = i_metric
-    ## Else, insert before last parenthesis
-    else:
-        i_insert=len(problem)-1
-        while problem[i_insert]!=')':
-            i_insert-=1
-    
-    # Insert constraints into problem
-    updatedProblem = problem[:i_insert] + filteredEncoding + problem[i_insert:]
-    
-    return updatedProblem
-
-def newUpdateProblem(problem, encodings):
+def updateProblem(problem, encodings):
     updatedProblem = None 
     
     # Find position to insert 
@@ -108,7 +59,6 @@ def newUpdateProblem(problem, encodings):
 
 def parse_pddl3(domain_path, problem_path):
     return ntcore_parsing_ext.parse_pddl3(domain_path, problem_path)
-
 def parse_pddl3_str(domain, updatedProblem):
     """
     Adapted from NTCORE parsing_extensions to take string as input instead of file_paths
