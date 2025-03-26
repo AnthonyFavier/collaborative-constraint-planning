@@ -244,7 +244,7 @@ def planWithConstraints():
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
         
     # Plan
-    feedback, plan = planner(problem_name, plan_mode=g_planning_mode)
+    feedback, plan = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True)
     success = feedback=='success'
     if success:
         mprint("\nSuccessful planning")
