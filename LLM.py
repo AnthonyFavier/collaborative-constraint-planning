@@ -1,8 +1,15 @@
 import time
 from defs import *
+import os                                                                                                                                                                                                          
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+try:
+    load_dotenv(find_dotenv())
+except:
+    load_dotenv(Path("my/path/.env"))
 import anthropic
 client = anthropic.Anthropic(
-    api_key=None
+    api_key=os.getenv("ANTHROPIC_API_KEY")
 )
 MAX_TOKEN=5000
 TEMPERATURE=0.0

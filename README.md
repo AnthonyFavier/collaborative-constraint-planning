@@ -66,6 +66,8 @@ sudo apt-source env_NTCORE/bin/activate
 sudo apt-get install python3.10-tk
 pip install customtkinter
 pip install pillow
+pip install python-dotenv
+
 ```
 
 ## Run CAI
