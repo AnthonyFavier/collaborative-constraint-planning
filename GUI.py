@@ -422,6 +422,7 @@ class PlanFrame(customtkinter.CTkFrame):
     def updateSimButton(self):
         plan = self.textbox.get("0.0", "end")
         updatePDSimPlan(plan)
+        mprint("\nSim updated.")
         
         
     def showText(self, txt):
