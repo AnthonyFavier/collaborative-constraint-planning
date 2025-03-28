@@ -12,7 +12,7 @@ from UserOption import UserOption
 CM = Constraints.ConstraintManager()
 
 
-def addConstraintsAsk():
+def askConstraintsToAdd():
     nl_constraints = []
     while True:
         if not len(nl_constraints):
@@ -26,36 +26,54 @@ def addConstraintsAsk():
         else:
             nl_constraints.append(t)
             
-    addConstraints(nl_constraints)
+    return nl_constraints
 def addConstraints(nl_constraints):
     new_r = []
     mprint(color.BOLD + "\nDecomposing constraints" + color.END)
     for nl_constraint in nl_constraints:
-        r = CM.createRaw(nl_constraint)
-        new_r.append(r)
-        
-        mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
-        result = LLM.decompose(g_domain, g_problem, nl_constraint)
-        result = LLM.removeFormating(result)
-        
-        # for c in constraints:
-        for c in result.splitlines():
-            CM.createDecomposed(r, c)
-        
-        mprint(r.strChildren())
-        
-        # input("is ok?")
-        
-        # TODO: Ask if decomposition ok?
-        # otherwise retry
-        # Different options: retry, with comment?, delete this constraint, replace this constraint
-    
+        encodingOK = False
+        i=0
+        while not encodingOK:
+            
+            r = CM.createRaw(nl_constraint)
+            new_r.append(r)
+            
+            if i==0:
+                mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
+                result = LLM.decompose(g_domain, g_problem, nl_constraint)
+            else:
+                mprint(color.BOLD + "\nRe-Decomposing...\n" + str(r) + color.END)
+                result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
+                
+            result = LLM.removeFormating(result)
+            
+            # for c in constraints:
+            for c in result.splitlines():
+                CM.createDecomposed(r, c)
+            
+            mprint(r.strChildren())
+            
+            # mprint("Is ok?")
+            answer = input("Is ok?")
+            encodingOK = answer==''
+
+            if not encodingOK:
+                id = r.symbol[1]
+                new_r.remove(r)
+                deleteConstraints([r.symbol])
+                del r
+                Constraints.Constraint._ID = int(id)
+                feedback = answer
+                
+            i+=1
+            
     # When all ok, encode the decomposed of all new r
     
     # Encoding
     mprint(color.BOLD + "\nEncoding..." + color.END)
     r_to_delete = []
     for r in new_r:
+        mprint(color.BOLD + str(r) + color.END)
         for c in r.children:
             encodingOK = False
             MAX_ENCODING_TRY = 5
@@ -296,7 +314,8 @@ def CAI():
         user_input = UO.ask()
         
         if "ADD"==user_input:
-            addConstraintsAsk()
+            constraints = askConstraintsToAdd()
+            addConstraints(constraints)
         elif "DEL"==user_input:
             deleteConstraintsAsk()
         elif "ACT"==user_input:
