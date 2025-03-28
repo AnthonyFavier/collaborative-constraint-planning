@@ -78,7 +78,7 @@ g_fluent_names = []
 def set_fluent_names(names):
     global g_fluent_names
     g_fluent_names = names
-    
+
 g_objects = []
 def set_objects(objects):
     global g_objects
@@ -127,19 +127,21 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     L = L.split()
 
 
+    # Check if no unknown keyword
     for i in range(len(L)):
         if L[i]=='(':
             if L[i+1] not in authorized_keywords:
                 if L[i+1][0]=='?':
                     continue
                 
-                return False, f"{L[i+1]} isn't a known PDDL keyword or part of the domain description. Re-encode correctly."
+                return False, f"{L[i+1]} isn't a known PDDL keyword or part of the domain description. Try again carefully to translate correctly."
             
     # Parsing test
     try:
         parse_pddl3_str(domain, updatedProblem)
     except:
-        return False, "Unable to parse the updated problem with the encoding. The encoding is probably erroneous, try again."
-            
+        return False, "There is a syntax error. Try again carefully to translate correctly."
+    
     # encodingOk, error_description
     return True, ""
+
