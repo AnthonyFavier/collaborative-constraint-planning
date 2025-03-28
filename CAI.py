@@ -53,11 +53,12 @@ def addConstraints(nl_constraints):
             
             mprint(r.strChildren())
             
-            # mprint("Is ok?")
-            answer = input("Is ok?")
+            answer = input("Press Enter to validate the decomposition or type a comment to consider when decomposing again:")
             encodingOK = answer==''
 
-            if not encodingOK:
+            if encodingOK:
+                LLM.clear_message_history()
+            else:
                 id = r.symbol[1]
                 new_r.remove(r)
                 deleteConstraints([r.symbol])
