@@ -27,6 +27,7 @@ def call_llm(systemMsg, messages):
         try:
             message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
             
+            # print('[User]\n', messages[-1]["content"], "\n[END User]")
             # print('[LLM]\n', message.content[0].text, "\n[END LLM]")
             
             return message
@@ -133,6 +134,8 @@ def encodePrefs(domain, problem, constraint):
             {"role": "user", "content": domain + '\n' + problem},   
             {"role": "assistant", "content": "Got it now share with me the constraint to translate."},
             {"role": "user", "content": constraint},
+            # {"role": "assistant", "content": "When translating, only when possible and relevant, I should forall instead of enumerating all objects."},
+            # {"role": "assistant", "content": "I will now carefully translate the given constraint."},
         ]
     
     # Call LLM
@@ -146,7 +149,7 @@ def encodePrefs(domain, problem, constraint):
 def reencodePrefs(feedback):
     global g_message_history
     messages=[
-            {"role": "user", "content": "Your last translation is incorrect. Carefully generate a new correct translation considering the following failure feedback: "+feedback},
+            {"role": "user", "content": feedback},
         ]
     
      # Call LLM
