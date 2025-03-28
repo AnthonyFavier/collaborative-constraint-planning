@@ -24,6 +24,15 @@ class RawConstraint(Constraint):
             if not c._activated:
                 return False
         return True
+    
+    def strChildren(self):
+        txt = ""
+        for c in self.children:
+            txt += "\t" + str(c) + '\n'
+            if c.encoding!='':
+                print("\t\t" + c.encoding)
+                txt += "\t\t" + c.encoding
+        return txt
         
     def strWithChildren(self):
         txt = str(self)+'\n'

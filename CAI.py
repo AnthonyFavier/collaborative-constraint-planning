@@ -29,11 +29,12 @@ def addConstraintsAsk():
     addConstraints(nl_constraints)
 def addConstraints(nl_constraints):
     new_r = []
+    mprint(color.BOLD + "\nDecomposing constraints" + color.END)
     for nl_constraint in nl_constraints:
         r = CM.createRaw(nl_constraint)
         new_r.append(r)
         
-        mprint(color.BOLD + "\nDecomposing constraints..." + color.END)
+        mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
         result = LLM.decompose(g_domain, g_problem, nl_constraint)
         result = LLM.removeFormating(result)
         
@@ -41,7 +42,7 @@ def addConstraints(nl_constraints):
         for c in result.splitlines():
             CM.createDecomposed(r, c)
         
-        mprint(r.strWithChildren())
+        mprint(r.strChildren())
         
         # input("is ok?")
         
@@ -66,7 +67,7 @@ def addConstraints(nl_constraints):
                     mprint(f"\tencoding {c.symbol}...")
                     encodedPref = LLM.encodePrefs(g_domain, g_problem, c.nl_constraint)
                 else: # Re-encoding
-                    mprint(f"\tre-encoding {c.symbol}...")
+                    mprint(f"\tre-encoding {c.symbol} (try {i+1}/{MAX_ENCODING_TRY}) ...")
                     encodedPref = LLM.reencodePrefs(feedback)
                 filteredEncoding = tools.filterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
@@ -87,6 +88,7 @@ def addConstraints(nl_constraints):
             if not encodingOK:
                 mprint(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
                 r_to_delete.append(r.symbol)
+                break
     
     if len(r_to_delete):
         deleteConstraints(r_to_delete)
