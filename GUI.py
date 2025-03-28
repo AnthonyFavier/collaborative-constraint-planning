@@ -7,7 +7,7 @@ from updatePDSimPlan import main as updatePDSimPlan
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
-class ConstraintsFrame(customtkinter.CTkFrame):
+class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     def __init__(self, master):
         super().__init__(master)
         
@@ -187,7 +187,7 @@ class ConstraintsFrame(customtkinter.CTkFrame):
         for k,x in self.encoding_labels.items():
             x.grid_remove()
         self.show_encodings = False
-        
+    
 class ButtonsFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
