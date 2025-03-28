@@ -335,6 +335,13 @@ def init(problem_name, planning_mode):
 
     # Set extracted fluent names (used during verification)
     tools.set_fluent_names([f.name for f in parsed.problem.fluents])
+    objects = {}
+    for o in parsed.problem.all_objects:
+        if o.type.name in objects:
+            objects[o.type.name].append(o.name)
+        else:
+            objects[o.type.name] = [o.name]
+    tools.set_objects(objects)
     
     # Open initial problem
     with open(DOMAIN_PATH, "r") as f:

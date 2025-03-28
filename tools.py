@@ -79,6 +79,11 @@ def set_fluent_names(names):
     global g_fluent_names
     g_fluent_names = names
     
+g_objects = []
+def set_objects(objects):
+    global g_objects
+    g_objects = objects
+
 def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
     Should look for action_name, specific unsupported constraints (e.g. imply)
