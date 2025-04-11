@@ -28,7 +28,7 @@ def main(problem_name, planning_mode, timeout):
     
     app = GUI.App()
     setPromptFunction(app.display_frame.prompt)
-    CAI.init(problem_name, planning_mode)
+    CAI.init(problem_name, planning_mode, timeout)
     app.mainloop()
 if __name__ == '__main__':
     # sys.argv.append('zeno5_n')
