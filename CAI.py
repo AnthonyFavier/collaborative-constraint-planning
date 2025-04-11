@@ -265,7 +265,7 @@ def planWithConstraints():
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
         
     # Plan
-    feedback, plan = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True)
+    feedback, plan = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True, timeout=g_timeout)
     success = feedback=='success'
     if success:
         mprint("\nSuccessful planning")
@@ -333,8 +333,8 @@ def CAI():
             else:
                 mprint("No current valid plan")
 
-def init(problem_name, planning_mode):
-    global g_problem_name, g_domain, g_problem, g_planning_mode
+def init(problem_name, planning_mode, timeout):
+    global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
     global DOMAIN_PATH, PROBLEM_PATH
     
     if not problem_name in PROBLEMS:
@@ -344,9 +344,11 @@ def init(problem_name, planning_mode):
     g_problem_name = problem_name
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
     g_planning_mode = planning_mode
+    g_timeout = float(timeout) if timeout!=None else None
+    timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
     
     # Show selected problem
-    mprint(f"Planning mode: {planning_mode}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+    mprint(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
     
     # Try parsing the initial problem
     try:
@@ -373,11 +375,13 @@ def init(problem_name, planning_mode):
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
-@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, default=True, help="Set the planning mode to 'Default' (default)")
+@click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
+@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
 @click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
-def main(problem_name, planning_mode):
-    init(problem_name, planning_mode)
+@click.option('-t', '--timeout', 'timeout', default=10.0, help="Timeout for planning")
+def main(problem_name, planning_mode, timeout):
+    init(problem_name, planning_mode, timeout)
     CAI()
 if __name__ == '__main__':
     main()

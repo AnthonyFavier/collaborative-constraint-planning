@@ -6,10 +6,12 @@ import sys
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
-@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, default=True, help="Set the planning mode to 'Default' (default)")
+@click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
+@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
 @click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
-def main(problem_name, planning_mode):
+@click.option('-t', '--timeout', 'timeout', default=10.0, help="Timeout for planning")
+def main(problem_name, planning_mode, timeout):
     
     # r = CAI.CM.createRaw("never use plane1")
     # d = CAI.CM.createDecomposed(r, "Person1, person2, person3, and person4 should never be in plane1.")

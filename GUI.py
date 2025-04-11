@@ -332,7 +332,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changePlanMode(self):
         mprint(' ')
         mprint(f"Current planning mode: {CAI.g_planning_mode}")
-        mprint(f"Select a planning mode:\n\t1 - {PlanMode.DEFAULT}\n\t2 - {PlanMode.OPTIMAL}\n\t3 - {PlanMode.SATISFICING}")
+        mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.DEFAULT}\n\t3 - {PlanMode.OPTIMAL}\n\t4 - {PlanMode.SATISFICING}")
         
         self.master.display_frame.entry.configure(state="normal")
         self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
@@ -345,12 +345,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.master.display_frame.prompt("> " + c )
             
             # Check if correct
-            if c in ['1', '2', '3']:
+            if c in ['1', '2', '3', '4']:
                 if c=='1':
-                    CAI.g_planning_mode=PlanMode.DEFAULT
+                    CAI.g_planning_mode=PlanMode.ANYTIME
                 if c=='2':
-                    CAI.g_planning_mode=PlanMode.OPTIMAL
+                    CAI.g_planning_mode=PlanMode.DEFAULT
                 if c=='3':
+                    CAI.g_planning_mode=PlanMode.OPTIMAL
+                if c=='4':
                     CAI.g_planning_mode=PlanMode.SATISFICING
                 
                 mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")

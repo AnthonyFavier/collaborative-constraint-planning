@@ -44,6 +44,7 @@ class PlanFiles:
 class PlanMode:
     OPTIMAL = 'opt-hrmax'
     SATISFICING = 'sat-hmrp'
+    ANYTIME = 'anytime'
     DEFAULT = 'def'
 
 class NtcoreStrategy:
