@@ -3,6 +3,20 @@ from defs import *
 import CAI
 from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
+import time
+import threading
+
+# Custom thread creation with return value. Used for timers
+class ThreadWithReturnValue(threading.Thread):
+    def __init__(self, group=None, target=None, name=None, args=(), kwargs={}, Verbose=None):
+        threading.Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+    def join(self, *args):
+        threading.Thread.join(self, *args)
+        return self._return
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -98,7 +112,6 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         
         self.updateLabels()
             
-    
     def updateLabels(self):
         activated_str = ''
         deactivated_str = '*** '
@@ -210,7 +223,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", command=self.activate)
         self.buttons["Activate"].grid(row=2, column=0, padx=10, pady=10, sticky="ew")
         
-        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.plan)
+        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.planT)
         self.buttons["Plan"].grid(row=4, column=0, padx=10, pady=10, sticky="ew")
         
         self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", command=self.changePlanMode)
@@ -324,9 +337,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.constraints_frame.updateLabels()
         self.confirm_function = None
         
+    def planT(self):
+        threading.Thread(target=self.plan).start()
     def plan(self):
-        txt = CAI.planWithConstraints()
-        # Update planframe with txt
+        txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
         self.master.plan_frame.showText(txt)
         
     def changePlanMode(self):
@@ -388,13 +402,36 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry_light = ('#F9F9FA', '#585a5c')
         # self.entry.configure(fg_color=self.entry_light)
         
+        self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s")
+        self.timer_label.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.start_time = None
+        self._timer_running = False
         
+    def _wrapperTimer(self, function, *args, **kwargs):
+        r = function(*args, **kwargs)
+        self._timer_running = False
+        return r
+        
+    def update_timer(self):
+        if self._timer_running:
+            elapsed = time.time() - self.start_time
+            self.timer_label.configure(text=f"Elapsed Time: {elapsed:.1f} s")
+            self.master.after(100, self.update_timer)
+            
+    def startWithTimer(self, function, *args, **kwargs):
+        self.start_time = time.time()
+        self._timer_running = True
+        t = ThreadWithReturnValue(target=self._wrapperTimer, args=(function,)+args, kwargs=kwargs)
+        t.start()
+        self.update_timer()
+        return t.join()
+            
     def prompt(self, text):
         self.textbox.configure(state='normal')
         self.textbox.insert(customtkinter.END, '\n'+text)
         self.textbox.see('end')
         self.textbox.configure(state='disabled')
-        self.master.update()
+        self.textbox.focus()
         
     def validateEntry(self, event):
         if self.entry.cget("state") == 'disabled':
@@ -425,7 +462,6 @@ class PlanFrame(customtkinter.CTkFrame):
         plan = self.textbox.get("0.0", "end")
         updatePDSimPlan(plan)
         mprint("\nSim updated.")
-        
         
     def showText(self, txt):
         self.textbox.configure(state='normal')
