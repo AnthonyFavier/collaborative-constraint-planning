@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
 import time
 import threading
+from my_scrollable_frame import MyScrollableFrame
 
 # Custom thread creation with return value. Used for timers
 class ThreadWithReturnValue(threading.Thread):
@@ -21,9 +22,9 @@ class ThreadWithReturnValue(threading.Thread):
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
-class ConstraintsFrame(customtkinter.CTkScrollableFrame):
+class ConstraintsFrame(MyScrollableFrame):
     def __init__(self, master):
-        super().__init__(master)
+        super().__init__(master, orientation="both")
         
         self.checkboxes = {}
         self.constraint_labels = {}
