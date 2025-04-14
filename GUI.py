@@ -268,6 +268,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             # repeat
             self.master.display_frame.prompt("\nPress Enter to validate or type another constraint:")
             self.master.display_frame.entry_function = self.add2
+            self.master.display_frame.entry.focus()
         
         else: # if no constraint entered
             # first time: abort
