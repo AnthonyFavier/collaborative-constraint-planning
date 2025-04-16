@@ -6,6 +6,14 @@ from updatePDSimPlan import main as updatePDSimPlan
 import time
 import threading
 from my_scrollable_frame import MyScrollableFrame
+import ctypes
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+except:
+    pass
+
+customtkinter.set_window_scaling(1.5)   # scales the window content (default is 1.0)
+customtkinter.set_widget_scaling(1.2)   # scales widgets/fonts (default is 1.0)
 
 # Custom thread creation with return value. Used for timers
 class ThreadWithReturnValue(threading.Thread):
@@ -63,7 +71,7 @@ class ConstraintsFrame(MyScrollableFrame):
         i_row = 0
         
         if CAI.CM.constraints == {}:
-            label = customtkinter.CTkLabel(self, text="No constraints")
+            label = customtkinter.CTkLabel(self, text="No constraints", font = App.font)
             label.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
             i_row += 1
         else:
@@ -78,7 +86,7 @@ class ConstraintsFrame(MyScrollableFrame):
                 self.checkboxes[r.symbol] = customtkinter.CTkCheckBox(framecb, text='', width=0, command=self.checkboxHandler)
                 self.checkboxes[r.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
                 
-                self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}")
+                self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}", font = App.font)
                 self.constraint_labels[r.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
                 i_row+=1
@@ -94,10 +102,10 @@ class ConstraintsFrame(MyScrollableFrame):
                     self.checkboxes[c.symbol] = customtkinter.CTkCheckBox(framecb, text="", width=0, command=self.checkboxHandler)
                     self.checkboxes[c.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
                 
-                    self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}")
+                    self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}", font = App.font)
                     self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
-                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}")
+                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = App.font)
                     self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
                     
                     i_row+=1
@@ -444,7 +452,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry_light = ('#F9F9FA', '#585a5c')
         # self.entry.configure(fg_color=self.entry_light)
         
-        self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s")
+        self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
         self.timer_label.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
         self.start_time = None
         self._timer_running = False
@@ -488,7 +496,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
-        self.title = customtkinter.CTkLabel(self, text="Current Plan", fg_color="gray30", corner_radius=6)
+        self.title = customtkinter.CTkLabel(self, text="Current Plan", fg_color="gray30", corner_radius=6,font=App.font)
         self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='char')
@@ -512,11 +520,13 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.configure(state='disabled')
 
 class App(customtkinter.CTk):
+    font = ("Helvetica", 16, "bold")
+    
     def __init__(self):
         super().__init__()
 
         self.title("CAI")
-        self.geometry("1700x956")
+        self.geometry("3400x1912")
         
         # self.iconbitmap("rsc/icon.ico")
         im = Image.open('rsc/icon.png')
