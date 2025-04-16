@@ -187,6 +187,12 @@ class ConstraintsFrame(MyScrollableFrame):
                 cb.select()
             else:
                 cb.deselect()
+    def selectAll(self):
+        for symbol,cb in self.checkboxes.items():
+            cb.select()
+    def unselectAll(self):
+        for symbol,cb in self.checkboxes.items():
+            cb.deselect()
                     
     def toggleEncodings(self):
         if self.show_encodings:
@@ -295,6 +301,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 mprint("\nConstraints added")
         
     def delete(self):
+        self.master.constraints_frame.unselectAll()
         self.master.constraints_frame.showCheckboxes()
         self.hideButtons()
         self.confirm_button.configure(text="Delete")
