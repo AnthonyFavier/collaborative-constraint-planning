@@ -155,5 +155,62 @@ def reencodePrefs(feedback):
     
     return message.content[0].text
 
+### HDDL:
+with open("./HDDL_method_description.txt", "r") as f:
+    hddl_method_description = f.read()
+
+g_message_history = []
+def clear_message_history():
+    global g_message_history
+    g_message_history = []
+
+def encodePrefs_hddl(domain, problem, preferences):
+    global g_message_history
+    
+    # Setup request
+    systemMsg="You are a HDDL planning expert. Your purpose is to translate natural language human preferences (preferred strategy) in how to perform a task into a new HDDL method to be used in a classical HDDL planner. Respond to the requested translations only with consise and accurate HDDL language."
+    messages=[
+            {"role": "user", "content": "I will share with you a text describing how HDDL method works. After I will share a HDDL domain followed by a corresponding HDDL problem. After that I will start to share human preferred strategy to translate."},
+            {"role": "user", "content": hddl_method_description},
+            
+        #     {"role": "user", "content": "When translating natural language inputs into PDDL3.0 constraints, only use the following keywords: 'and','or','not','=','<','<=','>','>=','+','-','*','/','forall','exists','always','sometime','within','at-most-once','sometime-after','sometime-before','always-within','holding-during','hold-after','at-end'. After, I will share a PDDL domain followed by a corresponding PDDL problem. After that, I will share human preferences to translate."},
+        
+            {"role": "assistant", "content": "Got it now share with me the HDDL domain and problem."},
+            {"role": "user", "content": domain + '\n' + problem},   
+            {"role": "assistant", "content": "Got it now share with me the human preferences to translate. Note that if the preferred strategy is similar to an existing method, I will return the name of the method."},
+            {"role": "user", "content": preferences},
+            # {"role": "user", "content":  "First, reformule and rephrase the preferences in two different manners to better understand it and remove ambiguities. After, give me the encoding for the given preferences."},
+        ]
+    
+    # Call LLM
+    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=systemMsg, messages= messages)
+    
+    # Update history with request and LLM answer
+    g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
+    
+    print('LLM:', message.content[0].text, "[END LLM]")
+    
+    return message.content[0].text
+
+def reencodePrefs_hddl(feedback):
+    global g_message_history
+    
+    # Setup request
+    system="You are a HDDL planning expert. Your purpose is to translate natural language human preferences into HDDL method to be used in a classical HDDL planner. Respond to the requested translations only with consise and accurate HDDL language."
+    messages=[
+            {"role": "user", "content": "Your last translation is incorrect. Carefully generate a new correct translation considering the following feedback: "+feedback},
+        ]
+    
+    # Call LLM
+    message = client.messages.create( model=MODEL, max_tokens=MAX_TOKEN, temperature=TEMPERATURE, system=system, messages=g_message_history + messages)
+    
+    # Update history with request and LLM answer
+    g_message_history += messages + [{"role": "assistant", "content": message.content[0].text},]
+    print('LLM:', message.content[0].text, "[END LLM]")
+    
+    return message.content[0].text
+
+
 if __name__=='__main__':
     pass
+
