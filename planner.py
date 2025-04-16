@@ -26,6 +26,8 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     elif PlanMode.SATISFICING==plan_mode:
         mode = ['-planner', f'{PlanMode.SATISFICING}']
     elif PlanMode.ANYTIME==plan_mode:
+        mode = ['-anytime']
+    elif PlanMode.ANYTIMEAUTO==plan_mode:
         mode = ['-anytime', '-autoanytime']
     elif PlanMode.DEFAULT==plan_mode:
         mode = []
@@ -72,6 +74,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
 @click.option('-c', '--compiled', 'files', flag_value=PlanFiles.COMPILED, help="Use the last compiled problem files. PROBLEM_NAME not used")
 @click.option('-p', '--path', 'files', flag_value=PlanFiles.PATH, help="Use the domain and problem paths given. PROBLEM_NAME not used")
 @click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
+@click.option('-aa', '--anytimeauto', 'planning_mode', flag_value=PlanMode.ANYTIMEAUTO, help="Set the planning mode to 'AnytimeAuto'")
 @click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
 @click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")

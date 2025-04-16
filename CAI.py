@@ -275,17 +275,21 @@ def planWithConstraints():
         return "Failed to plan:\n" + str(feedback)
 def askChangePlanMode():
     print(f"Current planning mode: {g_planning_mode}")
-    print(f"Select a planning mode:\n\t1 - {PlanMode.DEFAULT}\n\t2 - {PlanMode.OPTIMAL}\n\t3 - {PlanMode.SATISFICING}")
+    mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
     c = input("> ")
     if c!='':
         # Check if correct
-        if c in ['1', '2', '3']:
+        if c in ['1', '2', '3', '4', '5']:
             if c=='1':
-                g_planning_mode=PlanMode.DEFAULT
+                CAI.g_planning_mode=PlanMode.ANYTIME
             if c=='2':
-                g_planning_mode=PlanMode.OPTIMAL
+                CAI.g_planning_mode=PlanMode.ANYTIMEAUTO
             if c=='3':
-                g_planning_mode=PlanMode.SATISFICING
+                CAI.g_planning_mode=PlanMode.DEFAULT
+            if c=='4':
+                CAI.g_planning_mode=PlanMode.OPTIMAL
+            if c=='5':
+                CAI.g_planning_mode=PlanMode.SATISFICING
             
             print(f"\nPlanning mode set to: {g_planning_mode}")
         else:
