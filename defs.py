@@ -19,7 +19,10 @@ PROBLEMS = {
     "rover4":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile4"),
     "rover10":      ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile10"),
     "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                              "ENHSP-Public/handcraft/pfile1.pddl"),
+    # HDDL:
+    "zeno5_hddl":   ("HDDL_env/zeno_domain.hddl",       "HDDL_env/zeno_problem_5.hddl")
 }
+
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
 
 class color:
@@ -37,6 +40,7 @@ class color:
 COMPILED_DOMAIN_PATH = "tmp/compiled_dom.pddl"
 COMPILED_PROBLEM_PATH = "tmp/compiled_prob.pddl"
 UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
+UPDATED_HDDL_DOMAIN_PATH = "tmp/updatedDomain.hddl"
 
 class PlanFiles:
     ORIGINAL = 'original'
