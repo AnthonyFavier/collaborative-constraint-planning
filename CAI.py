@@ -53,6 +53,8 @@ def addConstraints(nl_constraints):
             
             mprint(r.strChildren())
             
+            mprint("* Check Terminal *")
+            
             answer = input("\nPress Enter to validate the decomposition or type a comment to consider when decomposing again: ")
             encodingOK = answer==''
 
