@@ -53,7 +53,7 @@ def addConstraints(nl_constraints):
             
             mprint(r.strChildren())
             
-            answer = input("Press Enter to validate the decomposition or type a comment to consider when decomposing again:")
+            answer = input("\nPress Enter to validate the decomposition or type a comment to consider when decomposing again: ")
             encodingOK = answer==''
 
             if encodingOK:
