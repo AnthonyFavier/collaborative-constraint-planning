@@ -341,7 +341,7 @@ def CAI():
 
 def init(problem_name, planning_mode, timeout):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
-    global DOMAIN_PATH, PROBLEM_PATH
+    global DOMAIN_PATH, PROBLEM_PATH 
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
