@@ -12,8 +12,8 @@ try:
 except:
     pass
 
-customtkinter.set_window_scaling(1.5)   # scales the window content (default is 1.0)
-customtkinter.set_widget_scaling(1.2)   # scales widgets/fonts (default is 1.0)
+customtkinter.set_window_scaling(2)   # scales the window content (default is 1.0)
+customtkinter.set_widget_scaling(2.5)   # scales widgets/fonts (default is 1.0)
 
 # Custom thread creation with return value. Used for timers
 class ThreadWithReturnValue(threading.Thread):
