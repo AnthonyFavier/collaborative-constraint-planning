@@ -54,11 +54,11 @@
 		(at a1 c1)
 		(at a2 c3)
 		(at p1 c1)
-		(at p2 c1)
+		(at p2 c3)
 		(at p3 c2)
 		(at p4 c2)
-		(fuel-level a1 f4)
-		(fuel-level a2 f5)
+		(fuel-level a1 f5)
+		(fuel-level a2 f1)
 	)
 	(:goal
 		(and

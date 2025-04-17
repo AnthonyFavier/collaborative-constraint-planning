@@ -123,8 +123,26 @@
 		)
 	)
 
-	
-(:action board
+	(:method m-transport-person-plane-elsewhere
+    :parameters (?p - Person ?a - Aircraft ?from - City ?to - City ?plane-city - City)
+    :task (transport-person ?p ?to)
+    :precondition (and
+        (at ?p ?from)
+        (at ?a ?plane-city)
+        (different ?plane-city ?from)
+    )
+    :subtasks (and
+        (task0 (upper-move-aircraft ?a ?from))
+        (task1 (board ?p ?a ?from))
+        (task2 (upper-move-aircraft ?a ?to))
+        (task3 (debark ?p ?a ?to))
+    )
+    :ordering (and
+        (< task0 task1)
+        (< task1 task2)
+        (< task2 task3)
+    )
+)(:action board
 		:parameters (?p - Person ?a - Aircraft ?c - City)
 		:precondition
 			(and
