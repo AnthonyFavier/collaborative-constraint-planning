@@ -2,7 +2,8 @@ import subprocess
 import os
 import anthropic
 from defs import *
-import tools
+import tools_hddl
+import time
 
 client = anthropic.Anthropic(
     api_key=None
@@ -67,66 +68,68 @@ def reencodePrefs(feedback):
     return message.content[0].text
 
 
+if __name__ == '__main__':
+    DOMAIN_PATH = './HDDL_env/zeno_domain.hddl'
+    PROBLEM_PATH = "./HDDL_env/zeno_problem_5.hddl"
 
-DOMAIN_PATH = './HDDL/zenotravel/domain.hddl'
-PROBLEM_PATH = "./HDDL/zenotravel/p03.hddl"
+    # DOMAIN_PATH, PROBLEM_PATH = "NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl","NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"
+    start_time = time.time()
+    output = subprocess.run(["./lilotane",'-v=0',DOMAIN_PATH, PROBLEM_PATH], capture_output=True, text=True, check=True)
+    end_time = time.time()
+    output_str = output.stdout
+    # print(output_str)
+    start_marker = "==>"
+    end_marker = "<=="
 
-# DOMAIN_PATH, PROBLEM_PATH = "NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl","NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl"
-output = subprocess.run(["./lilotane",DOMAIN_PATH, PROBLEM_PATH], capture_output=True, text=True, check=True)
-output_str = output.stdout
-start_marker = "==>"
-end_marker = "<=="
+    start = output_str.find(start_marker)
+    end = output_str.find(end_marker, start)
 
-start = output_str.find(start_marker)
-end = output_str.find(end_marker, start)
+    if start != -1 and end != -1:
+        # Adjust to slice the content between markers
+        extracted = output_str[start + len(start_marker):end].strip()
+        extracted = tools_hddl.format_lilotane_plan(extracted)
+        print("Plan:\n", extracted)
+        print(f"\n Planning time: {end_time-start_time:.6f}(sec)")
+    else:
+        print("Markers not found!")
 
-if start != -1 and end != -1:
-    # Adjust to slice the content between markers
-    extracted = output_str[start + len(start_marker):end].strip()
-    print("Plan:\n", extracted)
-else:
-    print("Markers not found!")
+    with open(DOMAIN_PATH,'r') as f_d:
+        domain=f_d.read()
+    with open(PROBLEM_PATH,'r') as f_p:
+        problem = f_p.read()
 
-
-
-print("\n\n***output:", output_str)
-
-with open(DOMAIN_PATH,'r') as f_d:
-    domain=f_d.read()
-with open(PROBLEM_PATH,'r') as f_p:
-    problem = f_p.read()
-
-while True:
-    #  Input of user Strategy to test
-    print(color.BOLD + "Enter your preferences:\n" + color.END)
-    pref = input()
-    if pref=="exit":
-        exit()
-    keep_trying = True
-    count = 0
-    encodedPref = encodePrefs(domain, problem, pref)
-    feedback=input("Does the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
-    while keep_trying or count > 5:
-        count +=1
-        if feedback.lower() == 'yes':
-            # add method to domain and save it as an updated domain:
-            new_domain = tools.updateDomain(domain, encodedPref)
-            encodedOK, verify_result = tools.verifyMethodEncoding(new_domain, problem, encodedPref)
-            if encodedOK:
-                print("Plan result with new domain:\n", verify_result)
-                keep_trying = False
-                need_reencode = False
-            else:
-                re_encoded_choice = input("There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again? (answer 'no' if don't want, answer 'yes' with more feedback if needed)".format(verify_result))
-                if re_encoded_choice.lower() == "no":
-                    keep_trying=False
+    while True:
+        #  Input of user Strategy to test
+        print(color.BOLD + "Enter your preferences:\n" + color.END)
+        pref = input()
+        if pref=="exit":
+            exit()
+        keep_trying = True
+        count = 0
+        encodedPref = encodePrefs(domain, problem, pref)
+        feedback=input("Does the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+        while keep_trying or count > 5:
+            count +=1
+            if feedback.lower() == 'yes':
+                # add method to domain and save it as an updated domain:
+                new_domain = tools_hddl.updateDomain(domain, encodedPref)
+                encodedOK, verify_result = tools_hddl.verifyMethodEncoding(new_domain, problem, encodedPref)
+                if encodedOK:
+                    print("Plan result with new domain:\n", verify_result)
+                    keep_trying = False
+                    need_reencode = False
                 else:
-                    keep_trying = True
-                    feedback = "There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again?".format(verify_result) + re_encoded_choice
-        if keep_trying:
-            print("Re-encode the preference...")
-            encodedPref = reencodePrefs(feedback=feedback)
-            feedback=input("Does the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+                    re_encoded_choice = input("There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again? (answer 'no' if don't want, answer 'yes' with more feedback if needed)".format(verify_result))
+                    if re_encoded_choice.lower() == "no":
+                        keep_trying=False
+                    else:
+                        keep_trying = True
+                        feedback = "There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again?".format(verify_result) + re_encoded_choice
+            if keep_trying:
+                print("Re-encode the preference...")
+                encodedPref = reencodePrefs(feedback=feedback)
+                feedback=input("Does the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+        
 
 # Preference: To transport a person,  if the plane and the person are in different cities, then fly the plane to the person, pick them up, take them to the destination, and drop them off.
 

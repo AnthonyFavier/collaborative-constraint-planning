@@ -1,5 +1,6 @@
 ### HELPER FUNCTIONS FOR HDDL
 import subprocess
+import time
 def extract_blocks(text, keyword="(:method"):
     blocks = []
     start = 0
@@ -45,7 +46,7 @@ def updateDomain(domain_str, new_method):
     
     return updatedDomain
 
-def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="./"):
+def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="./", debug = False):
     '''
     inputs:
     - updated_domain: string of updated domain with new methods
@@ -57,7 +58,7 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
     - feedback_str: string of feedback if it is not valid, return plan if it is valid
     '''
     # save updated_domain to a hddl file
-    updated_domain_file_path = current_path + "temp_domain.hddl"
+    updated_domain_file_path = current_path + "new_domain.hddl"
     problem_file_path = current_path + "temp_problem.hddl"
     with open(updated_domain_file_path, "w") as updated_domain_file:
         updated_domain_file.write(updated_domain)
@@ -66,7 +67,10 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
     
     # run lilotane:
     try:
+        start_time = time.time()
         output = subprocess.run(["./lilotane",updated_domain_file_path, problem_file_path], capture_output=True, text=True, check=True)
+        end_time = time.time()
+        planning_time = end_time-start_time
         output_str = output.stdout
         start_marker = "==>"
         end_marker = "<=="
@@ -77,7 +81,11 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
         if start != -1 and end != -1:
             # Adjust to slice the content between markers
             extracted = output_str[start + len(start_marker):end].strip()
-            print("Plan:\n", extracted)
+            extracted = format_lilotane_plan(extracted)
+            if debug:
+                print("Plan:\n", extracted)
+                print(f"\n Planning time: {end_time-start_time:.6f}(sec)")
+            extracted = extracted + f"\n--- Planning time: {planning_time:.6f}"
             return True, extracted
         else:
             print("Plan not found!")
@@ -85,3 +93,55 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
     except subprocess.CalledProcessError as e:
         error = "Program failed with new method! New method added: \n{}".format(new_methods_str)+"\n--- Exit code: "+ str(e.returncode) + "\nError output:"+ str(e.stderr)
         return False, error
+    
+def format_lilotane_plan(raw_plan):
+    '''
+    '''
+    lines = raw_plan.strip().split('\n')
+    primitive_actions, task_methods = parse_plan(lines)
+    return format_output(primitive_actions, task_methods)
+
+def parse_plan(raw_plan_lines):
+    primitive_actions = []
+    task_method_mappings = []
+    reading_primitives = True
+
+    for line in raw_plan_lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        if stripped.startswith("root"):
+            reading_primitives = False
+            continue
+
+        if reading_primitives:
+            parts = stripped.split()
+            if parts and parts[0].isdigit():
+                action_id = parts[0]
+                action = " ".join(parts[1:])
+                primitive_actions.append((action_id,action))
+        else:
+            parts = stripped.split("->")
+            if len(parts) == 2:
+                task_id = parts[0].strip().split()[0]
+                task = ' '.join(parts[0].strip().split()[1:])
+                method = parts[1].strip()  # Only keep method name
+                task_method_mappings.append([task_id, task, method])
+
+    return primitive_actions, task_method_mappings
+
+def format_output(primitive_actions, task_method_mappings):
+    output = []
+    output.append("Step |   ID   | Primitive Action")
+    output.append("---------------------------------------")
+    for i, act in enumerate(primitive_actions, 1):
+        output.append(f"{i:^5} | {act[0]:^6} | {act[1]}")
+
+    output.append("\nStrategies used:")
+    output.append(f"Task ID |    Task     ->     Method")
+    output.append("---------------------------------------")
+    max_width = max(len(str(item[1])) for item in task_method_mappings)
+    for task_id, task, method in task_method_mappings:
+        output.append(f"{task_id:^7} | {task:<{max_width}} -> {method}")
+    return '\n'.join(output)
