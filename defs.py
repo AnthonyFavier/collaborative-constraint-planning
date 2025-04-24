@@ -44,11 +44,12 @@ class PlanFiles:
     PATH = 'path'
 
 class PlanMode:
-    OPTIMAL = 'opt-hrmax'
-    SATISFICING = 'sat-hmrp'
+    OPTIMAL = 'opt-hmax'
+    SATISFICING = 'sat-hmrph'
     ANYTIME = 'anytime'
     ANYTIMEAUTO = 'anytimeAuto'
     DEFAULT = 'def'
+    CUSTOM = 'custom'
 
 class NtcoreStrategy:
     NAIVE = 'naive'

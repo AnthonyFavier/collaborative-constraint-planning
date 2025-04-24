@@ -20,7 +20,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         DOMAIN_PATH, PROBLEM_PATH = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
     else:
         DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[problem_name]
-    
+        
     if PlanMode.OPTIMAL==plan_mode:
         mode = [f'-planner', f'{PlanMode.OPTIMAL}']
     elif PlanMode.SATISFICING==plan_mode:
@@ -32,10 +32,13 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     elif PlanMode.DEFAULT==plan_mode:
         mode = []
     else:
-        raise Exception("plannerAnytime: plan_mode unknown")
+        mode = ['-planner', plan_mode]
+        # raise Exception("planner: plan_mode unknown")
     
-    if timeout!=None:
+    if timeout!=None and timeout!='None':
         timeout = float(timeout)
+    else:
+        timeout = None
     timeout_str = '' if timeout==None else f', TO={timeout}s'
     
     mprint(color.BOLD + f"\nPlanning ({plan_mode}{timeout_str}) ..." + color.END)
@@ -46,7 +49,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
             stderr=subprocess.PIPE, 
             preexec_fn=os.setsid, 
             text=True
-    )
+        )
     try:
         proc.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -55,7 +58,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     stdout, stderr = proc.communicate()
     
     last_found_plan_i = stdout.rfind("Found Plan:")
-    last_found_plan_end_i = stdout.rfind("NEW COST")-1 # minus previous '\n'
+    last_found_plan_end_i = stdout.rfind("NEW COST") # minus previous '\n'
 
     if last_found_plan_i==-1:
         feedback = "Failed planning " + stderr
@@ -65,8 +68,8 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         plan = stdout[last_found_plan_i:last_found_plan_end_i]
         if not hide_plan:
             print(plan)
-        
-    return feedback, plan
+                
+    return feedback, plan, stdout
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
@@ -78,11 +81,12 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
 @click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
 @click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
+@click.option('--custommode', 'custom_planning_mode', default="", help="Custom planning mode")
 @click.option('--domain', 'domain_path', help="Path of domain")
 @click.option('--problem', 'problem_path', help="Path of problem")
 @click.option('--hide-plan', 'hide_plan', is_flag=True, default=False, help="Hide plan")
-@click.option('-t', '--timeout', 'timeout', default=10.0, help="Timeout for planning")
-def main(problem_name, files, planning_mode, domain_path, problem_path, hide_plan, timeout):    
+@click.option('-t', '--timeout', 'timeout', default=None, help="Timeout for planning")
+def main(problem_name, files, planning_mode, custom_planning_mode, domain_path, problem_path, hide_plan, timeout):    
     if files==PlanFiles.COMPILED:
         d, p = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
         problem_name = PlanFiles.COMPILED
@@ -95,6 +99,9 @@ def main(problem_name, files, planning_mode, domain_path, problem_path, hide_pla
         d, p = domain_path, problem_path
         PROBLEMS[PlanFiles.PATH] = (d, p)
         problem_name = PlanFiles.PATH
+        
+    if custom_planning_mode!="":
+        planning_mode = custom_planning_mode
     
     print(f"{planning_mode}\nProblem ({problem_name}):\n\t- {d}\n\t- {p}\n")
     planner(problem_name, plan_mode=planning_mode, hide_plan=hide_plan, timeout=timeout)
