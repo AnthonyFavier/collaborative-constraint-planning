@@ -43,8 +43,30 @@ class ConstraintsFrame(MyScrollableFrame):
         self.width_checkbox_frame = 31
         self.last_checkboxes_state = {}
         
+        self.bind('<Enter>', self._bound_to_mousewheel)
+        self.bind('<Leave>', self._unbound_to_mousewheel)
+        
         
         self.updateFrame()
+        
+    def _bound_to_mousewheel(self, event):
+        # print("_bound_to_mousewheel")
+        self.master.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.master.bind_all("<Button-4>", self._on_mousewheel)
+        self.master.bind_all("<Button-5>", self._on_mousewheel)
+
+    def _unbound_to_mousewheel(self, event):
+        # print("_unbound_to_mousewheel")
+        self.master.unbind_all("<MouseWheel>")
+        self.master.unbind_all("<Button-4>")
+        self.master.unbind_all("<Button-5>")
+
+    def _on_mousewheel(self, event):
+        # print("_on_mousewheel")
+        if event.num==4:
+            self.master.yview_scroll(int(-1*event.num), 'units')
+        elif event.num==5:
+            self.master.yview_scroll(int(event.num), 'units')
         
     def clear(self):
         # Delete current grid and widgets
