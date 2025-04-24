@@ -6,6 +6,7 @@ from updatePDSimPlan import main as updatePDSimPlan
 import time
 import threading
 from my_scrollable_frame import MyScrollableFrame
+import pyperclip
 import ctypes
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -226,36 +227,36 @@ class ButtonsFrame(customtkinter.CTkFrame):
         i_row = 0
         self.confirm_function = None
         self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
-        self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10)
         self.confirm_button.grid_remove()
         
         self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add)
-        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10)
         self.add_nl_constraints = []
         i_row+=1
         
         self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete)
-        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
         self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", command=self.activate)
-        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.planT)
-        self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
         self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", command=self.changePlanMode)
-        self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
         self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", command=self.changeTimeout)
-        self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle encodings", command=self.master.constraints_frame.toggleEncodings)
-        self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
+        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", command=self.master.constraints_frame.toggleEncodings)
+        self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
     
     def confirm(self):
@@ -366,12 +367,15 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_function = None
         
     def planT(self):
+        self.hideButtons()
         threading.Thread(target=self.plan).start()
     def plan(self):
         txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
         self.master.plan_frame.showText(txt)
         
     def changePlanMode(self):
+        self.hideButtons()
+        
         mprint(' ')
         mprint(f"Current planning mode: {CAI.g_planning_mode}")
         mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
@@ -400,6 +404,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
                     CAI.g_planning_mode=PlanMode.SATISFICING
                 
                 mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")
+                
+                if CAI.g_timeout==None and CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+                    mprint('WARNING: Timeout disabled with Anytime planning mode!')
             else:
                 mprint("Incorrect input")
                 mprint("Aborted\n")
@@ -409,8 +416,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.display_frame.entry_function = None
         self.master.display_frame.entry.configure(state="disabled")
         self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
+        self.showButtons()
     
     def changeTimeout(self):
+        self.hideButtons()
         mprint(' ')
         mprint(f"Current Timeout: {CAI.g_timeout}")
         mprint("Enter a new timeout ('Empty'=disables timeout): ")
@@ -422,13 +431,17 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changeTimeout2(self):
         c = self.master.display_frame.entry_text
         try:
-            t = int(c)
+            t = float(c)
             assert t>0
             CAI.g_timeout = t
             mprint(f'Timeout updated: {CAI.g_timeout}')
         except:
             CAI.g_timeout = None
             mprint(f'Timeout disabled')
+            if CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+                mprint('WARNING: Timeout disabled with Anytime planning mode!')
+    
+        self.showButtons()
     
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -445,7 +458,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         
         self.entry = customtkinter.CTkEntry(self, placeholder_text="")
         self.entry.configure(state='disabled')
-        self.entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.entry.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
         self.entry_function = None
         self.entry_text = ''
         self.entry_dark = ('#F9F9FA', '#343638')
@@ -453,7 +466,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         # self.entry.configure(fg_color=self.entry_light)
         
         self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
-        self.timer_label.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.timer_label.grid(row=2, column=0, padx=10, pady=2, sticky="ew")
         self.start_time = None
         self._timer_running = False
         
@@ -474,7 +487,9 @@ class DisplayFrame(customtkinter.CTkFrame):
         t = ThreadWithReturnValue(target=self._wrapperTimer, args=(function,)+args, kwargs=kwargs)
         t.start()
         self.update_timer()
-        return t.join()
+        r = t.join()
+        self.master.buttons_frame.showButtons()
+        return r
             
     def prompt(self, text):
         self.textbox.configure(state='normal')
@@ -505,13 +520,21 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.buttons_frame = customtkinter.CTkFrame(self)
         self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        
         self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton)
         self.update_sim_button.grid(row=0, column=0, padx=10, pady=10)
+        
+        self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy)
+        self.copy_button.grid(row=0, column=2, padx=10, pady=10)
         
     def updateSimButton(self):
         plan = self.textbox.get("0.0", "end")
         updatePDSimPlan(plan)
         mprint("\nSim updated.")
+        
+    def copy(self):
+        pyperclip.copy(self.textbox.get("0.0", "end"))
+        mprint("\nCopied!")
         
     def showText(self, txt):
         self.textbox.configure(state='normal')
@@ -525,7 +548,7 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("CAI")
+        self.title("CAI - Alpha Version")
         self.geometry("3400x1912")
         
         # self.iconbitmap("rsc/icon.ico")
@@ -533,7 +556,7 @@ class App(customtkinter.CTk):
         photo = ImageTk.PhotoImage(im)
         self.wm_iconphoto(True, photo)
         
-        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=5)
         self.grid_columnconfigure(2, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
