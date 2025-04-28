@@ -1,0 +1,50 @@
+plan_mode: sat-hmrph
+timeout: 60
+
+zeno0: 19.0ms 17.0ms 22.0ms 
+	m=3240.0 average time = 19.33ms
+
+zeno1: 26.0ms 28.0ms 27.0ms 
+	m=5952.0 average time = 27.00ms
+
+zeno2: 29.0ms 26.0ms 25.0ms 
+	m=14352.0 average time = 26.67ms
+
+zeno3: 34.0ms 32.0ms 31.0ms 
+	m=9750.0 average time = 32.33ms
+
+zeno4: 51.0ms 53.0ms 49.0ms 
+	m=18197.0 average time = 51.00ms
+
+zeno5: 57.0ms 62.0ms 62.0ms 
+	m=4912.0 average time = 60.33ms
+
+zeno6: 53.0ms 56.0ms 54.0ms 
+	m=4277.0 average time = 54.33ms
+
+zeno7: 78.0ms 78.0ms 81.0ms 
+	m=18231.0 average time = 79.00ms
+
+zeno8: 100.0ms 93.0ms 91.0ms 
+	m=11046.0 average time = 94.67ms
+
+zeno9: 454.0ms 409.0ms 441.0ms 
+	m=17728.0 average time = 434.67ms
+
+zeno10: 185.0ms 178.0ms 182.0ms 
+	m=48108.0 average time = 181.67ms
+
+zeno11: 146.0ms 149.0ms 123.0ms 
+	m=9872.0 average time = 139.33ms
+
+zeno12: 319.0ms 322.0ms 296.0ms 
+	m=16637.0 average time = 312.33ms
+
+zeno13: 822.0ms 817.0ms 693.0ms 
+	m=14014.0 average time = 777.33ms
+
+zeno14: 2512.0ms 2521.0ms 2437.0ms 
+	m=81207.0 average time = 2490.00ms
+
+zeno15: 18835.0ms 18640.0ms 18594.0ms 
+	m=61229.0 average time = 18689.67ms

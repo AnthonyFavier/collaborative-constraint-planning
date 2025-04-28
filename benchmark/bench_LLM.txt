@@ -1,0 +1,50 @@
+plan_mode: LLM
+timeout: 60
+
+zeno0: 
+	m=3240.0 average time = 8539.99ms
+
+zeno1: 
+	m=5952.0 average time = 19178.26ms
+
+zeno2: 
+	m=6780.0 average time = 22631.02ms
+
+zeno3: 
+	failed domain...
+
+zeno4:
+ 	failed domain...
+
+zeno5: 
+	m=3939.0 average time = 5836.54ms
+
+zeno6: 
+ 	failed domain...
+
+zeno7:
+	failed domain...
+
+zeno8:
+	failed domain...
+
+zeno9:
+	failed domain...
+
+zeno10:
+	failed domain...
+
+zeno11:
+	failed domain...
+
+zeno12:
+	failed domain...
+
+zeno13:
+	failed domain...
+
+zeno14:
+	failed domain...
+
+zeno15:
+	failed domain...

@@ -1,0 +1,50 @@
+plan_mode: def
+timeout: 60
+
+zeno0: 18.0ms 17.0ms 18.0ms 
+	m=3240.0 average time = 17.67ms
+
+zeno1: 26.0ms 26.0ms 26.0ms 
+	m=17576.0 average time = 26.00ms
+
+zeno2: 25.0ms 24.0ms 24.0ms 
+	m=6780.0 average time = 24.33ms
+
+zeno3: 49.0ms 49.0ms 50.0ms 
+	m=10500.0 average time = 49.33ms
+
+zeno4: 56.0ms 56.0ms 57.0ms 
+	m=7652.0 average time = 56.33ms
+
+zeno5: 141.0ms 140.0ms 137.0ms 
+	m=15252.0 average time = 139.33ms
+
+zeno6: 107.0ms 106.0ms 104.0ms 
+	m=8889.0 average time = 105.67ms
+
+zeno7: 170.0ms 170.0ms 174.0ms 
+	m=21804.0 average time = 171.33ms
+
+zeno8: 311.0ms 321.0ms 323.0ms 
+	m=9775.0 average time = 318.33ms
+
+zeno9: 690.0ms 696.0ms 692.0ms 
+	m=32917.0 average time = 692.67ms
+
+zeno10: 856.0ms 836.0ms 827.0ms 
+	m=68130.0 average time = 839.67ms
+
+zeno11: 297.0ms 270.0ms 267.0ms 
+	m=10831.0 average time = 278.00ms
+
+zeno12: 1536.0ms 1558.0ms 1578.0ms 
+	m=24981.0 average time = 1557.33ms
+
+zeno13: 4511.0ms 4371.0ms 4399.0ms 
+	m=42148.0 average time = 4427.00ms
+
+zeno14: failed failed failed 
+	failed domain...
+
+zeno15: failed failed failed 
+	failed domain...

@@ -1,0 +1,27 @@
+
+
++----------------------------+---------------+------------------+
+|     Ablation settings      | Planning time | Planning quality |
++----------------------------+---------------+------------------+
+| PDDL planner (SotA)        |               |                  |
+|               opt          | --            | --               |
+|               sat          | --            | --               |
+|               any          | --            | --               |
+| LLM planner (SotA)         | --            | --               |
+| PDDL3 planner (SotA)       | --            | --               |
+| + LLM encoded constraints  | --            | --               |
+| + Verifier                 | --            | --               |
+| + Constraint decomposition | --            | --               |
++----------------------------+---------------+------------------+
+
+# Setup experiment
+
+Zenotravel: moderated size problem?
+Aim for a minute to find optimal?
+
+
+reach goal + minimize the total fuel used
+metric = fuel used
+
+3 runs for each config and each problem
+timeout of 2 minutes
