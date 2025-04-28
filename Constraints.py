@@ -39,8 +39,7 @@ class RawConstraint(Constraint):
         for c in self.children:
             txt += "\t" + str(c) + '\n'
             if c.encoding!='':
-                print("\t\t" + c.encoding)
-                txt += "\t\t" + c.encoding
+                txt += "\t\t" + c.encoding + '\n'
         return txt
     def showWithChildren(self):
         print(self.strWithChildren())
