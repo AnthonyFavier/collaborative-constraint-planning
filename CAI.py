@@ -11,6 +11,10 @@ from UserOption import UserOption
         
 CM = Constraints.ConstraintManager()
 
+# ABLATION_FLAGS #
+WITH_VERIFIER=True
+WITH_DECOMP = True
+ASK_DECOMP_FEEDBACK = False
 
 def askConstraintsToAdd():
     nl_constraints = []
@@ -29,47 +33,59 @@ def askConstraintsToAdd():
     return nl_constraints
 def addConstraints(nl_constraints):
     new_r = []
-    mprint(color.BOLD + "\nDecomposing constraints" + color.END)
-    for nl_constraint in nl_constraints:
-        encodingOK = False
-        i=0
-        while not encodingOK:
-            
+    
+    if WITH_DECOMP:
+        # Regular decomposition
+        mprint(color.BOLD + "\nDecomposing constraints" + color.END)
+        for nl_constraint in nl_constraints:
+            decompOK = False
+            i=0
+            while not decompOK:
+                
+                r = CM.createRaw(nl_constraint)
+                new_r.append(r)
+                
+                if i==0:
+                    mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
+                    result = LLM.decompose(g_domain, g_problem, nl_constraint)
+                else:
+                    mprint(color.BOLD + "\nRe-Decomposing...\n" + str(r) + color.END)
+                    result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
+                    
+                result = LLM.removeFormating(result)
+                
+                # for c in constraints:
+                for c in result.splitlines():
+                    CM.createDecomposed(r, c)
+                
+                mprint(r.strChildren())
+                
+                answer = ''
+                if ASK_DECOMP_FEEDBACK:
+                    mprint("* Check Terminal *")
+                    answer = input("\nPress Enter to validate the decomposition or type a comment to consider when decomposing again: ")
+                
+                decompOK = answer==''
+
+                if decompOK:
+                    LLM.clear_message_history()
+                else:
+                    id = r.symbol[1]
+                    new_r.remove(r)
+                    deleteConstraints([r.symbol])
+                    del r
+                    Constraints.Constraint._ID = int(id)
+                    feedback = answer
+                    
+                i+=1
+    else:
+        # no decomposition
+        # create only decomposed constraint similar to raw constraint
+        for nl_constraint in nl_constraints:
             r = CM.createRaw(nl_constraint)
             new_r.append(r)
-            
-            if i==0:
-                mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
-                result = LLM.decompose(g_domain, g_problem, nl_constraint)
-            else:
-                mprint(color.BOLD + "\nRe-Decomposing...\n" + str(r) + color.END)
-                result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
-                
-            result = LLM.removeFormating(result)
-            
-            # for c in constraints:
-            for c in result.splitlines():
-                CM.createDecomposed(r, c)
-            
-            mprint(r.strChildren())
-            
-            mprint("* Check Terminal *")
-            
-            answer = input("\nPress Enter to validate the decomposition or type a comment to consider when decomposing again: ")
-            encodingOK = answer==''
-
-            if encodingOK:
-                LLM.clear_message_history()
-            else:
-                id = r.symbol[1]
-                new_r.remove(r)
-                deleteConstraints([r.symbol])
-                del r
-                Constraints.Constraint._ID = int(id)
-                feedback = answer
-                
-            i+=1
-            
+            CM.createDecomposed(r, nl_constraint)
+        
     # When all ok, encode the decomposed of all new r
     
     # Encoding
@@ -97,13 +113,22 @@ def addConstraints(nl_constraints):
                 # 2 # Update the problem and verify the encoding
                     # If error, re-encode with feedback
                 updatedProblem = tools.updateProblem(g_problem, [filteredEncoding])
-                encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
-                if encodingOK:
-                    c.encoding = filteredEncoding
-                    LLM.clear_message_history()
+                
+                # VERIFIER
+                if WITH_VERIFIER:
+                    encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
+                    if encodingOK:
+                        c.encoding = filteredEncoding
+                        mprint(c.encoding)
+                        LLM.clear_message_history()
+                    else:
+                        mprint("\t\tVerifier: Encoding not OK.")
+                        # mprint(feedback)
                 else:
-                    mprint("\t\tVerifier: Encoding not OK.")
-                    # mprint(feedback)
+                    encodingOK = True
+                    c.encoding = filteredEncoding
+                    mprint(c.encoding)
+                    
                 i+=1
             
             if not encodingOK:
@@ -113,8 +138,7 @@ def addConstraints(nl_constraints):
     
     if len(r_to_delete):
         deleteConstraints(r_to_delete)
-                
-            
+
 def deleteConstraintsAsk():
     loop = True
     while loop:
