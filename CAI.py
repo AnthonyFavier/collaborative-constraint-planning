@@ -383,7 +383,19 @@ def init(problem_name, planning_mode, timeout):
     g_problem_name = problem_name
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
     g_planning_mode = planning_mode
+    
     g_timeout = float(timeout) if timeout!=None else None
+    if g_timeout==0.0:
+        g_timeout=None
+        
+    try:
+        t = float(timeout)
+        assert t>0
+        g_timeout = t
+    except:
+        g_timeout = None
+        if g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+            mprint('WARNING: Timeout disabled with Anytime planning mode!')
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
     
     # Show selected problem
