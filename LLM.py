@@ -118,7 +118,7 @@ def removeFormating(text):
         
     return newtext
 
-encodingSystemMsg="You are a PDDL planning expert. Your purpose is to translate natural language constraints into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with consise and accurate PDDL language. PDDL3.0 constraints should only concer predicates and functions, they cannot refer directly to actions."
+encodePrefsSystemMsg="You are a PDDL planning expert. Your purpose is to translate natural language constraints into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with consise and accurate PDDL language. PDDL3.0 constraints should only concer predicates and functions, they cannot refer directly to actions."
 def encodePrefs(domain, problem, constraint):
     global g_message_history
     
@@ -128,14 +128,14 @@ def encodePrefs(domain, problem, constraint):
         
             {"role": "assistant", "content": "Got it now share with me the PDDL domain and problem."},
             {"role": "user", "content": domain + '\n' + problem},   
-            {"role": "assistant", "content": "Got it now share with me the constraint to translate."},
+            {"role": "assistant", "content": "Got it now share with me the natural language constraint to translate into PDDL3.0."},
             {"role": "user", "content": constraint},
             # {"role": "assistant", "content": "When translating, only when possible and relevant, I should forall instead of enumerating all objects."},
             # {"role": "assistant", "content": "I will now carefully translate the given constraint."},
         ]
     
     # Call LLM
-    message = call_llm(encodingSystemMsg, messages)
+    message = call_llm(encodePrefsSystemMsg, messages)
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
@@ -148,14 +148,14 @@ def reencodePrefs(feedback):
         ]
     
      # Call LLM
-    message = call_llm(encodingSystemMsg, g_message_history + messages)
+    message = call_llm(encodePrefsSystemMsg, g_message_history + messages)
 
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text},]
     
     return message.content[0].text
 
-encodingSystemMsg="You are a PDDL planning expert. Your purpose is to translate PDDL3.0 constraints to natural language to give a human a good sense of what the PDDL3 constraint means and is doing."
+constraint2NLSystemMsg="You are a PDDL planning expert. Your purpose is to translate PDDL3.0 constraints to natural language to give a human a good sense of what the PDDL3 constraint means and is doing."
 def constraint2NL(domain, problem, constraint):
     global g_message_history
     
@@ -165,13 +165,13 @@ def constraint2NL(domain, problem, constraint):
         
             {"role": "assistant", "content": "Got it now share with me the PDDL domain and problem."},
             {"role": "user", "content": domain + '\n' + problem},   
-            {"role": "assistant", "content": "Got it now share with me the constraint to translate."},
+            {"role": "assistant", "content": "Got it now share with me the PDDL3.0 constraint to translate in natural language."},
             {"role": "user", "content": constraint},
             {"role": "assistant", "content": "When translating, I should only output the requested translation, without any additional comments or explanations."},
         ]
     
     # Call LLM
-    message = call_llm(encodingSystemMsg, messages)
+    message = call_llm(constraint2NLSystemMsg, messages)
     
     # Update history with request and LLM answer
     g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
