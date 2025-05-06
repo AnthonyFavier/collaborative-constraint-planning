@@ -299,6 +299,7 @@ def planWithConstraints():
     else:
         mprint("\nFailed to plan")
         return "Failed to plan:\n" + str(feedback)
+    
 def askChangePlanMode():
     print(f"Current planning mode: {g_planning_mode}")
     mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")

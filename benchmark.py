@@ -5,7 +5,7 @@ from defs import *
 
 planners = [
     "sat-hmrp",
-    "sat-hmrph",
+    "sat-hmrph", # best sat
     "sat-hmrphj",
     "sat-hmrpff",
     
@@ -20,7 +20,7 @@ planners = [
     
     "opt-blind",
     
-    "opt-hmax",
+    "opt-hmax", # best opt
     "opt-hrmax",
     
     PlanMode.DEFAULT,
