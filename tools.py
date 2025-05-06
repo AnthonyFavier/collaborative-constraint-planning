@@ -79,10 +79,15 @@ def set_fluent_names(names):
     global g_fluent_names
     g_fluent_names = names
 
-g_objects = []
-def set_objects(objects):
-    global g_objects
-    g_objects = objects
+g_typed_objects = []
+def set_typed_objects(objects):
+    global g_typed_objects
+    g_typed_objects = objects
+
+g_all_objects = []
+def set_all_objects(objects):
+    global g_all_objects
+    g_all_objects = objects
 
 def verifyEncoding(updatedProblem, domain, filteredEncoding):
     """
@@ -90,7 +95,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     return encodingOk: Bool, error_description: str
     """
     
-    # Keyword test
+    # Keyword
     PDDL_keywords =[
         ':constraints',
         'and',
@@ -118,7 +123,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         'hold-after',
         'at-end',
     ]
-    authorized_keywords = PDDL_keywords + g_fluent_names
+    authorized_keywords = PDDL_keywords + g_fluent_names + g_all_objects + [object_type for object_type in g_typed_objects] + ['(', ')']
 
     L = filteredEncoding
     L = " ( ".join(L.split('('))
@@ -127,19 +132,19 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     L = L.split()
 
 
-    # Check if no unknown keyword
-    for i in range(len(L)):
-        if L[i]=='(':
-            if L[i+1] not in authorized_keywords:
-                if L[i+1][0]=='?':
-                    continue
-                
-                return False, f"{L[i+1]} isn't a known PDDL keyword or part of the domain description. Try again carefully to translate correctly."
+    # Unknown keyword test #
+    for x in L:
+        if x not in authorized_keywords:
+            try: float(x)
+            except:
+                try: assert x[0]=='?'
+                except:
+                    return False, f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
             
-    # Parsing test
+    # Parsing test #
     try:
         parse_pddl3_str(domain, updatedProblem)
-    except:
+    except Exception as err:
         return False, "There is a syntax error. Try again carefully to translate correctly."
     
     # encodingOk, error_description
