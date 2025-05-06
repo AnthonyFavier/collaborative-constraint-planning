@@ -15,6 +15,7 @@ CM = Constraints.ConstraintManager()
 WITH_VERIFIER=True
 WITH_DECOMP = True
 ASK_DECOMP_FEEDBACK = False
+WITH_E2NL = False
 
 def askConstraintsToAdd():
     nl_constraints = []
@@ -121,6 +122,13 @@ def addConstraints(nl_constraints):
                         c.encoding = filteredEncoding
                         mprint(c.encoding)
                         LLM.clear_message_history()
+                        
+                        # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
+                        if WITH_E2NL:
+                            mprint("Asking for NL translation")
+                            mprint(LLM.constraint2NL(g_domain, g_problem, c.encoding))
+                            LLM.clear_message_history()
+                        
                     else:
                         mprint("\t\tVerifier: Encoding not OK.")
                         # mprint(feedback)

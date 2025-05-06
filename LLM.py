@@ -155,5 +155,28 @@ def reencodePrefs(feedback):
     
     return message.content[0].text
 
+encodingSystemMsg="You are a PDDL planning expert. Your purpose is to translate PDDL3.0 constraints to natural language to give a human a good sense of what the PDDL3 constraint means and is doing."
+def constraint2NL(domain, problem, constraint):
+    global g_message_history
+    
+    # Setup request
+    messages=[
+            {"role": "user", "content": "I will share a PDDL domain followed by a corresponding PDDL problem for you to understand the current problem addressed. After that, I will share a contraint in PDDL3 to translate into natural language."},
+        
+            {"role": "assistant", "content": "Got it now share with me the PDDL domain and problem."},
+            {"role": "user", "content": domain + '\n' + problem},   
+            {"role": "assistant", "content": "Got it now share with me the constraint to translate."},
+            {"role": "user", "content": constraint},
+            {"role": "assistant", "content": "When translating, I should only output the requested translation, without any additional comments or explanations."},
+        ]
+    
+    # Call LLM
+    message = call_llm(encodingSystemMsg, messages)
+    
+    # Update history with request and LLM answer
+    g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
+    
+    return message.content[0].text
+
 if __name__=='__main__':
     pass
