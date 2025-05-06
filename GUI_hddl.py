@@ -1,6 +1,7 @@
 import customtkinter
 from defs import *
 import CAI_hddl
+import generate_htn_image
 from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
 import time
@@ -402,9 +403,15 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
     def planT(self):
         threading.Thread(target=self.plan).start()
+    
     def plan(self):
         txt = self.master.display_frame.startWithTimer(CAI_hddl.planWithConstraints)
+        dot_graph = generate_htn_image.parse_plan(txt)
+        dot_graph.render("htn_plan", format="png", cleanup=True)
         self.master.plan_frame.showText(txt)
+        self.master.plan_frame.showPlanDiagram("htn_plan.png")
+        mprint("\nPlan generated.")
+        
         
     def changePlanMode(self):
         mprint(' ')
@@ -542,6 +549,10 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox = customtkinter.CTkTextbox(self, wrap='char')
         self.textbox.configure(state='disabled')
         self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Add image label for the diagram
+        self.image_label = customtkinter.CTkLabel(self)
+        self.image_label.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
         
         self.buttons_frame = customtkinter.CTkFrame(self)
         self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
@@ -558,6 +569,12 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
         self.textbox.configure(state='disabled')
+    
+    def showPlanDiagram(self, image_path):
+        # Load the image and display it in the image_label
+        img = customtkinter.CTkImage(light_image=image_path, dark_image=image_path, size=(400, 300))
+        self.image_label.configure(image=img)
+        self.image_label.image = img  # Keep a reference to avoid garbage collection
 
 class HTNViewFrame(customtkinter.CTkFrame):
     def __init__(self, master):
