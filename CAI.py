@@ -71,7 +71,7 @@ def addConstraints(nl_constraints):
                 if decompOK:
                     LLM.clear_message_history()
                 else:
-                    id = r.symbol[1]
+                    id = r.symbol[1:]
                     new_r.remove(r)
                     deleteConstraints([r.symbol])
                     del r
