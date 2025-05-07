@@ -8,6 +8,7 @@ from defs import *
 from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from UserOption import UserOption
+import time
         
 CM = Constraints.ConstraintManager()
 
@@ -33,6 +34,7 @@ def askConstraintsToAdd():
             
     return nl_constraints
 def addConstraints(nl_constraints):
+    t1 = time.time()
     new_r = []
     
     if WITH_DECOMP:
@@ -143,6 +145,9 @@ def addConstraints(nl_constraints):
                 mprint(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
                 r_to_delete.append(r.symbol)
                 break
+            
+    t2 = time.time()
+    mprint(f"\nTranslation time: {t2-t1:.2f} s")
     
     if len(r_to_delete):
         deleteConstraints(r_to_delete)
