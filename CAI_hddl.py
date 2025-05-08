@@ -40,7 +40,7 @@ def addConstraints(nl_constraints):
             
             if i==0:
                 mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
-                result = LLM.decompose(g_domain, g_problem, nl_constraint)
+                result = LLM.decompose_hddl(g_domain, g_problem, nl_constraint)
             else:
                 mprint(color.BOLD + "\nRe-Decomposing...\n" + str(r) + color.END)
                 result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)

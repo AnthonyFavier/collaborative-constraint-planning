@@ -164,6 +164,26 @@ def clear_message_history():
     global g_message_history
     g_message_history = []
 
+def decompose_hddl(domain, problem, constraint):
+    global g_message_history
+    
+    
+    messages=[
+            {"role": "user", "content": "I will share a HDDL domain followed by a corresponding HDDL problem. After that, I will share the hierarchical strategy to decompose."},
+            {"role": "assistant", "content": "Got it now share with me the HDDL domain and problem."},
+            {"role": "user", "content": domain + '\n' + problem},   
+            {"role": "assistant", "content": "Got it now share with me the strategy to decompose. I will format my answer in a very clear and consise list of (1) method parameters, (2) relevant task, (3) a numbered list of ordered subtasks in a more human interpretable langauge. I should not put any HDDL code in the main items."},
+            {"role": "user", "content": constraint},
+        ]
+    
+    # Call LLM
+    message = call_llm(decomposeSystemMsg, messages)
+    
+    # Update history with request and LLM answer
+    g_message_history += messages + [{"role": "assistant", "content": message.content[0].text}]
+    
+    return message.content[0].text
+
 def encodePrefs_hddl(domain, problem, preferences):
     global g_message_history
     

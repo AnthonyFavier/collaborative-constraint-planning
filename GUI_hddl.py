@@ -265,6 +265,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         self.confirm_button.grid_remove()
+
+        self.buttons["Show HTN"] = customtkinter.CTkButton(self, text="Show HTN", command=self.view_hddl)
+        self.buttons["Show HTN"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        i_row+=1
         
         self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add_hddl)
         self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
@@ -308,6 +312,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def showButtons(self):
         for k,x in self.buttons.items():
             x.grid()
+
+    def view_hddl(self):
+        self.master.htn_view_frame.view_all()
+        self.master.htn_view_frame.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+        self.master.constraints_frame.grid_remove()
+        self.buttons["Show HTN"].configure(text="Hide HTN", command=self.hide_hddl)
     
     def add_hddl(self):
         self.hideButtons()
@@ -475,9 +485,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
 
 
     # HDDL function:
-    def add_hddl(self):
-        '''what to do when the user clicks the Add button'''
-        pass
+    # def add_hddl(self):
+    #     '''what to do when the user clicks the Add button'''
+    #     pass
     def delete_hddl(self):
         '''what to do when the user clicks the Delete button'''
         pass
@@ -647,6 +657,10 @@ class App(customtkinter.CTk):
         
         self.plan_frame = PlanFrame(self)
         self.plan_frame.grid(row=0, column=2, rowspan=2, padx=10, pady=10, sticky='nsew')
+        
+        print("\n Create htn_view_frame")
+        self.htn_view_frame = HTNViewFrame(self)
+        self.htn_view_frame.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
         
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
