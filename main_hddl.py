@@ -1,5 +1,5 @@
-import CAI
-import GUI
+import CAI_hddl
+import GUI_hddl
 from defs import *
 import click
 import sys
@@ -27,9 +27,9 @@ def main(problem_name, planning_mode, timeout):
     # d = CAI.CM.createDecomposed(r, "plane2 must be located in city2 in the final state")
     # d.encoding = "(at-end (located plane2 city2))"
     
-    app = GUI.App()
+    app = GUI_hddl.App()
     setPromptFunction(app.display_frame.prompt)
-    CAI.init(problem_name, planning_mode, timeout)
+    CAI_hddl.init(problem_name, planning_mode, timeout)
     app.mainloop()
 if __name__ == '__main__':
     # sys.argv.append('zeno5_n')
