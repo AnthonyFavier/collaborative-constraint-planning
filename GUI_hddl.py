@@ -1,4 +1,5 @@
 import customtkinter
+import tkinter as tk
 from defs import *
 import CAI_hddl
 import generate_htn_image
@@ -72,7 +73,7 @@ class ConstraintsFrame(MyScrollableFrame):
         i_row = 0
         
         if CAI_hddl.CM.constraints == {}:
-            label = customtkinter.CTkLabel(self, text="No constraints", font = App.font)
+            label = customtkinter.CTkLabel(self, text="No Constraints", font = App.font)
             label.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
             i_row += 1
         else:
@@ -607,18 +608,134 @@ class HTNViewFrame(customtkinter.CTkFrame):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
-
+        self.title = customtkinter.CTkLabel(self, text="Hierarchy Viewer", fg_color="gray30", corner_radius=6,font=App.font)
+        self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
         self.buttons_frame = customtkinter.CTkFrame(self)
         self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
         self.all_oper_button = customtkinter.CTkButton(self.buttons_frame, text="All Operators", command=self.view_all)
         self.all_oper_button.grid(row=0, column=0, padx=10, pady=10)
         self.new_method_button = customtkinter.CTkButton(self.buttons_frame, text="New Methods", command=self.view_new_methods)
         self.new_method_button.grid(row=0, column=1, padx=10, pady=10)
+        self.operators_button = customtkinter.CTkButton(self.buttons_frame, text="View Operators", command=self.view_list_operators)
+        self.operators_button.grid(row=0, column=2, padx=10, pady=10)
 
     def view_all(self):
-        img=CAI_hddl.get_domain_graph().resize((400,300))
-        self.all_htn_graph = customtkinter.CTkImage(light_image = img, dark_image=img, size=(400,300))
-        self.all_htn_graph.grid(row=1, column=0, padx=10, pady=10)
+        img_path=CAI_hddl.get_domain_graph_image()#.resize((400,300))
+        try:
+            # Load the image from the file path
+            img = Image.open(img_path).resize((400, 300))
+            
+            # Create a CTkImage with the resized image
+            self.all_htn_graph = customtkinter.CTkImage(
+                light_image=img,
+                dark_image=img,
+                size=(400, 300)
+            )
+            
+            # Display the image in a label or appropriate widget
+            label = customtkinter.CTkLabel(self, image=self.all_htn_graph)
+            label.grid(row=1, column=0, padx=10, pady=10)
+        except Exception as e:
+            print(f"Error loading or displaying the image: {e}")
+        # self.all_htn_graph = customtkinter.CTkImage(light_image = img, dark_image=img, size=(400,300))
+        # self.all_htn_graph.grid(row=1, column=0, padx=10, pady=10)
+
+
+    def view_list_operators(self):
+        """
+        Display the list of operators in the domain with checkboxes.
+        Operators are represented as node names in the domain graph.
+        """
+        # Clear any existing operators frame
+        if hasattr(self, 'operators_frame'):
+            self.operators_frame.destroy()
+
+        # Create a new frame for the list of operators
+        self.operators_frame = customtkinter.CTkFrame(self)
+        self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Add a scrollable canvas inside the frame
+        canvas = tk.Canvas(self.operators_frame)
+        scrollbar = tk.Scrollbar(self.operators_frame, orient="vertical", command=canvas.yview)
+        scrollable_frame = customtkinter.CTkFrame(canvas)
+
+        # Configure the canvas and scrollbar
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Dictionary to store the BooleanVar for each checkbox
+        self.checkbox_vars = {}
+
+        try:
+            # Get the domain graph (assumed to be a Digraph object)
+            domain_graph = CAI_hddl.get_domain_graph_wrapper()
+            print("Domain graph nodes:", domain_graph.nodes(data=True))  # Debugging line
+
+            # Iterate through the nodes (operator names) and create checkboxes
+            for operator, data in domain_graph.nodes(data=True):  # Nodes are operator names
+                var = customtkinter.BooleanVar()  # Create a BooleanVar for this checkbox
+                # Determine the text color based on the "type"
+                if data.get("type") == "task":
+                    text_color = "yellow"
+                elif data.get("type") == "method":
+                    text_color = "green"
+                else:
+                    text_color = "white"
+                checkbox = customtkinter.CTkCheckBox(scrollable_frame, text=operator, variable=var,text_color=text_color)
+                checkbox.pack(anchor="w", padx=10, pady=5)
+                self.checkbox_vars[operator] = var  # Store the variable in the dictionary
+
+            # If no operators are found, display a message
+            if not domain_graph.nodes:
+                label = customtkinter.CTkLabel(scrollable_frame, text="No operators found.", fg_color="red")
+                label.pack(pady=10)
+
+            # Add a confirm button to print the checked operators
+            confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm", command=self.confirm_checked_operators)
+            confirm_button.pack(pady=10)
+
+        except Exception as e:
+            print(f"Error displaying operators: {e}")
+            label = customtkinter.CTkLabel(scrollable_frame, text="Error loading operators.", fg_color="red")
+            label.pack(pady=10)
+
+    def confirm_checked_operators(self):
+        """
+        Print the list of operators that are currently checked.
+        """
+        checked_operators = [operator for operator, var in self.checkbox_vars.items() if var.get()]
+        print("Checked operators:", checked_operators)
+        if hasattr(self, 'operators_frame'):
+            self.operators_frame.destroy()
+        row=1
+        for operator in checked_operators:
+            operator_graph_dir = CAI_hddl.get_operator_graph_image_saved_wrapper(operator)
+            try:
+                # Load the image from the file path
+                img = Image.open(operator_graph_dir).resize((400, 300))
+                
+                # Create a CTkImage with the resized image
+                operator_graph = customtkinter.CTkImage(
+                    light_image=img,
+                    dark_image=img,
+                    size=(400, 300)
+                )
+                
+                # Display the image in a label or appropriate widget
+                label = customtkinter.CTkLabel(self, image=operator_graph)
+                label.grid(row=row, column=0, padx=10, pady=10)
+                row +=1
+            except Exception as e:
+                print(f"Error loading or displaying the image: {e}")
+
+
 
 
     def view_new_methods(self):
@@ -646,8 +763,8 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
-        self.constraints_frame = ConstraintsFrame(self)
-        self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        # self.constraints_frame = ConstraintsFrame(self)
+        # self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         
         self.buttons_frame = ButtonsFrame(self)
         self.buttons_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
@@ -660,7 +777,7 @@ class App(customtkinter.CTk):
         
         print("\n Create htn_view_frame")
         self.htn_view_frame = HTNViewFrame(self)
-        self.htn_view_frame.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+        self.htn_view_frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
         
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)

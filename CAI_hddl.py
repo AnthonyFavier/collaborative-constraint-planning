@@ -8,6 +8,8 @@ from defs import *
 from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from UserOption import UserOption
+from generate_htn_image import parse_plan
+from hddl_to_graph import get_domain_graph_image_saved, get_domain_graph, get_operator_graph, get_operator_graph_image_saved
         
 CM = Constraints.ConstraintManager()
 
@@ -356,28 +358,60 @@ def init(problem_name, planning_mode, timeout):
     # Show selected problem
     mprint(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
     
-    # Try parsing the initial problem
-    try:
-        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
-    except Exception as e:
-        print("ERROR", e)
-        raise Exception(f"Unable to parse the initial problem.")
+    # # Try parsing the initial problem
+    print("Parsing the initial problem...", (DOMAIN_PATH, PROBLEM_PATH))
+    # parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+    # try:
+    #     parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+    # except Exception as e:
+    #     print("ERROR", e)
+    #     raise Exception(f"Unable to parse the initial problem.")
 
-    # Set extracted fluent names (used during verification)
-    tools.set_fluent_names([f.name for f in parsed.problem.fluents])
-    objects = {}
-    for o in parsed.problem.all_objects:
-        if o.type.name in objects:
-            objects[o.type.name].append(o.name)
-        else:
-            objects[o.type.name] = [o.name]
-    tools.set_objects(objects)
+    # # Set extracted fluent names (used during verification)
+    # tools.set_fluent_names([f.name for f in parsed.problem.fluents])
+    # objects = {}
+    # for o in parsed.problem.all_objects:
+    #     if o.type.name in objects:
+    #         objects[o.type.name].append(o.name)
+    #     else:
+    #         objects[o.type.name] = [o.name]
+    # tools.set_objects(objects)
     
     # Open initial problem
     with open(DOMAIN_PATH, "r") as f:
         g_domain = f.read()
     with open(PROBLEM_PATH, "r") as f:
         g_problem = f.read()
+
+def get_domain_graph_image(domain_path=None):
+    # Get the domain graph
+    if domain_path is None:
+        domain_path = DOMAIN_PATH
+    graph_dir = get_domain_graph_image_saved(domain_path=domain_path)
+    return graph_dir
+
+def get_domain_graph_wrapper(domain_path=None):
+    # Get the domain graph
+    if domain_path is None:
+        domain_path = DOMAIN_PATH
+    graph = get_domain_graph(domain_path=domain_path)
+    return graph
+
+def get_operator_graph_wrapper(operator_name):
+    # Get the operator graph
+    graph = get_operator_graph(domain_path=DOMAIN_PATH, operator_name=operator_name)
+    return graph
+
+def get_operator_graph_image_saved_wrapper(operator_name, domain_path=None, save_dir=None):
+    # Get the operator graph
+    if domain_path is None:
+        domain_path = DOMAIN_PATH
+    if save_dir is None:
+        save_dir = DOMAIN_PATH.replace(".hddl", "_graph.png")
+    save_dir = get_operator_graph_image_saved(operator_name=operator_name,domain_path=domain_path, save_dir=save_dir)
+    return save_dir
+
+
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')

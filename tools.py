@@ -59,6 +59,7 @@ def updateProblem(problem, encodings):
 
 def parse_pddl3(domain_path, problem_path):
     return ntcore_parsing_ext.parse_pddl3(domain_path, problem_path)
+
 def parse_pddl3_str(domain, updatedProblem):
     """
     Adapted from NTCORE parsing_extensions to take string as input instead of file_paths

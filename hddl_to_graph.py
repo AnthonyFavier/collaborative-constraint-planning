@@ -20,6 +20,58 @@ class HDDLParser:
                 self._parse_actions()
                 self._build_graph()
                 return self.graph
+        
+        def get_operator_graph(self, operator_name: str) -> nx.MultiDiGraph:
+                """ Generate a subgraph for a specific operator (task, method, or action) and its dependencies.
+                input:
+                operator_name: The name of the operator (task, method, or action) to generate the subgraph for.
+                """
+                operator_graph = nx.MultiDiGraph()
+                # Add all nodes and edges related to the operator
+                for node in self.graph.nodes:
+                        if node == operator_name or self.graph.has_edge(operator_name, node):# or self.graph.has_edge(node, operator_name):
+                                operator_graph.add_node(node, type=self.graph.nodes[node]['type'])
+                # Add edges connecting the operator to its dependencies:
+                operator_graph.add_edges_from(self.graph.edges(operator_name, keys=True))
+                return operator_graph
+        
+        def generate_operator_graph(self, operator_name: str, save_dir=None) -> str:
+                """ Generate and save a subgraph for a specific operator (task, method, or action) and its dependencies.
+                input:
+                operator_name: The name of the operator (task, method, or action) to generate the subgraph for.
+                save_dir: The directory to save the graph image. If None, saves in the same directory as the domain file.
+                """
+                operator_graph = self.get_operator_graph(operator_name)
+                plt.figure(figsize=(20, 20))
+                pos = nx.shell_layout(operator_graph)  # You can try other layouts like nx.shell_layout
+                node_colors = []
+                for _, data in operator_graph.nodes(data=True):
+                        if data['type'] == 'task':
+                                node_colors.append('skyblue')
+                        elif data['type'] == 'method':
+                                node_colors.append('lightgreen')
+                        elif data['type'] == 'action':
+                                node_colors.append('salmon')
+                        else:
+                                node_colors.append('gray')
+                nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=10, font_weight='bold', arrows=True)
+                offset = 0.05  # vertical offset to avoid overlap
+                for i, (u, v, k, d) in enumerate(operator_graph.edges(keys=True, data=True)):
+                        if d['priority'] == -1:
+                                continue
+                        x0, y0 = pos[u]
+                        x1, y1 = pos[v]
+                        label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.01)
+                        label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.01)
+                        label = f"[{d['priority']}]"
+                        plt.text(label_x, label_y, label, fontsize=15, color='red', fontweight='bold')
+                plt.title(f'HDDL Operator Graph for {operator_name}')
+                # Save the figure
+                if save_dir is None:
+                        save_dir = os.path.join(os.path.dirname(self.domain_str), f'{operator_name}_operators_graph.png')
+                plt.savefig(save_dir, format="png", dpi=300, bbox_inches="tight")
+                plt.close()
+                return save_dir
 
         def _parse_tasks(self):
                 
@@ -114,6 +166,102 @@ def extract_priority_from_subtasks_and_ordering(block):
         # Assign priority index based on topological order
         ordered_actions = [(label_to_action[label], i) for i, label in enumerate(sorted_labels)]
         return ordered_actions
+def get_domain_graph(domain_path: str) -> nx.MultiDiGraph:
+        parser = HDDLParser(domain_path)
+        graph = parser.parse()
+        return graph
+
+def get_domain_graph_image_saved(domain_path: str, save_dir=None) -> nx.MultiDiGraph:
+        parser = HDDLParser(domain_path)
+        graph = parser.parse()
+        plt.figure(figsize=(20, 20))  # width x height in inches
+        pos = nx.shell_layout(graph)  # You can try other layouts like nx.shell_layout
+        node_colors = []
+
+        for _, data in graph.nodes(data=True):
+                if data['type'] == 'task':
+                        node_colors.append('skyblue')
+                elif data['type'] == 'method':
+                        node_colors.append('lightgreen')
+                elif data['type'] == 'action':
+                        node_colors.append('salmon')
+                else:
+                        node_colors.append('gray')
+
+        nx.draw(graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=10, font_weight='bold', arrows=True)
+        offset = 0.05  # vertical offset to avoid overlap
+        for i, (u, v, k, d) in enumerate(graph.edges(keys=True, data=True)):
+                if d['priority'] == -1:
+                        continue
+                x0, y0 = pos[u]
+                x1, y1 = pos[v]
+                # label_x = x0 + 0.25 * (x1 - x0)
+                # label_y = y0 + 0.25 * (y1 - y0) + (i * offset)  # offset by edge index to avoid overlap
+                label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.01)
+                label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.01)
+                label = f"[{d['priority']}]"
+                plt.text(label_x, label_y, label, fontsize=15, color='red', fontweight='bold')
+        plt.title('HDDL Operator Graph')
+        # Save the figure
+        if save_dir is None:
+                save_dir = domain_path.replace('.hddl','_operators_graph.png')
+        plt.savefig(save_dir, format="png", dpi=300, bbox_inches="tight")
+        return save_dir
+
+def get_operator_graph(operator_name: str, domain_path=None) -> nx.MultiDiGraph:
+        """ Generate a subgraph for a specific operator (task, method, or action) and its dependencies.
+        input:
+        operator_name: The name of the operator (task, method, or action) to generate the subgraph for.
+        """
+        domain_graph = HDDLParser(domain_path).parse()
+        operator_graph = nx.MultiDiGraph()
+        # Add all nodes and edges related to the operator
+        for node in domain_graph.nodes:
+                if node == operator_name or domain_graph.has_edge(operator_name, node):# or self.graph.has_edge(node, operator_name):
+                        operator_graph.add_node(node, type=domain_graph.nodes[node]['type'])
+                        operator_graph.add_edge(operator_name, node)#, priority=domain_graph.nodes[operator_name][node]['priority'])
+        # Add edges connecting the operator to its dependencies:
+        # operator_graph.add_edges_from(domain_graph.edges(operator_name, keys=True))
+        return operator_graph
+
+# from networkx.drawing.nx_agraph import graphviz_layout
+def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_dir=None) -> str:
+        """ Generate and save a subgraph for a specific operator (task, method, or action) and its dependencies.
+        input: 
+        operator_name: The name of the operator (task, method, or action) to generate the subgraph for.
+        save_dir: The directory to save the graph image. If None, saves in the same directory as the domain file.
+        """
+        operator_graph = get_operator_graph(operator_name, domain_path)
+        plt.figure(figsize=(20, 20))
+        pos = nx.shell_layout(operator_graph)  # You can try other layouts like nx.shell_layout
+        # pos = nx.multipartite_layout(operator_graph, subset_key="layer")
+        node_colors = []
+        for _, data in operator_graph.nodes(data=True):
+                if data['type'] == 'task':
+                        node_colors.append('skyblue')
+                elif data['type'] == 'method':
+                        node_colors.append('lightgreen')
+                elif data['type'] == 'action':
+                        node_colors.append('salmon')
+                else:
+                        node_colors.append('gray')
+        nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=10, font_weight='bold', arrows=True)
+        offset = 0.05  # vertical offset to avoid overlap
+        for i, (u, v, k, d) in enumerate(operator_graph.edges(keys=True, data=True)):
+                if d['priority'] == -1:
+                        continue
+                x0, y0 = pos[u]
+                x1, y1 = pos[v]
+                label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.01)
+                label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.01)
+                label = f"[{d['priority']}]"
+                plt.text(label_x, label_y, label, fontsize=15, color='red', fontweight='bold')
+        plt.title(f'HDDL Operator Graph for {operator_name}')
+        # Save the figure
+        if save_dir is None:
+                save_dir = os.path.join(os.path.dirname(domain_path), f'{operator_name}_operators_graph.png')
+        plt.savefig(save_dir, format="png", dpi=300, bbox_inches="tight")
+        return save_dir
 
 if __name__ == "__main__":
         domain_path = input("Please provide domain file directory, if want to use default file, click enter.")
