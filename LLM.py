@@ -11,8 +11,8 @@ import anthropic
 client = anthropic.Anthropic(
     api_key=os.getenv("ANTHROPIC_API_KEY")
 )
-MAX_TOKEN=5000
-TEMPERATURE=0.05
+MAX_TOKEN=10000
+TEMPERATURE=0.0
 MODEL="claude-3-7-sonnet-20250219"
 MAX_TRY_OVERLOAD = 3
 
