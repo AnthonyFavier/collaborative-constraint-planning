@@ -13,8 +13,8 @@ try:
 except:
     pass
 
-customtkinter.set_window_scaling(1.5)   # scales the window content (default is 1.0)
-customtkinter.set_widget_scaling(1.2)   # scales widgets/fonts (default is 1.0)
+customtkinter.set_window_scaling(2.0)   # scales the window content (default is 1.0)
+customtkinter.set_widget_scaling(1.5)   # scales widgets/fonts (default is 1.0)
 
 # Custom thread creation with return value. Used for timers
 class ThreadWithReturnValue(threading.Thread):
@@ -246,38 +246,40 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.title = "Constraint actions"
         self.buttons = {}
         
+        buttons_width = 100
+        
         i_row = 0
         self.confirm_function = None
-        self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
+        self.confirm_button = customtkinter.CTkButton(self, text="Confirm", width=buttons_width, command=self.confirm)
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10)
         self.confirm_button.grid_remove()
         
-        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add)
+        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, command=self.add)
         self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10)
         self.add_nl_constraints = []
         i_row+=1
         
-        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete)
+        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", width=buttons_width, command=self.delete)
         self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", command=self.activate)
+        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", width=buttons_width, command=self.activate)
         self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.planT)
+        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", width=buttons_width, command=self.planT)
         self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", command=self.changePlanMode)
+        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, command=self.changePlanMode)
         self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", command=self.changeTimeout)
+        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, command=self.changeTimeout)
         self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", command=self.master.constraints_frame.toggleEncodings)
+        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", width=buttons_width, command=self.master.constraints_frame.toggleEncodings)
         self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
     
@@ -480,7 +482,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         
         self.entry = customtkinter.CTkEntry(self, placeholder_text="")
         self.entry.configure(state='disabled')
-        self.entry.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
+        self.entry.grid(row=1, column=0, padx=10, pady=0, sticky="ew")
         self.entry_function = None
         self.entry_text = ''
         self.entry_dark = ('#F9F9FA', '#343638')
@@ -488,7 +490,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         # self.entry.configure(fg_color=self.entry_light)
         
         self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
-        self.timer_label.grid(row=2, column=0, padx=10, pady=2, sticky="ew")
+        self.timer_label.grid(row=2, column=0, padx=10, pady=0, sticky="ew")
         self.start_time = None
         self._timer_running = False
         
@@ -542,12 +544,14 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.buttons_frame = customtkinter.CTkFrame(self)
         self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.buttons_frame.grid_columnconfigure(0, weight=1)
+        self.buttons_frame.grid_columnconfigure(1, weight=1)
         
-        self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton)
+        self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton, width=80)
         self.update_sim_button.grid(row=0, column=0, padx=10, pady=10)
         
-        self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy)
-        self.copy_button.grid(row=0, column=2, padx=10, pady=10)
+        self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
+        self.copy_button.grid(row=0, column=1, padx=10, pady=10)
         
     def updateSimButton(self):
         plan = self.textbox.get("0.0", "end")
@@ -578,22 +582,23 @@ class App(customtkinter.CTk):
         photo = ImageTk.PhotoImage(im)
         self.wm_iconphoto(True, photo)
         
-        self.grid_columnconfigure(0, weight=5)
-        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=20)
+        self.grid_columnconfigure(1, weight=0)
+        self.grid_columnconfigure(2, weight=2)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
         self.constraints_frame = ConstraintsFrame(self)
-        self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.constraints_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         
         self.buttons_frame = ButtonsFrame(self)
-        self.buttons_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.buttons_frame.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         
         self.display_frame = DisplayFrame(self)
-        self.display_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.display_frame.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
         
         self.plan_frame = PlanFrame(self)
-        self.plan_frame.grid(row=0, column=2, rowspan=2, padx=10, pady=10, sticky='nsew')
+        self.plan_frame.grid(row=0, column=2, rowspan=2, padx=5, pady=5, sticky='nsew')
         
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
