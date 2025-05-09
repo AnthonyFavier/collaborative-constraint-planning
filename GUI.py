@@ -32,6 +32,7 @@ customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dar
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 class ConstraintsFrame(MyScrollableFrame):
+    font = ("Arial", 16)
     def __init__(self, master):
         super().__init__(master, orientation="both")
         
@@ -91,33 +92,39 @@ class ConstraintsFrame(MyScrollableFrame):
         # Delete current grid and widgets
         self.clear()
         
-        i_row = 0
+        i_self_row = 0
         
         if CAI.CM.constraints == {}:
             label = customtkinter.CTkLabel(self, text="No constraints", font = App.font)
-            label.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
-            i_row += 1
+            label.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
+            i_self_row += 1
         else:
-            for k,r in CAI.CM.raw_constraints.items():
+            # for k,r in CAI.CM.raw_constraints.items():
+            for i,(k,r) in enumerate(CAI.CM.raw_constraints.items()):
                 
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
-                frame.grid(row=i_row, column=0, padx=0, pady=0, sticky="w")
+                frame.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
+                
+                if i!=0:
+                    ypadding_between_raw_constraints = 25
+                    empty_top_frame = customtkinter.CTkFrame(frame, fg_color="transparent", height=ypadding_between_raw_constraints)
+                    empty_top_frame.grid(row=0, column=0, columnspan=2, padx=0, pady=0, sticky="w")
                 
                 framecb = customtkinter.CTkFrame(frame, fg_color="transparent", height=self.height_checkbox_frame, width=self.width_checkbox_frame)
-                framecb.grid(row=0, column=0, padx=0, pady=0)
+                framecb.grid(row=1, column=0, padx=0, pady=0)
                 
                 self.checkboxes[r.symbol] = customtkinter.CTkCheckBox(framecb, text='', width=0, command=self.checkboxHandler)
                 self.checkboxes[r.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
                 
-                self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}", font = App.font)
-                self.constraint_labels[r.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
+                self.constraint_labels[r.symbol] = customtkinter.CTkLabel(frame, text=f"{r.symbol} - {r.nl_constraint}", font = ConstraintsFrame.font)
+                self.constraint_labels[r.symbol].grid(row=1, column=1, padx=0, pady=0, sticky="w")
                 
-                i_row+=1
+                i_self_row+=1
                 
-                xpadding = 30
+                xpadding_between_raw_and_decomposed_constraints = 30
                 for c in r.children:
                     frame = customtkinter.CTkFrame(self, fg_color="transparent")
-                    frame.grid(row=i_row, column=0, padx=xpadding, pady=0, sticky="w")
+                    frame.grid(row=i_self_row, column=0, padx=xpadding_between_raw_and_decomposed_constraints, pady=0, sticky="w")
                 
                     framecb = customtkinter.CTkFrame(frame, fg_color="transparent", height=self.height_checkbox_frame, width=self.width_checkbox_frame)
                     framecb.grid(row=0, column=0, padx=0, pady=0)
@@ -125,13 +132,13 @@ class ConstraintsFrame(MyScrollableFrame):
                     self.checkboxes[c.symbol] = customtkinter.CTkCheckBox(framecb, text="", width=0, command=self.checkboxHandler)
                     self.checkboxes[c.symbol].grid(row=0, column=0, padx=0, pady=0, sticky="w")
                 
-                    self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}", font = App.font)
+                    self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}", font = ConstraintsFrame.font)
                     self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
-                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = App.font)
+                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = ConstraintsFrame.font)
                     self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
                     
-                    i_row+=1
+                    i_self_row+=1
                     
         
         # Initialize last checkboxes state
@@ -580,7 +587,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.configure(state='disabled')
 
 class App(customtkinter.CTk):
-    font = ("Helvetica", 16, "bold")
+    font = ("Arial", 20, "bold")
     
     def __init__(self):
         super().__init__()
