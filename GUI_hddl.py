@@ -655,7 +655,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
         self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
         # Add a scrollable canvas inside the frame
-        canvas = tk.Canvas(self.operators_frame)
+        canvas = tk.Canvas(self.operators_frame, bg='black')
         scrollbar = tk.Scrollbar(self.operators_frame, orient="vertical", command=canvas.yview)
         scrollable_frame = customtkinter.CTkFrame(canvas)
 

@@ -216,10 +216,12 @@ def get_operator_graph(operator_name: str, domain_path=None) -> nx.MultiDiGraph:
         domain_graph = HDDLParser(domain_path).parse()
         operator_graph = nx.MultiDiGraph()
         # Add all nodes and edges related to the operator
+        operator_graph.add_node(operator_name, type=domain_graph.nodes[operator_name]['type'])
         for node in domain_graph.nodes:
-                if node == operator_name or domain_graph.has_edge(operator_name, node):# or self.graph.has_edge(node, operator_name):
+                if domain_graph.has_edge(operator_name, node):# or self.graph.has_edge(node, operator_name):
                         operator_graph.add_node(node, type=domain_graph.nodes[node]['type'])
-                        operator_graph.add_edge(operator_name, node)#, priority=domain_graph.nodes[operator_name][node]['priority'])
+                        # priority = domain_graph.edges[operator_name][node]['priority']
+                        operator_graph.add_edge(operator_name, node, priority=domain_graph.edges[operator_name][node]['priority'])
         # Add edges connecting the operator to its dependencies:
         # operator_graph.add_edges_from(domain_graph.edges(operator_name, keys=True))
         return operator_graph
