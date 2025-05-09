@@ -13,9 +13,9 @@ import time
 CM = Constraints.ConstraintManager()
 
 # ABLATION_FLAGS #
-WITH_VERIFIER=True
+WITH_VERIFIER = True
 WITH_DECOMP = True
-ASK_DECOMP_FEEDBACK = False
+ASK_DECOMP_FEEDBACK = True
 WITH_E2NL = False
 
 def askConstraintsToAdd():
