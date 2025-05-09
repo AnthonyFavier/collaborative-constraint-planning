@@ -4,6 +4,7 @@ from defs import *
 import click
 import sys
 def Zeno13A(decomp=CAI.WITH_DECOMP):
+    print("Zeno13A")
     constraints = [
         "Person7, plane2 and plane3 should be ignored.",
         "Also, planes should only fly slowly to save fuel.",
@@ -16,6 +17,7 @@ def Zeno13A(decomp=CAI.WITH_DECOMP):
         CAI.addConstraints([txt])
         
 def Zeno13B(decomp=CAI.WITH_DECOMP):
+    print("Zeno13B")
     constraints = [
         "Person7 should not move.","Plane2 and plane3 should never be used.",
         "No plane should ever use flyfast.",
@@ -28,14 +30,15 @@ def Zeno13B(decomp=CAI.WITH_DECOMP):
         CAI.addConstraints([txt])
         
 def Zeno13C(decomp=CAI.WITH_DECOMP):
+    print("Zeno13C")
     constraints = [
         "Person7 should always be located in city0.", 
-        "Plane2 should always be located in city3.", 
+        "Plane2 should always be located in city2.", 
         "Plane2 should always have no person onboard.", 
-        "Plane2 fuel level should never change.", 
+        "Plane2 fuel level should always be 1469.",
         "Plane3 should always be located in city3.", 
         "Plane3 should always have no person onboard.", 
-        "Plane3 fuel level should never change.", 
+        "Plane3 fuel level should always be 1532.",
         "For all planes and cities, there should always be no flyfast.",
     ]
     
@@ -62,6 +65,8 @@ def main(problem_name, planning_mode, timeout):
     
     # FOR ABLATION #
     # Zeno13A()
+    # Zeno13B()
+    # Zeno13C()
     # CAI.CM.show()
     # app.constraints_frame.updateFrame()
     
