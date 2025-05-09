@@ -66,7 +66,7 @@ def addConstraints(nl_constraints):
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
                     mprint("* Check Terminal *")
-                    answer = input("\nPress Enter to validate the decomposition or type a comment to consider when decomposing again: ")
+                    answer = input("\nPress Enter or give feedback: ")
                 
                 decompOK = answer==''
 
@@ -104,10 +104,10 @@ def addConstraints(nl_constraints):
                 
                 # 1 # Encode the preferences
                 if i==0: # first time
-                    mprint(f"\tencoding {c.symbol}...")
+                    mprint(f"\tencoding {c}...")
                     encodedPref = LLM.encodePrefs(g_domain, g_problem, c.nl_constraint)
                 else: # Re-encoding
-                    mprint(f"\tre-encoding {c.symbol} (try {i+1}/{MAX_ENCODING_TRY}) ...")
+                    mprint(f"\t\tre-encoding (try {i+1}/{MAX_ENCODING_TRY}) Verifier not ok ...")
                     encodedPref = LLM.reencodePrefs(feedback)
                 filteredEncoding = tools.filterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
@@ -122,7 +122,7 @@ def addConstraints(nl_constraints):
                     encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
                     if encodingOK:
                         c.encoding = filteredEncoding
-                        mprint(c.encoding)
+                        # mprint(c.encoding)
                         LLM.clear_message_history()
                         
                         # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
@@ -131,13 +131,13 @@ def addConstraints(nl_constraints):
                             mprint(LLM.constraint2NL(g_domain, g_problem, c.encoding))
                             LLM.clear_message_history()
                         
-                    else:
-                        mprint("\t\tVerifier: Encoding not OK.")
+                    # else:
+                        # mprint("\t\tVerifier: Encoding not OK.")
                         # mprint(feedback)
                 else:
                     encodingOK = True
                     c.encoding = filteredEncoding
-                    mprint(c.encoding)
+                    # mprint(c.encoding)
                     
                 i+=1
             
