@@ -395,7 +395,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.plan).start()
     def plan(self):
         txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
+        if txt[:len("Failed to plan:")]=="Failed to plan:":
         self.master.plan_frame.showText(txt)
+        else:
+            # put metrics at top
+            i = txt.find("Plan-Length:")
+            plan = txt[i:] + '\n' + txt[:i-2]
+            self.master.plan_frame.showText(plan)
+            self.master.plan_frame.updateSimButton()
         
     def changePlanMode(self):
         self.hideButtons()
@@ -554,7 +561,11 @@ class PlanFrame(customtkinter.CTkFrame):
         self.copy_button.grid(row=0, column=1, padx=10, pady=10)
         
     def updateSimButton(self):
-        plan = self.textbox.get("0.0", "end")
+        txt = self.textbox.get("0.0", "end")
+        if txt[:len("Failed to plan:")]!="Failed to plan:":
+            t = "Found plan:\n"
+            i1 = txt.find(t)+len(t)
+            plan = txt[i1:]
         updatePDSimPlan(plan)
         mprint("\nSim updated.")
         
