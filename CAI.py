@@ -93,7 +93,7 @@ def addConstraints(nl_constraints):
     
     # Encoding
     mprint(color.BOLD + "\nEncoding..." + color.END)
-    r_to_delete = []
+    to_delete = []
     for r in new_r:
         mprint(color.BOLD + str(r) + color.END)
         for c in r.children:
@@ -142,15 +142,14 @@ def addConstraints(nl_constraints):
                 i+=1
             
             if not encodingOK:
-                mprint(f"Failure: Maximum attempts reached to encode {c.symbol} of {r.symbol}... {r.symbol} will be deleted")
-                r_to_delete.append(r.symbol)
-                break
+                mprint(f"\t\tFailure: Maximum attempts reached to encode {c.symbol}... {c.symbol} will be deleted")
+                to_delete.append(c.symbol)
             
     t2 = time.time()
     mprint(f"\nTranslation time: {t2-t1:.2f} s")
     
-    if len(r_to_delete):
-        deleteConstraints(r_to_delete)
+    if len(to_delete):
+        deleteConstraints(to_delete)
 
 def deleteConstraintsAsk():
     loop = True
@@ -201,16 +200,6 @@ def deleteConstraints(constraint_symbols):
             
         elif symbol in CM.decomposed_constraints:
             constraint = CM.constraints[symbol]
-            # Warning if deleting only child of a constraint
-            if len(constraint.parent.children)==1:
-                print(f"Warning: deleting {constraint.symbol} will also delete {constraint.parent.symbol}.")
-                while True:
-                    answer = input("Continue (y/n)? ")
-                    if answer in ['y', 'n']:
-                        if answer=='n':
-                            print("Deletion aborted.")
-                            return None
-                        break
                 
             CM.constraints.pop(constraint.symbol)
             CM.decomposed_constraints.pop(constraint.symbol)
