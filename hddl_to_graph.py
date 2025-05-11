@@ -221,9 +221,24 @@ def get_operator_graph(operator_name: str, domain_path=None) -> nx.MultiDiGraph:
                 if domain_graph.has_edge(operator_name, node):# or self.graph.has_edge(node, operator_name):
                         operator_graph.add_node(node, type=domain_graph.nodes[node]['type'])
                         # priority = domain_graph.edges[operator_name][node]['priority']
-                        operator_graph.add_edge(operator_name, node, priority=domain_graph.edges[operator_name][node]['priority'])
+                        print("operator_name: ", operator_name)
+                        print("node: ", node)
+                        for start, target, key, priority_data in domain_graph.edges(data=True, keys=True):
+                                if start == operator_name and target == node:
+                                        print("start: ", start)
+                                        print("target: ", target)
+                                        print("key: ", key)
+                                        print("priority_data: ", priority_data)
+                                        operator_graph.add_edge(operator_name, node, key=key, priority=priority_data['priority'])
+                                        
+                                # print("key: ", key)
+                                # print("priority_data: ", priority_data)
+                                # operator_graph.add_edge(operator_name, node, key=key, priority=priority_data)
+                        # operator_graph.add_edge(operator_name, node, priority=domain_graph.edges[operator_name][node]['priority'])
         # Add edges connecting the operator to its dependencies:
         # operator_graph.add_edges_from(domain_graph.edges(operator_name, keys=True))
+        print("operator_graph nodes: ", operator_graph.nodes(data=True))
+        print("operator_graph edges: ", operator_graph.edges(keys=True, data=True))
         return operator_graph
 
 # from networkx.drawing.nx_agraph import graphviz_layout
@@ -234,7 +249,7 @@ def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_di
         save_dir: The directory to save the graph image. If None, saves in the same directory as the domain file.
         """
         operator_graph = get_operator_graph(operator_name, domain_path)
-        plt.figure(figsize=(20, 20))
+        plt.figure(figsize=(2, 2))
         pos = nx.shell_layout(operator_graph)  # You can try other layouts like nx.shell_layout
         # pos = nx.multipartite_layout(operator_graph, subset_key="layer")
         node_colors = []
@@ -247,7 +262,7 @@ def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_di
                         node_colors.append('salmon')
                 else:
                         node_colors.append('gray')
-        nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=10, font_weight='bold', arrows=True)
+        nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=1200, font_size=10, font_weight='bold', arrows=True)
         offset = 0.05  # vertical offset to avoid overlap
         for i, (u, v, k, d) in enumerate(operator_graph.edges(keys=True, data=True)):
                 if d['priority'] == -1:

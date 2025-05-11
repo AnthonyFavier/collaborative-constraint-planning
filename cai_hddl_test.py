@@ -87,6 +87,7 @@ if __name__ == '__main__':
     if start != -1 and end != -1:
         # Adjust to slice the content between markers
         extracted = output_str[start + len(start_marker):end].strip()
+        print("Plan:\n", extracted)
         extracted = tools_hddl.format_lilotane_plan(extracted)
         print("Plan:\n", extracted)
         print(f"\n Planning time: {end_time-start_time:.6f}(sec)")
