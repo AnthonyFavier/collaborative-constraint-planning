@@ -9,6 +9,7 @@ from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from UserOption import UserOption
 import time
+from datetime import datetime
         
 CM = Constraints.ConstraintManager()
 
@@ -17,6 +18,8 @@ WITH_VERIFIER = True
 WITH_DECOMP = True
 ASK_DECOMP_FEEDBACK = True
 WITH_E2NL = False
+
+DUMP_CM = True
 
 def askConstraintsToAdd():
     nl_constraints = []
@@ -149,6 +152,25 @@ def addConstraints(nl_constraints):
     
     if len(to_delete):
         deleteConstraints(to_delete)
+
+    dumpCM()
+    
+def dumpCM():
+    txt = ''
+    for k,r in CM.raw_constraints.items():
+        txt += 'r = CAI.CM.createRaw("' + r.nl_constraint + '")\n'
+        
+        
+        for c in r.children:
+            txt += 'd = CAI.CM.createDecomposed(r, "' + c.nl_constraint + '")\n'
+            txt += f"d.encoding = '''{c.encoding}'''\n"
+        
+        txt += '\n'
+            
+        
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    with open(f"dumps_CM/dumped_CM_{date}.py", 'w') as f:
+        f.write(txt)
 
 def deleteConstraintsAsk():
     loop = True
