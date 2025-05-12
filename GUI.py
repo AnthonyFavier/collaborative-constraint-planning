@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
 import time
 import threading
-from my_scrollable_frame import MyScrollableFrame
 import pyperclip
 import ctypes
 try:
@@ -33,13 +32,9 @@ customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-bl
 
 class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     font = ("Arial", 16)
+    encoding_font = ("Courier New", 12)
     def __init__(self, master):
         super().__init__(master, orientation="vertical")
-
-# class ConstraintsFrame(MyScrollableFrame):
-#     font = ("Arial", 16)
-#     def __init__(self, master):
-#         super().__init__(master, orientation="both")
         
         self.checkboxes = {}
         self.constraint_labels = {}
@@ -140,7 +135,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                     self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}", font = ConstraintsFrame.font)
                     self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
-                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = ConstraintsFrame.font)
+                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = ConstraintsFrame.encoding_font)
                     self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
                     
                     i_self_row+=1
