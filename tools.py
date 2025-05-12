@@ -139,6 +139,9 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
             except:
                 try: assert x[0]=='?'
                 except:
+                    if x in ['imply', 'implies']:
+                        print('imply detected')
+                        print('\t'+filteredEncoding)
                     return False, f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
             
     # Parsing test #
