@@ -167,7 +167,7 @@ def constraint2NL(domain, problem, constraint):
             {"role": "user", "content": domain + '\n' + problem},   
             {"role": "assistant", "content": "Got it now share with me the PDDL3.0 constraint to translate in natural language."},
             {"role": "user", "content": constraint},
-            {"role": "assistant", "content": "When translating, I should only output the requested translation, without any additional comments or explanations."},
+            {"role": "user", "content": "Be sure that your translation is intuitive and can be understood by anyone, e.g., make sure that there is no specific PDDL elements. Just give me a brief answer."},
         ]
     
     # Call LLM

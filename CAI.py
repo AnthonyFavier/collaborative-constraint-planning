@@ -17,7 +17,6 @@ CM = Constraints.ConstraintManager()
 WITH_VERIFIER = True
 WITH_DECOMP = True
 ASK_DECOMP_FEEDBACK = True
-WITH_E2NL = False
 
 DUMP_CM = True
 
@@ -69,6 +68,8 @@ def addConstraints(nl_constraints):
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
                     answer = minput("\nPress Enter or give feedback: ")
+                    mprint("> " + answer)
+                    
                 
                 decompOK = answer==''
 
@@ -128,9 +129,9 @@ def addConstraints(nl_constraints):
                         LLM.clear_message_history()
                         
                         # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
-                        if WITH_E2NL:
-                            mprint("Asking for NL translation")
-                            mprint(LLM.constraint2NL(g_domain, g_problem, c.encoding))
+                        if g_with_e2nl:
+                            # mprint("Asking for NL translation")
+                            mprint("\t\t> "+LLM.constraint2NL(g_domain, g_problem, c.encoding))
                             LLM.clear_message_history()
                         
                     # else:
@@ -387,13 +388,16 @@ def CAI():
             else:
                 mprint("No current valid plan")
 
-def init(problem_name, planning_mode, timeout):
+def init(problem_name, planning_mode, timeout, e2nl):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
     global DOMAIN_PATH, PROBLEM_PATH
+    global g_with_e2nl
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
         exit()
+        
+    g_with_e2nl = e2nl
     
     g_problem_name = problem_name
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
