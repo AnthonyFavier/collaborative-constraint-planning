@@ -501,9 +501,9 @@ class DisplayFrame(customtkinter.CTkFrame):
     def prompt(self, text):
         self.textbox.configure(state='normal')
         self.textbox.insert(customtkinter.END, '\n'+text)
-        self.textbox.see('end')
         self.textbox.configure(state='disabled')
         self.textbox.focus()
+        self.textbox.see('end')
         
     def activateEntry(self, txt=""):
         self.prompt(txt)
