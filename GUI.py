@@ -383,9 +383,17 @@ class ButtonsFrame(customtkinter.CTkFrame):
         if txt[:len("Failed to plan:")]=="Failed to plan:":
             self.master.plan_frame.showText(txt)
         else:
+            # get current metrics and put in previous
+            previous_plan = self.master.plan_frame.textbox.get("0.0", "end")
+            i = previous_plan.find("Plan-Length:")
+            if i!=-1:
+                previous_metrics = previous_plan[i:previous_plan.find("Found Plan:")-2]
+                self.master.plan_frame.editPrevious(previous_metrics)
+            
+            
             # put metrics at top
             i = txt.find("Plan-Length:")
-            plan = txt[i:] + '\n' + txt[:i-2]
+            plan = txt[i:] + '\n\n' + txt[:i-2]        
             self.master.plan_frame.showText(plan)
             self.master.plan_frame.updateSimButton()
         
@@ -522,20 +530,45 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry.configure(fg_color=self.master.display_frame.entry_dark)
         
 class PlanFrame(customtkinter.CTkFrame):
+    label_font = ("Arial", 16, "bold")
+    plan_font = ("Arial", 14)
+    
     def __init__(self, master):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        i_self_row = 0
         
         self.title = customtkinter.CTkLabel(self, text="Current Plan", fg_color="gray30", corner_radius=6,font=App.font)
-        self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
+        self.title.grid(row=i_self_row, column=0, padx=10, pady=(10, 0), sticky="ew")
+        i_self_row+=1
         
-        self.textbox = customtkinter.CTkTextbox(self, wrap='char')
+        self.previous_label = customtkinter.CTkLabel(self, text="Previous:", font=PlanFrame.label_font)
+        self.previous_label.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="ew")
+        i_self_row+=1
+        
+        self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
+        self.previous_textbox.insert('end', "None")
+        self.previous_textbox.configure(state='disabled')
+        self.previous_textbox.configure(height=65)
+        self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        # self.grid_rowconfigure(2, weight=1)
+        i_self_row+=1
+        
+        self.current_label = customtkinter.CTkLabel(self, text="Current:", font=PlanFrame.label_font)
+        self.current_label.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="ew")
+        i_self_row+=1
+        
+        
+        self.textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
+        self.textbox.insert('end', "None")
         self.textbox.configure(state='disabled')
-        self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        self.grid_rowconfigure(4, weight=1)
+        i_self_row+=1
         
         self.buttons_frame = customtkinter.CTkFrame(self)
-        self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.buttons_frame.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        i_self_row+=1
         self.buttons_frame.grid_columnconfigure(0, weight=1)
         self.buttons_frame.grid_columnconfigure(1, weight=1)
         
@@ -563,6 +596,12 @@ class PlanFrame(customtkinter.CTkFrame):
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
         self.textbox.configure(state='disabled')
+        
+    def editPrevious(self, txt):
+        self.previous_textbox.configure(state='normal')
+        self.previous_textbox.delete("0.0", 'end')
+        self.previous_textbox.insert('end', txt)
+        self.previous_textbox.configure(state='disabled')
 
 class App(customtkinter.CTk):
     font = ("Arial", 20, "bold")
