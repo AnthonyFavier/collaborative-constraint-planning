@@ -31,10 +31,15 @@ class ThreadWithReturnValue(threading.Thread):
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
-class ConstraintsFrame(MyScrollableFrame):
+class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     font = ("Arial", 16)
     def __init__(self, master):
-        super().__init__(master, orientation="both")
+        super().__init__(master, orientation="vertical")
+
+# class ConstraintsFrame(MyScrollableFrame):
+#     font = ("Arial", 16)
+#     def __init__(self, master):
+#         super().__init__(master, orientation="both")
         
         self.checkboxes = {}
         self.constraint_labels = {}
@@ -261,7 +266,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10)
         self.confirm_button.grid_remove()
         
-        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, command=self.add)
+        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, command=self.addT)
         self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10)
         self.add_nl_constraints = []
         i_row+=1
@@ -278,11 +283,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, command=self.changePlanMode)
+        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, command=self.changePlanModeT)
         self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
-        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, command=self.changeTimeout)
+        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, command=self.changeTimeoutT)
         self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
         
@@ -305,51 +310,29 @@ class ButtonsFrame(customtkinter.CTkFrame):
         for k,x in self.buttons.items():
             x.grid()
     
+    def addT(self):
+        threading.Thread(target=self.add).start()
     def add(self):
         self.hideButtons()
         self.add_nl_constraints = []
-        self.master.display_frame.prompt("\nEnter your first constraint:")
-        self.master.display_frame.entry.configure(state="normal")
-        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
-        self.master.display_frame.entry.focus()
-        self.master.display_frame.entry_function = self.add2
-    def add2(self):
-        # Show input
-        c = self.master.display_frame.entry_text
         
-        if c!='':
+        c = minput(txt="\nEnter your constraint:")
+        
+        if c=='':
+            self.master.display_frame.prompt("Aborted\n")
+            self.showButtons()
+        else:
             self.master.display_frame.prompt("> " + c )
-            
-            # Store constraint
             self.add_nl_constraints.append(c)
-            # repeat
-            self.master.display_frame.prompt("\nPress Enter to validate or type another constraint:")
-            self.master.display_frame.entry_function = self.add2
-            self.master.display_frame.entry.focus()
-        
-        else: # if no constraint entered
-            # first time: abort
-            if self.add_nl_constraints==[]:
-                self.master.display_frame.prompt("Aborted\n")
-                self.showButtons()
-                self.master.display_frame.entry_function = None
-                self.master.display_frame.entry.configure(state="disabled")
-                
-            else: # no additional constraint: add current ones
-                try:
-                    CAI.addConstraints(self.add_nl_constraints)
-                except Exception as err:
-                    self.master.quit()
-                    raise err
-                self.master.display_frame.entry_function = None
-                self.master.display_frame.entry.configure(state="disabled")
-                self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
-                # TODO deal with question if decomposition ok
-                # ask yes or no, enter possible feedback
-                self.master.constraints_frame.updateFrame()
-                self.showButtons()
-                
-                mprint("\nConstraints added")
+            try:
+                CAI.addConstraints(self.add_nl_constraints)
+            except Exception as err:
+                self.master.quit()
+                raise err
+            
+            self.master.constraints_frame.updateFrame()
+            self.showButtons()
+            mprint("\nConstraints added")
         
     def delete(self):
         self.master.constraints_frame.unselectAll()
@@ -398,12 +381,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_function = None
         
     def planT(self):
-        self.hideButtons()
         threading.Thread(target=self.plan).start()
     def plan(self):
+        self.hideButtons()
         txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
         if txt[:len("Failed to plan:")]=="Failed to plan:":
-        self.master.plan_frame.showText(txt)
+            self.master.plan_frame.showText(txt)
         else:
             # put metrics at top
             i = txt.find("Plan-Length:")
@@ -411,63 +394,49 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.master.plan_frame.showText(plan)
             self.master.plan_frame.updateSimButton()
         
+    def changePlanModeT(self):
+        threading.Thread(target=self.changePlanMode).start()
     def changePlanMode(self):
         self.hideButtons()
         
-        mprint(' ')
-        mprint(f"Current planning mode: {CAI.g_planning_mode}")
+        mprint(f"\nCurrent planning mode: {CAI.g_planning_mode}")
         mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
         
-        self.master.display_frame.entry.configure(state="normal")
-        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
-        self.master.display_frame.entry.focus()
-        self.master.display_frame.entry_function = self.changePlanMode2
-    def changePlanMode2(self):
-        c = self.master.display_frame.entry_text
+        c = minput()
         
-        if c!='':
+        # Check if correct
+        if c in ['1', '2', '3', '4', '5']:
             self.master.display_frame.prompt("> " + c )
+            if c=='1':
+                CAI.g_planning_mode=PlanMode.ANYTIME
+            if c=='2':
+                CAI.g_planning_mode=PlanMode.ANYTIMEAUTO
+            if c=='3':
+                CAI.g_planning_mode=PlanMode.DEFAULT
+            if c=='4':
+                CAI.g_planning_mode=PlanMode.OPTIMAL
+            if c=='5':
+                CAI.g_planning_mode=PlanMode.SATISFICING
             
-            # Check if correct
-            if c in ['1', '2', '3', '4', '5']:
-                if c=='1':
-                    CAI.g_planning_mode=PlanMode.ANYTIME
-                if c=='2':
-                    CAI.g_planning_mode=PlanMode.ANYTIMEAUTO
-                if c=='3':
-                    CAI.g_planning_mode=PlanMode.DEFAULT
-                if c=='4':
-                    CAI.g_planning_mode=PlanMode.OPTIMAL
-                if c=='5':
-                    CAI.g_planning_mode=PlanMode.SATISFICING
-                
-                mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")
-                
-                if CAI.g_timeout==None and CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
-                    mprint('WARNING: Timeout disabled with Anytime planning mode!')
-            else:
+            mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")
+            
+            if CAI.g_timeout==None and CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+                mprint('WARNING: Timeout disabled with Anytime planning mode!')
+        else: 
+            if c=='':
                 mprint("Incorrect input")
-                mprint("Aborted\n")
-        else:
             mprint("Aborted\n")
             
-        self.master.display_frame.entry_function = None
-        self.master.display_frame.entry.configure(state="disabled")
-        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
         self.showButtons()
     
+    def changeTimeoutT(self):
+        threading.Thread(target=self.changeTimeout).start()
     def changeTimeout(self):
         self.hideButtons()
-        mprint(' ')
-        mprint(f"Current Timeout: {CAI.g_timeout}")
+        mprint(f"\nCurrent Timeout: {CAI.g_timeout}")
         mprint("Enter a new timeout ('Empty'=disables timeout): ")
         
-        self.master.display_frame.entry.configure(state="normal")
-        self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
-        self.master.display_frame.entry.focus()
-        self.master.display_frame.entry_function = self.changeTimeout2
-    def changeTimeout2(self):
-        c = self.master.display_frame.entry_text
+        c = minput()
         try:
             t = float(c)
             assert t>0
@@ -478,7 +447,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             mprint(f'Timeout disabled')
             if CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
-    
+
         self.showButtons()
     
 class DisplayFrame(customtkinter.CTkFrame):
@@ -497,8 +466,8 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="")
         self.entry.configure(state='disabled')
         self.entry.grid(row=1, column=0, padx=10, pady=0, sticky="ew")
-        self.entry_function = None
         self.entry_text = ''
+        self.entry_stamp = None
         self.entry_dark = ('#F9F9FA', '#343638')
         self.entry_light = ('#F9F9FA', '#585a5c')
         # self.entry.configure(fg_color=self.entry_light)
@@ -536,13 +505,27 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox.configure(state='disabled')
         self.textbox.focus()
         
+    def activateEntry(self, txt=""):
+        self.prompt(txt)
+        self.entry.configure(state="normal")
+        self.entry.configure(fg_color=self.master.display_frame.entry_light)
+        self.entry.focus()
+        
+    def getFromEntry(self, txt=""):
+        self.activateEntry(txt)
+        while self.entry_stamp==None or time.time() - self.entry_stamp > 1.0:
+            time.sleep(0.1)
+        return self.entry_text
+        
     def validateEntry(self, event):
         if self.entry.cget("state") == 'disabled':
             return None
         self.entry_text = self.entry.get()
+        self.entry_stamp = time.time()
         self.entry.delete(0, customtkinter.END)
-        self.entry_function()
-
+        self.entry.configure(state="disabled")
+        self.entry.configure(fg_color=self.master.display_frame.entry_dark)
+        
 class PlanFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -573,8 +556,8 @@ class PlanFrame(customtkinter.CTkFrame):
             t = "Found plan:\n"
             i1 = txt.find(t)+len(t)
             plan = txt[i1:]
-        updatePDSimPlan(plan)
-        mprint("\nSim updated.")
+            updatePDSimPlan(plan)
+            mprint("\nSim updated.")
         
     def copy(self):
         pyperclip.copy(self.textbox.get("0.0", "end"))
@@ -618,6 +601,7 @@ class App(customtkinter.CTk):
         self.plan_frame = PlanFrame(self)
         self.plan_frame.grid(row=0, column=2, rowspan=2, padx=5, pady=5, sticky='nsew')
         
+        # TODO: Escape also kills child threads
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
         self.bind("<KP_Enter>", self.display_frame.validateEntry)

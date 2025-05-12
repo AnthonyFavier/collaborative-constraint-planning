@@ -93,3 +93,13 @@ def mprint(txt):
 def setPromptFunction(prompt_function):
     global prompt
     prompt = prompt_function
+    
+finput = lambda x: None
+def minput(txt=""):
+    if GUI_PROMPT:
+        return finput(txt=txt)
+    elif SHELL_PRINTS:
+        return input(txt)
+def setInputFunction(input_function):
+    global finput
+    finput = input_function

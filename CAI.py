@@ -65,8 +65,7 @@ def addConstraints(nl_constraints):
                 
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
-                    mprint("* Check Terminal *")
-                    answer = input("\nPress Enter or give feedback: ")
+                    answer = minput("\nPress Enter or give feedback: ")
                 
                 decompOK = answer==''
 
