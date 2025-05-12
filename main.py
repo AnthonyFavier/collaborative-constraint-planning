@@ -61,6 +61,7 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
 def main(problem_name, planning_mode, timeout):
     app = GUI.App()
     setPromptFunction(app.display_frame.prompt)
+    setInputFunction(app.display_frame.getFromEntry)
     CAI.init(problem_name, planning_mode, timeout)
     
     # FOR ABLATION #
