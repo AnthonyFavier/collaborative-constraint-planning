@@ -594,7 +594,7 @@ class PlanFrame(customtkinter.CTkFrame):
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
         if txt[:len("Failed to plan:")]!="Failed to plan:":
-            t = "Found plan:\n"
+            t = "Found Plan:\n"
             i1 = txt.find(t)+len(t)
             plan = txt[i1:]
             updatePDSimPlan(plan)

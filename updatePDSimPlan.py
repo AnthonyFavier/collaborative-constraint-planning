@@ -28,6 +28,8 @@ def convertPlanIntoActionTuples(plan):
     plan = plan.split('\n')
     
     for l in plan:
+        if ''.join(l.split())=='':
+            continue
         l = l[l.find("(")+1 : l.find(")") ]
         l = ' '.join(l.split('_'))
         l = l.split(' ')
@@ -40,6 +42,7 @@ def convertPlanIntoActionTuples(plan):
     return actions
 
 def main(plan):
+    # Takes as input directly a list of actions, without any additional text
     
     with open(PDSIM_INSTANCE_PATH, 'r') as f:
         pdFileStr = f.read()
