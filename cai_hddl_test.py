@@ -118,7 +118,6 @@ if __name__ == '__main__':
                 if encodedOK:
                     print("Plan result with new domain:\n", verify_result[1])
                     keep_trying = False
-                    need_reencode = False
                 else:
                     re_encoded_choice = input("There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again? (answer 'no' if don't want, answer 'yes' with more feedback if needed)".format(verify_result))
                     if re_encoded_choice.lower() == "no":

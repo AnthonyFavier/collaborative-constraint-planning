@@ -284,7 +284,15 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.manage_hddl_buttons['Cancel'].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         self.manage_hddl_buttons['Cancel'].grid_remove()
         ###
-
+        # Add buttons:
+        self.add_buttons = dict()
+        self.add_buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add2)
+        self.add_buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.add_buttons["Add"].grid_remove()
+        self.add_buttons["Cancel"] = customtkinter.CTkButton(self, text="Cancel", command=self.showButtons)
+        self.add_buttons["Cancel"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.add_buttons["Cancel"].grid_remove()
+        #
         self.buttons["View Domain Graph"] = customtkinter.CTkButton(self, text="View Domain Graph", command=self.master.htn_view_frame.view_all)
         self.buttons["View Domain Graph"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
@@ -297,31 +305,15 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Add New Method"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
 
-        # self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add_hddl)
-        # self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # self.add_nl_constraints = []
-        # i_row+=1
-
-        # self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete_hddl)
-        # self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-
         self.buttons["Manage All Methods"] = customtkinter.CTkButton(self, text="Manage All Methods",fg_color="green", hover_color="darkgreen",  command=self.manage_hddl)
         self.buttons["Manage All Methods"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         i_row+=1
-
-        # self.buttons["View"] = customtkinter.CTkButton(self, text="View Graph", command=self.view_hddl)
-        # self.buttons["View"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
 
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan with HDDL Planner",fg_color="red", hover_color="darkred", command=self.plan_hddl)
         self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         i_row+=1
 
-        # self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle encodings", command=self.master.constraints_frame.toggleEncodings)
-        # self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        # i_row+=1
-
+        
     def showManageButtons(self):
         r = 0
         for k,x in self.manage_hddl_buttons.items():
@@ -359,14 +351,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.hideButtons()
         # Show the view button
         self.showManageButtons()
-        # self.buttons["View"].grid(row=0, column=0, padx=10, pady=10, sticky="ew")
-        # # Show the add button
-        # self.buttons["Add"].grid(row=1, column=0, padx=10, pady=10, sticky="ew")
-        # # Show the delete button
-        # self.buttons["Delete"].grid(row=2, column=0, padx=10, pady=10, sticky="ew")
-        # # Show the reset button
-        # self.buttons["Reset"].grid(row=3, column=0, padx=10, pady=10, sticky="ew")
-
         self.view_hddl()
 
     def reset_hddl(self):
@@ -374,7 +358,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         what to do when the user clicks the Reset button
         '''
         #reset domain back to the original domain
-
+        CAI_hddl.switch_domain_problem_back_to_original()
         self.master.htn_view_frame.view_list_operators()
     
     def confirm(self):
@@ -382,16 +366,31 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
     def showConfirmButton(self):
         self.confirm_button.grid()
+    
     def hideConfirmButton(self):
         self.confirm_button.grid_remove()
         
     def hideButtons(self):
         for k,x in self.buttons.items():
             x.grid_remove()
+    
     def showButtons(self):
         self.hideManageButtons()
+        self.hideAddButtons()
         for k,x in self.buttons.items():
             x.grid()
+
+    def showAddButtons(self):
+        self.hideButtons()
+        self.hideManageButtons()
+        r=0
+        for k,x in self.add_buttons.items():
+            x.grid(row=r, column=0, padx=10, pady=10, sticky="ew")
+            r+=1
+    
+    def hideAddButtons(self):
+        for k,x in self.add_buttons.items():
+            x.grid_remove()
 
     def view_hddl(self):
         self.master.htn_view_frame.view_list_operators()
@@ -399,13 +398,171 @@ class ButtonsFrame(customtkinter.CTkFrame):
     
     def add_hddl(self):
         self.hideButtons()
+        self.showAddButtons()
         self.add_nl_constraints = []
         self.master.display_frame.prompt("\nEnter your preferred strategy:")
         self.master.display_frame.entry.configure(state="normal")
         self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
         self.master.display_frame.entry.focus()
-        self.master.display_frame.entry_function = self.add2
+        self.master.display_frame.entry_function = self.add_hddl2
     
+
+    def add_hddl2(self):
+        """
+        Main function to handle adding HDDL constraints.
+        """
+        # Show input
+        c = self.master.display_frame.entry_text
+        
+        if c!='':
+            self.master.display_frame.prompt("> " + c )
+            # Store constraint
+            self.add_nl_constraints.append(c)
+            # repeat
+            self.master.display_frame.prompt("\nPress Enter to validate or type another constraint:")
+            self.master.display_frame.entry_function = self.add_hddl2
+            self.master.display_frame.entry.focus()
+        
+        else:
+            self.master.display_frame.entry_function = None
+            # first time: abort
+            if self.add_nl_constraints==[]:
+                self.master.display_frame.prompt("Aborted\n")
+                self.showButtons()
+                self.master.display_frame.entry_function = None
+                self.master.display_frame.entry.configure(state="disabled")
+            else:
+                self.process_initial_response()
+
+    def process_initial_response(self):
+        """
+        Process the initial response and prompt the user for feedback.
+        """
+        try:
+            initial_response = CAI_hddl.ask_LLM_to_encode_new_methods('\n'.join(self.add_nl_constraints))
+            self.master.display_frame.prompt(initial_response)
+            self.master.display_frame.prompt("\nDoes the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+            self.master.display_frame.entry.configure(state="normal")
+            self.master.display_frame.entry.focus()
+            self.master.display_frame.entry_function = lambda: self.handle_feedback(initial_response)
+        except Exception as e:
+            self.master.display_frame.prompt(f"An error occurred: {e}")
+
+    def handle_feedback(self, initial_response, count=0):
+        """
+        Handle user feedback after displaying the initial response.
+        """
+        feedback = self.master.display_frame.entry_text  # Get the feedback text
+        self.master.display_frame.entry_text = ''  # Clear the entry text
+
+        if feedback.lower() == 'yes':
+            # Add method to domain and save it as an updated domain
+            CAI_hddl.update_domain_with_new_methods([initial_response])
+            self.master.display_frame.prompt("New methods added to the domain.")
+            self.master.display_frame.prompt("\nVerifying the new domain by running thru the HDDL planner...")
+            verify_result = CAI_hddl.plan_with_hddl_planner()
+            if "Failed to plan" not in verify_result:
+                self.master.plan_frame.showText(verify_result)
+                self.master.display_frame.prompt("Domain is updated and new plan is generated!")
+                self.hideAddButtons()
+            else:
+                # revert domain back to previous
+                CAI_hddl.switch_domain_back_to_previous()
+                self.master.display_frame.prompt("There is an error with the updated domain. The error is:\n{}\n*** Do you want to re-encode your preference again? (answer 'no' if you don't want, answer 'yes' with more feedback if needed)".format(feedback))
+                self.master.display_frame.entry.configure(state="normal")
+                self.master.display_frame.entry.focus()
+                self.master.display_frame.entry_function = lambda: self.handle_feedback(initial_response, count + 1)
+        elif feedback.lower() == 'no' or count > 5:
+            self.master.display_frame.prompt("Aborted re-encoding process.")
+        else:
+            # Re-encode the preference
+            self.master.display_frame.prompt("Re-encoding the preference...")
+            encoded_pref = CAI_hddl.ask_LLM_to_reencode_new_methods(feedback=feedback)
+            self.master.display_frame.prompt(f"Re-encode result:\n{encoded_pref}\n\nDoes the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+            self.master.display_frame.entry.configure(state="normal")
+            self.master.display_frame.entry.focus()
+            self.master.display_frame.entry_function = lambda: self.handle_feedback(initial_response, count + 1)
+
+
+
+    def add_hddl2_old(self):
+        # Show input
+        c = self.master.display_frame.entry_text
+        
+        if c!='':
+            self.master.display_frame.prompt("> " + c )
+            # Store constraint
+            self.add_nl_constraints.append(c)
+            # repeat
+            self.master.display_frame.prompt("\nPress Enter to validate or type another constraint:")
+            self.master.display_frame.entry_function = self.add_hddl2
+            self.master.display_frame.entry.focus()
+        
+        else:
+            self.master.display_frame.entry_function = None
+            # first time: abort
+            if self.add_nl_constraints==[]:
+                self.master.display_frame.prompt("Aborted\n")
+                self.showButtons()
+                self.master.display_frame.entry_function = None
+                self.master.display_frame.entry.configure(state="disabled")
+            else:
+                try:
+                    initial_response = CAI_hddl.ask_LLM_to_encode_new_methods('\n'.join(self.add_nl_constraints))
+                    self.master.display_frame.prompt(initial_response)
+                    self.master.display_frame.prompt("\nDoes the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+                    self.master.display_frame.entry.configure(state="normal")
+                    self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
+                    self.master.display_frame.entry.focus()
+                    feedback = self.master.display_frame.entry_text
+                    self.master.display_frame.entry_text = ''
+                    keep_trying = True
+                    count = 0
+                    while keep_trying or count >5:
+                        if feedback.lower() == 'yes':
+                            # add method to domain and save it as an updated domain:
+                            new_method = CAI_hddl.update_domain_with_new_methods([initial_response])
+                            CAI_hddl.update_domain_by_add_methods(new_method)
+                            self.master.display_frame.prompt("New methods added to the domain.")
+                            self.master.display_frame.prompt("\nVerifying the new domain by running thru the HDDL planner...")
+                            verify_result = CAI_hddl.plan_with_hddl_planner(return_format_version=True)
+                            if "Failed to plan" not in verify_result:
+                                self.master.plan_frame.showText(verify_result)
+                                self.master.display_frame.prompt("Domain is updated and new plan is generated!")
+                                keep_trying = False
+                            else:
+                                self.master.display_frame.prompt("There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again? (answer 'no' if don't want, answer 'yes' with more feedback if needed)".format(feedback))
+                                self.master.display_frame.entry.configure(state="normal")
+                                self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
+                                self.master.display_frame.entry.focus()
+                                feedback = self.master.display_frame.entry_text
+                                self.master.display_frame.entry_text = ''
+                                if feedback.lower() == "no":
+                                    keep_trying = False
+                                else:
+                                    keep_trying = True
+                                    feedback = "There is error with updated domain with new methods. The error is \n {} \n*** Do you want to re-encode your preference again?".format(feedback) + feedback
+                        if keep_trying:
+                            mprint("Re-encode the preference...")
+                            encodedPref = CAI_hddl.ask_LLM_to_reencode_new_methods(feedback=feedback)
+                            self.master.display_frame.prompt(f"Re-encode result:\n{encodedPref}\n\n Does the answer match your preferences? (if yes, answer 'yes', if no, please provide feedback.)")
+                            self.master.display_frame.entry.configure(state="normal")
+                            self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_light)
+                            self.master.display_frame.entry.focus()
+                            feedback = self.master.display_frame.entry_text
+                            self.master.display_frame.entry_text = ''
+                
+                except Exception as err:
+                    self.master.quit()
+                    raise err
+                self.master.display_frame.prompt("\nNew Methods added!")
+                self.master.display_frame.entry_function = None
+                self.master.display_frame.entry.configure(state="disabled")
+                self.master.display_frame.entry.configure(fg_color=self.master.display_frame.entry_dark)
+                self.master.htn_view_frame.view_list_operators()
+                self.showButtons()
+                mprint("\nNew Methods added!")
+
     def add2(self):
         # Show input
         c = self.master.display_frame.entry_text
@@ -563,18 +720,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
 
 
     # HDDL function:
-    # def add_hddl(self):
-    #     '''what to do when the user clicks the Add button'''
-    #     pass
+
     def delete_hddl(self):
-        '''what to do when the user clicks the Delete button'''
-        pass
-    def activate_hddl(self):
-        '''what to do when the user clicks the Activate button'''
-        pass
-    def view_hddl(self):
-        '''what to do when the user clicks the View button'''
-        pass    
+        '''what to do when the user clicks the Delete button:
+        Delete the selected method from the domain.
+        '''
+        checked_operators = [operator for operator, var in self.master.htn_view_frame.checkbox_vars.items() if var.get()]
+        print("Checked operators:", checked_operators)
+        if checked_operators:
+            print("Deleting methods:", checked_operators)
+            CAI_hddl.update_domain_by_remove_methods(checked_operators)
+        self.master.htn_view_frame.view_list_operators()
+        
+    
     
 
     
@@ -593,6 +751,8 @@ class InteractiveFrame(customtkinter.CTkFrame):
         self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="ewsn")
         N = 20
         self.prompt("\n" * N)
+
+        self.text = ''
         
         self.entry = customtkinter.CTkEntry(self, placeholder_text="[Type here]")
         self.entry.configure(state='disabled')
@@ -901,7 +1061,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
             )
             instruction_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="w")
             # Add a confirm button to print the checked operators
-            confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm", command=self.confirm_checked_operators)
+            confirm_button = customtkinter.CTkButton(self.operators_frame, text="View Operator Graphs", command=self.confirm_checked_operators)
             confirm_button.grid(row=0, column=2, columnspan=1, pady=10)
             # Add column headers
             task_label = customtkinter.CTkLabel(self.operators_frame, text="TASK", text_color="yellow")
@@ -999,28 +1159,6 @@ class HTNViewFrame(customtkinter.CTkFrame):
                     size=(600, 300)
                 )
 
-                # # Load the image from the file path
-                # img = Image.open(operator_graph_dir)
-
-                # # Get the width of the operators_frame
-                # # self.operators_frame.update_idletasks()  # Ensure the frame dimensions are updated
-                # frame_width = self.operators_frame.winfo_width()
-                # print("Current Frame width:", frame_width)
-
-                # # Calculate the new height to maintain the aspect ratio
-                # aspect_ratio = img.width / img.height
-                # new_width = frame_width
-                # new_height = int(new_width / aspect_ratio)
-
-                # # Resize the image
-                # resized_img = img.resize((new_width, new_height))
-
-                # # Create a CTkImage with the resized image
-                # operator_graph = customtkinter.CTkImage(
-                #     light_image=resized_img,
-                #     dark_image=resized_img
-                # )
-                
                 # Display the image in a label inside the scrollable frame
                 print("display the image in a label inside the scrollable frame")
                 label = customtkinter.CTkLabel(self.operators_frame, image=operator_graph, text="")

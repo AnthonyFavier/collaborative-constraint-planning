@@ -1,6 +1,41 @@
 ### HELPER FUNCTIONS FOR HDDL
 import subprocess
 import time
+def removeMethod(domain_str, delete_method):
+    """
+    Remove a method block from the domain string by tracking parentheses.
+
+    Args:
+        domain_str (str): The domain string containing methods and tasks.
+        delete_method (str): The name of the method to remove.
+
+    Returns:
+        str: The updated domain string with the specified method removed.
+    """
+    lines = domain_str.splitlines()
+    updated_lines = []
+    inside_method = False
+    parentheses_count = 0
+
+    for line in lines:
+        # Check if the line starts the method to delete
+        if not inside_method and f":method {delete_method}" in line:
+            inside_method = True
+            parentheses_count = line.count("(") - line.count(")")
+            continue  # Skip this line (start of the method)
+
+        # If inside the method block, track parentheses
+        if inside_method:
+            parentheses_count += line.count("(") - line.count(")")
+            if parentheses_count <= 0:
+                inside_method = False  # End of the method block
+            continue  # Skip lines inside the method block
+
+        # Add lines that are not part of the method block
+        updated_lines.append(line)
+
+    return "\n".join(updated_lines)
+
 def extract_blocks(text, keyword="(:method"):
     blocks = []
     start = 0
@@ -19,7 +54,7 @@ def extract_blocks(text, keyword="(:method"):
                 start = i + 1
                 break
     return blocks
-def updateDomain(domain_str, new_method):
+def updateDomain(domain_str, new_method=None, delete_method=None):
     ''' This function add new method into the domain file, and saved it in a different file with label -modifed-
     inputs:
     - domain_str: a string of domain
@@ -28,21 +63,29 @@ def updateDomain(domain_str, new_method):
     new_domain_str: a string of updated domain with new_method
     '''
     updatedDomain = None 
-    # extract method blocks: blocks that start with (:method:
-    new_method_blocks_list = extract_blocks(new_method,keyword="(:method")
-    # Find position to insert 
-    ## find action block, add new_method right before the first action block
-    i_metric = domain_str.find("(:action")
-    if i_metric!=-1:
-        i_insert = i_metric
-    ## Else, insert before last parenthesis
-    else:
-        i_insert=len(domain_str)-1
-        while domain_str[i_insert]!=')':
-            i_insert-=1
-    
-    # Insert constraints into problem
-    updatedDomain = domain_str[:i_insert] + "\n"+ "\n".join(new_method_blocks_list) + "\n" + domain_str[i_insert:]
+
+    if new_method is not None and "(:method" in new_method:
+        # extract method blocks: blocks that start with (:method:
+        new_method_blocks_list = extract_blocks(new_method,keyword="(:method")
+        # Find position to insert 
+        ## find action block, add new_method right before the first action block
+        i_metric = domain_str.find("(:action")
+        if i_metric!=-1:
+            i_insert = i_metric
+        ## Else, insert before last parenthesis
+        else:
+            i_insert=len(domain_str)-1
+            while domain_str[i_insert]!=')':
+                i_insert-=1
+        
+        # Insert constraints into problem
+        updatedDomain = domain_str[:i_insert] + "\n"+ "\n".join(new_method_blocks_list) + "\n" + domain_str[i_insert:]
+    elif delete_method is not None:
+        # remove method blocks: blocks that start with (:method:
+        updatedDomain = removeMethod(domain_str, delete_method)
+    else: 
+        print("Error: No appropriate new method or delete method provided.")
+        return domain_str
     
     return updatedDomain
 

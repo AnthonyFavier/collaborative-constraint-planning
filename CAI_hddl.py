@@ -117,7 +117,25 @@ def addConstraints(nl_constraints):
     if len(r_to_delete):
         deleteConstraints(r_to_delete)
                 
-            
+def ask_LLM_to_encode_new_methods(prompt):
+    # Ask LLM for new methods
+    mprint(color.BOLD + "\nAsking LLM for new methods..." + color.END)
+    with open(DOMAIN_PATH, "r") as f:
+        domain_str = f.read()
+    with open(PROBLEM_PATH, "r") as f_prob:
+        problem_str = f_prob.read()
+    # Ask LLM for new methods
+    response = LLM.encodePrefs_hddl(domain_str, problem_str, prompt)    # Parse the response
+    # new_methods = response.content[0].text.splitlines()
+    return response
+
+def ask_LLM_to_reencode_new_methods(feedback):
+    # Ask LLM for new methods
+    mprint(color.BOLD + "\nAsking LLM for new methods..." + color.END)
+    # Ask LLM for new methods
+    response = LLM.reencodePrefs_hddl(feedback)    # Parse the response
+    return response
+
 def deleteConstraintsAsk():
     loop = True
     while loop:
@@ -426,18 +444,37 @@ def copy_original_domain_problem():
     shutil.copy(DOMAIN_PATH, DOMAIN_PATH.replace(".hddl", "_original.hddl"))
     shutil.copy(PROBLEM_PATH, PROBLEM_PATH.replace(".pddl", "_original.pddl"))
 
-def update_domain_with_new_methods(new_methods_str):
+def update_domain_with_new_methods(list_new_methods_str):
     '''
     This function add new method into the domain file, and saved it in a different file with label -modifed-'''
     global DOMAIN_PATH, PREVIOUS_DOMAIN_PATH
     # Add new methods to domain file:
     with open(DOMAIN_PATH, "r") as f:
         domain_str = f.read()
-    new_domain_str = tools_hddl.updateDomain(domain_str, new_methods_str)
+    for new_method_str in list_new_methods_str:
+        domain_str = tools_hddl.updateDomain(domain_str, new_method=new_method_str)
 
     # Save updated domain in a file
     with open(DOMAIN_PATH.replace(".hddl", "_modified.hddl"), "w") as f:
-        f.write(new_domain_str)
+        f.write(domain_str)
+    
+    PREVIOUS_DOMAIN_PATH = DOMAIN_PATH
+    DOMAIN_PATH = DOMAIN_PATH.replace(".hddl", "_modified.hddl")
+
+def update_domain_by_remove_methods(list_methods_to_remove):
+    '''
+    This function remove methods from the domain file, and saved it in a different file with label -modifed-'''
+    global DOMAIN_PATH, PREVIOUS_DOMAIN_PATH
+    # Remove methods from domain file:
+    with open(DOMAIN_PATH, "r") as f:
+        domain_str = f.read()
+    for method_name in list_methods_to_remove:
+        # Remove method from domain string
+        domain_str = tools_hddl.removeMethod(domain_str, method_name)
+
+    # Save updated domain in a file
+    with open(DOMAIN_PATH.replace(".hddl", "_modified.hddl"), "w") as f:
+        f.write(domain_str)
     
     PREVIOUS_DOMAIN_PATH = DOMAIN_PATH
     DOMAIN_PATH = DOMAIN_PATH.replace(".hddl", "_modified.hddl")
@@ -451,12 +488,13 @@ def switch_domain_back_to_previous():
 
 def switch_domain_problem_back_to_original():
     # Set the domain and problem files back to the original
-    global DOMAIN_PATH, PROBLEM_PATH
+    global DOMAIN_PATH, PROBLEM_PATH, PREVIOUS_DOMAIN_PATH
+    PREVIOUS_DOMAIN_PATH = DOMAIN_PATH
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
-    DOMAIN_PATH = DOMAIN_PATH.replace(".hddl","_original.hddl")
-    PROBLEM_PATH = PROBLEM_PATH.replace(".hddl","_original.pddl")
+    # DOMAIN_PATH = DOMAIN_PATH.replace(".hddl","_original.hddl")
+    # PROBLEM_PATH = PROBLEM_PATH.replace(".hddl","_original.pddl")
 
-def plan_with_hddl_planner(return_format_version):
+def plan_with_hddl_planner(return_format_version=True):
     """Plan with the HDDL planner"""
     with open(DOMAIN_PATH, "r") as f:
         domain_str = f.read()
