@@ -31,7 +31,7 @@ customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dar
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 class ConstraintsFrame(customtkinter.CTkScrollableFrame):
-    font = ("Arial", 16)
+    font = ("Arial", 18)
     encoding_font = ("Courier New", 12)
     def __init__(self, master):
         super().__init__(master, orientation="vertical")
@@ -462,19 +462,20 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL")
     
 class DisplayFrame(customtkinter.CTkFrame):
+    font = ('Arial', 18)
     def __init__(self, master):
         super().__init__(master)
         
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
-        self.textbox = customtkinter.CTkTextbox(self, wrap='word')
+        self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
         self.textbox.configure(state='disabled')
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
         N = 20
         self.prompt("\n" * N)
         
-        self.entry = customtkinter.CTkEntry(self, placeholder_text="")
+        self.entry = customtkinter.CTkEntry(self, placeholder_text="", font=DisplayFrame.font)
         self.entry.configure(state='disabled')
         self.entry.grid(row=1, column=0, padx=10, pady=0, sticky="ew")
         self.entry_text = ''
