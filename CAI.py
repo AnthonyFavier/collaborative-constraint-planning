@@ -42,6 +42,7 @@ def addConstraints(nl_constraints):
     if WITH_DECOMP:
         # Regular decomposition
         mprint(color.BOLD + "\nDecomposing constraints" + color.END)
+        abort = False
         for nl_constraint in nl_constraints:
             decompOK = False
             i=0
@@ -72,9 +73,14 @@ def addConstraints(nl_constraints):
                     
                 
                 decompOK = answer==''
+                abort = answer=='abort'
 
                 if decompOK:
                     LLM.clear_message_history()
+                elif abort:
+                    LLM.clear_message_history()
+                    deleteConstraints( [r.symbol for r in new_r] )
+                    return None
                 else:
                     id = r.symbol[1:]
                     new_r.remove(r)
