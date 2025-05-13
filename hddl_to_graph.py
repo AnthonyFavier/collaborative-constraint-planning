@@ -35,14 +35,14 @@ class HDDLParser:
                 operator_graph.add_edges_from(self.graph.edges(operator_name, keys=True))
                 return operator_graph
         
-        def generate_operator_graph(self, operator_name: str, save_dir=None) -> str:
+        def generate_operator_graph_image(self, operator_name: str, save_dir=None) -> str:
                 """ Generate and save a subgraph for a specific operator (task, method, or action) and its dependencies.
                 input:
                 operator_name: The name of the operator (task, method, or action) to generate the subgraph for.
                 save_dir: The directory to save the graph image. If None, saves in the same directory as the domain file.
                 """
                 operator_graph = self.get_operator_graph(operator_name)
-                plt.figure(figsize=(20, 20))
+                plt.figure(figsize=(10, 10))
                 pos = nx.shell_layout(operator_graph)  # You can try other layouts like nx.shell_layout
                 node_colors = []
                 for _, data in operator_graph.nodes(data=True):
@@ -174,7 +174,7 @@ def get_domain_graph(domain_path: str) -> nx.MultiDiGraph:
 def get_domain_graph_image_saved(domain_path: str, save_dir=None) -> nx.MultiDiGraph:
         parser = HDDLParser(domain_path)
         graph = parser.parse()
-        plt.figure(figsize=(20, 20))  # width x height in inches
+        plt.figure(figsize=(10, 8))  # width x height in inches
         pos = nx.shell_layout(graph)  # You can try other layouts like nx.shell_layout
         node_colors = []
 
@@ -249,35 +249,37 @@ def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_di
         save_dir: The directory to save the graph image. If None, saves in the same directory as the domain file.
         """
         operator_graph = get_operator_graph(operator_name, domain_path)
-        plt.figure(figsize=(2, 2))
+        print("creating figure to store graph")
+        plt.figure(figsize=(10, 5))
         pos = nx.shell_layout(operator_graph)  # You can try other layouts like nx.shell_layout
         # pos = nx.multipartite_layout(operator_graph, subset_key="layer")
         node_colors = []
         for _, data in operator_graph.nodes(data=True):
                 if data['type'] == 'task':
-                        node_colors.append('skyblue')
+                        node_colors.append('yellow')
                 elif data['type'] == 'method':
                         node_colors.append('lightgreen')
                 elif data['type'] == 'action':
-                        node_colors.append('salmon')
+                        node_colors.append('lightgray')
                 else:
                         node_colors.append('gray')
-        nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=1200, font_size=10, font_weight='bold', arrows=True)
+        nx.draw(operator_graph, pos, with_labels=True, node_color=node_colors, node_size=2400, font_size=10, font_weight='bold', arrows=True)
         offset = 0.05  # vertical offset to avoid overlap
         for i, (u, v, k, d) in enumerate(operator_graph.edges(keys=True, data=True)):
                 if d['priority'] == -1:
                         continue
                 x0, y0 = pos[u]
                 x1, y1 = pos[v]
-                label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.01)
-                label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.01)
+                label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.05)
+                label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.05)
                 label = f"[{d['priority']}]"
-                plt.text(label_x, label_y, label, fontsize=15, color='red', fontweight='bold')
+                plt.text(label_x, label_y, label, fontsize=12, color='red', fontweight='bold')
         plt.title(f'HDDL Operator Graph for {operator_name}')
         # Save the figure
         if save_dir is None:
                 save_dir = os.path.join(os.path.dirname(domain_path), f'{operator_name}_operators_graph.png')
         plt.savefig(save_dir, format="png", dpi=300, bbox_inches="tight")
+        print("returned save_dir: ", save_dir)
         return save_dir
 
 if __name__ == "__main__":

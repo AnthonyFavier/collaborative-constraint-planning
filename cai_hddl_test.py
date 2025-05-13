@@ -116,7 +116,7 @@ if __name__ == '__main__':
                 new_domain = tools_hddl.updateDomain(domain, encodedPref)
                 encodedOK, verify_result = tools_hddl.verifyMethodEncoding(new_domain, problem, encodedPref)
                 if encodedOK:
-                    print("Plan result with new domain:\n", verify_result)
+                    print("Plan result with new domain:\n", verify_result[1])
                     keep_trying = False
                     need_reencode = False
                 else:

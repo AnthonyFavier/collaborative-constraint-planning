@@ -10,6 +10,7 @@ import Constraints
 from UserOption import UserOption
 from generate_htn_image import parse_plan
 from hddl_to_graph import get_domain_graph_image_saved, get_domain_graph, get_operator_graph, get_operator_graph_image_saved
+import tools_hddl
         
 CM = Constraints.ConstraintManager()
 
@@ -341,9 +342,9 @@ def CAI():
             else:
                 mprint("No current valid plan")
 
-def init(problem_name, planning_mode, timeout):
+def init(problem_name, planning_mode, timeout, print_description=False):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
-    global DOMAIN_PATH, PROBLEM_PATH 
+    global DOMAIN_PATH, PROBLEM_PATH, PREVIOUS_DOMAIN_PATH
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
@@ -351,6 +352,7 @@ def init(problem_name, planning_mode, timeout):
     
     g_problem_name = problem_name
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    PREVIOUS_DOMAIN_PATH = None
     g_planning_mode = planning_mode
     g_timeout = float(timeout) if timeout!=None else None
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
@@ -383,6 +385,13 @@ def init(problem_name, planning_mode, timeout):
     with open(PROBLEM_PATH, "r") as f:
         g_problem = f.read()
 
+    if print_description:
+        # Use LLM to interpret the domain and problem, then show in the display frame:
+        prompt_input = [{"role": "user", "content":f"Describe the following domain and problem from the HDDL files in a more human-interpretable language. \nDomain: {DOMAIN_PATH}\nProblem: {PROBLEM_PATH}"}]
+        print("Interpreting the domain and problem...")
+        response = LLM.call_llm('',prompt_input)
+        mprint(f"Description of domain and problem:\n{response.content[0].text}")
+
 def get_domain_graph_image(domain_path=None):
     # Get the domain graph
     if domain_path is None:
@@ -411,7 +420,54 @@ def get_operator_graph_image_saved_wrapper(operator_name, domain_path=None, save
     save_dir = get_operator_graph_image_saved(operator_name=operator_name,domain_path=domain_path, save_dir=save_dir)
     return save_dir
 
+def copy_original_domain_problem():
+    # Copy the original domain and problem files to the tmp directory
+    import shutil
+    shutil.copy(DOMAIN_PATH, DOMAIN_PATH.replace(".hddl", "_original.hddl"))
+    shutil.copy(PROBLEM_PATH, PROBLEM_PATH.replace(".pddl", "_original.pddl"))
 
+def update_domain_with_new_methods(new_methods_str):
+    '''
+    This function add new method into the domain file, and saved it in a different file with label -modifed-'''
+    global DOMAIN_PATH, PREVIOUS_DOMAIN_PATH
+    # Add new methods to domain file:
+    with open(DOMAIN_PATH, "r") as f:
+        domain_str = f.read()
+    new_domain_str = tools_hddl.updateDomain(domain_str, new_methods_str)
+
+    # Save updated domain in a file
+    with open(DOMAIN_PATH.replace(".hddl", "_modified.hddl"), "w") as f:
+        f.write(new_domain_str)
+    
+    PREVIOUS_DOMAIN_PATH = DOMAIN_PATH
+    DOMAIN_PATH = DOMAIN_PATH.replace(".hddl", "_modified.hddl")
+
+def switch_domain_back_to_previous():
+    global DOMAIN_PATH, PREVIOUS_DOMAIN_PATH
+    # Set the domain file back to the previous one
+    if PREVIOUS_DOMAIN_PATH is not None:
+        DOMAIN_PATH = PREVIOUS_DOMAIN_PATH
+        PREVIOUS_DOMAIN_PATH = None
+
+def switch_domain_problem_back_to_original():
+    # Set the domain and problem files back to the original
+    global DOMAIN_PATH, PROBLEM_PATH
+    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    DOMAIN_PATH = DOMAIN_PATH.replace(".hddl","_original.hddl")
+    PROBLEM_PATH = PROBLEM_PATH.replace(".hddl","_original.pddl")
+
+def plan_with_hddl_planner(return_format_version):
+    """Plan with the HDDL planner"""
+    with open(DOMAIN_PATH, "r") as f:
+        domain_str = f.read()
+    with open(PROBLEM_PATH, "r") as f_prob:
+        problem_str = f_prob.read()
+    success, info = tools_hddl.verifyMethodEncoding(domain_str, problem_str, new_methods_str="",current_path="./", debug = False, return_format_version=return_format_version)
+    if success:
+        return info
+    else:
+        return "Failed to plan:\n" + str(info)
+    
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')

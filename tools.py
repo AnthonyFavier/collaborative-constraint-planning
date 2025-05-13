@@ -1,4 +1,4 @@
-import numeric_tcore.parsing_extensions as ntcore_parsing_ext
+import NumericTCORE.numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
 def filterEncoding(encodedPref):
     i = i_s = encodedPref.find('(:constraints')

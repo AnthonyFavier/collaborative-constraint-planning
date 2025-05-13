@@ -10,6 +10,8 @@ def parse_plan(plan_text: str) -> Digraph:
     dot = Digraph("HTN")
     dot.attr(overlap='false')
     dot.attr(splines='true')
+    dot.attr(dpi='300')
+    dot.attr(size='10,5')
 
     for i, line in enumerate(lines):
         l = line.strip()
@@ -42,11 +44,11 @@ def parse_plan(plan_text: str) -> Digraph:
 
     queue = list(order)
     visited = set()
-    print(f"Queue: {queue}")
+    # print(f"Queue: {queue}")
 
     while queue:
         current = queue.pop(0)
-        print(f"Current: {current}")
+        # print(f"Current: {current}")
         if current in visited or current not in data:
             continue
         visited.add(current)
@@ -67,7 +69,7 @@ def parse_plan(plan_text: str) -> Digraph:
             dot.edge(current, method_id)
             for child in data[current][3]:
                 dot.edge(method_id, child)
-    print("graph created", dot.source)
+    # print("graph created", dot.source)
     return dot
 
 # Example usage

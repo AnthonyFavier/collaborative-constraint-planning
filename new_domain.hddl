@@ -124,27 +124,6 @@
 	)
 
 	
-
-(:method m-transport-person-different-cities
-    :parameters (?p - Person ?a - Aircraft ?from - City ?to - City ?aircraft_city - City)
-    :task (transport-person ?p ?to)
-    :precondition (and
-        (at ?p ?from)
-        (at ?a ?aircraft_city)
-        (different ?aircraft_city ?from)
-    )
-    :subtasks (and
-        (task0 (upper-move-aircraft ?a ?from))
-        (task1 (board ?p ?a ?from))
-        (task2 (upper-move-aircraft ?a ?to))
-        (task3 (debark ?p ?a ?to))
-    )
-    :ordering (and
-        (< task0 task1)
-        (< task1 task2)
-        (< task2 task3)
-    )
-)
 (:action board
 		:parameters (?p - Person ?a - Aircraft ?c - City)
 		:precondition

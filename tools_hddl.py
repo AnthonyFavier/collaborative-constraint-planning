@@ -46,7 +46,7 @@ def updateDomain(domain_str, new_method):
     
     return updatedDomain
 
-def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="./", debug = False):
+def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="./", debug = False, return_format_version=True):
     '''
     inputs:
     - updated_domain: string of updated domain with new methods
@@ -81,7 +81,9 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
         if start != -1 and end != -1:
             # Adjust to slice the content between markers
             extracted = output_str[start + len(start_marker):end].strip()
-            extracted = format_lilotane_plan(extracted)
+            raw_plan = extracted
+            if return_format_version:
+                extracted = format_lilotane_plan(extracted)
             if debug:
                 print("Plan:\n", extracted)
                 print(f"\n Planning time: {end_time-start_time:.6f}(sec)")
@@ -91,7 +93,10 @@ def verifyMethodEncoding(updated_domain, problem, new_methods_str,current_path="
             print("Plan not found!")
             return False, "Couldn't find a valid plan, although there is no error."
     except subprocess.CalledProcessError as e:
-        error = "Program failed with new method! New method added: \n{}".format(new_methods_str)+"\n--- Exit code: "+ str(e.returncode) + "\nError output:"+ str(e.stderr)
+        if new_methods_str == "":
+            error = "Program failed! \n--- Exit code: "+ str(e.returncode) + "\nError output:"+ str(e.stderr)
+        else:
+            error = "Program failed with new method! New method added: \n{}".format(new_methods_str)+"\n--- Exit code: "+ str(e.returncode) + "\nError output:"+ str(e.stderr)
         return False, error
     
 def format_lilotane_plan(raw_plan):

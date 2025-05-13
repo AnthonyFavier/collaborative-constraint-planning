@@ -1,6 +1,7 @@
 import customtkinter
 from defs import *
 import CAI_hddl
+import tools_hddl
 import generate_htn_image
 from PIL import Image, ImageTk
 from updatePDSimPlan import main as updatePDSimPlan
@@ -265,40 +266,55 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         self.confirm_button.grid_remove()
+        ###
+        self.manage_hddl_buttons = dict()
+        self.manage_hddl_buttons["View"] = customtkinter.CTkButton(self, text="View", command=self.master.htn_view_frame.view_list_operators)
+        self.manage_hddl_buttons["View"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.manage_hddl_buttons["View"].grid_remove()
 
-        # self.buttons["Show HTN"] = customtkinter.CTkButton(self, text="Show HTN", command=self.view_hddl)
-        # self.buttons["Show HTN"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
+        self.manage_hddl_buttons['Delete'] = customtkinter.CTkButton(self, text="Delete", command=self.delete_hddl)
+        self.manage_hddl_buttons['Delete'].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.manage_hddl_buttons['Delete'].grid_remove()
+
+        self.manage_hddl_buttons['Reset'] = customtkinter.CTkButton(self, text="Reset", command=self.reset_hddl)
+        self.manage_hddl_buttons['Reset'].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.manage_hddl_buttons['Reset'].grid_remove()
+
+        self.manage_hddl_buttons['Cancel'] = customtkinter.CTkButton(self, text="Cancel", command=self.showButtons)
+        self.manage_hddl_buttons['Cancel'].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        self.manage_hddl_buttons['Cancel'].grid_remove()
+        ###
+
         self.buttons["View Domain Graph"] = customtkinter.CTkButton(self, text="View Domain Graph", command=self.master.htn_view_frame.view_all)
         self.buttons["View Domain Graph"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
 
-        self.buttons["View All Operators"] = customtkinter.CTkButton(self, text="View All Operators", command=self.master.htn_view_frame.view_list_operators)
+        self.buttons["View All Operators"] = customtkinter.CTkButton(self, text="View Operators List", command=self.master.htn_view_frame.view_list_operators)
         self.buttons["View All Operators"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
 
-        self.buttons["View New Method"] = customtkinter.CTkButton(self, text="New Methods", command=self.master.htn_view_frame.view_new_methods)
-        self.buttons["View New Method"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["Add New Method"] = customtkinter.CTkButton(self, text="Add New Method",fg_color="green", hover_color="darkgreen", command=self.add_hddl)
+        self.buttons["Add New Method"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
 
-        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add_hddl)
-        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        self.add_nl_constraints = []
+        # self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add_hddl)
+        # self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        # self.add_nl_constraints = []
+        # i_row+=1
+
+        # self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete_hddl)
+        # self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        # i_row+=1
+
+        self.buttons["Manage All Methods"] = customtkinter.CTkButton(self, text="Manage All Methods",fg_color="green", hover_color="darkgreen",  command=self.manage_hddl)
+        self.buttons["Manage All Methods"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         i_row+=1
 
-        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete_hddl)
-        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        i_row+=1
+        # self.buttons["View"] = customtkinter.CTkButton(self, text="View Graph", command=self.view_hddl)
+        # self.buttons["View"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        # i_row+=1
 
-        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Manage All Methods", command=self.activate_hddl)
-        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        i_row+=1
-
-        self.buttons["View"] = customtkinter.CTkButton(self, text="View Graph", command=self.view_hddl)
-        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        i_row+=1
-
-        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.planT_hddl)
+        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan with HDDL Planner",fg_color="red", hover_color="darkred", command=self.plan_hddl)
         self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         i_row+=1
 
@@ -306,8 +322,60 @@ class ButtonsFrame(customtkinter.CTkFrame):
         # self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
         # i_row+=1
 
+    def showManageButtons(self):
+        r = 0
+        for k,x in self.manage_hddl_buttons.items():
+            x.grid(row=r, column=0, padx=10, pady=10, sticky="ew")
+            r+=1
+    
+    def hideManageButtons(self):
+        for k,x in self.manage_hddl_buttons.items():
+            x.grid_remove()
+    
+    def plan_hddl(self):
+        '''
+        what to do when the user clicks the Plan button
+        '''
+        print("Clicked Plan button --> Perform planning with the system HDDL planner")
+        result = CAI_hddl.plan_with_hddl_planner(return_format_version=False)
+        if "Failed to plan" in result:
+            self.master.plan_frame.showText(result)
+            return
+        plan_time_str = result.splitlines()[-1]
+        raw_plan = "\n".join(result.splitlines()[:-1])
+        formated_plan_text = tools_hddl.format_lilotane_plan(raw_plan)
+        self.master.plan_frame.showText(formated_plan_text+ '\n' + plan_time_str)
+        self.master.plan_frame.plan_text = formated_plan_text + '\n' + plan_time_str
+        #Generate the plan diagram:
+        dot_graph = generate_htn_image.parse_plan(raw_plan)
+        dot_graph.render("htn_plan", format="png", cleanup=True)
+        mprint("\nPlan generated.")
 
+    def manage_hddl(self):
+        '''
+        what to do when the user clicks the Manage button
+        '''
+        # Hide all buttons
+        self.hideButtons()
+        # Show the view button
+        self.showManageButtons()
+        # self.buttons["View"].grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        # # Show the add button
+        # self.buttons["Add"].grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        # # Show the delete button
+        # self.buttons["Delete"].grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        # # Show the reset button
+        # self.buttons["Reset"].grid(row=3, column=0, padx=10, pady=10, sticky="ew")
 
+        self.view_hddl()
+
+    def reset_hddl(self):
+        '''
+        what to do when the user clicks the Reset button
+        '''
+        #reset domain back to the original domain
+
+        self.master.htn_view_frame.view_list_operators()
     
     def confirm(self):
         self.confirm_function()
@@ -321,14 +389,13 @@ class ButtonsFrame(customtkinter.CTkFrame):
         for k,x in self.buttons.items():
             x.grid_remove()
     def showButtons(self):
+        self.hideManageButtons()
         for k,x in self.buttons.items():
             x.grid()
 
     def view_hddl(self):
-        self.master.htn_view_frame.view_all()
-        self.master.htn_view_frame.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
-        self.master.constraints_frame.grid_remove()
-        self.buttons["Show HTN"].configure(text="Hide HTN", command=self.hide_hddl)
+        self.master.htn_view_frame.view_list_operators()
+        
     
     def add_hddl(self):
         self.hideButtons()
@@ -431,7 +498,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         dot_graph = generate_htn_image.parse_plan(txt)
         dot_graph.render("htn_plan", format="png", cleanup=True)
         self.master.plan_frame.showText(txt)
-        self.master.plan_frame.showPlanDiagram("htn_plan.png")
+        # self.master.plan_frame.showPlanDiagram("htn_plan.png")
         mprint("\nPlan generated.")
         
         
@@ -508,13 +575,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def view_hddl(self):
         '''what to do when the user clicks the View button'''
         pass    
-    def planT_hddl(self):
-        '''what to do when the user clicks the Plan button'''
-        pass
-
+    
 
     
-class DisplayFrame(customtkinter.CTkFrame):
+class InteractiveFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
         
@@ -540,7 +604,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         # self.entry.configure(fg_color=self.entry_light)
         
         self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
-        self.timer_label.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.timer_label.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
         self.start_time = None
         self._timer_running = False
         
@@ -582,40 +646,135 @@ class PlanFrame(customtkinter.CTkFrame):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
+        # self.grid_rowconfigure(2, weight=1)
         
         self.title = customtkinter.CTkLabel(self, text="Current Plan", fg_color="gray30", corner_radius=6,font=App.font)
         self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
-        
-        self.textbox = customtkinter.CTkTextbox(self, wrap='char')
+
+        self.plan_text = ''
+
+        # self.main_frame = customtkinter.CTkScrollableFrame(self)
+        # self.main_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        # self.main_frame.grid_columnconfigure(0, weight=1)
+        # self.main_frame.grid_rowconfigure(0, weight=1)
+
+        # Create a canvas for scrollable content
+        self.canvas = tkinter.Canvas(self, bg="gray30")
+        self.canvas.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Add vertical and horizontal scrollbars
+        self.v_scrollbar = tkinter.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.v_scrollbar.grid(row=1, column=1, sticky="ns")
+
+        self.h_scrollbar = tkinter.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
+        self.h_scrollbar.grid(row=2, column=0, sticky="ew")
+
+        self.canvas.configure(yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set)
+
+        # Create a frame inside the canvas for content
+        self.main_frame = customtkinter.CTkFrame(self.canvas)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_rowconfigure(0, weight=1)
+
+        # Add the frame to the canvas
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.main_frame, anchor="nw")
+
+        # Bind the canvas to update the scroll region
+        self.main_frame.bind("<Configure>", self.update_scroll_region)
+
+
+        self.textbox = customtkinter.CTkTextbox(self.main_frame, wrap='none')
         self.textbox.configure(state='disabled')
-        self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        # Bind the canvas resize event to adjust the textbox size
+        self.canvas.bind("<Configure>", self.resize_textbox)
+        # self.textbox.grid_remove()
 
         # Add image label for the diagram
-        self.image_label = customtkinter.CTkLabel(self)
-        self.image_label.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.image_label = customtkinter.CTkLabel(self.main_frame)
+        self.image_label.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.image_label.grid_remove()
         
         self.buttons_frame = customtkinter.CTkFrame(self)
-        self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.buttons_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
         self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton)
         self.update_sim_button.grid(row=0, column=0, padx=10, pady=10)
+        self.view_hierarchy_button = customtkinter.CTkButton(self.buttons_frame, text="View Plan Diagram", command=self.showPlanDiagram)
+        self.view_hierarchy_button.grid(row=0, column=1, padx=10, pady=10)
+        self.view_hierarchy_button = customtkinter.CTkButton(self.buttons_frame, text="View Plan Text", command=self.showHDDLPlanText)
+        self.view_hierarchy_button.grid(row=0, column=2, padx=10, pady=10)
         
     def updateSimButton(self):
         plan = self.textbox.get("0.0", "end")
         updatePDSimPlan(plan)
         mprint("\nSim updated.")
-        
+
+    def resize_textbox(self, event):
+        """Resize the textbox to fit the canvas."""
+        canvas_width = event.width
+        canvas_height = event.height
+        self.textbox.configure(width=canvas_width, height=canvas_height)
+
+    def update_scroll_region(self, event):
+        """Update the scroll region of the canvas."""
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
     def showText(self, txt):
+        # Clear any existing image
+        self.image_label.grid_remove()
+        self.textbox.grid()
         self.textbox.configure(state='normal')
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
         self.textbox.configure(state='disabled')
-    
-    def showPlanDiagram(self, image_path):
-        # Load the image and display it in the image_label
-        img = customtkinter.CTkImage(light_image=image_path, dark_image=image_path, size=(400, 300))
-        self.image_label.configure(image=img)
-        self.image_label.image = img  # Keep a reference to avoid garbage collection
 
+    def showHDDLPlanText(self):
+        # Clear any existing image
+        self.image_label.grid_remove()
+        self.textbox.grid()
+        # show plan text in a text box:
+        self.textbox.configure(state='normal')
+        self.textbox.delete("0.0", 'end')
+        self.textbox.insert('end', self.plan_text)
+        self.textbox.configure(state='disabled')
+
+    def showPlanDiagram(self):
+        # Clear any existing text plan
+        self.textbox.grid_remove()
+        # Clear the image label
+        self.image_label.configure(image='')
+        self.image_label.image = None  # Clear the reference to the image
+        # Clear the text box
+        self.textbox.configure(state='normal')
+        self.textbox.delete("0.0", 'end')
+        self.textbox.configure(state='disabled')
+        
+        # Load the image and display it in the image_label
+        image_path = "htn_plan.png"  # Path to the image file
+        try:
+            # Load the image from the file path
+            print("Loading image from:", image_path)
+            img = Image.open(image_path).resize((1500, 600))
+            # Create a CTkImage with the resized image
+            print("Creating CTkImage")
+            self.plan_diagram = customtkinter.CTkImage(
+                light_image=img,
+                dark_image=img,
+                size=(1500, 600)
+            )
+            # Display the image in the label or appropriate widget
+            # self.image_label.configure(image=self.plan_diagram)
+            # self.image_label.image = self.plan_diagram  # Keep a reference to avoid garbage collection
+            # Display the image in a label or appropriate widget
+            self.image_label = customtkinter.CTkLabel(self.main_frame, image=self.plan_diagram)
+            self.image_label.grid(row=1, column=0, padx=10, pady=10)
+            print("Image displayed successfully")
+        except FileNotFoundError:
+            print(f"Error: The file '{image_path}' was not found.")
+        except Exception as e:
+            print(f"Error loading or displaying the image: {e}")
+       
+import tkinter
 class HTNViewFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -632,7 +791,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
         # self.operators_button = customtkinter.CTkButton(self.buttons_frame, text="View All Operators", command=self.view_list_operators)
         # self.operators_button.grid(row=0, column=2, padx=10, pady=10)
 
-    def view_all(self):
+    def view_all_old(self):
         """View all operators in the domain graph."""
         # Clear any existing operators frame
         if hasattr(self, 'operators_frame'):
@@ -658,6 +817,61 @@ class HTNViewFrame(customtkinter.CTkFrame):
         # self.all_htn_graph = customtkinter.CTkImage(light_image = img, dark_image=img, size=(400,300))
         # self.all_htn_graph.grid(row=1, column=0, padx=10, pady=10)
 
+    def view_all(self):
+        """View all operators in the domain graph with zoom functionality."""
+        # Clear any existing operators frame
+        if hasattr(self, 'operators_frame'):
+            self.operators_frame.destroy()
+
+        # Create a canvas for displaying the image
+        self.operators_frame = customtkinter.CTkFrame(self)
+        self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        # Configure the grid layout to allow the canvas to expand
+        self.operators_frame.grid_rowconfigure(0, weight=1)
+        self.operators_frame.grid_columnconfigure(0, weight=1)
+
+        canvas = tkinter.Canvas(self.operators_frame, bg="gray30")
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        # Add scrollbars
+        v_scrollbar = tkinter.Scrollbar(self.operators_frame, orient="vertical", command=canvas.yview)
+        v_scrollbar.grid(row=0, column=1, sticky="ns")
+
+        h_scrollbar = tkinter.Scrollbar(self.operators_frame, orient="horizontal", command=canvas.xview)
+        h_scrollbar.grid(row=1, column=0, sticky="ew")
+
+        canvas.configure(yscrollcommand=v_scrollbar.set, xscrollcommand=h_scrollbar.set)
+
+        # Load the image
+        img_path = CAI_hddl.get_domain_graph_image()
+        try:
+            frame_width = self.operators_frame.winfo_width()
+            frame_height = self.operators_frame.winfo_height()
+            self.original_image = Image.open(img_path).resize((frame_width, frame_height))
+            self.current_image = self.original_image.copy()
+            self.tk_image = ImageTk.PhotoImage(self.current_image)
+
+            # Add the image to the canvas
+            self.image_id = canvas.create_image(0, 0, anchor="nw", image=self.tk_image)
+            canvas.config(scrollregion=canvas.bbox("all"))
+
+            # Zoom functionality
+            def zoom(event):
+                print("Zoom event detected, event.delta:", event.delta)
+                scale = 1.1 if event.delta > 0 else 0.9  # Zoom in or out
+                new_width = int(self.current_image.width * scale)
+                new_height = int(self.current_image.height * scale)
+                self.current_image = self.original_image.resize((new_width, new_height), Image.ANTIALIAS)
+                self.tk_image = ImageTk.PhotoImage(self.current_image)
+                canvas.itemconfig(self.image_id, image=self.tk_image)
+                canvas.config(scrollregion=canvas.bbox("all"))
+
+            # Bind mouse wheel to zoom
+            canvas.bind("<MouseWheel>", zoom)
+
+        except Exception as e:
+            print(f"Error loading or displaying the image: {e}")
+
 
     def view_list_operators(self):
         """
@@ -670,18 +884,34 @@ class HTNViewFrame(customtkinter.CTkFrame):
         # Create a new scrollable frame to display images
         self.operators_frame = customtkinter.CTkScrollableFrame(self, width=500, height=400)
         self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        # Configure grid columns to scale proportionally
+        self.operators_frame.grid_columnconfigure(0, weight=1)  # Task column
+        self.operators_frame.grid_columnconfigure(1, weight=1)  # Method column
+        self.operators_frame.grid_columnconfigure(2, weight=1)  # Action column
         self.checkbox_vars = {}
 
         try:
+            # Add instruction label:
+            instruction_label = customtkinter.CTkLabel(
+                self.operators_frame,
+                text="Select operators and then click confirm button to show their hierarchies:",
+                text_color="white",
+                wraplength=450,  # Wrap text if it exceeds the width
+                justify="left"
+            )
+            instruction_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+            # Add a confirm button to print the checked operators
+            confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm", command=self.confirm_checked_operators)
+            confirm_button.grid(row=0, column=2, columnspan=1, pady=10)
             # Add column headers
             task_label = customtkinter.CTkLabel(self.operators_frame, text="TASK", text_color="yellow")
-            task_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+            task_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
             method_label = customtkinter.CTkLabel(self.operators_frame, text="METHOD", text_color="green")
-            method_label.grid(row=0, column=1, padx=10, pady=5, sticky="w")
+            method_label.grid(row=1, column=1, padx=10, pady=5, sticky="w")
 
             action_label = customtkinter.CTkLabel(self.operators_frame, text="ACTION", text_color="white")
-            action_label.grid(row=0, column=2, padx=10, pady=5, sticky="w")
+            action_label.grid(row=1, column=2, padx=10, pady=5, sticky="w")
 
             # Get the domain graph (assumed to be a Digraph object)
             domain_graph = CAI_hddl.get_domain_graph_wrapper()
@@ -690,7 +920,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
 
             # Create column indices for tasks, methods, and actions
             column_indices = {"task": 0, "method": 1, "action": 2}
-            row_counters = {"task": 0, "method": 0, "action": 0}
+            row_counters = {"task": 2, "method": 2, "action": 2}
 
             # Iterate through the nodes (operator names) and create checkboxes
             for operator, data in domain_graph.nodes(data=True):  # Nodes are operator names
@@ -722,9 +952,9 @@ class HTNViewFrame(customtkinter.CTkFrame):
                 label = customtkinter.CTkLabel(self.operators_frame, text="No operators found.", fg_color="red")
                 label.grid(row=0, column=0, columnspan=3, pady=10)
 
-            # Add a confirm button to print the checked operators
-            confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm", command=self.confirm_checked_operators)
-            confirm_button.grid(row=max(row_counters.values()) + 1, column=0, columnspan=3, pady=10)
+            # # Add a confirm button to print the checked operators
+            # confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm Selected Operators", command=self.confirm_checked_operators)
+            # confirm_button.grid(row=max(row_counters.values()) + 1, column=0, columnspan=3, pady=10)
 
         except Exception as e:
             print(f"Error displaying operators: {e}")
@@ -745,21 +975,54 @@ class HTNViewFrame(customtkinter.CTkFrame):
         # Create a new scrollable frame to display images
         self.operators_frame = customtkinter.CTkScrollableFrame(self, width=500, height=400)
         self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        frame_width = self.operators_frame.winfo_width()
+        frame_height = self.operators_frame.winfo_height()
+        print("Frame dimensions:", frame_width, frame_height)
+        
+        if len(checked_operators) == 0:
+            label = customtkinter.CTkLabel(self.operators_frame, text="No operators selected. Click 'View Operators List' to view and select operators.", fg_color="red")
+            label.pack(padx=10, pady=10)
+            return
+        
         for operator in checked_operators:
             operator_graph_dir = CAI_hddl.get_operator_graph_image_saved_wrapper(operator)
             try:
                 # Load the image from the file path
-                img = Image.open(operator_graph_dir).resize((400, 300))
+                img = Image.open(operator_graph_dir).resize((600,300))
                 
                 # Create a CTkImage with the resized image
                 operator_graph = customtkinter.CTkImage(
                     light_image=img,
                     dark_image=img,
-                    size=(400, 300)
+                    size=(600, 300)
                 )
+
+                # # Load the image from the file path
+                # img = Image.open(operator_graph_dir)
+
+                # # Get the width of the operators_frame
+                # # self.operators_frame.update_idletasks()  # Ensure the frame dimensions are updated
+                # frame_width = self.operators_frame.winfo_width()
+                # print("Current Frame width:", frame_width)
+
+                # # Calculate the new height to maintain the aspect ratio
+                # aspect_ratio = img.width / img.height
+                # new_width = frame_width
+                # new_height = int(new_width / aspect_ratio)
+
+                # # Resize the image
+                # resized_img = img.resize((new_width, new_height))
+
+                # # Create a CTkImage with the resized image
+                # operator_graph = customtkinter.CTkImage(
+                #     light_image=resized_img,
+                #     dark_image=resized_img
+                # )
                 
                 # Display the image in a label inside the scrollable frame
+                print("display the image in a label inside the scrollable frame")
                 label = customtkinter.CTkLabel(self.operators_frame, image=operator_graph, text="")
                 label.pack(padx=10, pady=10)
             except Exception as e:
@@ -795,7 +1058,7 @@ class App(customtkinter.CTk):
         
         # self.constraints_frame = ConstraintsFrame(self)
         # self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.display_frame = DisplayFrame(self)
+        self.display_frame = InteractiveFrame(self)
         self.display_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
         
         self.htn_view_frame = HTNViewFrame(self)
