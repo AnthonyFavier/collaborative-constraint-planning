@@ -24,9 +24,9 @@ def askConstraintsToAdd():
     nl_constraints = []
     while True:
         if not len(nl_constraints):
-            mprint(color.BOLD + "\nEnter your first constraint:\n> " + color.END, end="")
+            mprint("\nEnter your first constraint:\n> ", end="")
         else:
-            mprint(color.BOLD + "\nPress Enter to validate or type another constraint:\n> " + color.END, end="")
+            mprint("\nPress Enter to validate or type another constraint:\n> ", end="")
             
         t = input()
         if t=="":
@@ -41,7 +41,7 @@ def addConstraints(nl_constraints):
     
     if WITH_DECOMP:
         # Regular decomposition
-        mprint(color.BOLD + "\nDecomposing constraints" + color.END)
+        mprint("\nDecomposing constraints")
         abort = False
         for nl_constraint in nl_constraints:
             decompOK = False
@@ -52,10 +52,10 @@ def addConstraints(nl_constraints):
                 new_r.append(r)
                 
                 if i==0:
-                    mprint(color.BOLD + "\nDecomposing...\n" + str(r) + color.END)
+                    mprint("\nDecomposing...\n" + str(r))
                     result = LLM.decompose(g_domain, g_problem, nl_constraint)
                 else:
-                    mprint(color.BOLD + "\nRe-Decomposing...\n" + str(r) + color.END)
+                    mprint("\nRe-Decomposing...\n" + str(r))
                     result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
                     
                 result = LLM.removeFormating(result)
@@ -101,10 +101,10 @@ def addConstraints(nl_constraints):
     # When all ok, encode the decomposed of all new r
     
     # Encoding
-    mprint(color.BOLD + "\nEncoding..." + color.END)
+    mprint("\nEncoding...")
     to_delete = []
     for r in new_r:
-        mprint(color.BOLD + str(r) + color.END)
+        mprint(str(r))
         for c in r.children:
             encodingOK = False
             MAX_ENCODING_TRY = 5
@@ -317,7 +317,7 @@ def planWithConstraints():
             f.write(updatedProblem)
         
         # Compile the updated problem
-        mprint(color.BOLD + "\nCompiling..." + color.END)
+        mprint("\nCompiling...")
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
         
     # Plan

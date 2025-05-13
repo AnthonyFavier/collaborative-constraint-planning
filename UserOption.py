@@ -24,7 +24,7 @@ class UserOption:
             for k,o in self.options.items():
                 print(f"{k}- {o.text}")
                 
-            x = input(color.BOLD + "Select an option: " + color.END)
+            x = input("Select an option: ")
             print(' ')
             try:
                 x = int(x)

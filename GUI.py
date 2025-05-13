@@ -318,10 +318,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
         c = minput(txt="\nEnter your constraint:")
         
         if c=='':
-            self.master.display_frame.prompt("Aborted\n")
+            mprint("Aborted\n")
             self.showButtons()
         else:
-            self.master.display_frame.prompt("> " + c )
+            mprint("> " + c )
             self.add_nl_constraints.append(c)
             try:
                 CAI.addConstraints(self.add_nl_constraints)
@@ -413,7 +413,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         # Check if correct
         if c in ['1', '2', '3', '4', '5']:
-            self.master.display_frame.prompt("> " + c )
+            mprint("> " + c )
             if c=='1':
                 CAI.g_planning_mode=PlanMode.ANYTIME
             if c=='2':
@@ -522,7 +522,8 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox.see('end')
         
     def activateEntry(self, txt=""):
-        self.prompt(txt)
+        if txt!="":
+            mprint(txt)
         self.entry.configure(state="normal")
         self.entry.configure(fg_color=self.master.display_frame.entry_light)
         self.entry.focus()

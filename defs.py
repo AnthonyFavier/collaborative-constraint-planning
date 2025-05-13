@@ -87,8 +87,6 @@ def mprint(txt):
     if SHELL_PRINTS:
         print(txt)
     if GUI_PROMPT:
-        txt = txt.replace(color.BOLD, '')
-        txt = txt.replace(color.END, '')
         prompt(txt)
 def setPromptFunction(prompt_function):
     global prompt

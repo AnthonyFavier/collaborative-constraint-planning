@@ -47,7 +47,7 @@ class RawConstraint(Constraint):
     def __repr__(self):
         symbol_str = self.symbol 
         if self.isActivated():
-            symbol_str = color.BOLD + symbol_str + color.END
+            symbol_str = symbol_str
         return f"{symbol_str} - {self.nl_constraint}"
         
 class DecomposedConstraint(Constraint):
@@ -68,7 +68,7 @@ class DecomposedConstraint(Constraint):
     def __repr__(self):
         symbol_str = self.symbol 
         if self.isActivated():
-            symbol_str = color.BOLD + symbol_str + color.END
+            symbol_str = symbol_str
         return f"{symbol_str} - {self.nl_constraint}"
 
 class ConstraintManager:
@@ -91,7 +91,7 @@ class ConstraintManager:
         return c
         
     def show(self):
-        print(color.BOLD + "\nConstraint List:" + color.END)
+        print("\nConstraint List:")
         if self.constraints=={}:
             print("[No constraint]")
             return None
