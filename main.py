@@ -3,6 +3,21 @@ import GUI
 from defs import *
 import click
 import sys
+
+def ablation(app, type):
+    if type not in ['A', 'B', 'C']:
+        raise Exception("Wrong ablation type")
+
+    if 'A'==type:
+        Zeno13A()
+    elif 'B'==type:
+        Zeno13B()
+    elif 'C'==type:
+        Zeno13C()
+        
+    CAI.CM.show()
+    app.constraints_frame.updateFrame()
+        
 def Zeno13A(decomp=CAI.WITH_DECOMP):
     print("Zeno13A")
     constraints = [
@@ -47,7 +62,45 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
     else:
         txt = " ".join(constraints)
         CAI.addConstraints([txt])
-        
+    
+def loadDump():
+    # put dump code
+    r = CAI.CM.createRaw("Plane2 and plane3 should never be used")
+    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane2")
+    d.encoding = '''(always (forall (?p - person) (not (in ?p plane2))))'''
+    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane3")
+    d.encoding = '''(always (forall (?p - person) (not (in ?p plane3))))'''
+    d = CAI.CM.createDecomposed(r, "Plane2 should remain located in city2 throughout the entire plan")
+    d.encoding = '''(always (located plane2 city2))'''
+    d = CAI.CM.createDecomposed(r, "Plane3 should remain located in city3 throughout the entire plan")
+    d.encoding = '''(always (located plane3 city3))'''
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane2 should never exceed its initial value of 1469")
+    d.encoding = '''(always (= (fuel plane2) 1469))'''
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane3 should never exceed its initial value of 1532")
+    d.encoding = '''(always (= (fuel plane3) 1532))'''
+
+    r = CAI.CM.createRaw("Person7 should never move and planes should never fly fast")
+    d = CAI.CM.createDecomposed(r, "Person7 should always remain located in city0.")
+    d.encoding = '''(always (located person7 city0))'''
+    d = CAI.CM.createDecomposed(r, "No aircraft should ever use the flyfast mode of transportation.")
+    d.encoding = '''(always (forall (?p - aircraft ?c1 ?c2 - city) (= (n_flyfast ?p ?c1 ?c2) 0)))'''
+
+    r = CAI.CM.createRaw("Plane1 should never fly to a same city more than 3 times")
+    d = CAI.CM.createDecomposed(r, "ss")
+    d.encoding = '''(always (forall (?d - city) (<= (+  (n_flyslow plane1 city0 ?d) (n_flyfast plane1 city0 ?d) (n_flyslow plane1 city1 ?d) (n_flyfast plane1 city1 ?d) (n_flyslow plane1 city2 ?d) (n_flyfast plane1 city2 ?d) (n_flyslow plane1 city3 ?d) (n_flyfast plane1 city3 ?d) (n_flyslow plane1 city4 ?d) (n_flyfast plane1 city4 ?d) (n_flyslow plane1 city5 ?d) (n_flyfast plane1 city5 ?d) ) 2)))'''
+
+    r = CAI.CM.createRaw("Planes can't be refueled in city2")
+    d = CAI.CM.createDecomposed(r, "No aircraft can be refueled while located in city2")
+    d.encoding = '''(always (forall (?a - aircraft) (or (not (located ?a city2)) (= (capacity ?a) (fuel ?a)))))'''
+    d = CAI.CM.createDecomposed(r, "All refueling operations must occur in cities other than city2")
+    d.encoding = '''(forall (?a - aircraft)
+    (always (or (= (n_refuel ?a) 0) (not (located ?a city2)))))'''
+
+    r = CAI.CM.createRaw("Person5 should reach their destination before person1")
+    d = CAI.CM.createDecomposed(r, "Person5 should be located in city2 before person1 is located in city4")
+    d.encoding = '''(sometime-before (located person1 city4) (located person5 city2))'''
+
+
 #########################################################################################################
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
@@ -68,15 +121,12 @@ def main(problem_name, planning_mode, timeout, e2nl):
     
     CAI.init(problem_name, planning_mode, timeout)
     
-    # FOR ABLATION #
-    # Zeno13A()
-    # Zeno13B()
-    # Zeno13C()
-    # CAI.CM.show()
-    # app.constraints_frame.updateFrame()
+    # FOR ABLATION # A, B, or C
+    # ablation(app, 'A') 
     
     app.mainloop()
 if __name__ == '__main__':
-    # sys.argv.append('zeno5_n')
-    # sys.argv.append('zeno5_bis')
+    # sys.argv += ['zeno13_n']
+    
+    # loadDump()
     main()
