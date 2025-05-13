@@ -286,8 +286,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", width=buttons_width, command=self.master.constraints_frame.toggleEncodings)
-        self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, command=self.toggleEncodings)
+        self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
@@ -457,6 +457,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
 
         self.showButtons()
     
+    def toggleEncodings(self):
+        self.master.constraints_frame.toggleEncodings()
+        self.buttons['ToggleEncodings'].configure(text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings")
+        
     def toggleE2NL(self):
         CAI.g_with_e2nl = not CAI.g_with_e2nl
         self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL")
