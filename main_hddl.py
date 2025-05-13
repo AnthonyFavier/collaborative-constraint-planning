@@ -29,7 +29,7 @@ def main(problem_name, planning_mode, timeout):
     
     app = GUI_hddl.App()
     setPromptFunction(app.display_frame.prompt)
-    CAI_hddl.init(problem_name, planning_mode, timeout)
+    CAI_hddl.init(problem_name, planning_mode, timeout, print_description=True)
     app.mainloop()
 if __name__ == '__main__':
     # sys.argv.append('zeno5_n')

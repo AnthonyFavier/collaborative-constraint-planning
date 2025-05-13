@@ -286,9 +286,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
         ###
         # Add buttons:
         self.add_buttons = dict()
-        self.add_buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add2)
-        self.add_buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        self.add_buttons["Add"].grid_remove()
+        # self.add_buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add2)
+        # self.add_buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
+        # self.add_buttons["Add"].grid_remove()
         self.add_buttons["Cancel"] = customtkinter.CTkButton(self, text="Cancel", command=self.showButtons)
         self.add_buttons["Cancel"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         self.add_buttons["Cancel"].grid_remove()
@@ -465,6 +465,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 self.master.plan_frame.showText(verify_result)
                 self.master.display_frame.prompt("Domain is updated and new plan is generated!")
                 self.hideAddButtons()
+                self.showButtons()
             else:
                 # revert domain back to previous
                 CAI_hddl.switch_domain_back_to_previous()
@@ -984,7 +985,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
             self.operators_frame.destroy()
 
         # Create a canvas for displaying the image
-        self.operators_frame = customtkinter.CTkFrame(self)
+        self.operators_frame = customtkinter.CTkFrame(self, height=600, width=900)
         self.operators_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         # Configure the grid layout to allow the canvas to expand
         self.operators_frame.grid_rowconfigure(0, weight=1)
@@ -1005,9 +1006,9 @@ class HTNViewFrame(customtkinter.CTkFrame):
         # Load the image
         img_path = CAI_hddl.get_domain_graph_image()
         try:
-            frame_width = self.operators_frame.winfo_width()
-            frame_height = self.operators_frame.winfo_height()
-            self.original_image = Image.open(img_path).resize((frame_width, frame_height))
+            # frame_width = self.operators_frame.winfo_width()
+            # frame_height = self.operators_frame.winfo_height()
+            self.original_image = Image.open(img_path).resize((1500, 1000))
             self.current_image = self.original_image.copy()
             self.tk_image = ImageTk.PhotoImage(self.current_image)
 
@@ -1054,7 +1055,7 @@ class HTNViewFrame(customtkinter.CTkFrame):
             # Add instruction label:
             instruction_label = customtkinter.CTkLabel(
                 self.operators_frame,
-                text="Select operators and then click confirm button to show their hierarchies:",
+                text="Select operators and then click this button to show graphs(s):",
                 text_color="white",
                 wraplength=450,  # Wrap text if it exceeds the width
                 justify="left"
@@ -1207,7 +1208,7 @@ class App(customtkinter.CTk):
         
         self.plan_frame = PlanFrame(self)
         self.plan_frame.grid(row=0, column=2, rowspan=2, padx=10, pady=10, sticky='nsew')
-        
+
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
         self.bind("<KP_Enter>", self.display_frame.validateEntry)

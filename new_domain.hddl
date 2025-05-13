@@ -124,27 +124,6 @@
 	)
 
 	
-
-(:method m3-ordering-0
-    :parameters (?a - Aircraft ?c1 - City ?c2 - City ?c3 - City ?p - Person)
-    :task (transport-person ?p ?c3)
-    :precondition (and
-        (at ?p ?c1)
-        (at ?a ?c2)
-        (different ?c1 ?c2)
-    )
-    :subtasks (and
-        (task0 (upper-move-aircraft ?a ?c1))
-        (task1 (board ?p ?a ?c1))
-        (task2 (upper-move-aircraft ?a ?c3))
-        (task3 (debark ?p ?a ?c3))
-    )
-    :ordering (and
-        (< task0 task1)
-        (< task1 task2)
-        (< task2 task3)
-    )
-)
 (:action board
 		:parameters (?p - Person ?a - Aircraft ?c - City)
 		:precondition

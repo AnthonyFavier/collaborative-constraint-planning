@@ -174,21 +174,21 @@ def get_domain_graph(domain_path: str) -> nx.MultiDiGraph:
 def get_domain_graph_image_saved(domain_path: str, save_dir=None) -> nx.MultiDiGraph:
         parser = HDDLParser(domain_path)
         graph = parser.parse()
-        plt.figure(figsize=(10, 8))  # width x height in inches
+        plt.figure(figsize=(15, 10))  # width x height in inches
         pos = nx.shell_layout(graph)  # You can try other layouts like nx.shell_layout
         node_colors = []
 
         for _, data in graph.nodes(data=True):
                 if data['type'] == 'task':
-                        node_colors.append('skyblue')
+                        node_colors.append('yellow')
                 elif data['type'] == 'method':
                         node_colors.append('lightgreen')
                 elif data['type'] == 'action':
-                        node_colors.append('salmon')
+                        node_colors.append('lightgray')
                 else:
                         node_colors.append('gray')
 
-        nx.draw(graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=10, font_weight='bold', arrows=True)
+        nx.draw(graph, pos, with_labels=True, node_color=node_colors, node_size=12000, font_size=18, font_weight='bold', arrows=True)
         offset = 0.05  # vertical offset to avoid overlap
         for i, (u, v, k, d) in enumerate(graph.edges(keys=True, data=True)):
                 if d['priority'] == -1:
@@ -197,11 +197,11 @@ def get_domain_graph_image_saved(domain_path: str, save_dir=None) -> nx.MultiDiG
                 x1, y1 = pos[v]
                 # label_x = x0 + 0.25 * (x1 - x0)
                 # label_y = y0 + 0.25 * (y1 - y0) + (i * offset)  # offset by edge index to avoid overlap
-                label_x = x0 + (x1 - x0)*(0.1 + d['priority']*0.01)
-                label_y = y0 + (y1 - y0)*(0.1 + d['priority']*0.01)
+                label_x = x0 + (x1 - x0)*(0.15 + d['priority']*0.05)
+                label_y = y0 + (y1 - y0)*(0.15 + d['priority']*0.05)
                 label = f"[{d['priority']}]"
                 plt.text(label_x, label_y, label, fontsize=15, color='red', fontweight='bold')
-        plt.title('HDDL Operator Graph')
+        plt.title('HDDL Operator Graph', fontsize=25)
         # Save the figure
         if save_dir is None:
                 save_dir = domain_path.replace('.hddl','_operators_graph.png')
