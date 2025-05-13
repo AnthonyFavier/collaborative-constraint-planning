@@ -553,31 +553,31 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         i_self_row = 0
         
-        self.title = customtkinter.CTkLabel(self, text="Current Plan", fg_color="gray30", corner_radius=6,font=App.font)
+        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", corner_radius=6,font=App.font)
         self.title.grid(row=i_self_row, column=0, padx=10, pady=(10, 0), sticky="ew")
         i_self_row+=1
         
         self.previous_label = customtkinter.CTkLabel(self, text="Previous:", font=PlanFrame.label_font)
-        self.previous_label.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="ew")
+        self.previous_label.grid(row=i_self_row, column=0, padx=10, pady=5, sticky="ew")
         i_self_row+=1
         
         self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.previous_textbox.insert('end', "None")
         self.previous_textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
         self.previous_textbox.configure(height=65)
-        self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         # self.grid_rowconfigure(2, weight=1)
         i_self_row+=1
         
         self.current_label = customtkinter.CTkLabel(self, text="Current:", font=PlanFrame.label_font)
-        self.current_label.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="ew")
+        self.current_label.grid(row=i_self_row, column=0, padx=10, pady=5, sticky="ew")
         i_self_row+=1
         
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.textbox.insert('end', "None")
         self.textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
-        self.textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         self.grid_rowconfigure(4, weight=1)
         i_self_row+=1
         
