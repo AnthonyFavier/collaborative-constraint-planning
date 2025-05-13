@@ -388,17 +388,15 @@ def CAI():
             else:
                 mprint("No current valid plan")
 
-def init(problem_name, planning_mode, timeout, e2nl):
+g_with_e2nl = False
+def init(problem_name, planning_mode, timeout):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
     global DOMAIN_PATH, PROBLEM_PATH
-    global g_with_e2nl
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
         exit()
         
-    g_with_e2nl = e2nl
-    
     g_problem_name = problem_name
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
     g_planning_mode = planning_mode

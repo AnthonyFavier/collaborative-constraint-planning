@@ -60,10 +60,13 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
 @click.option('-t', '--timeout', 'timeout', default=15.0, help="Timeout for planning")
 @click.option('--e2nl', 'e2nl', is_flag=True, default=False, help="Activates the translation of encodings back to NL")
 def main(problem_name, planning_mode, timeout, e2nl):
+    CAI.g_with_e2nl = e2nl
+    
     app = GUI.App()
     setPromptFunction(app.display_frame.prompt)
     setInputFunction(app.display_frame.getFromEntry)
-    CAI.init(problem_name, planning_mode, timeout, e2nl)
+    
+    CAI.init(problem_name, planning_mode, timeout)
     
     # FOR ABLATION #
     # Zeno13A()

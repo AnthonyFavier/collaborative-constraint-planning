@@ -289,6 +289,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", width=buttons_width, command=self.master.constraints_frame.toggleEncodings)
         self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10)
         i_row+=1
+        
+        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
+        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=10)
+        i_row+=1
     
     def confirm(self):
         self.confirm_function()
@@ -452,6 +456,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
 
         self.showButtons()
+    
+    def toggleE2NL(self):
+        CAI.g_with_e2nl = not CAI.g_with_e2nl
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL")
     
 class DisplayFrame(customtkinter.CTkFrame):
     def __init__(self, master):
