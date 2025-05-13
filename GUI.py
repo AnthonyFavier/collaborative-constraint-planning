@@ -473,9 +473,10 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         
+        self.write_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
-        self.textbox.configure(state='disabled')
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
+        self.textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
         N = 20
         self.prompt("\n" * N)
         
@@ -486,7 +487,6 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry_stamp = None
         self.entry_dark = ('#F9F9FA', '#343638')
         self.entry_light = ('#F9F9FA', '#585a5c')
-        # self.entry.configure(fg_color=self.entry_light)
         
         self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
         self.timer_label.grid(row=2, column=0, padx=10, pady=0, sticky="ew")
@@ -515,11 +515,12 @@ class DisplayFrame(customtkinter.CTkFrame):
         return r
             
     def prompt(self, text):
-        self.textbox.configure(state='normal')
-        self.textbox.insert(customtkinter.END, '\n'+text)
-        self.textbox.configure(state='disabled')
+        self.write_lock.acquire()
+        self.textbox.insert('end', '\n'+text)
         self.textbox.focus()
         self.textbox.see('end')
+        self.write_lock.release()
+        
         
     def activateEntry(self, txt=""):
         if txt!="":
@@ -562,7 +563,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.previous_textbox.insert('end', "None")
-        self.previous_textbox.configure(state='disabled')
+        self.previous_textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
         self.previous_textbox.configure(height=65)
         self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
         # self.grid_rowconfigure(2, weight=1)
@@ -575,7 +576,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.textbox.insert('end', "None")
-        self.textbox.configure(state='disabled')
+        self.textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
         self.textbox.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
         self.grid_rowconfigure(4, weight=1)
         i_self_row+=1
@@ -606,16 +607,12 @@ class PlanFrame(customtkinter.CTkFrame):
         mprint("\nCopied!")
         
     def showText(self, txt):
-        self.textbox.configure(state='normal')
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
-        self.textbox.configure(state='disabled')
         
     def editPrevious(self, txt):
-        self.previous_textbox.configure(state='normal')
         self.previous_textbox.delete("0.0", 'end')
         self.previous_textbox.insert('end', txt)
-        self.previous_textbox.configure(state='disabled')
 
 class App(customtkinter.CTk):
     font = ("Arial", 20, "bold")
