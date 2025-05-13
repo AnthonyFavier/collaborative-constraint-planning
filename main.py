@@ -4,6 +4,33 @@ from defs import *
 import click
 import sys
 
+def initZeno13():
+    # ZENO 13 #
+    r = CAI.CM.createRaw("Person7 should not move.")
+    d = CAI.CM.createDecomposed(r, "Person7 should always be located in city0.")
+    d.encoding = "(always (located person7 city0))"
+    
+    r = CAI.CM.createRaw("Plane2 should never be used.")
+    d = CAI.CM.createDecomposed(r, "Plane2 should remain at its initial location (city2) throughout the plan.")
+    d.encoding = "(always (located plane2 city2))"
+    d = CAI.CM.createDecomposed(r, "The number of people onboard plane2 should always be zero.")
+    d.encoding = "(always (= (onboard plane2) 0))"
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane2 should remain unchanged from its initial value.")
+    d.encoding = "(always (= (fuel plane2) 1469))"
+    
+    r = CAI.CM.createRaw("Plane3 should never be used.")
+    d = CAI.CM.createDecomposed(r, "Plane3 should remain at its initial location (city3) throughout the plan.")
+    d.encoding = "(always (located plane3 city3))"
+    d = CAI.CM.createDecomposed(r, "The number of people onboard plane3 should always be zero.")
+    d.encoding = "(always (= (onboard plane3) 0))"
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane3 should remain unchanged from its initial value.")
+    d.encoding = "(always (= (fuel plane3) 1532))"
+    
+    r = CAI.CM.createRaw("No plane should even use flyfast.")
+    d = CAI.CM.createDecomposed(r, "No plane should never execute flyfast.")
+    d.encoding = "(always (forall (?p - aircraft ?c1 ?c2 - city) (= (n_flyfast ?p ?c1 ?c2) 0)))"
+
+
 def ablation(app, type):
     if type not in ['A', 'B', 'C']:
         raise Exception("Wrong ablation type")
@@ -62,6 +89,33 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
     else:
         txt = " ".join(constraints)
         CAI.addConstraints([txt])
+        
+
+def initdemo():
+    # ZENO 13 #
+    r = CAI.CM.createRaw("Plane2 and plane3 should never be used")
+    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane2")
+    d.encoding = "(always (forall (?p - person) (not (in ?p plane2))))"
+    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane3")
+    d.encoding = "(always (forall (?p - person) (not (in ?p plane3))))"
+    d = CAI.CM.createDecomposed(r, "Plane2 should remain located in city2 throughout the entire plan")
+    d.encoding = "(always (located plane2 city2))"
+    d = CAI.CM.createDecomposed(r, "Plane3 should remain located in city3 throughout the entire plan")
+    d.encoding = "(always (located plane3 city3))"
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane2 should never exceed its initial value of 1469")
+    d.encoding = "(always (= (fuel plane2) 1469))"
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane3 should never exceed its initial value of 1532")
+    d.encoding = "(always (= (fuel plane3) 1532))"
+    
+    r = CAI.CM.createRaw("Person7 should never move and planes should never fly fast")
+    d = CAI.CM.createDecomposed(r, "Person7 should always remain located in city0.")
+    d.encoding = "(always (located person7 city0))"
+    d = CAI.CM.createDecomposed(r, "No aircraft should ever use the flyfast mode of transportation.")
+    d.encoding = "(always (forall (?p - aircraft ?c1 ?c2 - city) (= (n_flyfast ?p ?c1 ?c2) 0)))"
+    
+    r = CAI.CM.createRaw("Plane1 should never fly to a same city more than 3 times")
+    d = CAI.CM.createDecomposed(r, "ss")
+    d.encoding = "(always (forall (?d - city) (<= (+  (n_flyslow plane1 city0 ?d) (n_flyfast plane1 city0 ?d) (n_flyslow plane1 city1 ?d) (n_flyfast plane1 city1 ?d) (n_flyslow plane1 city2 ?d) (n_flyfast plane1 city2 ?d) (n_flyslow plane1 city3 ?d) (n_flyfast plane1 city3 ?d) (n_flyslow plane1 city4 ?d) (n_flyfast plane1 city4 ?d) (n_flyslow plane1 city5 ?d) (n_flyfast plane1 city5 ?d) ) 2)))"
     
 def loadDump():
     # put dump code
