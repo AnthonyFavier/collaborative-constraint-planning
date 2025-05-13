@@ -258,40 +258,40 @@ class ButtonsFrame(customtkinter.CTkFrame):
         i_row = 0
         self.confirm_function = None
         self.confirm_button = customtkinter.CTkButton(self, text="Confirm", width=buttons_width, command=self.confirm)
-        self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10)
+        self.confirm_button.grid(row=i_row, column=0, padx=10, pady=3)
         self.confirm_button.grid_remove()
         
         self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, command=self.addT)
-        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=3)
         self.add_nl_constraints = []
         i_row+=1
         
         self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", width=buttons_width, command=self.delete)
-        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", width=buttons_width, command=self.activate)
-        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", width=buttons_width, command=self.planT)
-        self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, command=self.changePlanModeT)
-        self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, command=self.changeTimeoutT)
-        self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle\nencodings", width=buttons_width, command=self.master.constraints_frame.toggleEncodings)
-        self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
         self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
-        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=10)
+        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
     
     def confirm(self):
