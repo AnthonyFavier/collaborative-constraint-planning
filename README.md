@@ -7,9 +7,6 @@ CAI
 
 ![plot](./rsc/overview.jpg "Overview")
 
-Preliminary version for ONR CAI
-Mix of Phase 2 and 3
-
 ## Installation
 
 Tested on Ubuntu 20.04
@@ -23,10 +20,11 @@ pip install -r requirements.txt --no-cache-dir
 sudo apt-get install openjdk-17-jdk python3.10-tk
 ```
 
-Run a small patch for unified_planning to also handle default _real_ and _int_ values:
+Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
 ```
-python patch_unified_planning_default_values.py 
+python patches.py 
 ```
+
 
 **Note**: to deactivate the python environment simply run: `deactivate`
 
@@ -67,21 +65,6 @@ python main.py [OPTIONS] PROBLEM_NAME
 Problems and options can be listed using `python main.py --help`.
 
 ---
-
-
-### Run CAI in shell
-
-```
-source env_cai/bin/activate
-python cai.py [OPTIONS] PROBLEM_NAME
-```
-
-Problems and options can be listed using `python cai.py --help`.
-
-To add new problems, see `defs.py`.
-
-The planning mode used (i.e. optimal, satisficing, default) can be used using the respective options `-o`, `-s`, `-d`.
-
 
 ### Run Planner Only
 

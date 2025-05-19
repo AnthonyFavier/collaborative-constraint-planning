@@ -34,7 +34,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     font = ("Arial", 18)
     encoding_font = ("Courier New", 12)
     def __init__(self, master):
-        super().__init__(master, orientation="vertical")
+        super().__init__(master, orientation="both")
         
         self.checkboxes = {}
         self.constraint_labels = {}
