@@ -16,6 +16,7 @@ Create a python3.10 environment to install the relevant dependencies:
 ```
 python3.10 -m venv env_cai
 source env_cai/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt --no-cache-dir
 sudo apt-get install openjdk-17-jdk python3.10-tk
 ```
@@ -47,7 +48,7 @@ cd ENHSP-Public
 ./compile
 ```
 
-Ignore the two _Note_ lines.
+Ignore the two _Note:_ lines.
 
 #### > LLM API: Set up Claude API key
 
