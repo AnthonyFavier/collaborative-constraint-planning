@@ -89,6 +89,7 @@ class OPENAIClient:
         return answer
 clients = {'ANTHROPIC': ANTHROPICClient('claude-sonnet-4-20250514'), 'OPENAI': OPENAIClient('o4-mini-2025-04-16')}
 
+# CONVERSATION HISTORY
 class ConversationHistory:
     def __init__(self):
         # Initialize an empty list to store conversation turns
@@ -145,8 +146,6 @@ class ConversationHistory:
     
     def reset(self):
         self.turns = []
-
-# Initialize the conversation history
 conversation_history = ConversationHistory()
 
 # HELPERS
