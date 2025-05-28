@@ -53,13 +53,11 @@ def addConstraints(nl_constraints):
                 
                 if i==0:
                     mprint("\nDecomposing...\n" + str(r))
-                    result = LLM.decompose(g_domain, g_problem, nl_constraint)
+                    result = LLM.decompose(nl_constraint)
                 else:
                     mprint("\nRe-Decomposing...\n" + str(r))
                     result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
                     
-                result = LLM.removeFormating(result)
-                
                 # for c in constraints:
                 for c in result.splitlines():
                     CM.createDecomposed(r, c)
@@ -114,7 +112,7 @@ def addConstraints(nl_constraints):
                 # 1 # Encode the preferences
                 if i==0: # first time
                     mprint(f"\tencoding {c}...")
-                    encodedPref = LLM.encodePrefs(g_domain, g_problem, c.nl_constraint)
+                    encodedPref = LLM.encodePrefs(c.nl_constraint)
                 else: # Re-encoding
                     mprint(f"\t\tre-encoding (try {i+1}/{MAX_ENCODING_TRY}) Verifier not ok ...")
                     encodedPref = LLM.reencodePrefs(feedback)
@@ -137,7 +135,7 @@ def addConstraints(nl_constraints):
                         # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
                         if g_with_e2nl:
                             # mprint("Asking for NL translation")
-                            mprint("\t\t> "+LLM.constraint2NL(g_domain, g_problem, c.encoding))
+                            mprint("\t\t> "+LLM.E2NL(c.encoding))
                             LLM.clear_message_history()
                         
                     # else:
@@ -449,7 +447,10 @@ def init(problem_name, planning_mode, timeout):
         g_domain = f.read()
     with open(PROBLEM_PATH, "r") as f:
         g_problem = f.read()
-
+        
+    # Init LLM system message with domain and problem
+    LLM.setSystemMessage(g_domain, g_problem)
+    
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')
 @click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
