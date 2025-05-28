@@ -385,20 +385,20 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.hideButtons()
         txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
         if txt[:len("Failed to plan:")]=="Failed to plan:":
-            self.master.plan_frame.showText(txt)
+            self.master.plan_frame.printMain(txt)
         else:
             # get current metrics and put in previous
             previous_plan = self.master.plan_frame.textbox.get("0.0", "end")
             i = previous_plan.find("Plan-Length:")
             if i!=-1:
                 previous_metrics = previous_plan[i:previous_plan.find("Found Plan:")-2]
-                self.master.plan_frame.editPrevious(previous_metrics)
+                self.master.plan_frame.printPrevious(previous_metrics)
             
             
             # put metrics at top
             i = txt.find("Plan-Length:")
             plan = txt[i:] + '\n\n' + txt[:i-2]        
-            self.master.plan_frame.showText(plan)
+            self.master.plan_frame.printMain(plan)
             self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):
@@ -477,10 +477,6 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
         
-        # KEYBOARD BINDS
-        self.textbox.bind("<Escape>", lambda x: exit())
-        self.textbox.bind('<Control-c>',lambda e: self.handleEventCopy(e)) 
-        
         # Clear display
         N = 20
         self.prompt("\n" * N)
@@ -497,14 +493,6 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.timer_label.grid(row=2, column=0, padx=10, pady=0, sticky="ew")
         self.start_time = None
         self._timer_running = False
-        
-    def handleEventCopy(self, e):
-        try:
-            txt = self.textbox.selection_get()
-            pyperclip.copy(txt)
-        except:
-            pass
-        return 'break'
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
@@ -576,9 +564,9 @@ class PlanFrame(customtkinter.CTkFrame):
         self.previous_label.grid(row=i_self_row, column=0, padx=10, pady=5, sticky="ew")
         i_self_row+=1
         
+        self.write_previous_lock = threading.Lock()
         self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
-        self.previous_textbox.insert('end', "None")
-        self.previous_textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
+        self.printPrevious("None")
         self.previous_textbox.configure(height=65)
         self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         # self.grid_rowconfigure(2, weight=1)
@@ -589,9 +577,9 @@ class PlanFrame(customtkinter.CTkFrame):
         i_self_row+=1
         
         
+        self.write_main_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
-        self.textbox.insert('end', "None")
-        self.textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
+        self.printMain("None")
         self.textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         self.grid_rowconfigure(4, weight=1)
         i_self_row+=1
@@ -607,7 +595,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
         self.copy_button.grid(row=0, column=1, padx=10, pady=10)
-        
+    
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
         if txt[:len("Failed to plan:")]!="Failed to plan:":
@@ -621,13 +609,21 @@ class PlanFrame(customtkinter.CTkFrame):
         pyperclip.copy(self.textbox.get("0.0", "end"))
         mprint("\nCopied!")
         
-    def showText(self, txt):
+    def printMain(self, txt):
+        self.write_main_lock.acquire()
+        self.textbox.configure(state="normal")
         self.textbox.delete("0.0", 'end')
         self.textbox.insert('end', txt)
+        self.textbox.configure(state="disabled")
+        self.write_main_lock.release()
         
-    def editPrevious(self, txt):
+    def printPrevious(self, txt):
+        self.write_previous_lock.acquire()
+        self.previous_textbox.configure(state="normal")
         self.previous_textbox.delete("0.0", 'end')
         self.previous_textbox.insert('end', txt)
+        self.previous_textbox.configure(state="disabled")
+        self.write_previous_lock.release()
 
 class App(customtkinter.CTk):
     font = ("Arial", 20, "bold")
@@ -665,8 +661,19 @@ class App(customtkinter.CTk):
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
         self.bind("<KP_Enter>", self.display_frame.validateEntry)
-        # self.bind("<Key>", key_handler)
+        self.bind('<Control-c>',lambda e: self.handleEventCopy()) 
+        
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
-def key_handler(event):
-    print(event.char, event.keysym, event.keycode)
+    def handleEventCopy(self):
+        try:
+            pyperclip.copy(self.display_frame.textbox.selection_get())
+        except: 
+            try:
+                pyperclip.copy(self.plan_frame.textbox.selection_get())
+            except:
+                try:
+                    pyperclip.copy(self.plan_frame.previous_textbox.selection_get())
+                except: pass
+        return 'break'
+        
