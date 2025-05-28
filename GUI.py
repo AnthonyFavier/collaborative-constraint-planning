@@ -476,7 +476,12 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.write_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
-        self.textbox.bind('<Key>',lambda e: 'break') #ignore all key presses
+        
+        # KEYBOARD BINDS
+        self.textbox.bind("<Escape>", lambda x: exit())
+        self.textbox.bind('<Control-c>',lambda e: self.handleEventCopy(e)) 
+        
+        # Clear display
         N = 20
         self.prompt("\n" * N)
         
@@ -492,6 +497,14 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.timer_label.grid(row=2, column=0, padx=10, pady=0, sticky="ew")
         self.start_time = None
         self._timer_running = False
+        
+    def handleEventCopy(self, e):
+        try:
+            txt = self.textbox.selection_get()
+            pyperclip.copy(txt)
+        except:
+            pass
+        return 'break'
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
@@ -516,9 +529,11 @@ class DisplayFrame(customtkinter.CTkFrame):
             
     def prompt(self, text):
         self.write_lock.acquire()
+        self.textbox.configure(state="normal")
         self.textbox.insert('end', '\n'+text)
-        self.textbox.focus()
+        self.textbox.configure(state="disabled")
         self.textbox.see('end')
+        # self.textbox.focus_set()
         self.write_lock.release()
         
         
