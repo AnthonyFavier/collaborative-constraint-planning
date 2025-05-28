@@ -20,7 +20,8 @@ PROBLEMS = {
     "rover10":      ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile10"),
     "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                              "ENHSP-Public/handcraft/pfile1.pddl"),
     # HDDL:
-    "zeno5_hddl":   ("HDDL_env/zeno_domain.hddl",       "HDDL_env/zeno_problem_5.hddl")
+    "zeno5_hddl":   ("HDDL_env/zeno_domain.hddl",       "HDDL_env/zeno_problem_5.hddl"),
+    "monroe_hddl": ("HDDL_env/monroe_hddl.hddl",     "HDDL_env/monroe_problem.hddl"),
 }
 
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
