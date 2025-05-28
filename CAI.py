@@ -135,12 +135,9 @@ def addConstraints(nl_constraints):
                         # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
                         if g_with_e2nl:
                             # mprint("Asking for NL translation")
-                            mprint("\t\t> "+LLM.E2NL(c.encoding))
+                            c.e2nl = LLM.E2NL(c.encoding)
+                            mprint("\t\t> "+c.e2nl)
                             LLM.clear_message_history()
-                        
-                    # else:
-                        # mprint("\t\tVerifier: Encoding not OK.")
-                        # mprint(feedback)
                 else:
                     encodingOK = True
                     c.encoding = filteredEncoding

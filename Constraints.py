@@ -56,6 +56,7 @@ class DecomposedConstraint(Constraint):
         self.parent = parent
         self.symbol = 'D' + self.symbol[1:]
         self.encoding = ''
+        self.e2nl = ''
         self._activated = True
         
     def deactivate(self):
