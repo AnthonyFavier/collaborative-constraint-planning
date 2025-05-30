@@ -37,16 +37,16 @@ class ANTHROPICClient:
                         extra_headers={"anthropic-beta": "extended-cache-ttl-2025-04-11"}
                     )
                 
-                # Prints blocks
+                # blocks
+                answers = []
                 for m in result.content:
                     if m.type=='thinking':
-                        print(m.thinking)
+                        print("[THINKING]\n" + m.thinking)
+                        answers.append(m.thinking)
                     elif m.type=='text':
-                        print(m.text)
-                        
-                answer = result.content[-1].text
-                print(answer)
-                return answer
+                        print("[TEXT]\n" + m.text)
+                        answers.append(m.text)
+                return answers
             except Exception as err:
                 if err.args[0].find("not resolve authentication method"):
                     raise err
@@ -86,7 +86,7 @@ class OPENAIClient:
         
         result = self.client.responses.create(input=messages, model=self.model, instructions=systemMsg, max_output_tokens=self.max_token, reasoning=reasoning)
         answer = result.output_text
-        return answer
+        return [answer]
 clients = {'ANTHROPIC': ANTHROPICClient('claude-sonnet-4-20250514'), 'OPENAI': OPENAIClient('o4-mini-2025-04-16')}
 
 # CONVERSATION HISTORY
@@ -211,21 +211,23 @@ def decompose(constraint):
     conversation_history.add_turn_user(constraint)
     
     # Call 
-    assistant_reply = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
-    conversation_history.add_turn_assistant(assistant_reply)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
 
     # Remove format 
-    assistant_reply_without_formating = removeFormating(assistant_reply)
+    assistant_reply_without_formating = removeFormating(assistant_replies[-1])
     return assistant_reply_without_formating
 def redecompose(feedback):
     conversation_history.add_turn_user(feedback)
     
     # Call
-    assistant_reply = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
-    conversation_history.add_turn_assistant(assistant_reply)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
     
     # Remove format 
-    assistant_reply_without_formating = removeFormating(assistant_reply)
+    assistant_reply_without_formating = removeFormating(assistant_replies[-1])
     return assistant_reply_without_formating
 
 # ENCODE
@@ -235,17 +237,19 @@ def encodePrefs(constraint):
     conversation_history.add_turn_user(constraint)
     
     # Call
-    assistant_reply = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
-    conversation_history.add_turn_assistant(assistant_reply)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
     
-    return assistant_reply
+    return assistant_replies[-1]
 def reencodePrefs(feedback):
     conversation_history.add_turn_user(feedback)
     
-    assistant_reply = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
-    conversation_history.add_turn_assistant(assistant_reply)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
     
-    return assistant_reply
+    return assistant_replies[-1]
 
 # E2NL
 def E2NL(constraint):
@@ -254,10 +258,11 @@ def E2NL(constraint):
     conversation_history.add_turn_user(constraint)
     
     # Call LLM
-    assistant_reply = clients["OPENAI"].call(system_message, conversation_history.get_turns(), thinking=True)
-    conversation_history.add_turn_assistant(assistant_reply)
+    assistant_replies = clients["OPENAI"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
     
-    return assistant_reply
+    return assistant_replies[-1]
 
 # MAIN
 if __name__=='__main__':
