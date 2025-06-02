@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HDDL HTN Graph Visualizer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
+  <style>
+    #cy { width: 100%; height: 600px; border: 1px solid #aaa; }
+  </style>
+</head>
+<body>
+
+<h2>HDDL HTN Graph Visualizer</h2>
+<p>Select an HDDL domain file to generate the graph:</p>
+
+<input type="file" id="hddlFileInput" accept=".hddl">
+<br>
+<button onclick="generateGraph()">Generate Graph</button>
+
+<div id="cy"></div>
+
+<script>
+  let cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: [],
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'background-color': '#5a8',
+          'color': '#fff',
+          'shape': 'roundrectangle',
+          'width': 'label',
+          'padding': 10,
+          'font-size': '12px'
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+            'curve-style': 'bezier',
+            'edge-distances': 'node-position',
+            'control-point-step-size': 30,
+            'label': 'data(label)',
+            'font-size': '10px',
+            'text-rotation': 'autorotate',
+            'text-margin-y': -10,
+            'target-arrow-shape': 'triangle',
+            'line-color': '#ccc',
+            'target-arrow-color': '#ccc'
+        }
+        }
+    ]
+  });
+
+  function parseHDDL(content) {
+    const lines = content.split('\n');
+    const elements = [];
+    const nodeSet = new Set();
+
+    lines.forEach(line => {
+      const arrowIndex = line.indexOf('->');
+      if (arrowIndex !== -1) {
+        const parent = line.substring(0, arrowIndex).trim();
+        const children = line.substring(arrowIndex + 2).split(',').map(child => child.trim());
+
+        // Add parent node if not already added
+        if (!nodeSet.has(parent)) {
+          elements.push({ data: { id: parent, label: parent } });
+          nodeSet.add(parent);
+        }
+
+        // Add child nodes and edges
+        children.forEach(child => {
+          if (!nodeSet.has(child)) {
+            elements.push({ data: { id: child, label: child } });
+            nodeSet.add(child);
+          }
+          elements.push({ data: { source: parent, target: child } });
+        });
+      }
+    });
+
+    return elements;
+  }
+
+  async function generateGraph() {
+    console.log("Generating Graph ...");
+    const text = document.getElementById('hddlInput').value;
+
+    const res = await fetch('/generate_graph', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+
+    if (!res.ok) {
+      const error = await res.text();
+      alert(`Error: ${error}`);
+      return;
+    }
+
+    const { nodes, edges } = await res.json();
+
+    cy.elements().remove();
+    cy.add([...nodes, ...edges]);
+    cy.layout({ name: 'breadthfirst', directed: true, padding: 10 }).run();
+  }
+</script>
+
+</body>
+</html>

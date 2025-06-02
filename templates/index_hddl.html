@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HDDL Operators Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #operators-container {
+      margin-bottom: 20px;
+    }
+    .operator-checkbox {
+      margin-right: 10px;
+    }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+    .operator-image {
+      max-width: 600px;
+      max-height: 300px;
+      margin: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<h1>HDDL Operators Viewer</h1>
+<p>Select operators below to view their corresponding graphs:</p>
+
+<div id="operators-container">
+  <!-- Operator checkboxes will be dynamically added here -->
+</div>
+
+<button onclick="viewOperators()">View Selected Operators</button>
+
+<div id="operators-frame">
+  <!-- Operator graphs will be displayed here -->
+</div>
+
+<script>
+  async function loadOperators() {
+    const res = await fetch('/get_operators');
+    if (!res.ok) {
+      const error = await res.text();
+      alert(`Error loading operators: ${error}`);
+      return;
+    }
+
+    const operators = await res.json();
+    const container = document.getElementById('operators-container');
+    container.innerHTML = ''; // Clear previous content
+
+    operators.forEach(operator => {
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = operator;
+      checkbox.className = 'operator-checkbox';
+      checkbox.value = operator;
+
+      const label = document.createElement('label');
+      label.htmlFor = operator;
+      label.textContent = operator;
+
+      container.appendChild(checkbox);
+      container.appendChild(label);
+      container.appendChild(document.createElement('br'));
+    });
+  }
+
+  async function viewOperators() {
+    const selectedOperators = Array.from(document.querySelectorAll('.operator-checkbox:checked')).map(cb => cb.value);
+
+    const frame = document.getElementById('operators-frame');
+    frame.innerHTML = ''; // Clear previous content
+
+    if (selectedOperators.length === 0) {
+      const errorMessage = document.createElement('p');
+      errorMessage.textContent = "No operators selected. Please select operators to view their graphs.";
+      errorMessage.className = 'error-message';
+      frame.appendChild(errorMessage);
+      return;
+    }
+
+    for (const operator of selectedOperators) {
+      try {
+        const res = await fetch(`/get_operator_graph?operator=${operator}`);
+        if (!res.ok) {
+          throw new Error(`Error loading graph for operator: ${operator}`);
+        }
+
+        const blob = await res.blob();
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        img.alt = `Graph for ${operator}`;
+        img.className = 'operator-image';
+        frame.appendChild(img);
+      } catch (error) {
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = `Error loading graph for ${operator}: ${error.message}`;
+        errorMessage.className = 'error-message';
+        frame.appendChild(errorMessage);
+      }
+    }
+  }
+
+  // Load operators when the page loads
+  loadOperators();
+</script>
+
+</body>
+</html>
