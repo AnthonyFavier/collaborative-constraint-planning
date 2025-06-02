@@ -282,6 +282,28 @@ def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_di
         print("returned save_dir: ", save_dir)
         return save_dir
 
+def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
+        nodes = [{'data': {'id': str(n), 'label': str(n)}} for n in G.nodes()]
+
+        edges = []
+        for u, v, key, data in G.edges(keys=True, data=True):
+                edge_id = f"{u}-{v}-{key}"
+                label = data['priority'] if d['priority'] not in (-1, None) else ""
+                edge = {
+                        'data': {
+                                'id': edge_id,
+                                'source': str(u),
+                                'target': str(v),
+                                'priority': data['priority'],  # default to 0
+                                'label': label  # optional: show on edge
+                        }
+                }
+        # Optionally add attributes like weight, label, etc.
+        edge['data'].update({k: v for k, v in data.items()})
+        edges.append(edge)
+
+        return nodes, edges
+
 if __name__ == "__main__":
         domain_path = input("Please provide domain file directory, if want to use default file, click enter.")
         if domain_path == '':
