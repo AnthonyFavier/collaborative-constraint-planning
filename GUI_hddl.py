@@ -224,41 +224,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master = master
         self.title = "Constraint actions"
         self.buttons = {}
-        
-        # i_row = 0
-        # self.confirm_function = None
-        # self.confirm_button = customtkinter.CTkButton(self, text="Confirm", command=self.confirm)
-        # self.confirm_button.grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # self.confirm_button.grid_remove()
-        
-        # self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add)
-        # self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # self.add_nl_constraints = []
-        # i_row+=1
-        
-        # self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", command=self.delete)
-        # self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-        
-        # self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", command=self.activate)
-        # self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-        
-        # self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", command=self.planT)
-        # self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-        
-        # self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", command=self.changePlanMode)
-        # self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-        
-        # self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", command=self.changeTimeout)
-        # self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # i_row+=1
-        
-        # self.buttons["ShowEncodings"] = customtkinter.CTkButton(self, text="Toggle encodings", command=self.master.constraints_frame.toggleEncodings)
-        # self.buttons["ShowEncodings"].grid(row=i_row, column=0, padx=10, pady=10, sticky="w")
-        # i_row+=1
 
         # HDDL Button:
         i_row = 0
@@ -286,9 +251,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         ###
         # Add buttons:
         self.add_buttons = dict()
-        # self.add_buttons["Add"] = customtkinter.CTkButton(self, text="Add", command=self.add2)
-        # self.add_buttons["Add"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
-        # self.add_buttons["Add"].grid_remove()
         self.add_buttons["Cancel"] = customtkinter.CTkButton(self, text="Cancel", command=self.showButtons)
         self.add_buttons["Cancel"].grid(row=i_row, column=0, padx=10, pady=10, sticky="ew")
         self.add_buttons["Cancel"].grid_remove()
@@ -943,14 +905,6 @@ class HTNViewFrame(customtkinter.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
         self.title = customtkinter.CTkLabel(self, text="Hierarchy Viewer", fg_color="gray30", corner_radius=6,font=App.font)
         self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
-        # self.buttons_frame = customtkinter.CTkFrame(self)
-        # self.buttons_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        # self.all_oper_button = customtkinter.CTkButton(self.buttons_frame, text="View Domain Graph", command=self.view_all)
-        # self.all_oper_button.grid(row=0, column=0, padx=10, pady=10)
-        # self.new_method_button = customtkinter.CTkButton(self.buttons_frame, text="New Methods", command=self.view_new_methods)
-        # self.new_method_button.grid(row=0, column=1, padx=10, pady=10)
-        # self.operators_button = customtkinter.CTkButton(self.buttons_frame, text="View All Operators", command=self.view_list_operators)
-        # self.operators_button.grid(row=0, column=2, padx=10, pady=10)
 
     def view_all_old(self):
         """View all operators in the domain graph."""
@@ -1113,9 +1067,6 @@ class HTNViewFrame(customtkinter.CTkFrame):
                 label = customtkinter.CTkLabel(self.operators_frame, text="No operators found.", fg_color="red")
                 label.grid(row=0, column=0, columnspan=3, pady=10)
 
-            # # Add a confirm button to print the checked operators
-            # confirm_button = customtkinter.CTkButton(self.operators_frame, text="Confirm Selected Operators", command=self.confirm_checked_operators)
-            # confirm_button.grid(row=max(row_counters.values()) + 1, column=0, columnspan=3, pady=10)
 
         except Exception as e:
             print(f"Error displaying operators: {e}")
@@ -1194,9 +1145,7 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(2, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
-        
-        # self.constraints_frame = ConstraintsFrame(self)
-        # self.constraints_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
         self.display_frame = InteractiveFrame(self)
         self.display_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
         
@@ -1212,8 +1161,7 @@ class App(customtkinter.CTk):
         self.bind("<Escape>", lambda x: exit())
         self.bind("<Return>", self.display_frame.validateEntry)
         self.bind("<KP_Enter>", self.display_frame.validateEntry)
-        # self.bind("<Key>", key_handler)
-        # self.bind("beef", lambda x: print("ooh yummy!"))
+
         
 def key_handler(event):
     print(event.char, event.keysym, event.keycode)
