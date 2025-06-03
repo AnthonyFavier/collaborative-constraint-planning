@@ -204,6 +204,18 @@ def setSystemMessage(domain, problem):
             "cache_control": {"type": "ephemeral", "ttl":"1h"}
         }]
 
+# INITIAL SUGGESTIONS
+def suggestions():
+    conversation_history.add_turn_user("Your role is to reason on the working PDDL domain and problem to identify promising strategies in the form of state-based Linear Temporal Logic form, in natural language. This trajectory constraints should help and guide toward efficent solution or alternatives. They can also prevent from searching toward inefficient solutions. E.g. 'A costly ressource should never be used.'. Give me some suggestions of such strategies that could be used to solve the problem.")
+    
+    # Call 
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
+
+    answer = assistant_replies[-1]
+    return answer
+
 # DECOMPOSE
 def decompose(constraint):
     conversation_history.add_turn_user("Your role is to decompose a natural language constraint into lower-level constraints in order to later apply them to a given PDDL problem. You must reason about the input constraint, make it match a state-based Linear Temporal Logic form in natural language. That is, you may rephrase and decompose the initial constraint into as many constraints as necessary to fully capture the meaning of the initial constraint and where each decomposed constraint is a trajectory hard constraint for the plan referring to the predicates and fluents of the problem. Due to their state-based nature, the constraints cannot directly affect actions, so reason accordingly. The decomposed constraints should also be in natural language without any explicit PDDL language.")

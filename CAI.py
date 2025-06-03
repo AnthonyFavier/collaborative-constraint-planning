@@ -389,6 +389,10 @@ def CAI():
             else:
                 mprint("No current valid plan")
 
+def suggestions():
+    mprint("\nElaborating strategies suggestions...")
+    mprint(LLM.suggestions())
+
 g_with_e2nl = False
 def init(problem_name, planning_mode, timeout):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout

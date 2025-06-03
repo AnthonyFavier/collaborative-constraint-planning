@@ -676,4 +676,8 @@ class App(customtkinter.CTk):
                     pyperclip.copy(self.plan_frame.previous_textbox.selection_get())
                 except: pass
         return 'break'
+    
+    def suggestions(self):
+        t = threading.Thread(target=CAI.suggestions)
+        self.after(500, t.start)
         

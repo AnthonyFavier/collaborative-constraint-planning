@@ -143,6 +143,9 @@ def main(problem_name, planning_mode, timeout, e2nl):
     
     CAI.init(problem_name, planning_mode, timeout)
     
+    # Ask for initial suggestions
+    # app.suggestions()
+    
     # FOR ABLATION # A, B, or C
     # ablation(app, 'A') 
     
