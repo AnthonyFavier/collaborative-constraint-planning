@@ -64,6 +64,10 @@ def addConstraints(nl_constraints):
                 
                 mprint(r.strChildren())
                 
+                # mprint("Checking if worth to do modifications...")
+                # result = LLM.needModifications()
+                # mprint(result)
+                
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
                     answer = minput("\nPress Enter or give feedback: ")

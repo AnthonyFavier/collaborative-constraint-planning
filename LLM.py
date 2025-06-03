@@ -242,6 +242,17 @@ def redecompose(feedback):
     assistant_reply_without_formating = removeFormating(assistant_replies[-1])
     return assistant_reply_without_formating
 
+# MODICIFICATION
+def needModifications():
+    conversation_history.add_turn_user("Based on your previous reasonning to decompose the constraint, evaluate if modifying the PDDL problem would significantly help to better decompose the constraint. That is, is the current decomposition correctly capturing the initial constraint meaning and would it be worth it to, for instance, add new fluents or parameters to better capture the initial constraint. Answer with a clear Yes or No. If Yes, then give me clear suggestions on what updates to make.")
+    
+    # Call
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    for r in assistant_replies:
+        conversation_history.add_turn_assistant(r)
+    
+    return assistant_replies[-1]
+
 # ENCODE
 def encodePrefs(constraint):
     conversation_history.add_turn_user("Your purpose is to the given translate natural language constraint into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with concise and accurate PDDL language. PDDL3.0 constraints are state-based and should only concern predicates and fluents, they cannot refer directly to actions.")
