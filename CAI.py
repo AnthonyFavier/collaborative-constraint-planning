@@ -109,7 +109,7 @@ def addConstraints(nl_constraints):
         mprint(str(r))
         for c in r.children:
             encodingOK = False
-            MAX_ENCODING_TRY = 5
+            MAX_ENCODING_TRY = 3
             i=0
             while not encodingOK and i<MAX_ENCODING_TRY:
                 
