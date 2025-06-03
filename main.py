@@ -3,6 +3,7 @@ import GUI
 from defs import *
 import click
 import sys
+import faulthandler
 
 def initZeno13():
     # ZENO 13 #
@@ -135,6 +136,8 @@ def loadDump():
 @click.option('-t', '--timeout', 'timeout', default=15.0, help="Timeout for planning")
 @click.option('--e2nl', 'e2nl', is_flag=True, default=False, help="Activates the translation of encodings back to NL")
 def main(problem_name, planning_mode, timeout, e2nl):
+    faulthandler.enable()
+    
     CAI.g_with_e2nl = e2nl
     
     app = GUI.App()
