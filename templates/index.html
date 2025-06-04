@@ -1,116 +1,150 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HDDL HTN Graph Visualizer</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
+  <title>HDDL HTN Viewer</title>
+  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
   <style>
-    #cy { width: 100%; height: 600px; border: 1px solid #aaa; }
+    body { font-family: Arial; margin: 20px; }
+    textarea { width: 100%; font-family: monospace; resize: vertical; }
+    .scroll-area { height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; }
+    .frame-box { border: 1px solid #999; padding: 10px; height: 400px; overflow: hidden; }
+    #cy { width: 100%; height: 100%; }
+    .section { margin-bottom: 20px; }
+    .checkbox-list { display: flex; flex-direction: column; }
   </style>
 </head>
 <body>
 
-<h2>HDDL HTN Graph Visualizer</h2>
-<p>Select an HDDL domain file to generate the graph:</p>
+  <h2>HDDL HTN Viewer Interface</h2>
 
-<input type="file" id="hddlFileInput" accept=".hddl">
-<br>
-<button onclick="generateGraph()">Generate Graph</button>
+  <div class="section">
+    <h3>1. Load HDDL Domain and Problem Files</h3>
+    <!-- <form id="loadForm" enctype="multipart/form-data">
+      Domain File: <input type="file" name="domain" required>
+      Problem File: <input type="file" name="problem" required>
+      <button type="submit">Load</button>
+    </form> -->
+    <div style="display: flex; gap: 20px;">
+    <div style="flex: 1;">
+        <form id="loadDomainForm" enctype="multipart/form-data">
+            Domain File: <input type="file" name="domain" required>
+            <button type="submit">Load Domain</button>
+        </form>
+        <div class="scroll-area">
+        <pre id="domainText">(domain content appears here...)</pre>
+    </div></div>
+    <div style="flex: 1;">
+        <form id="loadProblemForm" enctype="multipart/form-data">
+            Problem File: <input type="file" name="problem" required>
+            <button type="submit">Load Problem</button>
+        </form>
+        <div class="scroll-area">
+            <pre id="problemText">(problem content appears here...)</pre>
+      </div></div>
+  </div></div>
 
-<div id="cy"></div>
+  <div class="section">
+    <h3>2. HTN Viewer</h3>
+    <div style="display: flex; gap: 20px;">
+      <div style="flex: 1;">
+        <label>LLM-Generated Explanation:</label>
+        <textarea id="llmOutput" rows="10" readonly></textarea>
 
-<script>
-  let cy = cytoscape({
-    container: document.getElementById('cy'),
-    elements: [],
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'label': 'data(label)',
-          'text-valign': 'center',
-          'text-halign': 'center',
-          'background-color': '#5a8',
-          'color': '#fff',
-          'shape': 'roundrectangle',
-          'width': 'label',
-          'padding': 10,
-          'font-size': '12px'
+        <label>Interactive Input Area (LLM Query):</label>
+        <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
+
+        <button onclick="viewHTN()">View HTN</button>
+        <button onclick="confirmHTN()">Confirm</button>
+      </div>
+      <div style="flex: 1;">
+        <label>Graph Viewer:</label>
+        <div class="frame-box"><div id="cy"></div></div>
+      </div>
+      <div style="width: 200px;">
+        <label>Options:</label>
+        <div class="scroll-area checkbox-list" id="optionsList" style="background-color: black">
+          <!-- dynamically populated -->
+          <!-- <label><input type="checkbox" value="task1"> task1</label>
+          <label><input type="checkbox" value="task2"> task2</label>
+          <label><input type="checkbox" value="method1"> method1</label>
+          <label><input type="checkbox" value="method2"> method2</label>
+          <label><input type="checkbox" value="action1"> action1</label>
+          <label><input type="checkbox" value="action2"> action2</label> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loadDomainForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+    //   console.log("Button clicked!", e)
+      const formData = new FormData(this);
+      const res = await fetch('/load_domain', { method: 'POST', body: formData });
+      const data = await res.json();
+      document.getElementById('domainText').textContent = data.domain || '(no content)';
+    });
+
+    document.getElementById('loadProblemForm').addEventListener('submit', async function(e2) {
+      e2.preventDefault();
+      const formData2 = new FormData(this);
+      const res2 = await fetch('/load_problem', { method: 'POST', body: formData2 });
+      const data2 = await res2.json();
+      document.getElementById('problemText').textContent = data2.problem || '(no content)';
+    });
+
+    function viewHTN() {
+      const query = document.getElementById('llmInput').value;
+      fetch('/view_htn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('llmOutput').value = data.text;
+          renderGraph(data.graph);
+        
+        // Generate checkboxes based on graph nodes
+        const optionsList = document.getElementById('optionsList');
+        optionsList.innerHTML = ''; // Clear existing checkboxes
+        data.graph.elements.forEach(element => {
+        if (element.data &&  !element.data.source) { // Check if it's a node
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = element.data.id;
+            
+            const label = document.createElement('label');
+            label.style.color = element.data.color || '#000000';
+            label.textContent = element.data.label || element.data.id;
+
+            label.prepend(checkbox);
+
+            optionsList.appendChild(label);
+            optionsList.appendChild(document.createElement('br'));
         }
-      },
-      {
-        selector: 'edge',
-        style: {
-            'curve-style': 'bezier',
-            'edge-distances': 'node-position',
-            'control-point-step-size': 30,
-            'label': 'data(label)',
-            'font-size': '10px',
-            'text-rotation': 'autorotate',
-            'text-margin-y': -10,
-            'target-arrow-shape': 'triangle',
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc'
-        }
-        }
-    ]
-  });
-
-  function parseHDDL(content) {
-    const lines = content.split('\n');
-    const elements = [];
-    const nodeSet = new Set();
-
-    lines.forEach(line => {
-      const arrowIndex = line.indexOf('->');
-      if (arrowIndex !== -1) {
-        const parent = line.substring(0, arrowIndex).trim();
-        const children = line.substring(arrowIndex + 2).split(',').map(child => child.trim());
-
-        // Add parent node if not already added
-        if (!nodeSet.has(parent)) {
-          elements.push({ data: { id: parent, label: parent } });
-          nodeSet.add(parent);
-        }
-
-        // Add child nodes and edges
-        children.forEach(child => {
-          if (!nodeSet.has(child)) {
-            elements.push({ data: { id: child, label: child } });
-            nodeSet.add(child);
-          }
-          elements.push({ data: { source: parent, target: child } });
         });
-      }
     });
-
-    return elements;
-  }
-
-  async function generateGraph() {
-    console.log("Generating Graph ...");
-    const text = document.getElementById('hddlInput').value;
-
-    const res = await fetch('/generate_graph', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    });
-
-    if (!res.ok) {
-      const error = await res.text();
-      alert(`Error: ${error}`);
-      return;
     }
 
-    const { nodes, edges } = await res.json();
+    function confirmHTN() {
+      alert("HTN confirmed. Implement server logic here.");
+    }
 
-    cy.elements().remove();
-    cy.add([...nodes, ...edges]);
-    cy.layout({ name: 'breadthfirst', directed: true, padding: 10 }).run();
-  }
-</script>
+    function renderGraph(graph) {
+      const cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: graph.elements,
+        style: [
+          { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#000000','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
+          { selector: 'edge', style: { 'label': 'data(label)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
+        ],
+        layout: { name: 'breadthfirst', directed: true }
+      });
+    }
+  </script>
 
 </body>
 </html>

@@ -283,26 +283,34 @@ def get_operator_graph_image_saved(operator_name: str, domain_path=None, save_di
         return save_dir
 
 def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
-        nodes = [{'data': {'id': str(n), 'label': str(n)}} for n in G.nodes()]
-
+        # nodes = [{'data': {'id': str(n), 'label': str(n)}} for n in G.nodes()]
+        nodes = []
+        for n, d in G.nodes(data=True):
+                if d['type'] == 'task':
+                        color = 'yellow'
+                elif d['type'] == 'method':
+                        color = 'lightgreen'
+                elif d['type'] == 'action':
+                        color = 'lightgray'
+                nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color}})
         edges = []
         for u, v, key, data in G.edges(keys=True, data=True):
-                edge_id = f"{u}-{v}-{key}"
-                label = data['priority'] if d['priority'] not in (-1, None) else ""
+                # edge_id = f"{u}-{v}-{key}"
+                label = data['priority'] if data['priority'] not in (-1, None) else ""
                 edge = {
                         'data': {
-                                'id': edge_id,
+                                # 'id': edge_id,
                                 'source': str(u),
                                 'target': str(v),
-                                'priority': data['priority'],  # default to 0
+                                # 'priority': data['priority'],  # default to 0
                                 'label': label  # optional: show on edge
                         }
                 }
-        # Optionally add attributes like weight, label, etc.
-        edge['data'].update({k: v for k, v in data.items()})
-        edges.append(edge)
+                # # Optionally add attributes like weight, label, etc.
+                # edge['data'].update({k: v for k, v in data.items()})
+                edges.append(edge)
 
-        return nodes, edges
+        return nodes+ edges
 
 if __name__ == "__main__":
         domain_path = input("Please provide domain file directory, if want to use default file, click enter.")
