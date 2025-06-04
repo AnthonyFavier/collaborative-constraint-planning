@@ -116,10 +116,10 @@ def addConstraints(nl_constraints):
                 # 1 # Encode the preferences
                 if i==0: # first time
                     mprint(f"\tencoding {c}...")
-                    encodedPref = LLM.encodePrefs(c.nl_constraint)
+                    encodedPref = tools.extractTag('pddl', LLM.encodePrefs(c.nl_constraint))
                 else: # Re-encoding
                     mprint(f"\t\tre-encoding (try {i+1}/{MAX_ENCODING_TRY}) Verifier not ok ...")
-                    encodedPref = LLM.reencodePrefs(feedback)
+                    encodedPref = tools.extractTag('pddl', LLM.reencodePrefs(feedback))
                 filteredEncoding = tools.filterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
                 # mprint(filteredEncoding)
@@ -139,8 +139,8 @@ def addConstraints(nl_constraints):
                         # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
                         if g_with_e2nl:
                             # mprint("Asking for NL translation")
-                            c.e2nl = LLM.E2NL(c.encoding)
-                            mprint("\t\t> "+c.e2nl)
+                            c.e2nl = tools.extractTag('E2NL', LLM.E2NL(c.encoding))
+                            mprint(f'"{c.e2nl}"')
                             LLM.clear_message_history()
                 else:
                     encodingOK = True
@@ -395,7 +395,7 @@ def CAI():
 
 def suggestions():
     mprint("\nElaborating strategies suggestions...")
-    mprint(LLM.suggestions())
+    mprint(tools.extractTag('suggestions', LLM.suggestions()))
 
 g_with_e2nl = False
 def init(problem_name, planning_mode, timeout):

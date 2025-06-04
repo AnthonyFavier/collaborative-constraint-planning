@@ -153,3 +153,13 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     # encodingOk, error_description
     return True, ""
 
+def extractTag(tag, txt):
+    i_1 = txt.find(f"<{tag}>")
+    if i_1==-1:
+        raise Exception(f"Can't find tag <{tag}>")
+    
+    i_2 = txt.find(f"</{tag}>")
+    if i_2==-1:
+        raise Exception(f"Can't find closing tag </{tag}>")
+    
+    return txt[ i_1 + len(f"<{tag}>") : i_2 ]

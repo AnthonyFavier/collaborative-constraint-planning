@@ -19,7 +19,7 @@ class ANTHROPICClient:
         self.temperature = temperature
         self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
     
-    def call(self, systemMsg, messages, max_token=None, temperature=None, thinking=False):
+    def call(self, systemMsg, messages, max_token=None, temperature=None, thinking=False, stop_sequences=[]):
         if max_token==None:max_token=self.max_token
         if temperature==None: temperature = self.temperature
         thinking_param = {'type': 'enabled', 'budget_tokens':10000} if thinking else {'type': 'disabled'}
@@ -34,6 +34,7 @@ class ANTHROPICClient:
                         system=systemMsg, 
                         messages=messages, 
                         thinking=thinking_param, 
+                        stop_sequences=stop_sequences,
                         extra_headers={"anthropic-beta": "extended-cache-ttl-2025-04-11"}
                     )
                 
@@ -44,6 +45,8 @@ class ANTHROPICClient:
                         print("[THINKING]\n" + m.thinking)
                         answers.append(m.thinking)
                     elif m.type=='text':
+                        if result.stop_reason == 'stop_sequence':
+                            m.text += result.stop_sequence
                         print("[TEXT]\n" + m.text)
                         answers.append(m.text)
                 return answers
@@ -196,20 +199,41 @@ def removeFormating(text):
 
 # SYSTEM MESSAGE 
 system_message = None
+g_domain = None
+g_problem = None
 def setSystemMessage(domain, problem):
-    global system_message
+    global system_message, g_domain, g_problem
+    g_domain = domain
+    g_problem = problem
     system_message = [{
             "type": "text",
-            "text": "You are a PDDL planning expert. Your role is to reason about a PDDL problem and translate between natural language and PDDL. Here is the PDDL domain and problem that you will work with:" + "\n" + "<file_contents>\n" + domain + "\n</file_contents>" + "\n" + "<file_contents>\n" + problem + "\n</file_contents>",
+            "text": "You are a PDDL planning expert and your role is to work with given PDDL problems and follow the user requests and instructions.",
             "cache_control": {"type": "ephemeral", "ttl":"1h"}
         }]
 
 # INITIAL SUGGESTIONS
 def suggestions():
-    conversation_history.add_turn_user("Your role is to reason on the working PDDL domain and problem to identify promising strategies in the form of state-based Linear Temporal Logic form, in natural language. This trajectory constraints should help and guide toward efficent solution or alternatives. They can also prevent from searching toward inefficient solutions. E.g. 'A costly ressource should never be used.'. Give me some suggestions of such strategies that could be used to solve the problem.")
+    
+    conversation_history.add_turn_user(f"""
+<documents>
+<pddl_domain>
+{g_domain}
+</pddl_domain>
+<pddl_problem>
+{g_problem}
+</pddl_problem>
+</documents> 
+
+<instructions> 
+- Analyze the key elements of the given problem.
+- Identify trajectory constraints as promising strategies to solve the problem.
+- The constraints should help and guide toward efficient solutions or alternatives. They can also prevent from searching toward inefficient solutions. For example, 'A costly ressource should never be used'.
+- Format your answer such as a concise numbered list with no subitems. The list must be between the tags <suggestions> and </suggestions>.
+</instructions>
+"""[1:-1])
     
     # Call 
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</suggestions>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
 
@@ -218,12 +242,44 @@ def suggestions():
 
 # DECOMPOSE
 def decompose(constraint):
-    conversation_history.add_turn_user("Your role is to decompose a natural language constraint into lower-level constraints in order to later apply them to a given PDDL problem. You must reason about the input constraint, make it match a state-based Linear Temporal Logic form in natural language. That is, you may rephrase and decompose the initial constraint into as many constraints as necessary to fully capture the meaning of the initial constraint and where each decomposed constraint is a trajectory hard constraint for the plan referring to the predicates and fluents of the problem. Due to their state-based nature, the constraints cannot directly affect actions, so reason accordingly. The decomposed constraints should also be in natural language without any explicit PDDL language.")
-    conversation_history.add_turn_assistant("Got it now share with me the constraints to decompose. I will format my answer in a clear and concise numbered list. There should be no subitems, only a list of the decomposed constraints without additional explanations or descriptions. I should also not use any PDDL code, e.g., no explicit referring to PDDL predicate names or actions.")
-    conversation_history.add_turn_user(constraint)
+    conversation_history.add_turn_user(f"""
+<documents>
+<pddl_domain>
+{g_domain}
+</pddl_domain>
+<pddl_problem>
+{g_problem}
+</pddl_problem>
+</documents> 
+
+<information>
+The user will give as input a constraint in natural language. This constraint must be used as a transjectory hard constraint for the solution plan of the given the PDDL problem. 
+</information>
+
+<instructions> 
+- Refine the user constraint to make it applicable to the given PDDL problem.
+- You can rephrase and decompose the initial constraint into several other contraints.
+- You may ask clarifying question if you face a strong ambiguity in the user input.
+- Constraints must be state-based and follow a Linear Temporal Logic. So constraints can't directly refer to actions.
+- Avoid explicit PDDL language in your answer, the user can't understand PDDL.
+- The set of all refined constraints must capture the meaning of the initial user constraint. 
+- Format your answer as a clear and concise numbered list between the tags <constraints> and </constraints>. There should be no subitems, only a list of the refined constraints. Here is an example:
+    <constraints>
+    1. [natural_language_constraint_1]
+    2. [natural_language_constraint_2]
+    ...
+    </constraints>
+</instructions>
+
+<user_input>
+{constraint}
+</user_input>
+"""[1:-1])
+    
+    # conversation_history.add_turn_assistant("Here is the list of refined constraints:")
     
     # Call 
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</constraints>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
 
@@ -234,7 +290,7 @@ def redecompose(feedback):
     conversation_history.add_turn_user(feedback)
     
     # Call
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</constraints>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
     
@@ -244,7 +300,8 @@ def redecompose(feedback):
 
 # MODICIFICATION
 def needModifications():
-    conversation_history.add_turn_user("Based on your previous reasonning to decompose the constraint, evaluate if modifying the PDDL problem would significantly help to better decompose the constraint. That is, is the current decomposition correctly capturing the initial constraint meaning and would it be worth it to, for instance, add new fluents or parameters to better capture the initial constraint. Answer with a clear Yes or No. If Yes, then give me clear suggestions on what updates to make.")
+    
+    conversation_history.add_turn_user("Based on your previous reasonning to refine the constraint, evaluate if modifying the PDDL problem would significantly help to better refine it. That is, is the current refinement correctly capturing the initial constraint meaning and would it be worth it to, for instance, add new fluents or parameters to better capture the initial constraint. Answer with a clear Yes or No. If Yes, then give me clear suggestions on what updates to make.")
     
     # Call
     assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
@@ -255,12 +312,36 @@ def needModifications():
 
 # ENCODE
 def encodePrefs(constraint):
-    conversation_history.add_turn_user("Your purpose is to the given translate natural language constraint into PDDL3.0 constraints to be used in a classical PDDL planner. Respond to the requested translations only with concise and accurate PDDL language. PDDL3.0 constraints are state-based and should only concern predicates and fluents, they cannot refer directly to actions.")
-    conversation_history.add_turn_assistant("Got it now share with me the natural language constraint to translate into PDDL3.0.")
-    conversation_history.add_turn_user(constraint)
+    
+    
+    conversation_history.add_turn_user(f"""
+<documents>
+<pddl_domain>
+{g_domain}
+</pddl_domain>
+<pddl_problem>
+{g_problem}
+</pddl_problem>
+</documents> 
+
+<information>
+The user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.
+</information>
+
+<instructions> 
+- Translate the input constraint into correct PDDL3.0.
+- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.
+- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.
+- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.
+</instructions>
+
+<user_input>
+{constraint}
+</user_input>
+"""[1:-1])
     
     # Call
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</pddl>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
     
@@ -276,9 +357,33 @@ def reencodePrefs(feedback):
 
 # E2NL
 def E2NL(constraint):
-    conversation_history.add_turn_user("Your purpose is to translate PDDL3.0 constraints to natural language in order to give to a human a good sense of what the PDDL3.0 constraint means and is doing.")
-    conversation_history.add_turn_assistant("Got it, now share with me the PDDL3.0 constraint to translate to natural language. I will make sure that the translation is intuitive, concisem and easy to undestand, without explicit PDDL elements.")
-    conversation_history.add_turn_user(constraint)
+    
+    
+    conversation_history.add_turn_user(f"""
+<documents>
+<pddl_domain>
+{g_domain}
+</pddl_domain>
+<pddl_problem>
+{g_problem}
+</pddl_problem>
+</documents> 
+
+<information>
+The user will give as input PDDL3.0 constraints.
+</information>
+
+<instructions> 
+- Translate the user input into natural language to give them a good sense of what the PDDL3.0 constraint means and is doing.
+- Your answer should be concise and not exceed 4 sentences.
+- Your translation should not contain any explicit PDDL element, the user can't understand PDDL.
+- Format your answer such as your translation is between the tags <E2NL> and </E2NL>.
+</instructions>
+
+<user_input>
+{constraint}
+</user_input>
+"""[1:-1])
     
     # Call LLM
     assistant_replies = clients["OPENAI"].call(system_message, conversation_history.get_turns(), thinking=True)
