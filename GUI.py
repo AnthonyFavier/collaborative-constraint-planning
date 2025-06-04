@@ -476,6 +476,8 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.write_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
+        self.textbox.bind('<Key>',lambda e: 'break') 
+        
         
         # Clear display
         N = 20
@@ -517,9 +519,9 @@ class DisplayFrame(customtkinter.CTkFrame):
             
     def prompt(self, text):
         self.write_lock.acquire()
-        self.textbox.configure(state="normal")
+        # self.textbox.configure(state="normal")
         self.textbox.insert('end', '\n'+text)
-        self.textbox.configure(state="disabled")
+        # self.textbox.configure(state="disabled")
         self.textbox.see('end')
         # self.textbox.focus_set()
         self.write_lock.release()
