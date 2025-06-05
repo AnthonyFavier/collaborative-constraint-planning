@@ -292,7 +292,7 @@ def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
                         color = 'lightgreen'
                 elif d['type'] == 'action':
                         color = 'lightgray'
-                nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color}})
+                nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color, 'type': d['type']}})
         edges = []
         for u, v, key, data in G.edges(keys=True, data=True):
                 # edge_id = f"{u}-{v}-{key}"

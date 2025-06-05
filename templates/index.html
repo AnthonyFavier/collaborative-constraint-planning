@@ -54,17 +54,15 @@
 
         <label>Interactive Input Area (LLM Query):</label>
         <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
-
-        <button onclick="viewHTN()">View HTN</button>
         <button onclick="confirmHTN()">Confirm</button>
       </div>
       <div style="flex: 1;">
-        <label>Graph Viewer:</label>
+        <label>Graph Viewer: <button onclick="viewHTN()">View HTN</button></label>
         <div class="frame-box"><div id="cy"></div></div>
       </div>
       <div style="width: 200px;">
-        <label>Options:</label>
-        <div class="scroll-area checkbox-list" id="optionsList" style="background-color: black">
+        <label>Operators:</label>
+        <div class="scroll-area checkbox-list" id="optionsList" rows="10" style="background-color: black">
           <!-- dynamically populated -->
           <!-- <label><input type="checkbox" value="task1"> task1</label>
           <label><input type="checkbox" value="task2"> task2</label>
@@ -73,14 +71,17 @@
           <label><input type="checkbox" value="action1"> action1</label>
           <label><input type="checkbox" value="action2"> action2</label> -->
         </div>
+        <button onclick="filterGraph()">Show Selected Operators</button>
       </div>
     </div>
   </div>
 
   <script>
+    let graphData = null; // Store the graph data globally
+
+    // Load domain and problem files:
     document.getElementById('loadDomainForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-    //   console.log("Button clicked!", e)
       const formData = new FormData(this);
       const res = await fetch('/load_domain', { method: 'POST', body: formData });
       const data = await res.json();
@@ -95,6 +96,7 @@
       document.getElementById('problemText').textContent = data2.problem || '(no content)';
     });
 
+    // View HTN and render graph:
     function viewHTN() {
       const query = document.getElementById('llmInput').value;
       fetch('/view_htn', {
@@ -105,7 +107,8 @@
         .then(res => res.json())
         .then(data => {
           document.getElementById('llmOutput').value = data.text;
-          renderGraph(data.graph);
+          renderGraph(data.graph.elements);
+          graphData = data.graph; // Store the graph data for filtering
         
         // Generate checkboxes based on graph nodes
         const optionsList = document.getElementById('optionsList');
@@ -115,11 +118,9 @@
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = element.data.id;
-            
             const label = document.createElement('label');
             label.style.color = element.data.color || '#000000';
             label.textContent = element.data.label || element.data.id;
-
             label.prepend(checkbox);
 
             optionsList.appendChild(label);
@@ -133,16 +134,60 @@
       alert("HTN confirmed. Implement server logic here.");
     }
 
-    function renderGraph(graph) {
+    function renderGraph(elements) {
       const cy = cytoscape({
         container: document.getElementById('cy'),
-        elements: graph.elements,
+        elements: elements,
         style: [
           { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#000000','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
           { selector: 'edge', style: { 'label': 'data(label)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
         ],
         layout: { name: 'breadthfirst', directed: true }
       });
+    }
+
+    // Filter graph based on selected operators
+    function filterGraph() {
+        if (!graphData) {
+        alert("No graph data available. Please load the graph first.");
+        return;
+        }
+
+        // Collect checked checkboxes
+        const checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value);
+
+        console.log("Checked Operators:", checkedValues);
+
+        // Find all nodes connected to the checked operators
+        const connectedNodes = new Set(checkedValues); // Start with checked operators
+        graphData.elements.forEach(element => {
+            if (element.data && element.data.source && element.data.target) { // Edge
+                if (checkedValues.includes(element.data.source)) {
+                    connectedNodes.add(element.data.target); // Add target node
+                }
+                if (checkedValues.includes(element.data.target) && element.data.label === '') {
+                    connectedNodes.add(element.data.source); // Add source node
+                }
+            }
+        });
+
+        console.log("Connected Nodes:", Array.from(connectedNodes));
+
+        // Filter graph elements based on connected nodes
+        const filteredElements = graphData.elements.filter(element => {
+            if (element.data && !element.data.source) { // Node
+                return connectedNodes.has(element.data.id);
+            }
+            if (element.data && element.data.source && element.data.target) { // Edge
+                return connectedNodes.has(element.data.source) && connectedNodes.has(element.data.target) 
+                && (checkedValues.includes(element.data.source) || checkedValues.includes(element.data.target));
+            }
+            return false;
+        });
+
+        // Render the filtered graph
+        renderGraph(filteredElements);
     }
   </script>
 
