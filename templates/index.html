@@ -48,6 +48,23 @@
   <div class="section">
     <h3>2. HTN Viewer</h3>
     <div style="display: flex; gap: 20px;">
+      
+      <div style="flex: 1;">
+        <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
+        </label>
+        <div class="frame-box"><div id="cy"></div></div>
+        <!-- <div class="frame-box" id="graphViewer" style="border: 1px solid #aaa;">
+            <div id="cy"></div> -->
+      </div>
+
+      <div style="width: 300px;">
+        <label>Operators:</label>
+        <div class="scroll-area checkbox-list" id="optionsList" rows="18" style="background-color: black; height: 300px;">
+          <!-- dynamically populated -->
+        </div>
+        <button onclick="filterGraph()">Show Selected Operators</button>
+      </div>
+
       <div style="flex: 1;">
         <label>LLM-Generated Explanation:</label>
         <textarea id="llmOutput" rows="10" readonly></textarea>
@@ -56,36 +73,48 @@
         <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
         <button onclick="confirmHTN()">Confirm</button>
       </div>
-      <div style="flex: 1;">
-        <label>Graph Viewer: <button onclick="viewHTN()">View HTN</button></label>
-        <div class="frame-box"><div id="cy"></div></div>
-      </div>
-      <div style="width: 200px;">
-        <label>Operators:</label>
-        <div class="scroll-area checkbox-list" id="optionsList" rows="10" style="background-color: black">
-          <!-- dynamically populated -->
-          <!-- <label><input type="checkbox" value="task1"> task1</label>
-          <label><input type="checkbox" value="task2"> task2</label>
-          <label><input type="checkbox" value="method1"> method1</label>
-          <label><input type="checkbox" value="method2"> method2</label>
-          <label><input type="checkbox" value="action1"> action1</label>
-          <label><input type="checkbox" value="action2"> action2</label> -->
-        </div>
-        <button onclick="filterGraph()">Show Selected Operators</button>
-      </div>
     </div>
   </div>
 
+  <!-- Section 3: Manage HTNs -->
+  <div class="section">
+    <h3>3. Manage HTNs</h3>
+    <div style="display: flex; gap: 20px;">
+    <div style="flex: 1;">
+        <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
+        </label>
+        <div class="frame-box"><div id="cy2"></div></div>
+      </div>
+
+    <div style="flex: 1;">
+        <label>Methods:</label>
+        <div class="scroll-area checkbox-list" id="methodsList" style="background-color: black; height: 300px;">
+        <!-- dynamically populated -->
+        </div>
+        <button onclick="deleteMethods()">Delete</button>
+        <button onclick="resetDomain()">Reset</button>
+        
+    </div>
+    <div style="flex: 1;">
+        <label>LLM Query for New Methods:</label>
+        <textarea id="newMethodsQuery" rows="5" placeholder="Describe new methods to add..."></textarea>
+        <button onclick="showMethods()">Show Methods</button>
+    </div>
+    </div>
+    </div>
+
   <script>
     let graphData = null; // Store the graph data globally
-
+    let originalDomain = null; // Store the original domain file content
     // Load domain and problem files:
     document.getElementById('loadDomainForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      const res = await fetch('/load_domain', { method: 'POST', body: formData });
-      const data = await res.json();
-      document.getElementById('domainText').textContent = data.domain || '(no content)';
+        e.preventDefault();
+        const formData = new FormData(this);
+        const res = await fetch('/load_domain', { method: 'POST', body: formData });
+        const data = await res.json();
+        document.getElementById('domainText').textContent = data.domain || '(no content)';
+        originalDomain = data.domain; // Store the original domain content
+        // populateMethodsList(data.methods); // Populate methods list
     });
 
     document.getElementById('loadProblemForm').addEventListener('submit', async function(e2) {
@@ -112,6 +141,7 @@
         
         // Generate checkboxes based on graph nodes
         const optionsList = document.getElementById('optionsList');
+        const methodsList = document.getElementById('methodsList');
         optionsList.innerHTML = ''; // Clear existing checkboxes
         data.graph.elements.forEach(element => {
         if (element.data &&  !element.data.source) { // Check if it's a node
@@ -125,6 +155,18 @@
 
             optionsList.appendChild(label);
             optionsList.appendChild(document.createElement('br'));
+            if (element.data.type === 'method') {
+                const methodCheckbox = document.createElement('input');
+                methodCheckbox.type = 'checkbox';
+                methodCheckbox.value = element.data.id;
+                const methodLabel = document.createElement('label');
+                methodLabel.textContent = element.data.label || element.data.id;
+                methodLabel.style.color = element.data.color || '#000000';
+                methodLabel.prepend(methodCheckbox);
+
+                methodsList.appendChild(methodLabel);
+                methodsList.appendChild(document.createElement('br'));
+            }
         }
         });
     });
@@ -189,6 +231,58 @@
         // Render the filtered graph
         renderGraph(filteredElements);
     }
+
+
+
+    async function deleteMethods() {
+        const checkedMethods = Array.from(document.querySelectorAll('#methodsList input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value);
+
+        if (checkedMethods.length === 0) {
+        alert("No methods selected for deletion.");
+        return;
+        }
+
+        const res = await fetch('/delete_methods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ methods: checkedMethods })
+        });
+
+        if (res.ok) {
+        const data = await res.json();
+        // populateMethodsList(data.methods); // Update methods list
+        // alert("Selected methods deleted successfully.");
+        // } else {
+        // const error = await res.text();
+        // alert(`Error deleting methods: ${error}`);
+        // }
+    }
+
+    function resetDomain() {
+        if (!originalDomain) {
+        alert("Original domain file not loaded.");
+        return;
+        }
+
+        const methodsList = document.getElementById('methodsList');
+        methodsList.innerHTML = ''; // Clear methods list
+        // populateMethodsList(originalDomain.methods); // Reset methods list
+        alert("Domain reset to original file.");
+    }
+
+    async function showMethods() {
+        const res = await fetch('/show_methods');
+        const data = await res.json();
+
+        if (data.graph) {
+        renderGraph(data.graph.elements); // Render methods graph
+        } else {
+        alert("No methods graph available.");
+        }
+    }
+    
+    
   </script>
 
 </body>

@@ -65,6 +65,12 @@ def view_htn():
 
     return jsonify({'text': text_response, 'graph': graph_data})
 
+# Delete methods:
+@app.route('/delete_methods', methods=['POST'])
+def delete_methods():
+    # global DOMAIN_PATH
+    return jsonify({'status': 'Methods deleted'})
+
 @app.route('/')
 def index():
     return render_template('index.html')
