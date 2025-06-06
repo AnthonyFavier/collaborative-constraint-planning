@@ -133,14 +133,28 @@ def addConstraints(nl_constraints):
                     encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
                     if encodingOK:
                         c.encoding = filteredEncoding
-                        # mprint(c.encoding)
-                        LLM.clear_message_history()
                         
-                        # TODO: query LLM again to translate back the final encoding into NL, then ask H if it feels close enough to given constraint?
                         if g_with_e2nl:
-                            # mprint("Asking for NL translation")
-                            c.e2nl = tools.extractTag('E2NL', LLM.E2NL(c.encoding))
+                            mprint("E2NL: ", end="")
+                            c.e2nl = tools.extractTag('E2NL', LLM.E2NL(c.encoding)).replace('\n', '')
                             mprint(f'"{c.e2nl}"')
+                            
+                            # Asking for feedback
+                            mprint("\tIs this back-translation matching the constraint?")
+                            answer = minput("\tPress Enter for yes or give feedback: ")
+                            mprint("\t> " + answer)
+                            encodingOK = answer==''
+                            abort = answer=='abort'
+                            
+                            if encodingOK:
+                                LLM.clear_message_history()
+                            elif abort:
+                                LLM.clear_message_history()
+                                deleteConstraints(new_r)
+                            else:
+                                feedback = "There is an issue with the encoding. Try again considering the following feedback: " + answer
+                                i=-1
+                        else:
                             LLM.clear_message_history()
                 else:
                     encodingOK = True
