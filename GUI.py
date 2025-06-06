@@ -308,12 +308,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
-        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
-        i_row+=1
-        
         self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, command=self.toggleDecomps)
         self.buttons["ToggleDecomps"].grid(row=i_row, column=0, padx=10, pady=3)
+        i_row+=1
+        
+        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
+        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
     
     def confirm(self):
