@@ -330,17 +330,19 @@ def planWithConstraints():
             f.write(updatedProblem)
         
         # Compile the updated problem
-        mprint("\nCompiling...")
+        mprint("\nCompiling ... ", end="")
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+        mprint("OK")
         
     # Plan
+    mprint(f"Planning ({g_planning_mode}{'' if g_timeout==None else f', TO={g_timeout}s'}) ... ", end="" )
     feedback, plan, stdout = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True, timeout=g_timeout)
     success = feedback=='success'
     if success:
-        mprint("\nSuccessful planning")
+        mprint("OK")
         return plan
     else:
-        mprint("\nFailed to plan")
+        mprint("Failed")
         return "Failed to plan:\n" + str(feedback)
     
 def askChangePlanMode():

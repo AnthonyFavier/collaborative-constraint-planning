@@ -41,7 +41,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         timeout = None
     timeout_str = '' if timeout==None else f', TO={timeout}s'
     
-    mprint(f"\nPlanning ({plan_mode}{timeout_str}) ..." )
+    # mprint(f"\nPlanning ({plan_mode}{timeout_str}) ... ", end="" )
     
     proc = subprocess.Popen(
             ["java", "-jar", "ENHSP-Public/enhsp.jar", "-o", f"{DOMAIN_PATH}", "-f", f"{PROBLEM_PATH}"] + mode, 

@@ -83,11 +83,11 @@ GUI_PROMPT = True
 
 prompt = lambda x: None
 
-def mprint(txt):
+def mprint(txt, end="\n"):
     if SHELL_PRINTS:
-        print(txt)
+        print(txt, end=end)
     if GUI_PROMPT:
-        prompt(txt)
+        prompt(txt, end=end)
 def setPromptFunction(prompt_function):
     global prompt
     prompt = prompt_function

@@ -517,10 +517,10 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.master.buttons_frame.showButtons()
         return r
             
-    def prompt(self, text):
+    def prompt(self, text, end="\n"):
         self.write_lock.acquire()
         # self.textbox.configure(state="normal")
-        self.textbox.insert('end', '\n'+text)
+        self.textbox.insert('end', text+end)
         # self.textbox.configure(state="disabled")
         self.textbox.see('end')
         # self.textbox.focus_set()

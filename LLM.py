@@ -42,12 +42,12 @@ class ANTHROPICClient:
                 answers = []
                 for m in result.content:
                     if m.type=='thinking':
-                        print("[THINKING]\n" + m.thinking)
+                        print("\n[THINKING]\n" + m.thinking)
                         answers.append(m.thinking)
                     elif m.type=='text':
                         if result.stop_reason == 'stop_sequence':
                             m.text += result.stop_sequence
-                        print("[TEXT]\n" + m.text)
+                        print("\n[TEXT]\n" + m.text)
                         answers.append(m.text)
                 return answers
             except Exception as err:
@@ -89,6 +89,9 @@ class OPENAIClient:
         
         result = self.client.responses.create(input=messages, model=self.model, instructions=systemMsg, max_output_tokens=self.max_token, reasoning=reasoning)
         answer = result.output_text
+        
+        print("\n[GPT]\n" + answer)
+        
         return [answer]
 clients = {'ANTHROPIC': ANTHROPICClient('claude-sonnet-4-20250514'), 'OPENAI': OPENAIClient('o4-mini-2025-04-16')}
 
