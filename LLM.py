@@ -341,6 +341,7 @@ The user will give as input a natural language constraint that must be translate
 - Translate the input constraint into correct PDDL3.0.
 - The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.
 - Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.
+- Be sure to include temporal logic like operators in your translation.
 - Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.
 </instructions>
 
