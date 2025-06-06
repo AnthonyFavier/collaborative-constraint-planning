@@ -297,7 +297,7 @@ def redecompose(feedback):
     conversation_history.add_turn_user(feedback)
     
     # Call
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</constraints>"])
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</explanation>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
     
