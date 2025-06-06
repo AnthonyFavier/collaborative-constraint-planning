@@ -11,8 +11,13 @@
     .scroll-area { height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; }
     .frame-box { border: 1px solid #999; padding: 10px; height: 400px; overflow: hidden; }
     #cy { width: 100%; height: 100%; }
+    #cy_plan { width: 100%; height: 100%; }
     .section { margin-bottom: 20px; }
     .checkbox-list { display: flex; flex-direction: column; }
+    label {
+        display: inline-block; /* Change label to inline-block to respect width */
+        width: auto; /* Set width appropriately */
+        margin-bottom: 5px; /* Optional: Add spacing below labels */
   </style>
 </head>
 <body>
@@ -20,7 +25,7 @@
   <h2>HDDL HTN Viewer Interface</h2>
 
   <div class="section">
-    <h3>1. Load HDDL Domain and Problem Files</h3>
+    <h3>Load HDDL Domain and Problem Files</h3>
     <!-- <form id="loadForm" enctype="multipart/form-data">
       Domain File: <input type="file" name="domain" required>
       Problem File: <input type="file" name="problem" required>
@@ -28,25 +33,35 @@
     </form> -->
     <div style="display: flex; gap: 20px;">
     <div style="flex: 1;">
-        <form id="loadDomainForm" enctype="multipart/form-data">
+        <!-- <form id="loadDomainForm" enctype="multipart/form-data">
             Domain File: <input type="file" name="domain" required>
             <button type="submit">Load Domain</button>
-        </form>
+        </form> -->
+        <form id="loadDomainForm" enctype="multipart/form-data">
+            <label for="domainFile">Domain File:</label>
+            <input type="file" id="domainFile" name="domain" required>
+            <button type="submit" onclick="loadDomain(event)">Load Domain</button>
+          </form>
         <div class="scroll-area">
         <pre id="domainText">(domain content appears here...)</pre>
     </div></div>
     <div style="flex: 1;">
-        <form id="loadProblemForm" enctype="multipart/form-data">
+        <!-- <form id="loadProblemForm" enctype="multipart/form-data">
             Problem File: <input type="file" name="problem" required>
             <button type="submit">Load Problem</button>
-        </form>
+        </form> -->
+        <form id="loadProblemForm" enctype="multipart/form-data">
+            <label for="problemFile">Problem File:</label>
+            <input type="file" id="problemFile" name="problem" required>
+            <button type="submit" onclick="loadProblem(event)">Load Problem</button>
+          </form>
         <div class="scroll-area">
             <pre id="problemText">(problem content appears here...)</pre>
       </div></div>
   </div></div>
 
   <div class="section">
-    <h3>2. HTN Viewer</h3>
+    <h3>HTN Viewer</h3>
     <div style="display: flex; gap: 20px;">
       
       <div style="flex: 1;">
@@ -59,7 +74,7 @@
 
       <div style="width: 300px;">
         <label>Operators:</label>
-        <div class="scroll-area checkbox-list" id="optionsList" rows="18" style="background-color: black; height: 300px;">
+        <div class="scroll-area checkbox-list" id="optionsList" rows="18" style="background-color: white; height: 300px;">
           <!-- dynamically populated -->
         </div>
         <button onclick="filterGraph()">Show Selected Operators</button>
@@ -71,219 +86,298 @@
 
         <label>Interactive Input Area (LLM Query):</label>
         <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
-        <button onclick="confirmHTN()">Confirm</button>
+        <button onclick="askLLM()">Ask LLM</button>
       </div>
     </div>
   </div>
 
-  <!-- Section 3: Manage HTNs -->
+  <!-- Section 3: Plan -->
   <div class="section">
-    <h3>3. Manage HTNs</h3>
+    <h3>Plan</h3>
     <div style="display: flex; gap: 20px;">
     <div style="flex: 1;">
-        <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
-        </label>
-        <div class="frame-box"><div id="cy2"></div></div>
-      </div>
-
-    <div style="flex: 1;">
-        <label>Methods:</label>
-        <div class="scroll-area checkbox-list" id="methodsList" style="background-color: black; height: 300px;">
-        <!-- dynamically populated -->
+        <label>Plan Diagram  </label>
+        <button onclick="runPlanner()">Run Planner</button>
+        <button onclick="viewPlanDiagram()">View Plan Diagram</button>
+        <div class="frame-box" style="width: 66.66vw;">
+            <div id="cy_plan"></div>
         </div>
-        <button onclick="deleteMethods()">Delete</button>
-        <button onclick="resetDomain()">Reset</button>
-        
-    </div>
+      </div>
+    
     <div style="flex: 1;">
-        <label>LLM Query for New Methods:</label>
-        <textarea id="newMethodsQuery" rows="5" placeholder="Describe new methods to add..."></textarea>
-        <button onclick="showMethods()">Show Methods</button>
+        <label>Previous Plan Summary</label>
+        <textarea id="previousPlanSummary" rows="5" readonly placeholder="Previous plan summary appears here..."></textarea>
+        <label>Plan Text</label>
+        <textarea id="planText" rows="10" readonly placeholder="Plan result appears here..."></textarea>
     </div>
     </div>
     </div>
 
-  <script>
-    let graphData = null; // Store the graph data globally
-    let originalDomain = null; // Store the original domain file content
-    // Load domain and problem files:
-    document.getElementById('loadDomainForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@1.4.1/dist/index.min.js" type="javascript/worker"></script>
+    <script src="https://unpkg.com/d3-graphviz@4.0.0/build/d3-graphviz.min.js"></script>
+    <script>
+        let graphData = null; // Store the graph data globally
+        let originalDomain = null; // Store the original domain file content
+        /* var dot, graphviz = d3.select("#cy_plan").graphviz({ // Updated selector
+            width: window.innerWidth * 0.66, // Adjust width to match frame-box
+            height: window.innerHeight * 0.66, // Adjust height to match frame-box
+            fit: true
+        }); */
+        let previous_plan = null; // Store the plan data globally
+
+        async function loadDomain(e) {
+        e.preventDefault(); // Prevent default form submission
+        const formData = new FormData(document.getElementById('loadDomainForm'));
         const res = await fetch('/load_domain', { method: 'POST', body: formData });
+
+        if (!res.ok) {
+            const error = await res.text();
+            alert(`Error loading domain: ${error}`);
+            return;
+        }
+
         const data = await res.json();
         document.getElementById('domainText').textContent = data.domain || '(no content)';
-        originalDomain = data.domain; // Store the original domain content
-        // populateMethodsList(data.methods); // Populate methods list
-    });
+        }
 
-    document.getElementById('loadProblemForm').addEventListener('submit', async function(e2) {
-      e2.preventDefault();
-      const formData2 = new FormData(this);
-      const res2 = await fetch('/load_problem', { method: 'POST', body: formData2 });
-      const data2 = await res2.json();
-      document.getElementById('problemText').textContent = data2.problem || '(no content)';
-    });
+        async function loadProblem(e) {
+        e.preventDefault(); // Prevent default form submission
+        const formData = new FormData(document.getElementById('loadProblemForm'));
+        const res = await fetch('/load_problem', { method: 'POST', body: formData });
 
-    // View HTN and render graph:
-    function viewHTN() {
-      const query = document.getElementById('llmInput').value;
-      fetch('/view_htn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
-      })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('llmOutput').value = data.text;
-          renderGraph(data.graph.elements);
-          graphData = data.graph; // Store the graph data for filtering
+        if (!res.ok) {
+            const error = await res.text();
+            alert(`Error loading problem: ${error}`);
+            return;
+        }
+
+        const data = await res.json();
+        document.getElementById('problemText').textContent = data.problem || '(no content)';
+        }
+        // View HTN and render graph:
+        function viewHTN() {
+        const query = document.getElementById('llmInput').value;
+        fetch('/view_htn', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+        })
+            .then(res => res.json())
+            .then(data => {
+            document.getElementById('llmOutput').value = data.text;
+            renderGraph(data.graph.elements);
+            graphData = data.graph; // Store the graph data for filtering
+            
+            // Generate checkboxes based on graph nodes
+            const optionsList = document.getElementById('optionsList');
+            /* const methodsList = document.getElementById('methodsList'); */
+            optionsList.innerHTML = ''; // Clear existing checkboxes
+            data.graph.elements.forEach(element => {
+            if (element.data &&  !element.data.source) { // Check if it's a node
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = element.data.id;
+                const label = document.createElement('label');
+                label.style.color = element.data.color || '#000000';
+                label.textContent = element.data.label || element.data.id;
+                label.prepend(checkbox);
+
+                optionsList.appendChild(label);
+                optionsList.appendChild(document.createElement('br'));
+                /* if (element.data.type === 'method') {
+                    const methodCheckbox = document.createElement('input');
+                    methodCheckbox.type = 'checkbox';
+                    methodCheckbox.value = element.data.id;
+                    const methodLabel = document.createElement('label');
+                    methodLabel.textContent = element.data.label || element.data.id;
+                    methodLabel.style.color = element.data.color || '#000000';
+                    methodLabel.prepend(methodCheckbox);
+
+                    methodsList.appendChild(methodLabel);
+                    methodsList.appendChild(document.createElement('br')); */
+                /* } */
+            }
+            });
+        });
+        }
+
+        function confirmHTN() {
+            alert("HTN confirmed. Implement server logic here.");
+            }
+
+        function renderGraph(elements) {
+        const cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: elements,
+            style: [
+            { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
+            { selector: 'edge', style: { 'label': 'data(label)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
+            ],
+            layout: { name: 'breadthfirst', directed: true }
+        });
+        }
+        function renderPlanGraph(elements) {
+            const cy_plan = cytoscape({
+                container: document.getElementById('cy_plan'),
+                elements: elements,
+                style: [
+                { selector: 'node', style: { 'label': 'data(label)', 'text-valign': 'center', 'text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF', 'shape': 'data(shape)', 'width': 'label', 'padding': 10, 'font-size': '12px' } },
+                { selector: 'edge', style: { 'label': '', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
+                ],
+                layout: { name: 'breadthfirst', directed: true }
+            });
+        }
+
+        // Filter graph based on selected operators
+        function filterGraph() {
+            if (!graphData) {
+            alert("No graph data available. Please load the graph first.");
+            return;
+            }
+
+            // Collect checked checkboxes
+            const checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.value);
+
+            console.log("Checked Operators:", checkedValues);
+
+            // Find all nodes connected to the checked operators
+            const connectedNodes = new Set(checkedValues); // Start with checked operators
+            graphData.elements.forEach(element => {
+                if (element.data && element.data.source && element.data.target) { // Edge
+                    if (checkedValues.includes(element.data.source)) {
+                        connectedNodes.add(element.data.target); // Add target node
+                    }
+                    if (checkedValues.includes(element.data.target) && element.data.label === '') {
+                        connectedNodes.add(element.data.source); // Add source node
+                    }
+                }
+            });
+
+            console.log("Connected Nodes:", Array.from(connectedNodes));
+
+            // Filter graph elements based on connected nodes
+            const filteredElements = graphData.elements.filter(element => {
+                if (element.data && !element.data.source) { // Node
+                    return connectedNodes.has(element.data.id);
+                }
+                if (element.data && element.data.source && element.data.target) { // Edge
+                    return connectedNodes.has(element.data.source) && connectedNodes.has(element.data.target) 
+                    && (checkedValues.includes(element.data.source) || checkedValues.includes(element.data.target));
+                }
+                return false;
+            });
+
+            // Render the filtered graph
+            renderGraph(filteredElements);
+        }
         
-        // Generate checkboxes based on graph nodes
-        const optionsList = document.getElementById('optionsList');
-        const methodsList = document.getElementById('methodsList');
-        optionsList.innerHTML = ''; // Clear existing checkboxes
-        data.graph.elements.forEach(element => {
-        if (element.data &&  !element.data.source) { // Check if it's a node
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = element.data.id;
-            const label = document.createElement('label');
-            label.style.color = element.data.color || '#000000';
-            label.textContent = element.data.label || element.data.id;
-            label.prepend(checkbox);
+        async function runPlanner() {
+            const res = await fetch('/run_planner', { method: 'POST' });
 
-            optionsList.appendChild(label);
-            optionsList.appendChild(document.createElement('br'));
-            if (element.data.type === 'method') {
-                const methodCheckbox = document.createElement('input');
-                methodCheckbox.type = 'checkbox';
-                methodCheckbox.value = element.data.id;
-                const methodLabel = document.createElement('label');
-                methodLabel.textContent = element.data.label || element.data.id;
-                methodLabel.style.color = element.data.color || '#000000';
-                methodLabel.prepend(methodCheckbox);
-
-                methodsList.appendChild(methodLabel);
-                methodsList.appendChild(document.createElement('br'));
+            if (!res.ok) {
+                const error = await res.text();
+                alert(`Error running planner: ${error}`);
+                return;
             }
+
+            const data = await res.json();
+            // print data:
+            console.log("Planner Response:", data);
+            // Update Previous Plan Summary
+            document.getElementById('previousPlanSummary').value = previous_plan || '(no previous plan summary available)';
+            document.getElementById('planText').value = data.text || '(no plan generated)';
+            previous_plan = data.text; // Store the current plan as previous for next run
+            renderPlanGraph(data.elements);
         }
-        });
-    });
-    }
-
-    function confirmHTN() {
-      alert("HTN confirmed. Implement server logic here.");
-    }
-
-    function renderGraph(elements) {
-      const cy = cytoscape({
-        container: document.getElementById('cy'),
-        elements: elements,
-        style: [
-          { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#000000','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
-          { selector: 'edge', style: { 'label': 'data(label)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
-        ],
-        layout: { name: 'breadthfirst', directed: true }
-      });
-    }
-
-    // Filter graph based on selected operators
-    function filterGraph() {
-        if (!graphData) {
-        alert("No graph data available. Please load the graph first.");
-        return;
-        }
-
-        // Collect checked checkboxes
-        const checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
-        .map(checkbox => checkbox.value);
-
-        console.log("Checked Operators:", checkedValues);
-
-        // Find all nodes connected to the checked operators
-        const connectedNodes = new Set(checkedValues); // Start with checked operators
-        graphData.elements.forEach(element => {
-            if (element.data && element.data.source && element.data.target) { // Edge
-                if (checkedValues.includes(element.data.source)) {
-                    connectedNodes.add(element.data.target); // Add target node
+        
+        async function runPlanner_old_with_image() {
+            try {
+                const res = await fetch('/run_planner', { method: 'POST' });
+                if (!res.ok) {
+                    const error = await res.text();
+                    alert(`Error running planner: ${error}`);
+                    return;
                 }
-                if (checkedValues.includes(element.data.target) && element.data.label === '') {
-                    connectedNodes.add(element.data.source); // Add source node
+
+                const data = await res.json();
+                const { text, diagram_path } = data;
+                // Update Previous Plan Summary
+                document.getElementById('previousPlanSummary').value = previous_plan || 'No previous plan summary available';
+
+                // Update Plan Text
+                document.getElementById('planText').value = text || 'No plan text returned';
+                previous_plan = text; // Store the current plan as previous for next run
+
+                // // Update Previous Plan Summary
+                // document.getElementById('previousPlanSummary').value = previousPlanSummary || 'No previous plan summary returned';
+
+                // Render Plan Diagram
+                if (diagram_path) {
+                    const cyPlanContainer = document.getElementById('cy_plan');
+                    cyPlanContainer.innerHTML = ''; // Clear existing content
+                    const img = document.createElement('img');
+                    img.src = diagram_path; // Set the image source to the diagram path
+                    img.alt = 'Plan Diagram';
+                    img.style.width = '100%'; // Make the image fit the frame-box
+                    img.style.height = '100%'; // Make the image fit the frame-box
+                    cyPlanContainer.appendChild(img);
+                } else {
+                    alert('No plan diagram returned');
                 }
+            } catch (err) {
+                console.error('Error running planner:', err);
+                alert('Failed to run planner. Please check the console for details.');
             }
-        });
-
-        console.log("Connected Nodes:", Array.from(connectedNodes));
-
-        // Filter graph elements based on connected nodes
-        const filteredElements = graphData.elements.filter(element => {
-            if (element.data && !element.data.source) { // Node
-                return connectedNodes.has(element.data.id);
-            }
-            if (element.data && element.data.source && element.data.target) { // Edge
-                return connectedNodes.has(element.data.source) && connectedNodes.has(element.data.target) 
-                && (checkedValues.includes(element.data.source) || checkedValues.includes(element.data.target));
-            }
-            return false;
-        });
-
-        // Render the filtered graph
-        renderGraph(filteredElements);
-    }
-
-
-
-    async function deleteMethods() {
-        const checkedMethods = Array.from(document.querySelectorAll('#methodsList input[type="checkbox"]:checked'))
-        .map(checkbox => checkbox.value);
-
-        if (checkedMethods.length === 0) {
-        alert("No methods selected for deletion.");
-        return;
         }
 
-        const res = await fetch('/delete_methods', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ methods: checkedMethods })
-        });
 
-        if (res.ok) {
-        const data = await res.json();
-        // populateMethodsList(data.methods); // Update methods list
-        // alert("Selected methods deleted successfully.");
-        // } else {
-        // const error = await res.text();
-        // alert(`Error deleting methods: ${error}`);
-        // }
-    }
 
-    function resetDomain() {
-        if (!originalDomain) {
-        alert("Original domain file not loaded.");
-        return;
+        async function deleteMethods() {
+            const checkedMethods = Array.from(document.querySelectorAll('#methodsList input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.value);
+
+            if (checkedMethods.length === 0) {
+            alert("No methods selected for deletion.");
+            return;
+            }
+
+            const res = await fetch('/delete_methods', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ methods: checkedMethods })
+            });
+
+            if (res.ok) {
+            const data = await res.json();
+            // populateMethodsList(data.methods); // Update methods list
+            // alert("Selected methods deleted successfully.");
+            // } else {
+            // const error = await res.text();
+            // alert(`Error deleting methods: ${error}`);
+            // }
+        }}
+
+        function resetDomain() {
+            if (!originalDomain) {
+            alert("Original domain file not loaded.");
+            return;
+            }
+
+            const methodsList = document.getElementById('methodsList');
+            methodsList.innerHTML = ''; // Clear methods list
+            // populateMethodsList(originalDomain.methods); // Reset methods list
+            alert("Domain reset to original file.");
         }
 
-        const methodsList = document.getElementById('methodsList');
-        methodsList.innerHTML = ''; // Clear methods list
-        // populateMethodsList(originalDomain.methods); // Reset methods list
-        alert("Domain reset to original file.");
-    }
-
-    async function showMethods() {
-        const res = await fetch('/show_methods');
-        const data = await res.json();
-
-        if (data.graph) {
-        renderGraph(data.graph.elements); // Render methods graph
-        } else {
-        alert("No methods graph available.");
+        async function askLLM() {
+            const res = await fetch('/ask_llm');
+            const data = await res.json();
         }
-    }
-    
-    
-  </script>
+        
+        
+    </script>
 
 </body>
 </html>

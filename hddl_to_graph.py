@@ -287,11 +287,11 @@ def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
         nodes = []
         for n, d in G.nodes(data=True):
                 if d['type'] == 'task':
-                        color = 'yellow'
+                        color = 'darkblue'
                 elif d['type'] == 'method':
-                        color = 'lightgreen'
+                        color = 'darkgreen'
                 elif d['type'] == 'action':
-                        color = 'lightgray'
+                        color = 'black'
                 nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color, 'type': d['type']}})
         edges = []
         for u, v, key, data in G.edges(keys=True, data=True):
@@ -311,6 +311,7 @@ def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
                 edges.append(edge)
 
         return nodes+ edges
+
 
 if __name__ == "__main__":
         domain_path = input("Please provide domain file directory, if want to use default file, click enter.")
