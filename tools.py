@@ -133,6 +133,12 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     L = " ".join(L.split())
     L = L.split()
     
+    # Check if imply present
+    if ('imply' in L) or ('implies' in L):
+        print('imply detected')
+        print('\t'+filteredEncoding)
+        return False, f"imply is not supported. Try again without it."
+    
     # Check if temporal keyword present
     temporal_present = False
     for keyword in TEMPORAL_keywords:
@@ -151,9 +157,6 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
             except:
                 try: assert x[0]=='?'
                 except:
-                    if x in ['imply', 'implies']:
-                        print('imply detected')
-                        print('\t'+filteredEncoding)
                     return False, f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
             
     # Parsing test #
