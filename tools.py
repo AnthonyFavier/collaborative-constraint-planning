@@ -112,7 +112,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         '*',
         '/',
         'forall',
-        'exists',
+        'exists']
+    TEMPORAL_keywords =[
         'always',
         'sometime',
         'within',
@@ -124,14 +125,24 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         'hold-after',
         'at-end',
     ]
-    authorized_keywords = PDDL_keywords + g_fluent_names + g_all_objects + [object_type for object_type in g_typed_objects] + ['(', ')']
+    authorized_keywords = PDDL_keywords + TEMPORAL_keywords + g_fluent_names + g_all_objects + [object_type for object_type in g_typed_objects] + ['(', ')']
 
     L = filteredEncoding
     L = " ( ".join(L.split('('))
     L = " ) ".join(L.split(')'))
     L = " ".join(L.split())
     L = L.split()
-
+    
+    # Check if temporal keyword present
+    temporal_present = False
+    for keyword in TEMPORAL_keywords:
+        if keyword in L:
+            temporal_present = True
+            break
+    if not temporal_present:
+        print("No temporal keywords")
+        print('\t'+filteredEncoding)
+        return False, "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint. Try again."
 
     # Unknown keyword test #
     for x in L:
