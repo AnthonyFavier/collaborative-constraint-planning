@@ -162,4 +162,12 @@ def extractTag(tag, txt):
     if i_2==-1:
         raise Exception(f"Can't find closing tag </{tag}>")
     
-    return txt[ i_1 + len(f"<{tag}>") : i_2 ]
+    txt = txt[ i_1 + len(f"<{tag}>") : i_2 ]
+    
+    if txt[0]=='\n':
+        txt = txt[1:]
+    if txt[-1]=='\n':
+        txt = txt[:-1]
+    
+    return txt
+
