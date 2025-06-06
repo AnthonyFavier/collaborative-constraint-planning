@@ -368,7 +368,6 @@ def reencodePrefs(feedback):
 # E2NL
 def E2NL(constraint):
     
-    
     conversation_history.add_turn_user(f"""
 <documents>
 <pddl_domain>
@@ -384,8 +383,9 @@ The user will give as input PDDL3.0 constraints.
 </information>
 
 <instructions> 
-- Translate the user input into natural language to give them a good sense of what the PDDL3.0 constraint means and is doing.
-- Your answer should be concise and not exceed 4 sentences.
+- Translate the user input into natural language.
+- Your translation should closely match the PDDL3.0 input, without additional deductions or reasoning. 
+- Your answer should be concise and not exceed 3 sentences.
 - Your translation should not contain any explicit PDDL element, the user can't understand PDDL.
 - Format your answer such as your translation is between the tags <E2NL> and </E2NL>.
 </instructions>
