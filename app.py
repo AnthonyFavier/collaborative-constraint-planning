@@ -223,7 +223,21 @@ def run_planner():
     # digraph_diagram.render(filename=diagram_filepath, format='png', cleanup=True)
     return jsonify({'text': text, 'elements':graph_data})# 'diagram_path': '/static/plan_diagram.png'})
     
-
+@app.route('/add_method', methods=['POST'])
+def add_method():
+    '''
+    Add a new method to the domain
+    '''
+    method_text = request.json.get('method_text', '')
+    if not method_text:
+        return jsonify({'status': 'No method text provided'})
+    
+    # Here you would typically add the method to the domain file
+    global DOMAIN_PATH
+    with open(DOMAIN_PATH, 'a') as f:
+        f.write("\n" + method_text)
+    
+    return jsonify({'status': 'Method added successfully', 'method_text': method_text})
 
 
 @app.route('/')

@@ -3,21 +3,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>HDDL HTN Viewer</title>
+<title>HDDL HTN Viewer</title>
   <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    textarea { width: 100%; font-family: monospace; resize: vertical; }
-    .scroll-area { height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; }
-    .frame-box { border: 1px solid #999; padding: 10px; height: 400px; overflow: hidden; }
-    #cy { width: 100%; height: 100%; }
-    #cy_plan { width: 100%; height: 100%; }
+    body { font-family: Arial; margin: 20px; height: 100%; overflow: auto; }
+    textarea { width: 100%; font-family: monospace; resize: both;overflow: auto; }
+    .scroll-area { height: 100px; overflow: auto; border: 1px solid #ccc; padding: 8px; resize:both;}
+    .frame-box { border: 1px solid #999; padding: 10px; height: 200px; resize:both; width: 100%; overflow: hidden;}
+    #cy { width: 100%; height: 100%; resize: both; overflow: auto; }
+    #cy_plan { width: 100%; height: 100%; resize:both; overflow: auto; }
     .section { margin-bottom: 20px; }
     .checkbox-list { display: flex; flex-direction: column; }
     label {
         display: inline-block; /* Change label to inline-block to respect width */
         width: auto; /* Set width appropriately */
-        margin-bottom: 5px; /* Optional: Add spacing below labels */
+        margin-bottom: 5px; /* Optional: Add spacing below labels */}
+    h2 {
+        text-align: center;
+        color: #333;
+    }
   </style>
 </head>
 <body>
@@ -41,9 +45,11 @@
             <label for="domainFile">Domain File:</label>
             <input type="file" id="domainFile" name="domain" required>
             <button type="submit" onclick="loadDomain(event)">Load Domain</button>
+            <button type="button" onclick="editDomain()">Edit Domain</button>
+            <button onclick="saveToFile()">Save domain as</button>
           </form>
         <div class="scroll-area">
-        <pre id="domainText">(domain content appears here...)</pre>
+        <pre id="domainText" contenteditable="false">(domain content appears here...)</pre>
     </div></div>
     <div style="flex: 1;">
         <!-- <form id="loadProblemForm" enctype="multipart/form-data">
@@ -60,35 +66,41 @@
       </div></div>
   </div></div>
 
-  <div class="section">
-    <h3>HTN Viewer</h3>
-    <div style="display: flex; gap: 20px;">
-      
-      <div style="flex: 1;">
-        <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
-        </label>
-        <div class="frame-box"><div id="cy"></div></div>
-        <!-- <div class="frame-box" id="graphViewer" style="border: 1px solid #aaa;">
-            <div id="cy"></div> -->
-      </div>
+  <div style="display: flex; gap: 20px;">
+    <div style="flex: 2;">
+    <div class="section">
+        <h3>HTN Viewer</h3>
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 2;">
+                <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
+                </label>
+                <div class="frame-box"><div id="cy"></div></div>
+            </div>
 
-      <div style="width: 300px;">
-        <label>Operators:</label>
-        <div class="scroll-area checkbox-list" id="optionsList" rows="18" style="background-color: white; height: 300px;">
-          <!-- dynamically populated -->
+            <div style="flex: 1;">
+                <label>Operators:
+                    <button onclick="filterGraph()">Show Selected Operators</button>
+                </label>
+                <div class="scroll-area checkbox-list" id="optionsList" rows="10" style="background-color: white; height: 300px;">
+                </div>
+            </div>
         </div>
-        <button onclick="filterGraph()">Show Selected Operators</button>
-      </div>
+    </div>
+    </div>
 
+    <div class="section">
       <div style="flex: 1;">
-        <label>LLM-Generated Explanation:</label>
+        <h3>LLM Interactive Area:</h3>
+        <label>LLM Output:</label>
         <textarea id="llmOutput" rows="10" readonly></textarea>
 
-        <label>Interactive Input Area (LLM Query):</label>
+        <label>LLM Query:</label>
         <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
         <button onclick="askLLM()">Ask LLM</button>
+        <button onclick="addMethod()">Add Method</button>
       </div>
     </div>
+    
   </div>
 
   <!-- Section 3: Plan -->
@@ -98,7 +110,6 @@
     <div style="flex: 1;">
         <label>Plan Diagram  </label>
         <button onclick="runPlanner()">Run Planner</button>
-        <button onclick="viewPlanDiagram()">View Plan Diagram</button>
         <div class="frame-box" style="width: 66.66vw;">
             <div id="cy_plan"></div>
         </div>
@@ -116,6 +127,7 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://unpkg.com/@hpcc-js/wasm@1.4.1/dist/index.min.js" type="javascript/worker"></script>
     <script src="https://unpkg.com/d3-graphviz@4.0.0/build/d3-graphviz.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre/cytoscape-dagre.js"></script>
     <script>
         let graphData = null; // Store the graph data globally
         let originalDomain = null; // Store the original domain file content
@@ -136,9 +148,27 @@
             alert(`Error loading domain: ${error}`);
             return;
         }
+        
 
         const data = await res.json();
         document.getElementById('domainText').textContent = data.domain || '(no content)';
+        viewHTN(); // Automatically view HTN after loading domain
+        }
+
+        function editDomain() {
+            const domainText = document.getElementById('domainText');
+            const isEditable = domainText.getAttribute('contenteditable') === 'true';
+
+            if (!isEditable) {
+                domainText.setAttribute('contenteditable', 'true'); // Make editable
+                domainText.style.border = '1px solid #ccc'; // Optional: Add a visual cue
+                domainText.style.backgroundColor = '#f9f9f9'; // Optional: Change background color
+            } 
+            // else {
+            //     domainText.setAttribute('contenteditable', 'false'); // Make readonly again
+            //     domainText.style.border = 'none'; // Reset styles
+            //     domainText.style.backgroundColor = 'transparent'; // Reset background color
+            // }
         }
 
         async function loadProblem(e) {
@@ -212,8 +242,16 @@
             elements: elements,
             style: [
             { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
-            { selector: 'edge', style: { 'label': 'data(label)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
-            ],
+            { selector: 'edge', 
+                style: { 
+                    'label': 'data(label)', 
+                    'target-arrow-shape': 'triangle', 
+                    'curve-style': 'bezier', 
+                    'line-color': '#aaa', 
+                    'target-arrow-color': '#aaa', 
+                    'arrow-scale': 0.8 /* Reduce the arrow size to make it shorter */
+                }
+            }],
             layout: { name: 'breadthfirst', directed: true }
         });
         }
@@ -223,9 +261,17 @@
                 elements: elements,
                 style: [
                 { selector: 'node', style: { 'label': 'data(label)', 'text-valign': 'center', 'text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF', 'shape': 'data(shape)', 'width': 'label', 'padding': 10, 'font-size': '12px' } },
-                { selector: 'edge', style: { 'label': '', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-color': '#aaa', 'target-arrow-color': '#aaa' } }
+                { selector: 'edge', 
+                    style: { 'label': '', 
+                            'target-arrow-shape': 'triangle', 
+                            'curve-style': 'bezier', 
+                            'line-color': '#aaa', 
+                            'target-arrow-color': '#aaa',
+                            'arrow-scale': 0.1 /* Reduce the arrow size to make it shorter */
+                        } 
+                }
                 ],
-                layout: { name: 'breadthfirst', directed: true }
+                layout: { name: 'breadthfirst', directed: true, spaceFactor: .5 } // Adjust space factor for better layout
             });
         }
 
@@ -333,6 +379,31 @@
         }
 
 
+        async function addMethod(){
+            // Get the method from the LLM output
+            const llmOutput = document.getElementById('llmOutput').value;
+            if (!llmOutput) {
+                alert("LLM output is empty. Please ask the LLM first.");
+                return;
+            }
+            const res = await fetch('/add_method', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ method: llmOutput })
+            });
+            if (!res.ok) {
+                const error = await res.text();
+                alert(`Error adding method: ${error}`);
+                return;
+            }
+            const data = await res.json();
+            // Update the domain text area with the new domain content
+            document.getElementById('domainText').textContent = data.domain || '(no content)';
+            viewHTN(); // Automatically view HTN after adding method
+            alert("Method added successfully.");
+            // Update on the LLM output text area saying method added successfully
+            document.getElementById('llmOutput').value = "Method added successfully.";
+        }
 
         async function deleteMethods() {
             const checkedMethods = Array.from(document.querySelectorAll('#methodsList input[type="checkbox"]:checked'))
@@ -374,6 +445,34 @@
         async function askLLM() {
             const res = await fetch('/ask_llm');
             const data = await res.json();
+        }
+
+        async function saveToFile() {
+            try {
+                // Get the content from the textarea
+                const content = document.getElementById('domainText').value;
+
+                // Show a file save dialog
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: 'domain.hddl', // Default file name
+                    types: [
+                        {
+                            description: 'HDDL Files',
+                            accept: { 'text/plain': ['.hddl'] }
+                        }
+                    ]
+                });
+
+                // Create a writable stream and write the content to the file
+                const writableStream = await fileHandle.createWritable();
+                await writableStream.write(content);
+                await writableStream.close();
+
+                alert('File saved successfully!');
+            } catch (error) {
+                console.error('Error saving file:', error);
+                alert('Failed to save the file.');
+            }
         }
         
         
