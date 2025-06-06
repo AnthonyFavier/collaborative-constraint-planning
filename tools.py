@@ -1,17 +1,22 @@
 import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
 def filterEncoding(encodedPref):
-    i = i_s = encodedPref.find('(:constraints')
-    with_constraints = True
     
-    if i_s == -1:
-        i = i_s = encodedPref.find('(')
-        with_constraints = False
-        
+    # Skip ':(constraints' if included
+    i_s = encodedPref.find('(:constraints')
+    if i_s==-1:
+        i_s = 0
+    else:
+        i_s += len('(:constraints')
+    
+    # Find first open parenthesis
+    i_s = encodedPref.find('(', i_s)
     if i_s == -1:
         raise Exception("tools:updateProblem: Can't find encoded contraints in text...")
     
+    # Find the matching closing parenthesis
     n=1
+    i=i_s
     while True:
         i+=1
         if encodedPref[i]=='(':
@@ -20,14 +25,10 @@ def filterEncoding(encodedPref):
             n-=1
         if n==0:
             break
-        
-    if not with_constraints:
-        filteredEncoding = encodedPref[i_s:i+1]
-    else:
-        filteredEncoding = encodedPref[i_s+len('(:constraints'):i+1]
-        
-        
-        
+    
+    # Keep only the parenthesis
+    filteredEncoding = encodedPref[i_s:i+1]
+    
     return filteredEncoding
 
 def initialFixes(filteredEncoding):
