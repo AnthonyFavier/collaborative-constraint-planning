@@ -341,6 +341,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.hideButtons()
         self.add_nl_constraints = []
         
+        mprint("\n=== ADDING CONSTRAINT ===")
+        
         c = minput(txt="\nEnter your constraint:")
         
         if c=='':
@@ -357,7 +359,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             
             self.showButtons()
             self.master.constraints_frame.updateFrame()
-            mprint("\nConstraints added")
+            # mprint("\nConstraints added")
         
     def delete(self):
         self.master.constraints_frame.unselectAll()

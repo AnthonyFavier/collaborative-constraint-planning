@@ -41,7 +41,8 @@ def addConstraints(nl_constraints):
     
     if WITH_DECOMP:
         # Regular decomposition
-        mprint("\nDecomposing constraints")
+        mprint("\n== Decomposition ==")
+        
         abort = False
         for nl_constraint in nl_constraints:
             decompOK = False
@@ -52,10 +53,10 @@ def addConstraints(nl_constraints):
                 new_r.append(r)
                 
                 if i==0:
-                    mprint("\nDecomposing...\n" + str(r))
+                    mprint("\nDecomposing: " + str(r))
                     constraints, explanation = LLM.decompose(nl_constraint)
                 else:
-                    mprint("\nRe-Decomposing...\n" + str(r))
+                    mprint("\nRe-Decomposing: " + str(r))
                     constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
                     
                 # for c in constraints:
@@ -71,8 +72,9 @@ def addConstraints(nl_constraints):
                 
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
-                    answer = minput("\nPress Enter or give feedback: ")
-                    mprint("> " + answer)
+                    answer = minput("Press Enter or give feedback: ")
+                    if answer!="":
+                        mprint("> " + answer)
                     
                 
                 decompOK = answer==''
@@ -104,10 +106,11 @@ def addConstraints(nl_constraints):
     # When all ok, encode the decomposed of all new r
     
     # Encoding
-    mprint("\nEncoding...")
+    mprint("\n== Encoding ==")
+    
     to_delete = []
     for r in new_r:
-        mprint(str(r))
+        mprint("\n" + str(r))
         for c in r.children:
             encodingOK = False
             MAX_ENCODING_TRY = 3
@@ -116,10 +119,10 @@ def addConstraints(nl_constraints):
                 
                 # 1 # Encode the preferences
                 if i==0: # first time
-                    mprint(f"\tencoding {c}...")
+                    mprint(f"\tEncoding {c} ... ", end="")
                     encodedPref = tools.extractTag('pddl', LLM.encodePrefs(c.nl_constraint))
                 else: # Re-encoding
-                    mprint(f"\t\tre-encoding (try {i+1}/{MAX_ENCODING_TRY}) Verifier not ok ...")
+                    mprint(f"\t\tRe-encoding (try {i+1}/{MAX_ENCODING_TRY}) ... ", end="")
                     encodedPref = tools.extractTag('pddl', LLM.reencodePrefs(feedback))
                 filteredEncoding = tools.filterEncoding(encodedPref)
                 filteredEncoding = tools.initialFixes(filteredEncoding)
@@ -133,6 +136,7 @@ def addConstraints(nl_constraints):
                 if WITH_VERIFIER:
                     encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
                     if encodingOK:
+                        mprint(f"OK")
                         c.encoding = filteredEncoding
                         
                         if g_with_e2nl:
@@ -143,7 +147,8 @@ def addConstraints(nl_constraints):
                             # Asking for feedback
                             mprint("\tIs this back-translation matching the constraint?")
                             answer = minput("\tPress Enter for yes or give feedback: ")
-                            mprint("\t> " + answer)
+                            if answer!="":
+                                mprint("\t> " + answer)
                             encodingOK = answer==''
                             abort = answer=='abort'
                             
@@ -157,7 +162,11 @@ def addConstraints(nl_constraints):
                                 i=-1
                         else:
                             LLM.clear_message_history()
+                            
+                    else:
+                        mprint("Verifier failed")
                 else:
+                    mprint(f"OK")
                     encodingOK = True
                     c.encoding = filteredEncoding
                     # mprint(c.encoding)
@@ -165,7 +174,7 @@ def addConstraints(nl_constraints):
                 i+=1
             
             if not encodingOK:
-                mprint(f"\t\tFailure: Maximum attempts reached to encode {c.symbol}... {c.symbol} will be deleted")
+                mprint(f"\n\t\tFailure: Maximum attempts reached to encode {c.symbol}... {c.symbol} will be deleted")
                 to_delete.append(c.symbol)
             
     t2 = time.time()
@@ -310,6 +319,8 @@ def planWithConstraints():
     # update problem with activated constraints
     # compile problem
     # Solve it
+    
+    mprint("\n=== PLANNING ===\n")
     
     # Get activated constraints
     activated_encodings = []
