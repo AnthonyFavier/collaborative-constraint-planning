@@ -339,11 +339,16 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.grid()
         self.update()
         self.master.display_frame.textbox.see('end')
+    def showE2NLButton(self):
+        self.buttons["E2NL"].grid()
+        self.update()
+        self.master.display_frame.textbox.see('end')
     
     def addT(self):
         threading.Thread(target=self.add).start()
     def add(self):
         self.hideButtons()
+        self.showE2NLButton()
         self.add_nl_constraints = []
         
         mprint("\n=== ADDING CONSTRAINT ===")
