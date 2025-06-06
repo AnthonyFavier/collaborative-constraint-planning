@@ -327,9 +327,13 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def hideButtons(self):
         for k,x in self.buttons.items():
             x.grid_remove()
+        self.update()
+        self.master.display_frame.textbox.see('end')
     def showButtons(self):
         for k,x in self.buttons.items():
             x.grid()
+        self.update()
+        self.master.display_frame.textbox.see('end')
     
     def addT(self):
         threading.Thread(target=self.add).start()
@@ -340,8 +344,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         c = minput(txt="\nEnter your constraint:")
         
         if c=='':
-            mprint("Aborted\n")
             self.showButtons()
+            mprint("Aborted\n")
         else:
             mprint("> " + c )
             self.add_nl_constraints.append(c)
@@ -351,8 +355,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 self.master.quit()
                 raise err
             
-            self.master.constraints_frame.updateFrame()
             self.showButtons()
+            self.master.constraints_frame.updateFrame()
             mprint("\nConstraints added")
         
     def delete(self):
