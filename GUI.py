@@ -556,7 +556,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox.see('end')
         # self.textbox.focus_set()
         self.write_lock.release()
-        
+        self.update()
         
     def activateEntry(self, txt=""):
         if txt!="":
