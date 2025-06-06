@@ -343,7 +343,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         mprint("\n=== ADDING CONSTRAINT ===")
         
-        c = minput(txt="\nEnter your constraint:")
+        c = minput(txt="\nEnter your constraint: ")
         
         if c=='':
             self.showButtons()
@@ -562,7 +562,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         
     def activateEntry(self, txt=""):
         if txt!="":
-            mprint(txt)
+            mprint(txt, end="")
         self.entry.configure(state="normal")
         self.entry.configure(fg_color=self.master.display_frame.entry_light)
         self.entry.focus()

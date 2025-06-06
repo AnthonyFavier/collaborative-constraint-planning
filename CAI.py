@@ -53,10 +53,10 @@ def addConstraints(nl_constraints):
                 new_r.append(r)
                 
                 if i==0:
-                    mprint("\nDecomposing: " + str(r))
+                    mprint("\nDecomposing: " + str(r) + " ... ")
                     constraints, explanation = LLM.decompose(nl_constraint)
                 else:
-                    mprint("\nRe-Decomposing: " + str(r))
+                    mprint("\nRe-Decomposing: " + str(r) + " ... ")
                     constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
                     
                 # for c in constraints:
@@ -73,8 +73,11 @@ def addConstraints(nl_constraints):
                 answer = ''
                 if ASK_DECOMP_FEEDBACK:
                     answer = minput("Press Enter or give feedback: ")
-                    if answer!="":
-                        mprint("> " + answer)
+                    if answer=="":
+                        mprint("OK")
+                    else:
+                        mprint("\n> " + answer)
+                    
                     
                 
                 decompOK = answer==''
@@ -147,8 +150,10 @@ def addConstraints(nl_constraints):
                             # Asking for feedback
                             mprint("\tIs this back-translation matching the constraint?")
                             answer = minput("\tPress Enter for yes or give feedback: ")
-                            if answer!="":
-                                mprint("\t> " + answer)
+                            if answer=="":
+                                mprint("OK")
+                            else:
+                                mprint("\n\t> " + answer)
                             encodingOK = answer==''
                             abort = answer=='abort'
                             
