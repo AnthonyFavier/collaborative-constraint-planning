@@ -354,7 +354,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.showButtons()
             mprint("Aborted\n")
         else:
-            mprint("> " + c )
+            mprint("\n> " + c )
             self.add_nl_constraints.append(c)
             try:
                 CAI.addConstraints(self.add_nl_constraints)
