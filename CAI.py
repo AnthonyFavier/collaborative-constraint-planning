@@ -53,15 +53,16 @@ def addConstraints(nl_constraints):
                 
                 if i==0:
                     mprint("\nDecomposing...\n" + str(r))
-                    result = LLM.decompose(nl_constraint)
+                    constraints, explanation = LLM.decompose(nl_constraint)
                 else:
                     mprint("\nRe-Decomposing...\n" + str(r))
-                    result = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
+                    constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
                     
                 # for c in constraints:
-                for c in result.splitlines():
+                for c in constraints.splitlines():
                     CM.createDecomposed(r, c)
                 
+                mprint(f'Explanation: "{explanation}"')
                 mprint(r.strChildren())
                 
                 # mprint("Checking if worth to do modifications...")

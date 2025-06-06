@@ -1,5 +1,6 @@
 import time
 from defs import *
+import tools
 import os                                                                                                                                                                                                          
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
@@ -272,6 +273,7 @@ The user will give as input a constraint in natural language. This constraint mu
     2. [natural_language_constraint_2]
     ...
     </constraints>
+- After, add a 1 or 2 sentences explanation of your choice of decomposition between the tags <explanation> and </explanation>.
 </instructions>
 
 <user_input>
@@ -282,13 +284,15 @@ The user will give as input a constraint in natural language. This constraint mu
     # conversation_history.add_turn_assistant("Here is the list of refined constraints:")
     
     # Call 
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</constraints>"])
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</explanation>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
 
     # Remove format 
-    assistant_reply_without_formating = removeFormating(assistant_replies[-1])
-    return assistant_reply_without_formating
+    constraints = tools.extractTag("constraints", assistant_replies[-1])
+    constraints = removeFormating(constraints)
+    explanation = tools.extractTag("explanation", assistant_replies[-1])
+    return constraints, explanation
 def redecompose(feedback):
     conversation_history.add_turn_user(feedback)
     
@@ -298,8 +302,10 @@ def redecompose(feedback):
         conversation_history.add_turn_assistant(r)
     
     # Remove format 
-    assistant_reply_without_formating = removeFormating(assistant_replies[-1])
-    return assistant_reply_without_formating
+    constraints = tools.extractTag("constraints", assistant_replies[-1])
+    constraints = removeFormating(constraints)
+    explanation = tools.extractTag("explanation", assistant_replies[-1])
+    return constraints, explanation
 
 # MODICIFICATION
 def needModifications():
