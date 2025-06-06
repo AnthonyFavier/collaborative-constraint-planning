@@ -450,6 +450,10 @@ def init(problem_name, planning_mode, timeout):
     except Exception as e:
         print("ERROR", e)
         raise Exception(f"Unable to parse the initial problem.")
+    
+    # Check if no initial constraints
+    if parsed.problem.trajectory_constraints!=[]:
+        raise Exception(f"There are already constraints in the initial problem.\n{parsed.problem.trajectory_constraints}")
 
     # Set extracted fluent names (used during verification)
     tools.set_fluent_names([f.name for f in parsed.problem.fluents])
