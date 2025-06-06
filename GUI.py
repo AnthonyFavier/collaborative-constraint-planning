@@ -160,15 +160,20 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     def updateLabels(self):
         activated_str = ''
         deactivated_str = '*** '
+        partial_str = '* '
         for k,x in self.constraint_labels.items():
-            x.configure(text=x.cget('text').replace(activated_str, '').replace(deactivated_str, ''))
+            x.configure(text=x.cget('text').replace(activated_str, '').replace(deactivated_str, '').replace(partial_str, ''))
             
         for symbol in self.constraint_labels:
             l = self.constraint_labels[symbol]
-            if CAI.CM.constraints[symbol].isActivated():
+            c = CAI.CM.constraints[symbol]
+            if c.isActivated():
                 l.configure(text=activated_str + l.cget("text"))
             else:
-                l.configure(text=deactivated_str + l.cget("text"))
+                if c.isPartiallyActivated():
+                    l.configure(text=partial_str + l.cget("text"))
+                else:
+                    l.configure(text=deactivated_str + l.cget("text"))
     
     def updateLastStateCheckboxes(self):
         for symbol in self.checkboxes:

@@ -21,9 +21,15 @@ class RawConstraint(Constraint):
             c.deactivate()
     def isActivated(self):
         for c in self.children:
-            if not c._activated:
+            if not c.isActivated():
                 return False
         return True
+    def isPartiallyActivated(self):
+        if not self.isActivated():
+            for c in self.children:
+                if c.isActivated():
+                    return True
+        return False
     
     def strChildren(self):
         txt = ""
@@ -65,6 +71,8 @@ class DecomposedConstraint(Constraint):
         self._activated = True
     def isActivated(self):
         return self._activated
+    def isPartiallyActivated(self):
+        return False
     
     def __repr__(self):
         symbol_str = self.symbol 
