@@ -506,6 +506,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.write_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='word', font=DisplayFrame.font)
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
+        self.textbox.bind("<Escape>", lambda x: exit())
         self.textbox.bind('<Key>',lambda e: 'break') 
         
         
