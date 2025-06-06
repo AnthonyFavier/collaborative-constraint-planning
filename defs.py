@@ -81,23 +81,22 @@ class NtcoreStrategy:
 SHELL_PRINTS = False
 GUI_PROMPT = True
 
-prompt = lambda x: None
-
+myprint = lambda x: None
 def mprint(txt, end="\n"):
     if SHELL_PRINTS:
         print(txt, end=end)
     if GUI_PROMPT:
-        prompt(txt, end=end)
-def setPromptFunction(prompt_function):
-    global prompt
-    prompt = prompt_function
+        myprint(txt, end=end)
+def setPrintFunction(print_function):
+    global myprint
+    myprint = print_function
     
-finput = lambda x: None
+myinput = lambda x: None
 def minput(txt=""):
     if GUI_PROMPT:
-        return finput(txt=txt)
+        return myinput(txt=txt)
     elif SHELL_PRINTS:
         return input(txt)
 def setInputFunction(input_function):
-    global finput
-    finput = input_function
+    global myinput
+    myinput = input_function

@@ -141,7 +141,7 @@ def main(problem_name, planning_mode, timeout, e2nl):
     CAI.g_with_e2nl = e2nl
     
     app = GUI.App()
-    setPromptFunction(app.display_frame.prompt)
+    setPrintFunction(app.display_frame.prompt)
     setInputFunction(app.display_frame.getFromEntry)
     
     CAI.init(problem_name, planning_mode, timeout)
