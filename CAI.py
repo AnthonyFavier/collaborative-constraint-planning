@@ -325,7 +325,7 @@ def planWithConstraints():
     # compile problem
     # Solve it
     
-    mprint("\n=== PLANNING ===\n")
+    mprint("\n=== PLANNING ===")
     
     # Get activated constraints
     activated_encodings = []
