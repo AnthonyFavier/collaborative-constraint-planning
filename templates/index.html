@@ -3,30 +3,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<title>HDDL HTN Viewer</title>
+<title>LLM-powered HDDL GUI</title>
   <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
   <style>
-    body { font-family: Arial; margin: 20px; height: 100%; overflow: auto; }
+    body { font-family: Arial; margin: 15px; height: 100%; overflow: auto; }
     textarea { width: 100%; font-family: monospace; resize: both;overflow: auto; }
-    .scroll-area { height: 100px; overflow: auto; border: 1px solid #ccc; padding: 8px; resize:both;}
-    .frame-box { border: 1px solid #999; padding: 10px; height: 200px; resize:both; width: 100%; overflow: hidden;}
-    #cy { width: 100%; height: 100%; resize: both; overflow: auto; }
-    #cy_plan { width: 100%; height: 100%; resize:both; overflow: auto; }
-    .section { margin-bottom: 20px; }
-    .checkbox-list { display: flex; flex-direction: column; }
+    .scroll-area { width: 100%; height: 100px; overflow: auto; border: 1px solid #ccc; resize:both; background-color: white;}
+    .frame-box { border: 1px solid #999; height: 280px; width: 100%; overflow: hidden;background-color: white; resize: both; align-items: center;}
+    #cy { width: 99%; height: 100%; overflow: hidden;} 
+    #cy_plan { width: 99.9%; height: 100%;} 
+    .section { 
+        margin-bottom: 15px; 
+        border: 1px solid #ccc; /* Add a light gray border */
+        padding: 10px; /* Add padding inside the section */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        background-color: #f9f9f9; /* Optional: Add a light background color */
+        resize: both; /* Make the section resizable */;
+        height: auto;
+        /* display: flex; */
+        align-items: stretch;
+    }
+    .checkbox-list { width: 100%; height: 280px; display: flex; flex-direction: column; flex-grow: 1; background-color: white; overflow: auto;border: 1px solid #999;resize: both;}
     label {
         display: inline-block; /* Change label to inline-block to respect width */
         width: auto; /* Set width appropriately */
         margin-bottom: 5px; /* Optional: Add spacing below labels */}
     h2 {
         text-align: center;
-        color: #333;
+        font-family: 'Georgia', serif; /* Change the font family */
+        font-size: 25px; /* Adjust the font size */
+        font-weight: bold; /* Make the font bold */
+        color: #1e09bd;
+        margin-bottom: 10px; /* Add spacing below the header */
+        margin-top: 10px; /* Add spacing above the header */
     }
+    h3 {
+        text-align: center;
+        font-family: 'Georgia', serif; /* Change the font family */
+        font-size: 30px; /* Adjust the font size */
+        font-weight: bold; /* Make the font bold */
+        color: #470202; /* Change the font color */
+        margin-bottom: 5px; /* Add spacing below the header */
+        margin-top: 5px; /* Add spacing above the header */
+    }
+    button {
+        font-size: 16px;
+        color: white;
+        background-color: #007BFF;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-bottom:3px;
+    }
+    button:hover {
+            background-color: #0555a4;
+        }
   </style>
 </head>
 <body>
 
-  <h2>HDDL HTN Viewer Interface</h2>
+  <h2>LLM-powered HDDL GUI</h2>
 
   <div class="section">
     <h3>Load HDDL Domain and Problem Files</h3>
@@ -35,7 +72,7 @@
       Problem File: <input type="file" name="problem" required>
       <button type="submit">Load</button>
     </form> -->
-    <div style="display: flex; gap: 20px;">
+    <div style="display: flex; gap: 10px;">
     <div style="flex: 1;">
         <!-- <form id="loadDomainForm" enctype="multipart/form-data">
             Domain File: <input type="file" name="domain" required>
@@ -46,7 +83,8 @@
             <input type="file" id="domainFile" name="domain" required>
             <button type="submit" onclick="loadDomain(event)">Load Domain</button>
             <button type="button" onclick="editDomain()">Edit Domain</button>
-            <button onclick="saveToFile()">Save domain as</button>
+            <button onclick="saveToFile()">Save</button>
+            <button onclick="resetDomain()">Reset</button>
           </form>
         <div class="scroll-area">
         <pre id="domainText" contenteditable="false">(domain content appears here...)</pre>
@@ -70,18 +108,19 @@
     <div style="flex: 2;">
     <div class="section">
         <h3>HTN Viewer</h3>
-        <div style="display: flex; gap: 20px;">
+        <div style="display: flex; gap: 10px;">
             <div style="flex: 2;">
-                <label>Graph Viewer: <button onclick="viewHTN()">View All HTN</button>
-                </label>
+                <label>Graph Viewer: </label>
+                    <button onclick="viewHTN()">View Domain</button>
+                    <button onclick="filterGraph()">View Selected Operators</button>
+                
                 <div class="frame-box"><div id="cy"></div></div>
             </div>
 
             <div style="flex: 1;">
-                <label>Operators:
-                    <button onclick="filterGraph()">Show Selected Operators</button>
-                </label>
-                <div class="scroll-area checkbox-list" id="optionsList" rows="10" style="background-color: white; height: 300px;">
+                <label>Operators:</label>
+                <button onclick="deleteMethods()">Delete Selected Methods</button>
+                <div class="checkbox-list" id="optionsList">
                 </div>
             </div>
         </div>
@@ -95,9 +134,9 @@
         <textarea id="llmOutput" rows="10" readonly></textarea>
 
         <label>LLM Query:</label>
-        <textarea id="llmInput" rows="5" placeholder="Describe what you want to see..."></textarea>
+        <textarea id="llmInput" rows="3" placeholder="Describe what you want to ask..."></textarea>
         <button onclick="askLLM()">Ask LLM</button>
-        <button onclick="addMethod()">Add Method</button>
+        <button onclick="addMethod()" >Add Method</button>
       </div>
     </div>
     
@@ -116,10 +155,10 @@
       </div>
     
     <div style="flex: 1;">
-        <label>Previous Plan Summary</label>
-        <textarea id="previousPlanSummary" rows="5" readonly placeholder="Previous plan summary appears here..."></textarea>
+        <label>Previous Plan</label>
+        <textarea id="previousPlanSummary" rows="5" readonly placeholder="Previous plan appears here..."></textarea>
         <label>Plan Text</label>
-        <textarea id="planText" rows="10" readonly placeholder="Plan result appears here..."></textarea>
+        <textarea id="planText" rows="11" readonly placeholder="Plan result appears here..."></textarea>
     </div>
     </div>
     </div>
@@ -241,8 +280,22 @@
             container: document.getElementById('cy'),
             elements: elements,
             style: [
-            { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF','shape': 'roundrectangle', 'width': 'label','padding': 10,'font-size': '12px'} },
-            { selector: 'edge', 
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(label)', // Display the label from the data field
+                    'text-valign': 'center', // Center the label vertically
+                    'text-halign': 'center', // Center the label horizontally
+                    'background-color': 'data(color)', // Use the color from the data field
+                    'color': '#FFFFFF', // Label text color
+                    'shape': 'roundrectangle', // Node shape
+                    'width': 'label', // Dynamically calculate width
+                    'height': 20, // Fixed height
+                    'padding': 3, // Add padding around the label
+                    'font-size': '12px' // Font size for the label
+                }
+            },            
+            {   selector: 'edge', 
                 style: { 
                     'label': 'data(label)', 
                     'target-arrow-shape': 'triangle', 
@@ -252,7 +305,14 @@
                     'arrow-scale': 0.8 /* Reduce the arrow size to make it shorter */
                 }
             }],
-            layout: { name: 'breadthfirst', directed: true }
+            layout: { name: 'breadthfirst', directed: true },
+            // nodeDimensionsIncludeLabels: true
+        });
+        cy.fit();
+        // Adjust the graph dynamically when the window is resized
+        window.addEventListener('resize', () => {
+            cy.resize(); // Recalculate the container size
+            cy.fit(null, 20); // Fit the graph with padding
         });
         }
         function renderPlanGraph(elements) {
