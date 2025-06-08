@@ -149,8 +149,8 @@ def addConstraints(nl_constraints):
                             mprint(f'"{c.e2nl}"')
                             
                             # Asking for feedback
-                            mprint("\tIs this back-translation matching the constraint?")
-                            answer = minput("\tPress Enter for yes or give feedback: ")
+                            mprint("Does this back-translation match the constraint?")
+                            answer = minput("Press Enter for yes or give feedback: ")
                             if answer=="":
                                 mprint("OK")
                             else:
