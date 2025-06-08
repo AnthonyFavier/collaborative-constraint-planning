@@ -135,8 +135,9 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     
     # Check if imply present
     if ('imply' in L) or ('implies' in L):
+        print('[VERIFIER]')
         print('imply detected')
-        print('\t'+filteredEncoding)
+        # print('\t'+filteredEncoding)
         return False, f"imply is not supported. Try again without it."
     
     # Check if temporal keyword present
@@ -146,8 +147,9 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
             temporal_present = True
             break
     if not temporal_present:
+        print('[VERIFIER]')
         print("No temporal keywords")
-        print('\t'+filteredEncoding)
+        # print('\t'+filteredEncoding)
         return False, "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint. Try again."
 
     # Unknown keyword test #
@@ -157,6 +159,9 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
             except:
                 try: assert x[0]=='?'
                 except:
+                    print('[VERIFIER]')
+                    print(f"{x} is not supported")
+                    # print('\t'+filteredEncoding)
                     return False, f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
             
     # Parsing test #
