@@ -127,7 +127,8 @@ def addConstraints(nl_constraints):
                 else: # Re-encoding
                     mprint(f"\t\tRe-encoding (try {i+1}/{MAX_ENCODING_TRY}) ... ", end="")
                     encodedPref = tools.extractTag('pddl', LLM.reencodePrefs(feedback))
-                filteredEncoding = tools.filterEncoding(encodedPref)
+                # filteredEncoding = tools.filterEncoding(encodedPref)
+                filteredEncoding = encodedPref
                 filteredEncoding = tools.initialFixes(filteredEncoding)
                 # mprint(filteredEncoding)
                     
