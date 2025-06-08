@@ -158,6 +158,8 @@ conversation_history = ConversationHistory()
 # HELPERS
 def clear_message_history():
     conversation_history.reset()
+    conversation_history_E2NL.reset()
+    
 def removeFormating(text):
     
     # Remove initial white spaces and empty lines
@@ -366,9 +368,11 @@ def reencodePrefs(feedback):
     return assistant_replies[-1]
 
 # E2NL
+conversation_history_E2NL = ConversationHistory()
 def E2NL(constraint):
+    conversation_history_E2NL.reset()
     
-    conversation_history.add_turn_user(f"""
+    conversation_history_E2NL.add_turn_user(f"""
 <documents>
 <pddl_domain>
 {g_domain}
@@ -396,9 +400,9 @@ The user will give as input PDDL3.0 constraints.
 """[1:-1])
     
     # Call LLM
-    assistant_replies = clients["OPENAI"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["OPENAI"].call(system_message, conversation_history_E2NL.get_turns(), thinking=True)
     for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
+        conversation_history_E2NL.add_turn_assistant(r)
     
     return assistant_replies[-1]
 
