@@ -290,6 +290,8 @@ The user will give as input a constraint in natural language. This constraint mu
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
 
+    # TODO: Add an automated verifier checking if the tags are present, otherwise ask to refine answer
+
     # Remove format 
     constraints = tools.extractTag("constraints", assistant_replies[-1])
     constraints = removeFormating(constraints)
@@ -356,6 +358,9 @@ The user will give as input a natural language constraint that must be translate
     assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</pddl>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
+        
+    # TODO: Add an automated verifier checking if the tags are present, otherwise ask to refine answer
+    
     
     return assistant_replies[-1]
 def reencodePrefs(feedback):
