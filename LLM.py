@@ -361,7 +361,7 @@ The user will give as input a natural language constraint that must be translate
 def reencodePrefs(feedback):
     conversation_history.add_turn_user(feedback)
     
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True)
+    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</pddl>"])
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
     
