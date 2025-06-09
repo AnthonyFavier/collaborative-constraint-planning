@@ -278,48 +278,54 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         buttons_width = 100
         
+        color_constraints='OrangeRed3'
+        color_planning='#3B8ED0'
+        color_planning=None
+        color_display='gray40'
+        
         i_row = 0
         self.confirm_function = None
         self.confirm_button = customtkinter.CTkButton(self, text="Confirm", width=buttons_width, command=self.confirm)
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=3)
         self.confirm_button.grid_remove()
         
-        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, command=self.addT)
+        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, fg_color=color_constraints, command=self.addT)
         self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=3)
         self.add_nl_constraints = []
         i_row+=1
         
-        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", width=buttons_width, command=self.delete)
+        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", width=buttons_width, fg_color=color_constraints, command=self.delete)
         self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", width=buttons_width, command=self.activate)
+        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", width=buttons_width, fg_color=color_constraints, command=self.activate)
         self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", width=buttons_width, command=self.planT)
+        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
+        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
+        i_row+=1
+        
+        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", width=buttons_width, fg_color=color_planning, command=self.planT)
         self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, command=self.changePlanModeT)
+        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, fg_color=color_planning, command=self.changePlanModeT)
         self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, command=self.changeTimeoutT)
+        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, fg_color=color_planning, command=self.changeTimeoutT)
         self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, command=self.toggleEncodings)
+        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, fg_color=color_display, command=self.toggleEncodings)
         self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, command=self.toggleDecomps)
+        self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, fg_color=color_display, command=self.toggleDecomps)
         self.buttons["ToggleDecomps"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, command=self.toggleE2NL)
-        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
-        i_row+=1
     
     def confirm(self):
         self.confirm_function()
@@ -648,7 +654,7 @@ class PlanFrame(customtkinter.CTkFrame):
             i1 = txt.find(t)+len(t)
             plan = txt[i1:]
             updatePDSimPlan(plan)
-            mprint("\nSim updated.")
+            # mprint("\nSim updated.")
         
     def copy(self):
         pyperclip.copy(self.textbox.get("0.0", "end"))
@@ -686,8 +692,8 @@ class App(customtkinter.CTk):
         
         self.grid_columnconfigure(0, weight=20)
         self.grid_columnconfigure(1, weight=0)
-        self.grid_columnconfigure(2, weight=2)
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(2, weight=3)
+        self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
         
         self.constraints_frame = ConstraintsFrame(self)
