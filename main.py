@@ -5,6 +5,18 @@ import click
 import sys
 import faulthandler
 
+def initZeno5():
+    # ZENO 5 #
+    r = CAI.CM.createRaw("Plane1 should never be used.")
+    d = CAI.CM.createDecomposed(r, "There must always be no person in plane1.")
+    d.encoding = '''(always (forall (?p - person) (not (in ?p plane1))))'''
+    d = CAI.CM.createDecomposed(r, "Plane1 should remain at its initial location (city1) throughout the plan.")
+    d.encoding = "(always (located plane1 city1))"
+    # d = CAI.CM.createDecomposed(r, "The number of people onboard plane1 should always be zero")
+    # d.encoding = "(always (= (onboard plane1) 0))"
+    d = CAI.CM.createDecomposed(r, "The fuel level of plane1 should remain unchanged from its initial value.")
+    d.encoding = "(always (= (fuel plane1) 174))"
+    
 def initZeno13():
     # ZENO 13 #
     r = CAI.CM.createRaw("Person7 should not move.")
