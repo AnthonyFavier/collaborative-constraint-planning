@@ -653,29 +653,35 @@
         }
 
         async function deleteMethods() {
-            const checkedMethods = Array.from(document.querySelectorAll('#methodsList input[type="checkbox"]:checked'))
+            const checkedMethods = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
             .map(checkbox => checkbox.value);
 
             if (checkedMethods.length === 0) {
             alert("No methods selected for deletion.");
             return;
             }
+            let domainText = document.getElementById('domainText').textContent;
 
             const res = await fetch('/delete_methods', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ methods: checkedMethods })
+            body: JSON.stringify({ methods: checkedMethods, domainText: domainText  })
             });
 
             if (res.ok) {
-            const data = await res.json();
-            // populateMethodsList(data.methods); // Update methods list
-            // alert("Selected methods deleted successfully.");
-            // } else {
-            // const error = await res.text();
-            // alert(`Error deleting methods: ${error}`);
-            // }
-        }}
+                const data = await res.json();
+                
+                // Update the domain text area with the new domain content
+                document.getElementById('domainText').textContent = data.updated_domain || '(no content)';
+                // Show success message to the user in llmOutput with the list of deleted methods from data.deleted_methods:
+                document.getElementById('llmOutput').value += `\n***\nMethods deleted successfully: ${data.deleted_methods.join(", ")}`;
+                viewHTN(); // Refresh the HTN view
+                alert("Selected methods deleted successfully.");
+            } else {
+                const error = await res.text();
+                alert(`Error deleting methods: ${error}`);
+            }
+        }
 
         
 

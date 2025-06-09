@@ -7,6 +7,7 @@ import tools_hddl
 from generate_htn_image import parse_plan, parse_plan_render
 import networkx as nx
 import LLM
+import copy
 
 app = Flask(__name__, static_folder='static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -206,8 +207,18 @@ def view_htn():
 # Delete methods:
 @app.route('/delete_methods', methods=['POST'])
 def delete_methods():
-    # global DOMAIN_PATH
-    return jsonify({'status': 'Methods deleted'})
+    global DOMAIN_TEXT, ORIGINAL_DOMAIN_TEXT
+    list_operators_to_delete = request.json.get('methods', [])
+    DOMAIN_TEXT = request.json.get('domainText', '')
+    delete_methods = []
+    updated_domain = copy.copy(DOMAIN_TEXT)
+    for operator in list_operators_to_delete:
+        if ":method "+operator in DOMAIN_TEXT:
+             updated_domain = tools_hddl.removeMethod(updated_domain, delete_method=operator)
+             delete_methods.append(operator)
+    DOMAIN_TEXT = updated_domain
+        
+    return jsonify({'deleted_methods': delete_methods, 'updated_domain': DOMAIN_TEXT})
 
 # Ask LLM:
 @app.route('/ask_llm', methods=['POST'])
