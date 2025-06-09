@@ -6,6 +6,7 @@ import CAI_hddl
 import tools_hddl
 from generate_htn_image import parse_plan, parse_plan_render
 import networkx as nx
+import LLM
 
 app = Flask(__name__, static_folder='static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -14,6 +15,9 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['STATIC'], exist_ok=True)
 # GLOBAL DOMAIN = None
 # GLOBAL PROBLEM = None
+DOMAIN_TEXT = ""
+PROBLEM_TEXT = ""
+ORIGINAL_DOMAIN_TEXT = ""
 def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
     # nodes = [{'data': {'id': str(n), 'label': str(n)}} for n in G.nodes()]
     nodes = []
@@ -97,13 +101,13 @@ def digraph_to_cytoscape_elements(G: nx.DiGraph):
 
 def plan_with_hddl_planner(return_format_version=True):
     """Plan with the HDDL planner"""
-    global DOMAIN_PATH, PROBLEM_PATH
+    global DOMAIN_PATH, PROBLEM_PATH, DOMAIN_TEXT, PROBLEM_TEXT
 
-    with open(DOMAIN_PATH, "r") as f:
-        domain_str = f.read()
-    with open(PROBLEM_PATH, "r") as f_prob:
-        problem_str = f_prob.read()
-    success, info = tools_hddl.verifyMethodEncoding(domain_str, problem_str, new_methods_str="",current_path="./", debug = False, return_format_version=return_format_version)
+    # with open(DOMAIN_PATH, "r") as f:
+    #     DOMAIN_TEXT = f.read()
+    # with open(PROBLEM_PATH, "r") as f_prob:
+    #     PROBLEM_TEXT = f_prob.read()
+    success, info = tools_hddl.verifyMethodEncoding(DOMAIN_TEXT, PROBLEM_TEXT, new_methods_str="",current_path="./", debug = False, return_format_version=return_format_version)
     if success:
         return info
     else:
@@ -133,58 +137,71 @@ def plan_with_hddl_planner(return_format_version=True):
 # Dummy placeholder for domain text display
 @app.route('/load_domain', methods=['POST'])
 def load_domain():
-    global DOMAIN_PATH
+    global DOMAIN_PATH, DOMAIN_TEXT, ORIGINAL_DOMAIN_TEXT
     domain_file = request.files.get('domain')
 
     if domain_file:
         DOMAIN_PATH = os.path.join(app.config['UPLOAD_FOLDER'], domain_file.filename)
         domain_file.save(DOMAIN_PATH)
         with open(DOMAIN_PATH, 'r') as f:
-            domain_text = f.read()
+            DOMAIN_TEXT = f.read()
+        ORIGINAL_DOMAIN_TEXT = DOMAIN_TEXT
+        # reset the LLM message history:
+        LLM.clear_message_history()
+        # #   Use LLM to interpret the problem, then show in the display frame:
+        # prompt_input = [{"role": "user", "content":f"Describe the following domain from the HDDL files in a more human-interpretable language. \Domain: {DOMAIN_TEXT}"}]
+        # print("Use LLM to interpret the domain...")
+        # response = LLM.call_llm('',prompt_input, save_history=True, use_history=True) 
     else:
-        domain_text = "(No domain file provided)"
+        DOMAIN_TEXT = "(No domain file provided)"
+        ORIGINAL_DOMAIN_TEXT = ''
+        # response=''
 
-    return jsonify({'domain': domain_text})
+    return jsonify({'domain': DOMAIN_TEXT})#, 'text_output': response})
 
 @app.route('/load_problem', methods=['POST'])
 def load_problem():
-    global PROBLEM_PATH
+    global PROBLEM_PATH, PROBLEM_TEXT
     problem_file = request.files.get('problem')
 
     if problem_file:
         PROBLEM_PATH = os.path.join(app.config['UPLOAD_FOLDER'], problem_file.filename)
         problem_file.save(PROBLEM_PATH)
         with open(PROBLEM_PATH, 'r') as f:
-            problem_text = f.read()
+            PROBLEM_TEXT = f.read()
+        # # Use LLM to interpret the problem, then show in the display frame:
+        # prompt_input = [{"role": "user", "content":f"Describe the following problem from the HDDL files in a more human-interpretable language. \nProblem: {PROBLEM_TEXT}"}]
+        # print("Use LLM to interpret the problem...")
+        # response = LLM.call_llm('',prompt_input, save_history=True, use_history=True) 
+        # print("LLM response:", response)
     else:
-        problem_text = "(No domain file provided)"
+        PROBLEM_TEXT = "(No domain file provided)"
+        # response = '(No domain file provided)'
 
-    return jsonify({'problem': problem_text})
+    return jsonify({'problem': PROBLEM_TEXT})#, 'text_output': response})
 
 # Simulate HTN viewer response from LLM and graph
 @app.route('/view_htn', methods=['POST'])
 def view_htn():
-    query = request.json.get('query', '')
+    global DOMAIN_TEXT, DOMAIN_PATH
+    DOMAIN_TEXT = request.json.get('domainText', '')
+    print('domain text:',DOMAIN_TEXT)
     
-    # Simulate LLM response
-    text_response = f"LLM explanation based on query: \"{query}\""
-    
-    # Example graph
-    graph_data_old = {
-        'elements': [
-            {'data': {'id': 'MakeDinner', 'label': 'MakeDinner', 'color': 'blue'}},
-            {'data': {'id': 'Cook', 'label': 'Cook', 'color': 'green'}},
-            {'data': {'id': 'Serve', 'label': 'Serve', 'color': 'green'}},
-            {'data': {'source': 'MakeDinner', 'target': 'Cook', 'label': 'part of'}},
-            {'data': {'source': 'MakeDinner', 'target': 'Serve', 'label': 'part of'}},
-        ]
-    }
-    parser = hddl_to_graph.HDDLParser(DOMAIN_PATH)
+    # # Use LLM to interpret the domain and problem, then show in the display frame:
+    # prompt_input = [{"role": "user", "content":f"Describe the following domain and problem from the HDDL files in a more human-interpretable language. \nDomain: {DOMAIN_TEXT}\nProblem: {PROBLEM_TEXT}"}]
+    # print("Interpreting the domain and problem...")
+    # # Simulate LLM response
+    # prompt_input.append({"role": "user", "content":f"Additional request from the user: {query}"})
+    # response = LLM.call_llm('',prompt_input)  
+    temp_domain_path = os.path.join(app.config['UPLOAD_FOLDER'], 'temp_domain.hddl')
+    with open(temp_domain_path, 'w') as f:
+        f.write(DOMAIN_TEXT)
+    parser = hddl_to_graph.HDDLParser(temp_domain_path)
     nxgraph = parser.parse()
     graph_data = nx_to_cytoscape_elements(nxgraph)
     graph_data = {'elements': graph_data}
 
-    return jsonify({'text': text_response, 'graph': graph_data})
+    return jsonify({'graph': graph_data})
 
 # Delete methods:
 @app.route('/delete_methods', methods=['POST'])
@@ -195,8 +212,13 @@ def delete_methods():
 # Ask LLM:
 @app.route('/ask_llm', methods=['POST'])
 def ask_LLM():
-    # global DOMAIN_PATH
-    return jsonify({'status': 'Methods deleted'})
+    response = ''
+    query = request.json.get('query', '')
+    if query:
+        response = LLM.call_llm('',[{"role": "user", "content":query}],save_history=True, use_history=True)
+    else:
+        response = '(No query provided)'
+    return jsonify({'response': response})
 
 @app.route('/run_planner', methods=['POST'])
 def run_planner():
@@ -228,16 +250,17 @@ def add_method():
     '''
     Add a new method to the domain
     '''
-    method_text = request.json.get('method_text', '')
+    global DOMAIN_TEXT
+    method_text = request.json.get('latest_response', '')
+    domain_text = request.json.get('domain_text', '')
     if not method_text:
-        return jsonify({'status': 'No method text provided'})
+        return jsonify({'status': 'No method text provided', 'updated_domain_text': domain_text})
     
     # Here you would typically add the method to the domain file
-    global DOMAIN_PATH
-    with open(DOMAIN_PATH, 'a') as f:
-        f.write("\n" + method_text)
+    updated_domain_text = tools_hddl.updateDomain(domain_text, new_method=method_text)
+    DOMAIN_TEXT = updated_domain_text
     
-    return jsonify({'status': 'Method added successfully', 'method_text': method_text})
+    return jsonify({'status': 'Method added successfully', 'updated_domain_text': updated_domain_text})
 
 
 @app.route('/')

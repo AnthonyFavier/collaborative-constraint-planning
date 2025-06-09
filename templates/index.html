@@ -81,10 +81,13 @@
         <form id="loadDomainForm" enctype="multipart/form-data">
             <label for="domainFile">Domain File:</label>
             <input type="file" id="domainFile" name="domain" required>
-            <button type="submit" onclick="loadDomain(event)">Load Domain</button>
-            <button type="button" onclick="editDomain()">Edit Domain</button>
-            <button onclick="saveToFile()">Save</button>
-            <button onclick="resetDomain()">Reset</button>
+            <button id="loadDomainButton" type="submit" onclick="loadDomain(event)">Load Domain</button>
+            <button id="describeDomainButton" type="button" onclick="describeDomain()">Describe Domain</button>
+            <button id="editDomainButton" type="button" onclick="editDomain()">Edit Domain</button>
+            <button id="resetDomainButton" type="button" onclick="resetDomain()">Reset</button>
+            <button id="downloadDomainButton" type="button" onclick="saveToFile()">Download</button>
+            <button id="saveDomainButton" type="button" onclick="saveDomain()" style="display: none;">Save</button>
+            <button id="cancelEditButton" type="button" onclick="cancelEdit()" style="display: none;">Cancel</button>
           </form>
         <div class="scroll-area">
         <pre id="domainText" contenteditable="false">(domain content appears here...)</pre>
@@ -98,6 +101,7 @@
             <label for="problemFile">Problem File:</label>
             <input type="file" id="problemFile" name="problem" required>
             <button type="submit" onclick="loadProblem(event)">Load Problem</button>
+            <button type="button" onclick="describeProblem()">Describe Problem</button>
           </form>
         <div class="scroll-area">
             <pre id="problemText">(problem content appears here...)</pre>
@@ -119,7 +123,9 @@
 
             <div style="flex: 1;">
                 <label>Operators:</label>
-                <button onclick="deleteMethods()">Delete Selected Methods</button>
+                <button onclick="filterGraph()">View Graph</button>
+                <button onclick="askLLMOperators()">View Text</button>
+                <button onclick="deleteMethods()">Delete</button>
                 <div class="checkbox-list" id="optionsList">
                 </div>
             </div>
@@ -130,13 +136,19 @@
     <div class="section">
       <div style="flex: 1;">
         <h3>LLM Interactive Area:</h3>
-        <label>LLM Output:</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        <label>Text Output:</label>
+            <button id='feedDomainButton' onclick="describeDomain()" style="display: none;">Feed Domain</button>
+            <button id="feedProblemButton" onclick="describeProblem()" style="display: none;">Feed Problem</button>
+        </div>
         <textarea id="llmOutput" rows="10" readonly></textarea>
 
         <label>LLM Query:</label>
         <textarea id="llmInput" rows="3" placeholder="Describe what you want to ask..."></textarea>
         <button onclick="askLLM()">Ask LLM</button>
-        <button onclick="addMethod()" >Add Method</button>
+        <button id="addMethodButton" onclick="addMethod()" >Start Adding Method</button>
+        <button id="confirmButton" onclick="confirmAddMethod()" style="display: none;">Confirm</button>
+        <button id="cancelButton" onclick="cancelAction()" style="display: none;">Cancel</button>
       </div>
     </div>
     
@@ -170,31 +182,69 @@
     <script>
         let graphData = null; // Store the graph data globally
         let originalDomain = null; // Store the original domain file content
+        let previousDomain = null; // Store the previous domain content for Set to Previous
         /* var dot, graphviz = d3.select("#cy_plan").graphviz({ // Updated selector
             width: window.innerWidth * 0.66, // Adjust width to match frame-box
             height: window.innerHeight * 0.66, // Adjust height to match frame-box
             fit: true
         }); */
         let previous_plan = null; // Store the plan data globally
+        let adding_method = false; // Flag to indicate if we are in the process of adding a method
+        let latest_response = ""; // Store the latest response from the LLM
+        let feedback_adding_method = false; // Flag to indicate if we are still in the process of adding a method
+        
 
         async function loadDomain(e) {
-        e.preventDefault(); // Prevent default form submission
-        const formData = new FormData(document.getElementById('loadDomainForm'));
-        const res = await fetch('/load_domain', { method: 'POST', body: formData });
+            e.preventDefault(); // Prevent default form submission
+            const formData = new FormData(document.getElementById('loadDomainForm'));
+            const res = await fetch('/load_domain', { method: 'POST', body: formData });
 
-        if (!res.ok) {
-            const error = await res.text();
-            alert(`Error loading domain: ${error}`);
-            return;
+            if (!res.ok) {
+                const error = await res.text();
+                alert(`Error loading domain: ${error}`);
+                return;
+            }
+            
+
+            const data = await res.json();
+            document.getElementById('domainText').textContent = data.domain || '(no content)';
+            // save to originalDomain:
+            originalDomain = document.getElementById('domainText').textContent;
+            console.log("Original Domain:", originalDomain);
+            previousDomain = originalDomain;
+            viewHTN(); // Automatically view HTN after loading domain
+            // reset llmOutput everytime a new domain is loaded:
+            document.getElementById('llmOutput').value = '';
+            // document.getElementById('llmOutput').value = data.text_output ||'';
+            // Show Feed Domain button
+            document.getElementById('feedDomainButton').style.display = 'inline-block';
+        }
+
+        async function describeDomain() {
+            const domain_text = document.getElementById('domainText').textContent;
+            let query = "Provide a concise description of the following domain:\n" + domain_text;
+            askLLM(optionalInput=query);
+            // Hide Feed Domain button
+            document.getElementById('feedDomainButton').style.display = 'none';
         }
         
 
-        const data = await res.json();
-        document.getElementById('domainText').textContent = data.domain || '(no content)';
-        viewHTN(); // Automatically view HTN after loading domain
-        }
-
         function editDomain() {
+            // Save content before editing
+            previousDomain = document.getElementById('domainText').textContent;
+            // Hide Load Domain, Edit Domain, Download, and Reset buttons
+            document.getElementById('editDomainButton').style.display = 'none';
+            document.getElementById('loadDomainButton').style.display = 'none';
+            document.getElementById('describeDomainButton').style.display = 'none';
+            document.getElementById('resetDomainButton').style.display = 'none';
+            document.getElementById('downloadDomainButton').style.display = 'none';
+
+
+            // Show Save and Cancel button
+            document.getElementById('saveDomainButton').style.display = 'inline-block';
+            document.getElementById('cancelEditButton').style.display = 'inline-block';
+            
+
             const domainText = document.getElementById('domainText');
             const isEditable = domainText.getAttribute('contenteditable') === 'true';
 
@@ -203,77 +253,136 @@
                 domainText.style.border = '1px solid #ccc'; // Optional: Add a visual cue
                 domainText.style.backgroundColor = '#f9f9f9'; // Optional: Change background color
             } 
-            // else {
-            //     domainText.setAttribute('contenteditable', 'false'); // Make readonly again
-            //     domainText.style.border = 'none'; // Reset styles
-            //     domainText.style.backgroundColor = 'transparent'; // Reset background color
-            // }
+            else {
+                domainText.setAttribute('contenteditable', 'false'); // Make readonly again
+                domainText.style.border = 'none'; // Reset styles
+                domainText.style.backgroundColor = 'transparent'; // Reset background color
+            }
+
         }
+        
+        function saveDomain() {
+            // Hide Save and Cancel button
+            document.getElementById('saveDomainButton').style.display = 'none';
+            document.getElementById('cancelEditButton').style.display = 'none';
+            // Show Load Domain, Edit Domain, and Reset buttons
+            document.getElementById('editDomainButton').style.display = 'inline-block';
+            document.getElementById('loadDomainButton').style.display = 'inline-block';
+            document.getElementById('describeDomainButton').style.display = 'inline-block';
+            document.getElementById('resetDomainButton').style.display = 'inline-block';
+            document.getElementById('downloadDomainButton').style.display = 'inline-block';
+            // Show Feed Domain button because new domain might need to be described
+            document.getElementById('feedDomainButton').style.display = 'inline-block';
+
+            const domainText = document.getElementById('domainText');
+            domainText.setAttribute('contenteditable', 'false'); // Make readonly again
+            domainText.style.border = 'none'; // Reset styles
+            domainText.style.backgroundColor = 'transparent'; // Reset background color
+        }
+
+        function cancelEdit() {
+            // Hide Save and Cancel button
+            document.getElementById('saveDomainButton').style.display = 'none';
+            document.getElementById('cancelEditButton').style.display = 'none';
+            // Show Load Domain, Edit Domain, and Reset buttons
+            document.getElementById('editDomainButton').style.display = 'inline-block';
+            document.getElementById('loadDomainButton').style.display = 'inline-block';
+            document.getElementById('describeDomainButton').style.display = 'inline-block';
+            document.getElementById('resetDomainButton').style.display = 'inline-block';
+            document.getElementById('downloadDomainButton').style.display = 'inline-block';
+
+            let domainText = document.getElementById('domainText');
+            domainText.setAttribute('contenteditable', 'false'); // Make readonly again
+            domainText.style.border = 'none'; // Reset styles
+            domainText.style.backgroundColor = 'transparent'; // Reset background color
+
+            // Revert to previous content
+            domainText.textContent = previousDomain;
+        }
+
+        function resetDomain() {
+            if (!originalDomain) {
+                alert("Original domain file not loaded.");
+                return;
+            }
+            // Save current domain before resetting
+            previousDomain = document.getElementById('domainText').textContent;
+            document.getElementById('domainText').textContent = originalDomain; 
+        }   
 
         async function loadProblem(e) {
-        e.preventDefault(); // Prevent default form submission
-        const formData = new FormData(document.getElementById('loadProblemForm'));
-        const res = await fetch('/load_problem', { method: 'POST', body: formData });
+            e.preventDefault(); // Prevent default form submission
+            const formData = new FormData(document.getElementById('loadProblemForm'));
+            const res = await fetch('/load_problem', { method: 'POST', body: formData });
 
-        if (!res.ok) {
-            const error = await res.text();
-            alert(`Error loading problem: ${error}`);
-            return;
+            if (!res.ok) {
+                const error = await res.text();
+                alert(`Error loading problem: ${error}`);
+                return;
+            }
+
+            const data = await res.json();
+            document.getElementById('problemText').textContent = data.problem || '(no content)';
+            // print description of the problem on the llmOutput text area
+            // document.getElementById('llmOutput').value += '\n***\n' + data.text_output || '';
+            // Show Feed Problem button
+            document.getElementById('feedProblemButton').style.display = 'inline-block';
         }
-
-        const data = await res.json();
-        document.getElementById('problemText').textContent = data.problem || '(no content)';
+        async function describeProblem() {
+            const problem_text = document.getElementById('problemText').textContent;
+            let query = "Provide a concise description of the following problem:\n" + problem_text;
+            askLLM(optionalInput=query);
+            // Hide Feed Problem button
+            document.getElementById('feedProblemButton').style.display = 'none';
         }
         // View HTN and render graph:
         function viewHTN() {
-        const query = document.getElementById('llmInput').value;
-        fetch('/view_htn', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query })
-        })
-            .then(res => res.json())
-            .then(data => {
-            document.getElementById('llmOutput').value = data.text;
-            renderGraph(data.graph.elements);
-            graphData = data.graph; // Store the graph data for filtering
-            
-            // Generate checkboxes based on graph nodes
-            const optionsList = document.getElementById('optionsList');
-            /* const methodsList = document.getElementById('methodsList'); */
-            optionsList.innerHTML = ''; // Clear existing checkboxes
-            data.graph.elements.forEach(element => {
-            if (element.data &&  !element.data.source) { // Check if it's a node
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = element.data.id;
-                const label = document.createElement('label');
-                label.style.color = element.data.color || '#000000';
-                label.textContent = element.data.label || element.data.id;
-                label.prepend(checkbox);
+            const domain_text = document.getElementById('domainText').textContent;
+            fetch('/view_htn', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domainText: domain_text })
+            })
+                .then(res => res.json())
+                .then(data => {
+                // document.getElementById('llmOutput').value = data.text_output;
+                renderGraph(data.graph.elements);
+                graphData = data.graph; // Store the graph data for filtering
+                
+                // Generate checkboxes based on graph nodes
+                const optionsList = document.getElementById('optionsList');
+                /* const methodsList = document.getElementById('methodsList'); */
+                optionsList.innerHTML = ''; // Clear existing checkboxes
+                data.graph.elements.forEach(element => {
+                if (element.data &&  !element.data.source) { // Check if it's a node
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = element.data.id;
+                    const label = document.createElement('label');
+                    label.style.color = element.data.color || '#000000';
+                    label.textContent = element.data.label || element.data.id;
+                    label.prepend(checkbox);
 
-                optionsList.appendChild(label);
-                optionsList.appendChild(document.createElement('br'));
-                /* if (element.data.type === 'method') {
-                    const methodCheckbox = document.createElement('input');
-                    methodCheckbox.type = 'checkbox';
-                    methodCheckbox.value = element.data.id;
-                    const methodLabel = document.createElement('label');
-                    methodLabel.textContent = element.data.label || element.data.id;
-                    methodLabel.style.color = element.data.color || '#000000';
-                    methodLabel.prepend(methodCheckbox);
+                    optionsList.appendChild(label);
+                    optionsList.appendChild(document.createElement('br'));
+                    /* if (element.data.type === 'method') {
+                        const methodCheckbox = document.createElement('input');
+                        methodCheckbox.type = 'checkbox';
+                        methodCheckbox.value = element.data.id;
+                        const methodLabel = document.createElement('label');
+                        methodLabel.textContent = element.data.label || element.data.id;
+                        methodLabel.style.color = element.data.color || '#000000';
+                        methodLabel.prepend(methodCheckbox);
 
-                    methodsList.appendChild(methodLabel);
-                    methodsList.appendChild(document.createElement('br')); */
-                /* } */
-            }
+                        methodsList.appendChild(methodLabel);
+                        methodsList.appendChild(document.createElement('br')); */
+                    /* } */
+                }
+                });
             });
-        });
         }
 
-        function confirmHTN() {
-            alert("HTN confirmed. Implement server logic here.");
-            }
+
 
         function renderGraph(elements) {
         const cy = cytoscape({
@@ -343,9 +452,9 @@
             }
 
             // Collect checked checkboxes
-            const checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
+            let checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
             .map(checkbox => checkbox.value);
-
+            checked_operators_text = "Selected Operators: " + checkedValues.join(", ") + "\n";
             console.log("Checked Operators:", checkedValues);
 
             // Find all nodes connected to the checked operators
@@ -360,7 +469,6 @@
                     }
                 }
             });
-
             console.log("Connected Nodes:", Array.from(connectedNodes));
 
             // Filter graph elements based on connected nodes
@@ -377,6 +485,18 @@
 
             // Render the filtered graph
             renderGraph(filteredElements);
+            // askLLM("Provide descriptions for the selected operators. " + checked_operators_text);
+        }
+        async function askLLMOperators() {
+            // Collect checked checkboxes
+            let checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+            if (checkedValues.length === 0) {
+                alert("No operators selected.");
+                return;
+            }
+            let query = "Provide detailed descriptions for the following operators: " + checkedValues.join(", ");
+            askLLM(optionalInput=query);
         }
         
         async function runPlanner() {
@@ -440,29 +560,96 @@
 
 
         async function addMethod(){
-            // Get the method from the LLM output
-            const llmOutput = document.getElementById('llmOutput').value;
-            if (!llmOutput) {
-                alert("LLM output is empty. Please ask the LLM first.");
-                return;
+            // Hide Ask LLM and Add Method buttons, show Confirm and Cancel buttons
+            document.getElementById('addMethodButton').style.display = 'none';
+            document.getElementById('confirmButton').style.display = 'inline-block';
+            document.getElementById('cancelButton').style.display = 'inline-block';
+            // // Get the method from the LLM output
+            // let llmOutput = document.getElementById('llmOutput').value;
+            // if (!llmOutput) {
+            //     alert("LLM output is empty. Please ask the LLM first.");
+            //     return;
+            // }
+            // const res = await fetch('/add_method', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ method: llmOutput })
+            // });
+            // if (!res.ok) {
+            //     const error = await res.text();
+            //     alert(`Error adding method: ${error}`);
+            //     return;
+            // }
+            // const data = await res.json();
+            // // Update the domain text area with the new domain content
+            // document.getElementById('domainText').textContent = data.domain || '(no content)';
+            // viewHTN(); // Automatically view HTN after adding method
+            // alert("Method added successfully.");
+            // // Update on the LLM output text area saying method added successfully
+            // document.getElementById('llmOutput').value += "\nMethod added successfully.";
+
+            adding_method = true;
+            //Prompt to textarea output            
+            document.getElementById('llmOutput').value += "\n*** Please provide the high-level strategy (method) details so that LLM can translate into the following format:\nMethod Name: <name>\nParameters: <parameters>\nPreconditions: <preconditions>\nSubtasks: <subtasks>\nEffects: <effects>\n";
+        }
+
+        async function confirmAddMethod() {
+            try {
+                // Get the latest response and current domainText
+                const latestResponse = latest_response;
+                const currentDomainText = document.getElementById('domainText').textContent.trim();
+
+                // Validate inputs
+                if (!latestResponse) {
+                    alert('No latest response found. Please ensure there is a response in the LLM Output.');
+                    return;
+                }
+                if (!currentDomainText) {
+                    alert('No domain text found. Please ensure the domain text is loaded.');
+                    return;
+                }
+
+                // Send the data to the back-end
+                const response = await fetch('/add_method', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        latest_response: latestResponse,
+                        domain_text: currentDomainText
+                    })
+                });
+
+                // Check if the response is OK
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(`Failed to add method: ${error}`);
+                }
+
+                // Parse the returned data
+                const data = await response.json();
+
+                // Update the domainText with the updated domainText from the back-end
+                document.getElementById('domainText').textContent = data.updated_domain_text || '(no content)';
+
+                // Notify the user of success
+                alert('Method added successfully!');
+                // Reset the adding_method flag
+                adding_method = false;
+                feedback_adding_method = false;
+                // Hide Confirm and Cancel buttons and Add Method buttons
+                document.getElementById('confirmButton').style.display = 'none';
+                document.getElementById('cancelButton').style.display = 'none';
+                // Show Ask LLM and Add Method buttons
+                document.getElementById('addMethodButton').style.display = 'inline-block';
+
+                // Alert the user in the llmOutput text area
+                document.getElementById('llmOutput').value += "\n***\nMethod added successfully. You can check the domain text area for the updated domain.";
+            } catch (error) {
+                console.error('Error in confirmAddMethod:', error);
+                alert(`An error occurred: ${error.message}`);
             }
-            const res = await fetch('/add_method', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ method: llmOutput })
-            });
-            if (!res.ok) {
-                const error = await res.text();
-                alert(`Error adding method: ${error}`);
-                return;
-            }
-            const data = await res.json();
-            // Update the domain text area with the new domain content
-            document.getElementById('domainText').textContent = data.domain || '(no content)';
-            viewHTN(); // Automatically view HTN after adding method
-            alert("Method added successfully.");
-            // Update on the LLM output text area saying method added successfully
-            document.getElementById('llmOutput').value = "Method added successfully.";
         }
 
         async function deleteMethods() {
@@ -490,27 +677,81 @@
             // }
         }}
 
-        function resetDomain() {
-            if (!originalDomain) {
-            alert("Original domain file not loaded.");
-            return;
+        
+
+        async function askLLM(optionalInput = null) {
+            // Get the query from the llmInput textarea
+            let query = document.getElementById('llmInput').value;
+
+            // Check if the input is empty
+            if (!query.trim()) {
+                if (optionalInput) {
+                    query = optionalInput; // Use the optional input if provided
+                } else {
+                    alert('Please enter a query.');
+                    return;
+                }
+            }
+            if (adding_method && !feedback_adding_method) {
+                query = "Generate a method in HDDL format based on the following description:\n" + query;
+                feedback_adding_method = true;
+            }
+            else if (adding_method && feedback_adding_method) {
+                query = "The previous method did not meet the expectations. Please regenerate the method based on the following feedback:\n" + query;
             }
 
-            const methodsList = document.getElementById('methodsList');
-            methodsList.innerHTML = ''; // Clear methods list
-            // populateMethodsList(originalDomain.methods); // Reset methods list
-            alert("Domain reset to original file.");
+
+            // Send the query to the /ask_llm endpoint
+            fetch('/ask_llm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query }) // Send the query as JSON
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(data => {
+                // Append the response to the llmOutput textarea
+                document.getElementById('llmOutput').value += '\n***\nQUERY:\n  ' + query + '\n\nANSWER:\n' + data.response + '\n';
+                // Print the response to the console
+                console.log(data.response);
+                latest_response = data.response;
+    
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while communicating with the server.');
+            });
+            // Clear the llmInput textarea
+            document.getElementById('llmInput').value = '';
+            // if still adding_method, instruct user to click Confirm button or Cancel button
+            if (adding_method) {
+                document.getElementById('llmOutput').value += "\n***\nIf the generated method match your expectation, click 'Confirm' to add the method. \nIf not, type your feedback and click 'Ask LLM' to ask LLM to re-generate', or 'Cancel' to discard.";
+            }
         }
 
-        async function askLLM() {
-            const res = await fetch('/ask_llm');
-            const data = await res.json();
+        function cancelAction() {
+            // Perform cancel action logic here (if needed)
+            alert("Action Adding Method canceled!");
+
+            // Hide Cancel and Confirm button, show Ask LLM and Add Method buttons
+            document.getElementById('cancelButton').style.display = 'none';
+            document.getElementById('confirmButton').style.display = 'none';
+            document.getElementById('addMethodButton').style.display = 'inline-block';
+            // Reset flags
+            adding_method = false;
+            feedback_adding_method = false;
         }
 
         async function saveToFile() {
             try {
                 // Get the content from the textarea
-                const content = document.getElementById('domainText').value;
+                const content = document.getElementById('domainText').textContent;
 
                 // Show a file save dialog
                 const fileHandle = await window.showSaveFilePicker({

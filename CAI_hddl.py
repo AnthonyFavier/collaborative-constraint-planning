@@ -405,7 +405,7 @@ def init(problem_name, planning_mode, timeout, print_description=False):
 
     if print_description:
         # Use LLM to interpret the domain and problem, then show in the display frame:
-        prompt_input = [{"role": "user", "content":f"Describe the following domain and problem from the HDDL files in a more human-interpretable language. \nDomain: {DOMAIN_PATH}\nProblem: {PROBLEM_PATH}"}]
+        prompt_input = [{"role": "user", "content":f"Describe the following domain and problem from the HDDL files in a more human-interpretable language. \nDomain: {g_domain}\nProblem: {g_problem}"}]
         print("Interpreting the domain and problem...")
         response = LLM.call_llm('',prompt_input)
         mprint(f"Description of domain and problem:\n{response.content[0].text}")
