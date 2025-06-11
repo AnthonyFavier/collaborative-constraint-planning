@@ -77,11 +77,5 @@
 	)
 )
 
-
-(:constraints (and (sometime (>= (energy rover0) 60))
-(at-most-once (>= (energy rover0) 70))
-(sometime (>= (energy rover1) 60))
-(at-most-once (>= (energy rover1) 70))))
-
  
 )

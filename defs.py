@@ -28,18 +28,9 @@ PROBLEMS = {
     "zeno22":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile22.pddl"),
     "zeno23":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile23.pddl"),
     
-    "sailing1":     ("ENHSP-Public/ijcai18_benchmarks/sailing_ln/domain.pddl",              "ENHSP-Public/ijcai18_benchmarks/sailing_ln/instance_1_1_1229.pddl"),
-    "satellite1":   ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile1"),
-    "satellite3":   ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile3"),
-    "satellite4":   ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile4"),
-    "satellite5":   ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile5"),
-    "satellite15":  ("ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/metricSat.pddl",    "ENHSP-Public/ijcai16_benchmarks/Satellite/Numeric/pfile15"),
-    "rover1":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile1"),
-    "rover3":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile3"),
-    "rover3_bis":   ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile3_bis"),
-    "rover4":       ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile4"),
-    "rover10":      ("ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/NumRover.pddl",         "ENHSP-Public/ijcai16_benchmarks/Rover-Numeric/pfile10"),
-    "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                              "ENHSP-Public/handcraft/pfile1.pddl"),
+    # "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                              "ENHSP-Public/handcraft/pfile1.pddl"),
+    
+    "rover3":       ("NumericTCORE/benchmark/Rover-Numeric/domain.pddl",         "NumericTCORE/benchmark/Rover-Numeric/pfile3.pddl"),
 }
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
 
