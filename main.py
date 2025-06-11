@@ -106,30 +106,193 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
 
 def initdemo():
     # ZENO 13 #
-    r = CAI.CM.createRaw("Plane2 and plane3 should never be used")
-    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane2")
-    d.encoding = "(always (forall (?p - person) (not (in ?p plane2))))"
-    d = CAI.CM.createDecomposed(r, "Person1 through person10 should never be in plane3")
-    d.encoding = "(always (forall (?p - person) (not (in ?p plane3))))"
-    d = CAI.CM.createDecomposed(r, "Plane2 should remain located in city2 throughout the entire plan")
-    d.encoding = "(always (located plane2 city2))"
-    d = CAI.CM.createDecomposed(r, "Plane3 should remain located in city3 throughout the entire plan")
-    d.encoding = "(always (located plane3 city3))"
-    d = CAI.CM.createDecomposed(r, "The fuel level of plane2 should never exceed its initial value of 1469")
-    d.encoding = "(always (= (fuel plane2) 1469))"
-    d = CAI.CM.createDecomposed(r, "The fuel level of plane3 should never exceed its initial value of 1532")
-    d.encoding = "(always (= (fuel plane3) 1532))"
-    
-    r = CAI.CM.createRaw("Person7 should never move and planes should never fly fast")
-    d = CAI.CM.createDecomposed(r, "Person7 should always remain located in city0.")
-    d.encoding = "(always (located person7 city0))"
-    d = CAI.CM.createDecomposed(r, "No aircraft should ever use the flyfast mode of transportation.")
-    d.encoding = "(always (forall (?p - aircraft ?c1 ?c2 - city) (= (n_flyfast ?p ?c1 ?c2) 0)))"
-    
+    r = CAI.CM.createRaw("Only use plane1.")
+    d = CAI.CM.createDecomposed(r, "No person is ever inside plane2 throughout the entire plan execution")
+    d.encoding = '''(always (forall (?p - person) (not (in ?p plane2))))'''
+    d = CAI.CM.createDecomposed(r, "No person is ever inside plane3 throughout the entire plan execution")
+    d.encoding = '''(always (forall (?p - person) (not (in ?p plane3))))'''
+    d = CAI.CM.createDecomposed(r, "Plane2 always remains at city2 throughout the entire plan execution")
+    d.encoding = '''(always (located plane2 city2))'''
+    d = CAI.CM.createDecomposed(r, "Plane3 always remains at city3 throughout the entire plan execution")
+    d.encoding = '''(always (located plane3 city3))'''
+
+    r = CAI.CM.createRaw("Person7 should not move")
+    d = CAI.CM.createDecomposed(r, "Person7 must remain at city0 throughout the entire plan execution")
+    d.encoding = '''(always (located person7 city0))'''
+
+    r = CAI.CM.createRaw("Planes should only fly slowly")
+    d = CAI.CM.createDecomposed(r, "Throughout the entire plan execution, for every aircraft and every pair of cities, the number of fast flights performed by that aircraft between those cities must always remain zero.")
+    d.encoding = '''(always (forall (?a - aircraft ?c1 - city ?c2 - city) 
+        (= (n_flyfast ?a ?c1 ?c2) 0)))'''
+
     r = CAI.CM.createRaw("Plane1 should never fly to a same city more than 3 times")
-    d = CAI.CM.createDecomposed(r, "ss")
-    d.encoding = "(always (forall (?d - city) (<= (+  (n_flyslow plane1 city0 ?d) (n_flyfast plane1 city0 ?d) (n_flyslow plane1 city1 ?d) (n_flyfast plane1 city1 ?d) (n_flyslow plane1 city2 ?d) (n_flyfast plane1 city2 ?d) (n_flyslow plane1 city3 ?d) (n_flyfast plane1 city3 ?d) (n_flyslow plane1 city4 ?d) (n_flyfast plane1 city4 ?d) (n_flyslow plane1 city5 ?d) (n_flyfast plane1 city5 ?d) ) 2)))"
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city0 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always (<= 
+        (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0)
+          (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0))
+        3))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city1 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 3))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city2 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city2) 
+          (n_flyslow plane1 city1 city2) 
+          (n_flyslow plane1 city2 city2) 
+          (n_flyslow plane1 city3 city2) 
+          (n_flyslow plane1 city4 city2) 
+          (n_flyslow plane1 city5 city2)
+          (n_flyfast plane1 city0 city2) 
+          (n_flyfast plane1 city1 city2) 
+          (n_flyfast plane1 city2 city2) 
+          (n_flyfast plane1 city3 city2) 
+          (n_flyfast plane1 city4 city2) 
+          (n_flyfast plane1 city5 city2)
+        ) 
+        3
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city3 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city3)
+          (n_flyslow plane1 city1 city3) 
+          (n_flyslow plane1 city2 city3)
+          (n_flyslow plane1 city3 city3)
+          (n_flyslow plane1 city4 city3)
+          (n_flyslow plane1 city5 city3)
+          (n_flyfast plane1 city0 city3)
+          (n_flyfast plane1 city1 city3)
+          (n_flyfast plane1 city2 city3)
+          (n_flyfast plane1 city3 city3)
+          (n_flyfast plane1 city4 city3)
+          (n_flyfast plane1 city5 city3)
+        )
+        3
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city4 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 3))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city5 (from any origin city, using either slow or fast flight) must never exceed 3")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5)) 3))'''
+
+    r = CAI.CM.createRaw("Plane1 should never fly to a same city more than twice")
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city0 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always (<= 
+        (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0)
+          (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0))
+        2))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city1 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 2))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city2 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city2) 
+          (n_flyslow plane1 city1 city2) 
+          (n_flyslow plane1 city2 city2) 
+          (n_flyslow plane1 city3 city2) 
+          (n_flyslow plane1 city4 city2) 
+          (n_flyslow plane1 city5 city2)
+          (n_flyfast plane1 city0 city2) 
+          (n_flyfast plane1 city1 city2) 
+          (n_flyfast plane1 city2 city2) 
+          (n_flyfast plane1 city3 city2) 
+          (n_flyfast plane1 city4 city2) 
+          (n_flyfast plane1 city5 city2)
+        ) 
+        2
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city3 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city3)
+          (n_flyslow plane1 city1 city3) 
+          (n_flyslow plane1 city2 city3)
+          (n_flyslow plane1 city3 city3)
+          (n_flyslow plane1 city4 city3)
+          (n_flyslow plane1 city5 city3)
+          (n_flyfast plane1 city0 city3)
+          (n_flyfast plane1 city1 city3)
+          (n_flyfast plane1 city2 city3)
+          (n_flyfast plane1 city3 city3)
+          (n_flyfast plane1 city4 city3)
+          (n_flyfast plane1 city5 city3)
+        )
+        2
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city4 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 2))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city5 (from any origin city, using either slow or fast flight) must never exceed 2")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5)) 2))'''
+
+    r = CAI.CM.createRaw("Plane1 should never fly to a same city more than once")
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city0 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always (<= 
+        (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0)
+          (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0))
+        1))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city1 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 1))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city2 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city2) 
+          (n_flyslow plane1 city1 city2) 
+          (n_flyslow plane1 city2 city2) 
+          (n_flyslow plane1 city3 city2) 
+          (n_flyslow plane1 city4 city2) 
+          (n_flyslow plane1 city5 city2)
+          (n_flyfast plane1 city0 city2) 
+          (n_flyfast plane1 city1 city2) 
+          (n_flyfast plane1 city2 city2) 
+          (n_flyfast plane1 city3 city2) 
+          (n_flyfast plane1 city4 city2) 
+          (n_flyfast plane1 city5 city2)
+        ) 
+        1
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city3 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always 
+      (<= 
+        (+ 
+          (n_flyslow plane1 city0 city3)
+          (n_flyslow plane1 city1 city3) 
+          (n_flyslow plane1 city2 city3)
+          (n_flyslow plane1 city3 city3)
+          (n_flyslow plane1 city4 city3)
+          (n_flyslow plane1 city5 city3)
+          (n_flyfast plane1 city0 city3)
+          (n_flyfast plane1 city1 city3)
+          (n_flyfast plane1 city2 city3)
+          (n_flyfast plane1 city3 city3)
+          (n_flyfast plane1 city4 city3)
+          (n_flyfast plane1 city5 city3)
+        )
+        1
+      )
+    )'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city4 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 1))'''
+    d = CAI.CM.createDecomposed(r, "The total number of times plane1 flies to city5 (from any origin city, using either slow or fast flight) must never exceed 1")
+    d.encoding = '''(always (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5)) 1))'''
     
+    r = CAI.CM.createRaw("Person1 and person3 should travel together. By this I mean that person1 and 3 should either be in the same plane, either be in the same city, either if one is in a plane then the other should be in the city where the plane is.")
+    d = CAI.CM.createDecomposed(r, "Person1 and person3 should either be in the same plane, in the same city, or when if one is in a plane then other should be in the city where the place is located.")
+    d.encoding = '''(always (or
+      (exists (?a - aircraft) (and (in person1 ?a) (in person3 ?a)))
+      (exists (?c - city) (and (located person1 ?c) (located person3 ?c)))
+      (exists (?a - aircraft ?c - city) (and (in person1 ?a) (located person3 ?c) (located ?a ?c)))
+      (exists (?a - aircraft ?c - city) (and (in person3 ?a) (located person1 ?c) (located ?a ?c)))
+    )))'''
+
 def loadDump():
     # put dump code
     pass
