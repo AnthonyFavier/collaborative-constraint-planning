@@ -333,3 +333,26 @@ if __name__ == '__main__':
     
     # loadDump()
     main()
+  
+#### Notes ####
+#   '''(always (forall (?a - aircraft)
+#   (or (not (in person1 ?a))
+#       (or (in person3 ?a)
+#           (exists (?c - city)
+#             (and (located ?a ?c)
+#                  (located person3 ?c)))))))'''
+# '''(always (forall (?a - aircraft)
+#     (or (not (in person3 ?a))
+#         (in person1 ?a)
+#         (exists (?c - city)
+#           (and (located ?a ?c) (located person1 ?c))))))'''
+#  
+#  Seems to be equivalent to 
+#  (OR
+#    Person1 not in aircraft and Person3 not in aircraft
+#    Person1 and Person3 in aircraft
+#    Person1 in city of aircraft
+#    Person3 in city of aircraft
+#  )
+# 
+# => Unsolvable problem....
