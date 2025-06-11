@@ -173,6 +173,19 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     # encodingOk, error_description
     return True, ""
 
+def checkTag(tag, txt):
+    opening_tag = txt.find(f'<{tag}>')!=-1
+    closing_tag = txt.find(f'</{tag}>')!=-1
+    
+    if not opening_tag and not closing_tag:
+        return 'missing_both'
+    elif not opening_tag:
+        return 'missing_opening'
+    elif not closing_tag:
+        return 'missing_closing'
+    else:
+        return 'ok'
+
 def extractTag(tag, txt):
     i_1 = txt.find(f"<{tag}>")
     if i_1==-1:

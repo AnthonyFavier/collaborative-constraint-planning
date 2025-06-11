@@ -88,7 +88,7 @@ class OPENAIClient:
         if not isinstance(systemMsg, str):
             systemMsg = systemMsg[0]['text']
         
-        result = self.client.responses.create(input=messages, model=self.model, instructions=systemMsg, max_output_tokens=self.max_token, reasoning=reasoning)
+        result = self.client.responses.create(input=messages, model=self.model, instructions=systemMsg, max_output_tokens=self.max_token, reasoning=reasoning) # stop sequence not supported by o4-mini
         answer = result.output_text
         
         print("\n[GPT]\n" + answer)
@@ -220,6 +220,7 @@ def setSystemMessage(domain, problem):
 # INITIAL SUGGESTIONS
 def suggestions():
     
+    tag = 'suggestions'
     conversation_history.add_turn_user(f"""
 <documents>
 <pddl_domain>
@@ -234,20 +235,39 @@ def suggestions():
 - Analyze the key elements of the given problem.
 - Identify trajectory constraints as promising strategies to solve the problem.
 - The constraints should help and guide toward efficient solutions or alternatives. They can also prevent from searching toward inefficient solutions. For example, 'A costly ressource should never be used'.
-- Format your answer such as a concise numbered list with no subitems. The list must be between the tags <suggestions> and </suggestions>.
+- Format your answer such as a concise numbered list with no subitems. The list must be between the tags <{tag}> and </{tag}>.
 </instructions>
 """[1:-1])
     
-    # Call 
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</suggestions>"])
-    for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
+    tagsOK = False
+    while not tagsOK:
+        # Call 
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=[f"</{tag}>"])
+        for r in assistant_replies:
+            conversation_history.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag, assistant_replies[-1])
+        if 'ok'==check:
+            tagsOK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag}> and </{tag}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag}> is missing.")
+                
 
-    suggestions = tools.extractTag("suggestions", assistant_replies[-1])
+    suggestions = tools.extractTag(tag, assistant_replies[-1])
     return suggestions
 
 # DECOMPOSE
 def decompose(constraint):
+    
+    tag1 = 'constraints'
+    tag2 = 'explanation'
+    
     conversation_history.add_turn_user(f"""
 <documents>
 <pddl_domain>
@@ -269,13 +289,17 @@ The user will give as input a constraint in natural language. This constraint mu
 - Constraints must be state-based and follow a Linear Temporal Logic. So constraints can't directly refer to actions.
 - Avoid explicit PDDL language in your answer, the user can't understand PDDL.
 - The set of all refined constraints must capture the meaning of the initial user constraint. 
-- Format your answer as a clear and concise numbered list between the tags <constraints> and </constraints>. There should be no subitems, only a list of the refined constraints. Here is an example:
-    <constraints>
-    1. [natural_language_constraint_1]
-    2. [natural_language_constraint_2]
-    ...
-    </constraints>
-- After, add a 1 or 2 sentences explanation of your choice of decomposition between the tags <explanation> and </explanation>.
+- Format your answer as a clear and concise numbered list between the tags <{tag1}> and </{tag1}>. There should be no subitems, only the list of refined constraints.
+- After, add 1 or 2 sentences to explain your choice of decomposition between the tags <{tag2}> and </{tag2}>.
+- Here is an example of how to format your answer:
+    <{tag1}>
+        1. [natural_language_constraint_1]
+        2. [natural_language_constraint_2]
+        ...
+    </{tag1}>
+    <{tag2}>
+        [consice_explanation]
+    </{tag2}>
 </instructions>
 
 <user_input>
@@ -283,32 +307,82 @@ The user will give as input a constraint in natural language. This constraint mu
 </user_input>
 """[1:-1])
     
-    # conversation_history.add_turn_assistant("Here is the list of refined constraints:")
-    
-    # Call 
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</explanation>"])
-    for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
+    tags1OK = False
+    tags2OK = False
+    while not tags1OK or not tags2OK:
+        # Call 
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</{tag2}>"])
+        for r in assistant_replies:
+            conversation_history.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag1, assistant_replies[-1])
+        if 'ok'==check:
+            tags1OK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag1}> and </{tag1}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag1}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag1}> is missing.")
+        check = tools.checkTag(tag2, assistant_replies[-1])
+        if 'ok'==check:
+            tags2OK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag2}> and </{tag2}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag2}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag2}> is missing.")
 
-    # TODO: Add an automated verifier checking if the tags are present, otherwise ask to refine answer
 
     # Remove format 
-    constraints = tools.extractTag("constraints", assistant_replies[-1])
+    constraints = tools.extractTag(tag1, assistant_replies[-1])
     constraints = removeFormating(constraints)
-    explanation = tools.extractTag("explanation", assistant_replies[-1])
+    explanation = tools.extractTag(tag2, assistant_replies[-1])
     return constraints, explanation
 def redecompose(feedback):
     conversation_history.add_turn_user(feedback)
+       
+    tag1 = 'constraints'
+    tag2 = 'explanation'
     
-    # Call
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</explanation>"])
-    for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
+    tags1OK = False
+    tags2OK = False
+    while not tags1OK or not tags2OK:
+        # Call
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=[f"</{tag2}>"])
+        for r in assistant_replies:
+            conversation_history.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag1, assistant_replies[-1])
+        if 'ok'==check:
+            tags1OK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag1}> and </{tag1}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag1}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag1}> is missing.")
+        check = tools.checkTag(tag2, assistant_replies[-1])
+        if 'ok'==check:
+            tags2OK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag2}> and </{tag2}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag2}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag2}> is missing.")
     
     # Remove format 
-    constraints = tools.extractTag("constraints", assistant_replies[-1])
+    constraints = tools.extractTag(tag1, assistant_replies[-1])
     constraints = removeFormating(constraints)
-    explanation = tools.extractTag("explanation", assistant_replies[-1])
+    explanation = tools.extractTag(tag2, assistant_replies[-1])
     return constraints, explanation
 
 # MODICIFICATION
@@ -326,6 +400,7 @@ def needModifications():
 # ENCODE
 def encodePrefs(constraint):
     
+    tag = 'pddl'
     
     conversation_history.add_turn_user(f"""
 <documents>
@@ -346,7 +421,7 @@ The user will give as input a natural language constraint that must be translate
 - The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.
 - Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.
 - Be sure to include temporal logic like operators in your translation.
-- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.
+- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <{tag}> and </{tag}>.
 </instructions>
 
 <user_input>
@@ -354,30 +429,62 @@ The user will give as input a natural language constraint that must be translate
 </user_input>
 """[1:-1])
     
-    # Call
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</pddl>"])
-    for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
+    tagOK = False
+    while not tagOK:
+        # Call
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=[f"</{tag}>"])
+        for r in assistant_replies:
+            conversation_history.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag, assistant_replies[-1])
+        if 'ok'==check:
+            tagOK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag}> and </{tag}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag}> is missing.")
         
-    # TODO: Add an automated verifier checking if the tags are present, otherwise ask to refine answer
     
-    encoding = tools.extractTag("pddl", assistant_replies[-1])
+    encoding = tools.extractTag(tag, assistant_replies[-1])
     return encoding
 
 def reencodePrefs(feedback):
+    tag = 'pddl'
+    
     conversation_history.add_turn_user(feedback)
     
-    assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=["</pddl>"])
-    for r in assistant_replies:
-        conversation_history.add_turn_assistant(r)
     
-    encoding = tools.extractTag("pddl", assistant_replies[-1])
+    tagOK = False
+    while not tagOK:
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conversation_history.get_turns(), thinking=True, stop_sequences=[f"</{tag}>"])
+        for r in assistant_replies:
+            conversation_history.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag, assistant_replies[-1])
+        if 'ok'==check:
+            tagOK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag}> and </{tag}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag}> is missing.")
+    
+    encoding = tools.extractTag(tag, assistant_replies[-1])
     return encoding
 
 # E2NL
 conversation_history_E2NL = ConversationHistory()
 def E2NL(constraint):
     conversation_history_E2NL.reset()
+    
+    tag = 'E2NL'
     
     conversation_history_E2NL.add_turn_user(f"""
 <documents>
@@ -398,7 +505,7 @@ The user will give as input PDDL3.0 constraints.
 - Your translation should closely match the PDDL3.0 input, without additional deductions or reasoning. 
 - Your answer should be concise and not exceed 3 sentences.
 - Your translation should not contain any explicit PDDL element, the user can't understand PDDL.
-- Format your answer such as your translation is between the tags <E2NL> and </E2NL>.
+- Format your answer such as your translation is between the tags <{tag}> and </{tag}>.
 </instructions>
 
 <user_input>
@@ -406,12 +513,28 @@ The user will give as input PDDL3.0 constraints.
 </user_input>
 """[1:-1])
     
-    # Call LLM
-    assistant_replies = clients["OPENAI"].call(system_message, conversation_history_E2NL.get_turns(), thinking=True)
-    for r in assistant_replies:
-        conversation_history_E2NL.add_turn_assistant(r)
     
-    e2nl = tools.extractTag("E2NL", assistant_replies[-1])
+    tagOK = False
+    while not tagOK:
+    
+        # Call LLM
+        assistant_replies = clients["OPENAI"].call(system_message, conversation_history_E2NL.get_turns(), thinking=True)
+        for r in assistant_replies:
+            conversation_history_E2NL.add_turn_assistant(r)
+            
+        # Check tags
+        check = tools.checkTag(tag, assistant_replies[-1])
+        if 'ok'==check:
+            tagOK = True
+        else:
+            if 'missing_both'==check:
+                conversation_history.add_turn_user(f"The tags <{tag}> and </{tag}> are missing.")
+            elif 'missing_opening'==check:
+                conversation_history.add_turn_user(f"The tag <{tag}> is missing.")
+            elif 'missing_closing'==check:
+                conversation_history.add_turn_user(f"The tag </{tag}> is missing.")
+    
+    e2nl = tools.extractTag(tag, assistant_replies[-1])
     e2nl = e2nl.replace('\n', '')
     return e2nl
 
