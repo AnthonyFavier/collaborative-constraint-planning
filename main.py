@@ -104,7 +104,7 @@ def Zeno13C(decomp=CAI.WITH_DECOMP):
         CAI.addConstraints([txt])
         
 
-def initdemo():
+def initDemo():
     # ZENO 13 #
     r = CAI.CM.createRaw("Only use plane1.")
     d = CAI.CM.createDecomposed(r, "No person is ever inside plane2 throughout the entire plan execution")
