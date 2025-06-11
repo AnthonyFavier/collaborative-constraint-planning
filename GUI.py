@@ -44,15 +44,20 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         self.width_checkbox_frame = 31
         self.last_checkboxes_state = {}
         
-        self.show_decomps = False
         
         self.bind('<Enter>', self._bound_to_mousewheel)
         self.bind('<Leave>', self._unbound_to_mousewheel)
         
+        self.show_decomps = False
+        self.show_encodings = False
+        self.show_checkboxes = False
         
         self.updateFrame()
         
     def updateFrame(self):
+        
+        self.master.configure(state='disabled')
+        
         # Delete current grid and widgets
         self.clear()
         
@@ -64,7 +69,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             i_self_row += 1
         else:
             # for k,r in CAI.CM.raw_constraints.items():
-            for i,(k,r) in enumerate(CAI.CM.raw_constraints.items()):
+            for i,(id,r) in enumerate(CAI.CM.raw_constraints.items()):
                 
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
                 frame.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
@@ -107,15 +112,17 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         # Initialize last checkboxes state
         self.updateLastStateCheckboxes()
         
+        self.updateLabels()
+        
         if not self.show_decomps:
             self.hideDecomps()
-        
-        self.hideEncodings()
-        self.show_encodings = False
-        self.hideCheckboxes()
-        self.show_checkboxes = False
-        
-        self.updateLabels()
+        if not self.show_encodings:
+            self.hideEncodings()
+        if not self.show_checkboxes:
+            self.hideCheckboxes()
+            
+        self.master.configure(state='normal')
+            
         
     def _bound_to_mousewheel(self, event):
         # print("_bound_to_mousewheel")
@@ -138,7 +145,6 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         
     def clear(self):
         # Delete current grid and widgets
-        l = self.grid_slaves()
         for x in self.grid_slaves():
             x.destroy()
         
@@ -158,6 +164,8 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         self.decomp_frame = []
      
     def updateLabels(self):
+        """ Update constraint label according to activation state: Activated / Partially activated / Deactivated"""
+        
         activated_str = ''
         deactivated_str = '*** '
         partial_str = '* '
@@ -180,7 +188,9 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             self.last_checkboxes_state[symbol] = self.checkboxes[symbol].get()
         
     def checkboxHandler(self):
-        # Find checkbox         
+        """ Handle dynamic selection of all decomposed when clicking on raw"""
+        
+        # Find clicked checkbox
         for symbol in self.checkboxes:
             if self.checkboxes[symbol].get() != self.last_checkboxes_state[symbol]:
                 checkbox = symbol
@@ -217,19 +227,18 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         self.updateLastStateCheckboxes()
                 
     def toggleCheckboxes(self):
+        self.show_checkboxes = not self.show_checkboxes
         if self.show_checkboxes:
-            self.hideCheckboxes()
-        else:
             self.showCheckboxes()
+        else:
+            self.hideCheckboxes()
     def showCheckboxes(self):
         self.updateLastStateCheckboxes()
         for k,cb in self.checkboxes.items():
             cb.grid()
-        self.show_checkboxes = True
     def hideCheckboxes(self):
         for k,cb in self.checkboxes.items():
             cb.grid_remove()
-        self.show_checkboxes = False
     def selectActivatedCheckboxes(self):
         for symbol,cb in self.checkboxes.items():
             if CAI.CM.constraints[symbol].isActivated():
@@ -318,12 +327,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, fg_color=color_display, command=self.toggleEncodings)
-        self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
-        i_row+=1
-        
         self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, fg_color=color_display, command=self.toggleDecomps)
         self.buttons["ToggleDecomps"].grid(row=i_row, column=0, padx=10, pady=3)
+        i_row+=1
+        
+        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, fg_color=color_display, command=self.toggleEncodings)
+        self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
     
