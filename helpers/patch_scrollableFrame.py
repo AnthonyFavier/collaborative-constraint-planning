@@ -673,7 +673,7 @@ class CTkScrollableFrame(tkinter.Frame, CTkAppearanceModeBaseClass, CTkScalingBa
 """[1:-1]
 
 def main():
-    print("patching scrollableFrame")
+    print("patching [customtkinter] scrollableFrame both orientation")
     
     with open(path, 'r') as f:
         txt = f.read()
