@@ -3,21 +3,27 @@
 Human in the Loop constraint planning 
 CAI 
 
-## Overview
+## OVERVIEW
 
 ![plot](./rsc/overview.jpg "Overview")
 
-## Installation
+## INSTALLATION
 
 Tested on Ubuntu 20.04
 
-#### > Dependencies: Virtual Environment
-Create a python3.10 environment to install the relevant dependencies:
+### 1. Create a python3.10 virtual environment 
+
+**IMPORTANT**: Currently only supporting **Venv** (<u>not</u> Conda) due to later manual patching of the packages `unified-planning` and `customtkinter`.
+
 ```
 python3.10 -m venv env_cai
 source env_cai/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt --no-cache-dir
+```
+
+### 2. Install dependencies
+
+```
+pip install --upgrade pip -r requirements.txt --no-cache-dir
 sudo apt-get install openjdk-17-jdk python3.10-tk
 ```
 
@@ -29,7 +35,8 @@ python patches.py
 
 **Note**: to deactivate the python environment simply run: `deactivate`
 
-#### > NTCORE: Numeric constraints compilation
+
+### 3. NTCORE: Numeric constraints compilation
 
 
 **Note**: Conflicting command line management in `NumericTCORE/bin/ntcore.py`, already solved by commenting `@click.command()`.
@@ -40,7 +47,7 @@ cd NumericTCORE/
 pip install .
 ```
 
-#### > ENHSP: Planner 
+### 4. ENHSP: Compile planner 
 
 Compile the planner by running:
 ```
@@ -50,16 +57,17 @@ cd ENHSP-Public
 
 Ignore the two _Note:_ lines.
 
-#### > LLM API: Set up Claude API key
+### 5. LLM APIs
 
-Replace `REPLACE_WITH_YOUR_KEY` in `.env`.  
+Replace `REPLACE_WITH_YOUR_KEY` in `.env`, for ANTHROPIC_API_KEY and OPENAI_API_KEY
 
 
-## Run CAI with GUI
+## RUN
 
-Activate virtual environment:
+Activate virtual environment: `source env_cai/bin/activate`
+
+Run the system:
 ```
-source env_cai/bin/activate
 python main.py [OPTIONS] PROBLEM_NAME
 ```
 
