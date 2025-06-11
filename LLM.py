@@ -43,12 +43,12 @@ class ANTHROPICClient:
                 answers = []
                 for m in result.content:
                     if m.type=='thinking':
-                        print("\n[THINKING]\n" + m.thinking)
+                        print("\n[CLAUDE THINKING]\n" + m.thinking)
                         answers.append(m.thinking)
                     elif m.type=='text':
                         if result.stop_reason == 'stop_sequence':
                             m.text += result.stop_sequence
-                        print("\n[TEXT]\n" + m.text)
+                        print("\n[CLAUDE TEXT]\n" + m.text)
                         answers.append(m.text)
                 return answers
             except Exception as err:
@@ -243,8 +243,8 @@ def suggestions():
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
 
-    answer = assistant_replies[-1]
-    return answer
+    suggestions = tools.extractTag("suggestions", assistant_replies[-1])
+    return suggestions
 
 # DECOMPOSE
 def decompose(constraint):
@@ -361,8 +361,9 @@ The user will give as input a natural language constraint that must be translate
         
     # TODO: Add an automated verifier checking if the tags are present, otherwise ask to refine answer
     
-    
-    return assistant_replies[-1]
+    encoding = tools.extractTag("pddl", assistant_replies[-1])
+    return encoding
+
 def reencodePrefs(feedback):
     conversation_history.add_turn_user(feedback)
     
@@ -370,7 +371,8 @@ def reencodePrefs(feedback):
     for r in assistant_replies:
         conversation_history.add_turn_assistant(r)
     
-    return assistant_replies[-1]
+    encoding = tools.extractTag("pddl", assistant_replies[-1])
+    return encoding
 
 # E2NL
 conversation_history_E2NL = ConversationHistory()
@@ -409,7 +411,9 @@ The user will give as input PDDL3.0 constraints.
     for r in assistant_replies:
         conversation_history_E2NL.add_turn_assistant(r)
     
-    return assistant_replies[-1]
+    e2nl = tools.extractTag("E2NL", assistant_replies[-1])
+    e2nl = e2nl.replace('\n', '')
+    return e2nl
 
 # MAIN
 if __name__=='__main__':

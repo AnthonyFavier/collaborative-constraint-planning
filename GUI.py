@@ -394,7 +394,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
         if selection!=[]:
             # Delete selected constraints
-            CAI.deleteConstraints(selection)
+            CAI.CM.deleteConstraints(selection)
             self.master.constraints_frame.updateFrame()
         
         self.hideConfirmButton()

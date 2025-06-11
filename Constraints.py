@@ -1,4 +1,5 @@
 from defs import *
+from datetime import datetime
 
 class Constraint:
     _ID = 0
@@ -107,4 +108,72 @@ class ConstraintManager:
         
         for key,rc in self.raw_constraints.items():
             rc.showWithChildren()
+            
+    def deleteConstraints(self, symbols):
+        # if R# remove raw constraint and all decomposed associated
+        # if D# remove only decompose from general list and from parent children
+        for symbol in symbols:
+            if symbol not in self.constraints:
+                # already deleted
+                continue
+        
+            if symbol in self.raw_constraints:
+                constraint = self.constraints[symbol]
+                self.constraints.pop(constraint.symbol)
+                self.raw_constraints.pop(constraint.symbol)
+                for child in constraint.children:
+                    self.constraints.pop(child.symbol)
+                    self.decomposed_constraints.pop(child.symbol)
+                    del child
+                del constraint
+                
+            elif symbol in self.decomposed_constraints:
+                constraint = self.constraints[symbol]
+                    
+                self.constraints.pop(constraint.symbol)
+                self.decomposed_constraints.pop(constraint.symbol)
+                constraint.parent.children.remove(constraint)
+                
+                if len(constraint.parent.children)==0:
+                    self.constraints.pop(constraint.parent.symbol)
+                    self.raw_constraints.pop(constraint.parent.symbol)
+                    del constraint.parent
+                
+                del constraint
+                
+    def clean(self):
+        # Look for constraints to delete
+
+        # - raw constraint without decomposition
+        to_delete = []
+        for id, r in self.raw_constraints.items():
+            if r.children == []:
+                print(f"Deleted {r.symbol}: no decomposition")
+                to_delete.append(r)
+        self.deleteConstraints(to_delete)
+        
+        # - decomposed constraint without encoding
+        to_delete = []
+        for id, d in self.decomposed_constraints.items():
+            if d.encoding == '':
+                print(f"Deleted {d.symbol}: no encoding")
+                to_delete.append(d)
+        self.deleteConstraints(to_delete)
+        
+    def dump(self):
+        txt = ''
+        for k,r in self.raw_constraints.items():
+            txt += 'r = CAI.CM.createRaw("' + r.nl_constraint + '")\n'
+            
+            
+            for c in r.children:
+                txt += 'd = CAI.CM.createDecomposed(r, "' + c.nl_constraint + '")\n'
+                txt += f"d.encoding = '''{c.encoding}'''\n"
+            
+            txt += '\n'
+                
+            
+        date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+        with open(f"dumps_CM/dumped_CM_{date}.py", 'w') as f:
+            f.write(txt)
         
