@@ -330,8 +330,16 @@ def main(problem_name, planning_mode, timeout, e2nl):
     app.mainloop()
 if __name__ == '__main__':
     # sys.argv += ['zeno13_n']
+    # sys.argv += ['zeno5']
+    # sys.argv += ['rover1']
+    # sys.argv += ['rover3']
+    
+    # initZeno5()
+    # initZeno13()
+    # initDemo()
     
     # loadDump()
+    
     main()
   
 #### Notes ####
