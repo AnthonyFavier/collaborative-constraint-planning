@@ -613,8 +613,9 @@ class DisplayFrame(customtkinter.CTkFrame):
         
     def getFromEntry(self, txt=""):
         self.activateEntry(txt)
-        while self.entry_stamp==None or time.time() - self.entry_stamp > 1.0:
+        while self.entry_stamp==None:
             time.sleep(0.1)
+        self.entry_stamp = None
         return self.entry_text
         
     def validateEntry(self, event):
