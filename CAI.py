@@ -8,6 +8,7 @@ from updatePDSimPlan import main as updatePDSimPlan
 import Constraints
 from helpers.UserOption import UserOption
 import time
+import threading
         
 CM = Constraints.ConstraintManager()
 
@@ -20,6 +21,7 @@ WITH_CHECK_DOMAIN_MODIFICATION = False
 DUMP_CM = True
 MAX_ENCODING_TRY = 3
 
+## ADD CONSTRAINT ##
 def addConstraints(nl_constraints):
     for nl_constraint in nl_constraints:
         addConstraint(nl_constraint)
@@ -28,160 +30,204 @@ def addConstraint(nl_constraint):
     t1 = time.time()
     
     # Decomposition
-    new_c, abort = decomposeConstraint(nl_constraint)
-    if abort: return None
+    mprint("\n== Decomposition ==")
+    new_c = decomposeConstraint(nl_constraint)
+    feedback = decomp_interaction(new_c)
+    if 'abort'==feedback: return None
+    while 'OK'!=feedback:
+        new_c = redecompose(new_c, feedback)
+        feedback = decomp_interaction(new_c)
     
     # Encoding
-    abort = encodeConstraint(new_c)
-    if abort: return None
+    encoding(new_c)
+    for d in new_c.children:
+        feedback = encoding_interaction(d)
+        if 'abort'==feedback: return None
+        while 'OK'!=feedback:
+            encodeDecomposed(d, feedback)
+            feedback = encoding_interaction(d)
         
     t2 = time.time()
     mprint(f"\nTranslation time: {t2-t1:.2f} s")
     
     CM.dump()
-    
+
+## DECOMPOSE ##
 def decomposeConstraint(nl_constraint):
     if WITH_DECOMP:
-        # Regular decomposition
-        mprint("\n== Decomposition ==")
+        r = CM.createRaw(nl_constraint)
+        r.decomp_conv = LLM.ConversationHistory()
         
-        decompOK = False
-        first_attempt = True
-        while not decompOK:
+        t1 = time.time()
+        startTimer()
+        mprint("\nDecomposing: " + str(r) + " ... ", end="")
+        constraints, explanation = LLM.decompose(nl_constraint, r.decomp_conv)
+        t2 = time.time()
+        stopTimer()
+        mprint(f"OK [{t2-t1}s]")
             
-            r = CM.createRaw(nl_constraint)
+        for c in constraints.splitlines():
+            CM.createDecomposed(r, c)
+        mprint(f'Explanation: "{explanation}"')
+        mprint(r.strChildren())
             
-            if first_attempt:
-                mprint("\nDecomposing: " + str(r) + " ... ")
-                constraints, explanation = LLM.decompose(nl_constraint)
-            else:
-                mprint("\nRe-Decomposing: " + str(r) + " ... ")
-                constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback)
-                
-            # for c in constraints:
-            for c in constraints.splitlines():
-                CM.createDecomposed(r, c)
-            
-            mprint(f'Explanation: "{explanation}"')
-            mprint(r.strChildren())
-            
-            if WITH_CHECK_DOMAIN_MODIFICATION:
-                mprint("Checking if worth to do modifications...")
-                result = LLM.needModifications()
-                mprint(result)
-            
-            if ASK_DECOMP_FEEDBACK:
-                answer = minput("Press Enter or give feedback: ")
-                if answer=='':
-                    mprint("OK")
-                elif 'abort'==answer:
-                    LLM.clear_message_history()
-                    CM.deleteConstraints( [r.symbol] )
-                    return None, True
-                else:
-                    mprint("\n> " + answer)
-                    
-                decompOK = answer==''
-                if not decompOK:
-                    ## Re-decompose with user feedback
-                    # reset Constraint ID
-                    id = r.symbol[1:]
-                    Constraints.Constraint._ID = int(id)
-                    # delete created constraint
-                    CM.deleteConstraints([r.symbol])
-                    del r
-                    feedback = answer
-                    
-            first_attempt = False
-            
-        LLM.clear_message_history
+        if WITH_CHECK_DOMAIN_MODIFICATION:
+            mprint("Checking if worth to do modifications...")
+            result = LLM.needModifications()
+            mprint(result)
             
     elif not WITH_DECOMP:
         # create only decomposed constraint similar to raw constraint
         r = CM.createRaw(nl_constraint)
         CM.createDecomposed(r, nl_constraint)
         
-    # created constraint (RawConstraint), process aborted (bool)
-    return r, False
+    # created constraint (RawConstraint)
+    return r
 
-def encodeConstraint(r):
+def decomp_interaction(r):
+    if ASK_DECOMP_FEEDBACK:
+        answer = minput("Press Enter or give feedback: ")
+        if answer=='':
+            mprint("OK")
+        elif 'abort'==answer:
+            CM.deleteConstraints( [r.symbol] )
+            return 'abort'
+        else:
+            mprint("\n> " + answer)
+            
+        decompOK = answer==''
+        if not decompOK:
+            ## Re-decompose with user feedback
+            return answer
+    return 'OK'
+
+def redecompose(c, feedback):
+    # Re-decompose constraint according to user feedback
+    
+    # save relevant info
+    nl_constraint = c.nl_constraint
+    conv = c.decomp_conv
+    
+    # delete previous constraint
+    id = c.symbol[1:]
+    Constraints.Constraint._ID = int(id)
+    CM.deleteConstraints([c.symbol])
+    del c
+    
+    r = CM.createRaw(nl_constraint)
+    r.decomp_conv = conv
+        
+    mprint("\nRe-Decomposing: " + str(r) + " ... ")
+    constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback, r.decomp_conv)
+                
+    for c in constraints.splitlines():
+        CM.createDecomposed(r, c)
+    mprint(f'Explanation: "{explanation}"')
+    mprint(r.strChildren())
+            
+    # created constraint (RawConstraint)
+    return r
+
+## ENCODING ##
+
+def encoding(r):
+    
     # Encoding
     mprint("\n== Encoding ==")
     
     mprint("\n" + str(r))
     
-    for c in r.children:
-        encodingOK = False
-        i=0
-        while not encodingOK and i<MAX_ENCODING_TRY:
-            
-            # 1 # Encode the preferences
-            if i==0: # first time
-                mprint(f"\tEncoding {c} ... ", end="")
-                encodedPref = LLM.encodePrefs(c.nl_constraint)
-            else: # Re-encoding
-                mprint(f"\t\tRe-encoding (try {i+1}/{MAX_ENCODING_TRY}) ... ", end="")
-                encodedPref = LLM.reencodePrefs(feedback)
-            filteredEncoding = encodedPref
-            filteredEncoding = tools.initialFixes(filteredEncoding)
-                
-            # 2 # Update the problem
-            updatedProblem = tools.updateProblem(g_problem, [filteredEncoding])
-            
-            # VERIFIER
-            if WITH_VERIFIER:
-                encodingOK, feedback = tools.verifyEncoding(updatedProblem, g_domain, filteredEncoding)
-                if encodingOK:
-                    mprint(f"OK")
-                    c.encoding = filteredEncoding
-                    
-                    if g_with_e2nl:
-                        # Generate back translation
-                        mprint("E2NL: ", end="")
-                        c.e2nl = LLM.E2NL(c.encoding)
-                        mprint(f'"{c.e2nl}"')
-                        
-                        # Asking for feedback
-                        mprint("Does this back-translation match the constraint?")
-                        answer = minput("Press Enter for yes or give feedback: ")
-                        if answer=="":
-                            mprint("OK")
-                        elif 'abort'== answer:
-                            LLM.clear_message_history()
-                            CM.deleteConstraints(r)
-                            return True
-                        else:
-                            mprint("\n\t> " + answer)
-                        
-                        e2nlOK = answer==''
-                        if not e2nlOK:
-                            # Re-encoding with human feedback
-                            c.encoding = ''
-                            feedback = "There is an issue with the encoding. Try again considering the following feedback: " + answer
-                            i=-1
-                    
-                elif not encodingOK:
-                    # Re-encoding with verifier's feedback
-                    mprint("Verifier failed")
-                    c.encoding = ''
-                    
-            elif not WITH_VERIFIER:
-                mprint(f"OK")
-                encodingOK = True
-                c.encoding = filteredEncoding
-                
-            i+=1
-            
-        LLM.clear_message_history()
-        
-        if not encodingOK:
-            mprint(f"\n\t\tFailure: Maximum attempts reached to encode {c.symbol}... {c.symbol} will be deleted")
+    reset_counters(len(r.children))
+    showEncodingStatus(newline=True)
     
-    CM.clean()
+    # THREADING ENCODING
+    startTimer()
+    t1 = time.time()
+    threads = []
+    for d in r.children:
+        t = threading.Thread(target=encodeDecomposed, args=[d])
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    t2 = time.time()
+    stopTimer()
     
-    # process aborted (bool)
-    return False
+    mprint(f"\nEncoding done [{t2-t1:.2f}s]")
 
+def encodeDecomposed(d, feedback=None):
+    print('start encoding of ', d)
+    
+    if feedback==None:
+        d.encoding_conv = LLM.ConversationHistory()
+    
+    encodingOK = False
+    i=0
+    while not encodingOK and i<MAX_ENCODING_TRY:
+        if i==0 and feedback==None:
+            encoding = LLM.encodePrefs(d.nl_constraint, d.encoding_conv)
+        else:
+            encoding = LLM.reencodePrefs(feedback, d.encoding_conv)
+        encoding = tools.initialFixes(encoding)
+        
+        # VERIFIER
+        if WITH_VERIFIER:
+            updatedProblem = tools.updateProblem(g_problem, [encoding])
+            result = tools.verifyEncoding(updatedProblem, g_domain, encoding)
+            
+            encodingOK = result=='OK'
+            if encodingOK:
+                d.encoding = encoding
+                if g_with_e2nl:
+                    d.e2nl = LLM.E2NL(d.encoding)
+                    increase_e2nl_done()
+                
+            elif not encodingOK:
+                d.encoding = ''
+                increase_encoding_retry()
+                feedback = result
+                d.nb_retries += 1
+                
+        elif not WITH_VERIFIER:
+            encodingOK = True
+            d.encoding = encoding
+            
+    
+    if encodingOK:
+        increase_encoding_done()
+    if not encodingOK:
+        increase_encoding_failed()
+    
+    print('end encoding of ', d)
+
+def encoding_interaction(d):
+    # show decomposed nl + succes or failed + nb retry 
+    mprint(f"\n{d}")
+    status = "Encoded" if d.encoding!='' else "Failed"
+    retries = f"Retries:{d.nb_retries}/{MAX_ENCODING_TRY-1}"
+    mprint(f"\t{status} - {retries}")
+
+    # E2NL
+    if g_with_e2nl:
+        mprint(f'E2NL: "{d.e2nl}"')
+        mprint("\nDoes this back-translation sounds correct?")
+        answer = minput("Press Enter for yes or give feedback: ")
+        if answer=="":
+            mprint('OK')
+        elif 'abort'==answer:
+            CM.deleteConstraints(d.parent)
+            return 'abort'
+        else:
+            mprint("\n> " + answer + '\n')
+        
+        e2nlOK = answer==''
+        if not e2nlOK:
+            return answer
+    
+    return 'OK'
+    
+
+## PLAN ##
 def planWithConstraints():
     # get activated constraints
     # update problem with activated constraints
@@ -225,10 +271,12 @@ def planWithConstraints():
         mprint("Failed")
         return "Failed to plan:\n" + str(feedback)
 
+## SUGGESTIONS ##
 def suggestions():
     mprint("\nElaborating strategies suggestions...")
     mprint(LLM.suggestions())
 
+## INIT ##
 g_with_e2nl = False
 def init(problem_name, planning_mode, timeout):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
@@ -292,7 +340,79 @@ def init(problem_name, planning_mode, timeout):
     # Init LLM system message with domain and problem
     LLM.setSystemMessage(g_domain, g_problem)
 
+########################
+### HELPERS ENCODING ###
+########################
 
+def reset_counters(n):
+    global nb_to_encode
+    nb_to_encode = n
+    reset_encoding_done()
+    reset_encoding_failed()
+    reset_encoding_retry()
+    reset_nb_e2nl_done()
+    
+nb_to_encode = 0
+nb_encoding_done = 0
+nb_encoding_done_lock = threading.Lock()
+def increase_encoding_done():
+    global nb_encoding_done
+    nb_encoding_done_lock.acquire()
+    nb_encoding_done += 1
+    showEncodingStatus()
+    nb_encoding_done_lock.release()
+def reset_encoding_done():
+    global nb_encoding_done
+    nb_encoding_done_lock.acquire()
+    nb_encoding_done = 0 
+    nb_encoding_done_lock.release()
+    
+nb_encoding_failed = 0
+nb_encoding_failed_lock = threading.Lock()
+def increase_encoding_failed():
+    global nb_encoding_failed
+    nb_encoding_failed_lock.acquire()
+    nb_encoding_failed += 1
+    showEncodingStatus()
+    nb_encoding_failed_lock.release()
+def reset_encoding_failed():
+    global nb_encoding_failed
+    nb_encoding_failed_lock.acquire()
+    nb_encoding_failed = 0 
+    nb_encoding_failed_lock.release()
+    
+nb_encoding_retry = 0
+nb_encoding_retry_lock = threading.Lock()
+def increase_encoding_retry():
+    global nb_encoding_retry
+    nb_encoding_retry_lock.acquire()
+    nb_encoding_retry += 1
+    showEncodingStatus()
+    nb_encoding_retry_lock.release()
+def reset_encoding_retry():
+    global nb_encoding_retry
+    nb_encoding_retry_lock.acquire()
+    nb_encoding_retry = 0 
+    nb_encoding_retry_lock.release()    
+    
+nb_e2nl_done = 0
+nb_e2nl_done_lock = threading.Lock()
+def increase_e2nl_done():
+    global nb_e2nl_done
+    nb_e2nl_done_lock.acquire()
+    nb_e2nl_done += 1
+    showEncodingStatus()
+    nb_e2nl_done_lock.release()
+def reset_nb_e2nl_done():
+    global nb_e2nl_done
+    nb_e2nl_done_lock.acquire()
+    nb_e2nl_done = 0 
+    nb_e2nl_done_lock.release()
+
+def showEncodingStatus(newline=False):
+    f = mprint if newline else mrprint
+    e2nl_txt = f" - E2NL:{nb_e2nl_done}/{nb_to_encode}" if g_with_e2nl else ""
+    f(f"In progress... done:{nb_encoding_done}/{nb_to_encode} - retries:{nb_encoding_retry} - failed:{nb_encoding_failed}{e2nl_txt}", end="")
 
 #################################################################
 ########### TEXT ONLY BELOW, WITHOUT GUI [DEPRECATED] ###########

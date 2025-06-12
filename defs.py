@@ -82,6 +82,16 @@ def setPrintFunction(print_function):
     global myprint
     myprint = print_function
     
+myreplaceprint = lambda x: None
+def mrprint(txt, end='\n'):
+    if SHELL_PRINTS:
+        print('\r' + txt, end)
+    if GUI_PROMPT:
+        myreplaceprint(txt, end=end)
+def setReplacePrintFunction(replace_print_function):
+    global myreplaceprint
+    myreplaceprint = replace_print_function
+    
 myinput = lambda x: None
 def minput(txt=""):
     if GUI_PROMPT:
@@ -91,3 +101,17 @@ def minput(txt=""):
 def setInputFunction(input_function):
     global myinput
     myinput = input_function
+
+mstartTimer = None
+def setStartTimer(f):
+    global mstartTimer
+    mstartTimer = f
+def startTimer():
+    mstartTimer()
+
+mstopTimer = None
+def setStopTimer(f):
+    global mstopTimer
+    mstopTimer = f
+def stopTimer():
+    mstopTimer()

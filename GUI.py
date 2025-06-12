@@ -335,7 +335,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
         i_row+=1
         
-    
     def confirm(self):
         self.confirm_function()
         
@@ -574,6 +573,15 @@ class DisplayFrame(customtkinter.CTkFrame):
         r = t.join()
         self.master.buttons_frame.showButtons()
         return r
+    
+    def startTimer(self):
+        self.start_time = time.time()
+        self._timer_running = True
+        self.update_timer()
+        
+    def stopTimer(self):
+        self._timer_running = False
+        
             
     def prompt(self, text, end="\n"):
         self.write_lock.acquire()
@@ -582,6 +590,17 @@ class DisplayFrame(customtkinter.CTkFrame):
         # self.textbox.configure(state="disabled")
         self.textbox.see('end')
         # self.textbox.focus_set()
+        self.write_lock.release()
+        self.update()
+        
+    def replace_last_line(self, new_text, end='\n'):
+        self.write_lock.acquire()
+        # Get index of last line
+        last_line_index = self.textbox.index('end-2c linestart')
+        # Delete the entire last line
+        self.textbox.delete(last_line_index, 'end-1c')
+        # Insert the new text at the last line's start
+        self.textbox.insert(last_line_index, new_text + end)
         self.write_lock.release()
         self.update()
         

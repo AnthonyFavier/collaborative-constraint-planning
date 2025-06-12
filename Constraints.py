@@ -13,6 +13,7 @@ class RawConstraint(Constraint):
         super().__init__(nl_constraint)
         self.children = [] # children 
         self.symbol = 'R' + self.symbol[1:]
+        self.decomp_conv = None
     
     def activate(self):
         for c in self.children:
@@ -65,6 +66,8 @@ class DecomposedConstraint(Constraint):
         self.encoding = ''
         self.e2nl = ''
         self._activated = True
+        self.encoding_conv = None
+        self.nb_retries = 0 # = try -1
         
     def deactivate(self):
         self._activated = False

@@ -138,7 +138,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         print('[VERIFIER]')
         print('imply detected')
         # print('\t'+filteredEncoding)
-        return False, f"imply is not supported. Try again without it."
+        return f"imply is not supported. Try again without it."
     
     # Check if temporal keyword present
     temporal_present = False
@@ -150,7 +150,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         print('[VERIFIER]')
         print("No temporal keywords")
         # print('\t'+filteredEncoding)
-        return False, "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint. Try again."
+        return "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint. Try again."
 
     # Unknown keyword test #
     for x in L:
@@ -162,16 +162,16 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
                     print('[VERIFIER]')
                     print(f"{x} is not supported")
                     # print('\t'+filteredEncoding)
-                    return False, f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
+                    return f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
             
     # Parsing test #
     try:
         parse_pddl3_str(domain, updatedProblem)
     except Exception as err:
-        return False, "There is a syntax error. Try again carefully to translate correctly."
+        return "There is a syntax error. Try again carefully to translate correctly."
     
     # encodingOk, error_description
-    return True, ""
+    return 'OK'
 
 def checkTag(tag, txt):
     opening_tag = txt.find(f'<{tag}>')!=-1

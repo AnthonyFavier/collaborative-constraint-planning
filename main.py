@@ -318,6 +318,9 @@ def main(problem_name, planning_mode, timeout, e2nl):
     app = GUI.App()
     setPrintFunction(app.display_frame.prompt)
     setInputFunction(app.display_frame.getFromEntry)
+    setReplacePrintFunction(app.display_frame.replace_last_line)
+    setStartTimer(app.display_frame.startTimer)
+    setStopTimer(app.display_frame.stopTimer)
     
     CAI.init(problem_name, planning_mode, timeout)
     
