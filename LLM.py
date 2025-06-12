@@ -52,14 +52,16 @@ class ANTHROPICClient:
                         answers.append(m.text)
                 return answers
             except Exception as err:
-                if err.args[0].find("not resolve authentication method"):
+                if err.args[0].find("not resolve authentication method")!=-1:
                     raise err
-                if err.args[0].find("overloaded_error"):
+                elif err.args[0].find("overloaded_error")!=-1:
                     if i<MAX_TRY_OVERLOAD-1:
                         mprint("API Overloaded, trying again in 2 seconds...")
                         time.sleep(2)
                     else:
                         raise err
+                else:
+                    raise err
 from openai import OpenAI
 class OPENAIClient:
     def __init__(self, model, max_token=10000, temperature=0.0):
