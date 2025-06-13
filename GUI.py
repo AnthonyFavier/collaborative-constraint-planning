@@ -122,7 +122,6 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             self.hideCheckboxes()
             
         self.master.configure(state='normal')
-            
         
     def _bound_to_mousewheel(self, event):
         # print("_bound_to_mousewheel")
@@ -248,9 +247,11 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     def selectAll(self):
         for symbol,cb in self.checkboxes.items():
             cb.select()
+        self.updateLastStateCheckboxes()
     def unselectAll(self):
         for symbol,cb in self.checkboxes.items():
             cb.deselect()
+        self.updateLastStateCheckboxes()
                     
     def toggleEncodings(self):
         self.show_encodings = not self.show_encodings
@@ -286,62 +287,104 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons = {}
         
         buttons_width = 100
+        buttons_column1_width = 100
         
         color_constraints='OrangeRed3'
         color_planning='#3B8ED0'
         color_planning=None
         color_display='gray40'
         
-        i_row = 0
+        # First column (hidden)
+        self.frame_hidden_column = customtkinter.CTkFrame(self, fg_color='gray17')
+        self.frame_hidden_column.grid(row=0, column=0, padx=0, pady=0)
+        self.frame_hidden_column.grid_remove()
+        i_row=0
         self.confirm_function = None
-        self.confirm_button = customtkinter.CTkButton(self, text="Confirm", width=buttons_width, command=self.confirm)
+        self.confirm_button = customtkinter.CTkButton(self.frame_hidden_column, text="Confirm", width=buttons_column1_width, command=self.confirm)
         self.confirm_button.grid(row=i_row, column=0, padx=10, pady=3)
         self.confirm_button.grid_remove()
+        i_row+=1
         
-        self.buttons["Add"] = customtkinter.CTkButton(self, text="Add", width=buttons_width, fg_color=color_constraints, command=self.addT)
-        self.buttons["Add"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.select_all_button = customtkinter.CTkButton(self.frame_hidden_column, text="All", width=buttons_column1_width, command=self.master.constraints_frame.selectAll)
+        self.select_all_button.grid(row=i_row, column=0, padx=10, pady=3)
+        self.select_all_button.grid_remove()
+        i_row+=1
+        
+        self.unselect_all_button = customtkinter.CTkButton(self.frame_hidden_column, text="Clear", width=buttons_column1_width, command=self.master.constraints_frame.unselectAll)
+        self.unselect_all_button.grid(row=i_row, column=0, padx=10, pady=3)
+        self.unselect_all_button.grid_remove()
+        i_row+=1
+        
+        # Second column (always shown)
+        self.frame_always_column = customtkinter.CTkFrame(self, fg_color='gray17')
+        self.frame_always_column.grid(row=0, column=1, padx=0, pady=0)
+        i_row=0
+        self.buttons["Add"] = customtkinter.CTkButton(self.frame_always_column, text="Add", width=buttons_width, fg_color=color_constraints, command=self.addT)
+        self.buttons["Add"].grid(row=i_row, column=1, padx=10, pady=3)
         self.add_nl_constraints = []
         i_row+=1
         
-        self.buttons["Delete"] = customtkinter.CTkButton(self, text="Delete", width=buttons_width, fg_color=color_constraints, command=self.delete)
-        self.buttons["Delete"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["Delete"] = customtkinter.CTkButton(self.frame_always_column, text="Delete", width=buttons_width, fg_color=color_constraints, command=self.delete)
+        self.buttons["Delete"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["Activate"] = customtkinter.CTkButton(self, text="Activate /\nDeactivate", width=buttons_width, fg_color=color_constraints, command=self.activate)
-        self.buttons["Activate"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["Activate"] = customtkinter.CTkButton(self.frame_always_column, text="Activate /\nDeactivate", width=buttons_width, fg_color=color_constraints, command=self.activate)
+        self.buttons["Activate"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["E2NL"] = customtkinter.CTkButton(self, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
-        self.buttons["E2NL"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["E2NL"] = customtkinter.CTkButton(self.frame_always_column, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
+        self.buttons["E2NL"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["Plan"] = customtkinter.CTkButton(self, text="Plan", width=buttons_width, fg_color=color_planning, command=self.planT)
-        self.buttons["Plan"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["Plan"] = customtkinter.CTkButton(self.frame_always_column, text="Plan", width=buttons_width, fg_color=color_planning, command=self.planT)
+        self.buttons["Plan"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self, text="Change\nPlanning Mode", width=buttons_width, fg_color=color_planning, command=self.changePlanModeT)
-        self.buttons["ChangePlanningMode"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["ChangePlanningMode"] = customtkinter.CTkButton(self.frame_always_column, text="Change\nPlanning Mode", width=buttons_width, fg_color=color_planning, command=self.changePlanModeT)
+        self.buttons["ChangePlanningMode"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self, text="Change\nTimeout (TO)", width=buttons_width, fg_color=color_planning, command=self.changeTimeoutT)
-        self.buttons["ChangeTimeout"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self.frame_always_column, text="Change\nTimeout (TO)", width=buttons_width, fg_color=color_planning, command=self.changeTimeoutT)
+        self.buttons["ChangeTimeout"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, fg_color=color_display, command=self.toggleDecomps)
-        self.buttons["ToggleDecomps"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["ToggleDecomps"] = customtkinter.CTkButton(self.frame_always_column, text="Show\nDecomps" if not self.master.constraints_frame.show_decomps else "Hide\nDecomps", width=buttons_width, fg_color=color_display, command=self.toggleDecomps)
+        self.buttons["ToggleDecomps"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, fg_color=color_display, command=self.toggleEncodings)
-        self.buttons["ToggleEncodings"].grid(row=i_row, column=0, padx=10, pady=3)
+        self.buttons["ToggleEncodings"] = customtkinter.CTkButton(self.frame_always_column, text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings", width=buttons_width, fg_color=color_display, command=self.toggleEncodings)
+        self.buttons["ToggleEncodings"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
     def confirm(self):
         self.confirm_function()
         
-    def showConfirmButton(self):
+    def select_all(self):
+        self.master.constraints_frame.selectAll()
+        
+    def showSelectAllButtons(self):
+        self.frame_hidden_column.grid()
+        self.select_all_button.grid()
+        self.unselect_all_button.grid()
+    def hideSelectAllButtons(self):
+        self.frame_hidden_column.grid_remove()
+        self.select_all_button.grid_remove()
+        self.unselect_all_button.grid_remove()
+        
+    def showConfirmButton(self, txt="Confirm"):
+        self.frame_hidden_column.grid()
+        self.confirm_button.configure(text=txt)
         self.confirm_button.grid()
     def hideConfirmButton(self):
+        self.frame_hidden_column.grid_remove()
         self.confirm_button.grid_remove()
+    
+    def disableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='disabled')
+    def enableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='enabled')
         
     def hideButtons(self):
         for k,x in self.buttons.items():
@@ -361,7 +404,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def addT(self):
         threading.Thread(target=self.add).start()
     def add(self):
-        self.hideButtons()
+        self.disableButtons()
         self.showE2NLButton()
         self.add_nl_constraints = []
         
@@ -370,7 +413,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         c = minput(txt="\nEnter your constraint: ")
         
         if c=='':
-            self.showButtons()
+            self.enableButtons()
             mprint("Aborted\n")
         else:
             mprint("\n> " + c )
@@ -381,16 +424,16 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 self.master.quit()
                 raise err
             
-            self.showButtons()
+            self.enableButtons()
             self.master.constraints_frame.updateFrame()
             # mprint("\nConstraints added")
         
     def delete(self):
         self.master.constraints_frame.unselectAll()
         self.master.constraints_frame.showCheckboxes()
-        self.hideButtons()
-        self.confirm_button.configure(text="Delete")
-        self.showConfirmButton()
+        self.disableButtons()
+        self.showConfirmButton(txt="Delete")
+        self.showSelectAllButtons()
         # TODO: Select/Deselect ALL
         self.confirm_function = self.deleteConfirm
     def deleteConfirm(self):
@@ -406,16 +449,16 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.master.constraints_frame.updateFrame()
         
         self.hideConfirmButton()
-        self.confirm_button.configure(text="Confirm")
-        self.showButtons()
+        self.hideSelectAllButtons()
+        self.enableButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.confirm_function = None
         
     def activate(self):
         self.master.constraints_frame.selectActivatedCheckboxes()
         self.master.constraints_frame.showCheckboxes()
-        self.hideButtons()
-        # TODO: Select/Deselect ALL
+        self.disableButtons()
+        self.showSelectAllButtons()
         self.showConfirmButton()
         self.confirm_function = self.activateConfirm
     def activateConfirm(self):
@@ -426,7 +469,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 CAI.CM.constraints[k].deactivate()
                 
         self.hideConfirmButton()
-        self.showButtons()
+        self.hideSelectAllButtons()
+        self.enableButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.master.constraints_frame.updateLabels()
         self.confirm_function = None
@@ -434,7 +478,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def planT(self):
         threading.Thread(target=self.plan).start()
     def plan(self):
-        self.hideButtons()
+        self.disableButtons()
         txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
         if txt[:len("Failed to plan:")]=="Failed to plan:":
             self.master.plan_frame.printMain(txt)
@@ -456,7 +500,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changePlanModeT(self):
         threading.Thread(target=self.changePlanMode).start()
     def changePlanMode(self):
-        self.hideButtons()
+        self.disableButtons()
         
         mprint(f"\nCurrent planning mode: {CAI.g_planning_mode}")
         mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
@@ -486,12 +530,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 mprint("Incorrect input")
             mprint("Aborted\n")
             
-        self.showButtons()
+        self.enableButtons()
     
     def changeTimeoutT(self):
         threading.Thread(target=self.changeTimeout).start()
     def changeTimeout(self):
-        self.hideButtons()
+        self.disableButtons()
         mprint(f"\nCurrent Timeout: {CAI.g_timeout}")
         mprint("Enter a new timeout ('Empty'=disables timeout): ")
         
@@ -507,7 +551,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             if CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
 
-        self.showButtons()
+        self.enableButtons()
     
     def toggleEncodings(self):
         self.master.constraints_frame.toggleEncodings()
@@ -571,7 +615,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         t.start()
         self.update_timer()
         r = t.join()
-        self.master.buttons_frame.showButtons()
+        self.master.buttons_frame.enableButtons()
         return r
     
     def startTimer(self):
@@ -636,7 +680,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         i_self_row = 0
         
-        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", corner_radius=6,font=App.font)
+        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", width=400, corner_radius=6,font=App.font)
         self.title.grid(row=i_self_row, column=0, padx=10, pady=(10, 0), sticky="ew")
         i_self_row+=1
         
@@ -721,7 +765,7 @@ class App(customtkinter.CTk):
         
         self.grid_columnconfigure(0, weight=20)
         self.grid_columnconfigure(1, weight=0)
-        self.grid_columnconfigure(2, weight=3)
+        self.grid_columnconfigure(2, weight=0)
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
         
