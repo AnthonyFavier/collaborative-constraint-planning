@@ -571,17 +571,18 @@
             planStepList.innerHTML = ''; // Clear existing checkboxes
             data.elements.forEach(element => {
                 if (element.data && !element.data.source) { // Check if it's a node
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.value = element.data.id;
-                    const label = document.createElement('label');
-                    label.style.color = element.data.color || '#000000';
-                    label.textContent = element.data.label || element.data.id;
-                    label.prepend(checkbox);
-
-                    planStepList.appendChild(label);
-                    planStepList.appendChild(document.createElement('br'));
-                }
+                    if (element.data.type === 'action') {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.value = element.data.id;
+                        const label = document.createElement('label');
+                        label.style.color = element.data.color || '#000000';
+                        label.textContent = element.data.label || element.data.id;
+                        label.prepend(checkbox);
+                        
+                        planStepList.appendChild(label);
+                        planStepList.appendChild(document.createElement('br'));
+                }};
             });
         }
         
