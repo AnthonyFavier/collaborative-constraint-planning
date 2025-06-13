@@ -32,6 +32,15 @@
 		:parameters (?a - Aircraft ?c - City)
 	)
 
+	(:method m1-ordering-0
+		:parameters (?c - City ?p - Person)
+		:task (transport-person ?p ?c)
+		:precondition (and
+			(at ?p ?c)
+		)
+		:subtasks (
+		)
+	)
 
 	(:method m2-ordering-0
 		:parameters (?a - Aircraft ?c1 - City ?c2 - City ?p - Person)

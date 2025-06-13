@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<title>LLM-powered HDDL GUI</title>
+<title>LLM-powered HDDL-GUI</title>
   <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
   <style>
     body { font-family: Arial; margin: 15px; height: 100%; overflow: auto; }
@@ -34,13 +34,13 @@
         font-size: 25px; /* Adjust the font size */
         font-weight: bold; /* Make the font bold */
         color: #1e09bd;
-        margin-bottom: 10px; /* Add spacing below the header */
-        margin-top: 10px; /* Add spacing above the header */
+        margin-bottom: 5px; /* Add spacing below the header */
+        margin-top: 5px; /* Add spacing above the header */
     }
     h3 {
         text-align: center;
         font-family: 'Georgia', serif; /* Change the font family */
-        font-size: 30px; /* Adjust the font size */
+        font-size: 25px; /* Adjust the font size */
         font-weight: bold; /* Make the font bold */
         color: #470202; /* Change the font color */
         margin-bottom: 5px; /* Add spacing below the header */
@@ -55,6 +55,7 @@
         border-radius: 3px;
         cursor: pointer;
         margin-bottom:3px;
+        margin-top:3px;
     }
     button:hover {
             background-color: #0555a4;
@@ -63,9 +64,9 @@
 </head>
 <body>
 
-  <h2>LLM-powered HDDL GUI</h2>
+  <h2>LLM-powered HDDL-GUI</h2>
 
-  <div class="section">
+  <div class="section" style="background-color: rgb(226, 247, 226)">
     <h3>Load HDDL Domain and Problem Files</h3>
     <!-- <form id="loadForm" enctype="multipart/form-data">
       Domain File: <input type="file" name="domain" required>
@@ -110,7 +111,7 @@
 
   <div style="display: flex; gap: 20px;">
     <div style="flex: 2;">
-    <div class="section">
+    <div class="section" style="background-color: rgb(216, 216, 243)">
         <h3>HTN Viewer</h3>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 2;">
@@ -133,15 +134,15 @@
     </div>
     </div>
 
-    <div class="section">
+    <div class="section" style="background-color: rgb(244, 241, 204)">
       <div style="flex: 1;">
-        <h3>LLM Interactive Area:</h3>
+        <h3>LLM Interactive Area</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
         <label>Text Output:</label>
             <button id='feedDomainButton' onclick="describeDomain()" style="display: none;">Feed Domain</button>
             <button id="feedProblemButton" onclick="describeProblem()" style="display: none;">Feed Problem</button>
         </div>
-        <textarea id="llmOutput" rows="10" readonly></textarea>
+        <textarea id="llmOutput" rows="12" readonly></textarea>
 
         <label>LLM Query:</label>
         <textarea id="llmInput" rows="3" placeholder="Describe what you want to ask..."></textarea>
@@ -155,16 +156,26 @@
   </div>
 
   <!-- Section 3: Plan -->
-  <div class="section">
+  <div class="section" style="background-color: rgb(246, 214, 210)">
     <h3>Plan</h3>
     <div style="display: flex; gap: 20px;">
-    <div style="flex: 1;">
+    <div style="flex: 2;">
+        <div style="display: flex; gap: 20px;">
+        <div style="flex: 2;">
         <label>Plan Diagram  </label>
-        <button onclick="runPlanner()">Run Planner</button>
-        <div class="frame-box" style="width: 66.66vw;">
-            <div id="cy_plan"></div>
+            <button onclick="runPlanner()">Run Planner</button>
+            <div class="frame-box" >
+                <div id="cy_plan"></div>
+            </div>
         </div>
-      </div>
+        <div style="flex: 1;gap: 20px;">
+            <label>Plan Steps</label>
+            <button id="showPlanStep" onclick="showPlanStep()">Show Steps</button>
+            <button id="uncheckedAllSteps" onclick="uncheckedAllSteps()">Uncheck All</button>
+            <div class="checkbox-list" id="planStepList">
+            </div>
+        </div>
+      </div></div>
     
     <div style="flex: 1;">
         <label>Previous Plan</label>
@@ -181,6 +192,7 @@
     <script src="https://unpkg.com/cytoscape-dagre/cytoscape-dagre.js"></script>
     <script>
         let graphData = null; // Store the graph data globally
+        let graphPlanData = null; // Store the plan graph data globally
         let originalDomain = null; // Store the original domain file content
         let previousDomain = null; // Store the previous domain content for Set to Previous
         /* var dot, graphviz = d3.select("#cy_plan").graphviz({ // Updated selector
@@ -193,6 +205,11 @@
         let latest_response = ""; // Store the latest response from the LLM
         let feedback_adding_method = false; // Flag to indicate if we are still in the process of adding a method
         
+        document.addEventListener('DOMContentLoaded', () => {
+            // Reset the content of planText and previousPlanSummary
+            document.getElementById('planText').textContent = '';
+            document.getElementById('previousPlanSummary').textContent = '';
+        });
 
         async function loadDomain(e) {
             e.preventDefault(); // Prevent default form submission
@@ -487,6 +504,37 @@
             renderGraph(filteredElements);
             // askLLM("Provide descriptions for the selected operators. " + checked_operators_text);
         }
+        function filterPlanGraph() {
+            if (!graphPlanData) {
+                alert("No plan graph data available. Please run the planner first.");
+                return;
+            }
+
+            // Collect checked checkboxes
+            let checkedValues = Array.from(document.querySelectorAll('#planStepList input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+            if (checkedValues.length === 0) {
+                alert("No steps selected.");
+                return;
+            }
+            console.log("Checked Steps:", checkedValues);
+
+            // Filter graph elements based on checked steps
+            const filteredElements = graphPlanData.filter(element => {
+                if (element.data && !element.data.source) { // Node
+                    return checkedValues.includes(element.data.id);
+                }
+                if (element.data && element.data.source && element.data.target) { // Edge
+                    return checkedValues.includes(element.data.source) && checkedValues.includes(element.data.target);
+                }
+                return false;
+            });
+
+            // Render the filtered plan graph
+            renderPlanGraph(filteredElements);
+
+        }
+
         async function askLLMOperators() {
             // Collect checked checkboxes
             let checkedValues = Array.from(document.querySelectorAll('#optionsList input[type="checkbox"]:checked'))
@@ -515,7 +563,26 @@
             document.getElementById('previousPlanSummary').value = previous_plan || '(no previous plan summary available)';
             document.getElementById('planText').value = data.text || '(no plan generated)';
             previous_plan = data.text; // Store the current plan as previous for next run
+            graphPlanData = data.elements; // Store the plan graph data
             renderPlanGraph(data.elements);
+
+            // Show plan steps in the planStepList
+            const planStepList = document.getElementById('planStepList');
+            planStepList.innerHTML = ''; // Clear existing checkboxes
+            data.elements.forEach(element => {
+                if (element.data && !element.data.source) { // Check if it's a node
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = element.data.id;
+                    const label = document.createElement('label');
+                    label.style.color = element.data.color || '#000000';
+                    label.textContent = element.data.label || element.data.id;
+                    label.prepend(checkbox);
+
+                    planStepList.appendChild(label);
+                    planStepList.appendChild(document.createElement('br'));
+                }
+            });
         }
         
         async function runPlanner_old_with_image() {
@@ -759,23 +826,37 @@
                 // Get the content from the textarea
                 const content = document.getElementById('domainText').textContent;
 
-                // Show a file save dialog
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: 'domain.hddl', // Default file name
-                    types: [
-                        {
-                            description: 'HDDL Files',
-                            accept: { 'text/plain': ['.hddl'] }
-                        }
-                    ]
-                });
+                // Check if the browser supports showSaveFilePicker
+                if (window.showSaveFilePicker) {
+                    // Use the File System Access API
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: 'modified_domain.hddl', // Default file name
+                        types: [
+                            {
+                                description: 'HDDL Files',
+                                accept: { 'text/plain': ['.hddl'] }
+                            }
+                        ]
+                    });
 
-                // Create a writable stream and write the content to the file
-                const writableStream = await fileHandle.createWritable();
-                await writableStream.write(content);
-                await writableStream.close();
+                    // Create a writable stream and write the content to the file
+                    const writableStream = await fileHandle.createWritable();
+                    await writableStream.write(content);
+                    await writableStream.close();
 
-                alert('File saved successfully!');
+                    alert('File saved successfully!');
+                } else {
+                    // Fallback to the Blob method for unsupported browsers
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'modified_domain.hddl'; // Default file name
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    alert('File saved successfully using fallback method!');
+                }
             } catch (error) {
                 console.error('Error saving file:', error);
                 alert('Failed to save the file.');
