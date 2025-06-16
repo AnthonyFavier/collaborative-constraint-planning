@@ -8,6 +8,7 @@ from planner import planner
 import json
 from progress.bar import IncrementalBar
 import psutil
+from datetime import datetime
 
 import typing
 from unified_planning.model.problem import Problem as upProblem
@@ -22,15 +23,16 @@ pp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.
 
 ###################################
 
-NB_CONSTRAINT =         50
-NB_CONSTRAINT_AND2 =    50
-NB_CONSTRAINT_AND3 =    50
-NB_CONSTRAINT_OR2 =     50
-NB_CONSTRAINT_OR3 =     50
+NB_EXPRESSION =         50
+NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
+NB_CONSTRAINT_AND2 =    NB_EXPRESSION
+NB_CONSTRAINT_AND3 =    NB_EXPRESSION
+NB_CONSTRAINT_OR2 =     NB_EXPRESSION
+NB_CONSTRAINT_OR3 =     NB_EXPRESSION
 NB_TEST = 200
-TIMEOUT = 10
+TIMEOUT = 5
 
-run_name = f"{NB_CONSTRAINT}-{NB_TEST}-TO{TIMEOUT}"
+run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
 print(run_name)
 
 ###################################
@@ -60,194 +62,264 @@ def pick3Random(l):
     while i3==i1 or i3==i2: i3 = random.randint(0, len(l)-1)
     return l[i1], l[i2], l[i3]
 
-##########
-## MAIN ##
-##########
-
-def main():
-    reader = PDDLReader()
-    original_problem: upProblem = reader.parse_problem(dp, pp) 
-
-    if original_problem.trajectory_constraints!=[]:
-        raise Exception('Already some constraints in original problem')
-
-    # Generates NB_CONSTRAINT constraints, each forcing random grounded fluents to always keep their initial value
-    # Generates NB_CONSTRAINT_AND2 constraints by combining pairs of random previous constraints with And
-    # Generates NB_CONSTRAINT_AND3 constraints by combining three random previous constraints with And
-    # Generates NB_CONSTRAINT_OR2 constraints by combining pairs of random previous constraints with Or
-    # Generates NB_CONSTRAINT_OR3 constraints by combining three random previous constraints with Or
-
-    result = {}
-
-    # SEED
-    seed = random.randrange(sys.maxsize)
-    seed = 0
-    random.seed(seed)
-    result['seed'] = seed
-
-    result['timeout'] = TIMEOUT
-
-    from datetime import datetime
-    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-    filename = f'{run_name}_{date}.json'
-    result['domain'] = dp
-    result['problem'] = pp
-    with open(filename, 'w') as f:
-        f.write(json.dumps(result, indent=4))
-
+##########################
+## GENERATE CONSTRAINTS ##
+##########################
+def generate_constraints(original_problem):
+    # Select only changing fluents (not constants)
     changing_fluents = []
     for f in original_problem.fluents:
         if not f.name in ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit']:
             changing_fluents.append(f)
             
+    # EXPRESSIONS
     expressions = []
-
-    constraints_SIMPLE = []
-    picked = []
-    for i in range(NB_CONSTRAINT):
-        fluent:upFluent = pickRandomNotAlready(changing_fluents, picked)
-        picked.append(fluent)
-        
-        objects = []
-        for p in fluent.signature:
-            p:upParameter
-            valid_objects = list(original_problem.objects(p.type))
-            objects.append(pickRandom(valid_objects))
+    for i in range(NB_EXPRESSION):
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            # pick random changing fluent
+            fluent:upFluent = pickRandom(changing_fluents)
             
-        # print(fluent(*objects))
-
-        if isinstance(fluent.type, upReal):
-            initial_value = original_problem.initial_values[fluent(*objects)]
-            exp = Equals(fluent(*objects), initial_value)
-        elif isinstance(fluent.type, upBool):
-            initial_value = original_problem.initial_values[fluent(*objects)]
-            if initial_value.constant_value():
-                exp = fluent(*objects)
+            # randomly ground fluent
+            objects = []
+            for p in fluent.signature:
+                p:upParameter
+                valid_objects = list(original_problem.objects(p.type))
+                objects.append(pickRandom(valid_objects))
+            grounded_fluent = fluent(*objects)
+            
+            # make expression with initial value
+            if isinstance(grounded_fluent.type, upReal):
+                initial_value = original_problem.initial_values[grounded_fluent]
+                exp = Equals(grounded_fluent, initial_value)
+            elif isinstance(grounded_fluent.type, upBool):
+                initial_value = original_problem.initial_values[grounded_fluent]
+                if initial_value.constant_value():
+                    exp = grounded_fluent
+                else:
+                    exp = Not(grounded_fluent)
+                    
+            # check if already present, if so retry until new 
+            if not exp in expressions:
+                keep_picking = False
+                expressions.append(exp)
+            
+            # If too many retry, stop to avoid infite loop in case already picked all possibilities
             else:
-                exp = Not(fluent(*objects))
-        
-        expressions.append(exp)
-        constraint = Always(exp)
-        constraints_SIMPLE.append(constraint)
-        
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("EXPRESSION: Too many retry to pick expression: Probably already picked all...")
+    
+    constraints_dict = {}
+    
+    # SIMPLE
+    constraints_SIMPLE = []
+    for i in range(NB_CONSTRAINT_SIMPLE):
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            exp = pickRandom(expressions)
+            constraint = Always(exp)
+            if not constraint in constraints_SIMPLE:
+                keep_picking = False
+                constraints_SIMPLE.append(constraint)
+            else:
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("SIMPLE: Too many retry to pick expression: Probably already picked all...")
+    constraints_dict['SIMPLE'] = constraints_SIMPLE
+         
+    # AND2   
     constraints_AND2 = []
     for i in range(NB_CONSTRAINT_AND2):
-        e1, e2 = pick2Random(expressions)
-        constraint = Always(And(e1, e2))
-        constraints_AND2.append(constraint)
-        
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            e1, e2 = pick2Random(expressions)
+            constraint = Always(And(e1, e2))
+            if not constraint in constraints_AND2:
+                keep_picking = False
+                constraints_AND2.append(constraint)
+            else:
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("AND2: Too many retry to pick expression: Probably already picked all...")
+    constraints_dict['AND2'] = constraints_AND2
+             
+    # AND3
     constraints_AND3 = []
     for i in range(NB_CONSTRAINT_AND3):
-        e1, e2, e3 = pick3Random(expressions)
-        constraint = Always(And(e1, e2, e3))
-        constraints_AND3.append(constraint)
-        
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            e1, e2, e3 = pick3Random(expressions)
+            constraint = Always(And(e1, e2, e3))
+            if not constraint in constraints_AND3:
+                keep_picking = False
+                constraints_AND3.append(constraint)
+            else:
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("AND3: Too many retry to pick expression: Probably already picked all...")
+    constraints_dict['AND3'] = constraints_AND3
+    
+    # OR2    
     constraints_OR2 = []
     for i in range(NB_CONSTRAINT_OR2):
-        e1, e2 = pick2Random(expressions)
-        constraint = Always(Or(e1, e2))
-        constraints_OR2.append(constraint)
-            
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            e1, e2 = pick2Random(expressions)
+            constraint = Always(Or(e1, e2))
+            if not constraint in constraints_OR2:
+                keep_picking = False
+                constraints_OR2.append(constraint)
+            else:
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("OR2: Too many retry to pick expression: Probably already picked all...")
+    constraints_dict['OR2'] = constraints_OR2
+    
+    # OR3                
     constraints_OR3 = []
     for i in range(NB_CONSTRAINT_OR3):
-        e1, e2, e3 = pick3Random(expressions)
-        constraint = Always(Or(e1, e2, e3))
-        constraints_OR3.append(constraint)
-
-
-    result['generated_constraints'] = {
-        'EXPRESSIONS': [str(e) for e in expressions],
-        'SIMPLE': [str(c) for c in constraints_SIMPLE],
-        'AND2': [str(c) for c in constraints_AND2],
-        'AND3': [str(c) for c in constraints_AND3],
-        'OR2': [str(c) for c in constraints_OR2],
-        'OR3': [str(c) for c in constraints_OR3],
-    }
+        keep_picking = True
+        n_retry = 0
+        while keep_picking:
+            e1, e2, e3 = pick3Random(expressions)
+            constraint = Always(Or(e1, e2, e3))
+            if not constraint in constraints_OR3:
+                keep_picking = False
+                constraints_OR3.append(constraint)
+            else:
+                n_retry+=1
+                if n_retry==100:
+                    raise Exception("OR3: Too many retry to pick expression: Probably already picked all...")
+    constraints_dict['OR3'] = constraints_OR3
     
-    all_constraints = constraints_SIMPLE+constraints_AND2+constraints_AND3+constraints_OR2+constraints_OR3
-    my_dict = {x:all_constraints.count(x) for x in all_constraints}
-    print("repeated constraints:")
-    repeated = 0
-    for k,n in my_dict.items():
-        if n>1:
-            print(f'\t{n}: {k}')
-            repeated+=1
+    return expressions, constraints_dict
 
-    with open(filename, 'w') as f:
+class MyIterator:
+    def __init__(self, d):
+        self.names = [n for n in d]
+        self.lists = [d[n] for n in d]
+    def __iter__(self):
+        self.i = 0
+        return self
+    def __next__(self):
+        n = self.names[self.i]
+        l = self.lists[self.i]
+        self.i+=1
+        if self.i==len(self.names):
+            self.i=0
+        return n,l
+
+##########
+## MAIN ##
+##########
+
+def main():
+    # Parse original problem
+    reader = PDDLReader()
+    original_problem: upProblem = reader.parse_problem(dp, pp) 
+
+    # Check if original problem has no constraints
+    if original_problem.trajectory_constraints!=[]:
+        raise Exception('Already some constraints in original problem')
+
+    # Initialize random seed
+    seed = random.randrange(sys.maxsize)
+    seed = 0 # for testing
+    random.seed(seed)
+
+    # Create result file
+    result = {}
+    result['seed'] = seed
+    result['timeout'] = TIMEOUT
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    filename = f'{run_name}_{date}.json'
+    path = 'results_constraints/'
+    result['domain'] = dp
+    result['problem'] = pp
+    with open(path+filename, 'w') as f:
         f.write(json.dumps(result, indent=4))
 
+    # Generate constraints
+    expressions, constraints_dict = generate_constraints(original_problem)
+    result['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
+    for k,l in constraints_dict.items():
+        result['generated_constraints'][k] = [str(c) for c in l]
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(result, indent=4))
+
+    # Tests
     result['tests'] = []
+    itType = iter(MyIterator(constraints_dict))
     with IncrementalBar('Processsing', max=NB_TEST, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
         for i in range(NB_TEST):
-            # print(f'\nTEST {i+1}/{NB_TEST}')
+            
             bar.start()
             test = {}
             
-            # Pick a constraint from all set
-            picked_constrait = pickRandomNotAlready(constraints_SIMPLE+constraints_AND2+constraints_AND3+constraints_OR2+constraints_OR3, [t['constraint'] for t in result['tests']])
-            test['constraint'] = str(picked_constrait)
-            if picked_constrait in constraints_SIMPLE:
-                test['constraint_type'] = 'SIMPLE'
-            elif picked_constrait in constraints_AND2:
-                test['constraint_type'] = 'AND2'
-            elif picked_constrait in constraints_AND3:
-                test['constraint_type'] = 'AND3'
-            elif picked_constrait in constraints_OR2:
-                test['constraint_type'] = 'OR2'
-            elif picked_constrait in constraints_OR3:
-                test['constraint_type'] = 'O3'
+            # Get current type and pickRandom of this type
+            type_name, type_list = next(itType)
+            picked_constraint = pickRandom(type_list)
+            while str(picked_constraint) in [t['constraint'] for t in result['tests']]:
+                picked_constraint = pickRandom(type_list)
+            test['constraint'] = str(picked_constraint)
+            test['constraint_type'] = type_name
                 
-            
-            
             result['tests'].append(test)
-            with open(filename, 'w') as f:
+            test['result'] = 'In progress...'
+            with open(path+filename, 'w') as f:
                 f.write(json.dumps(result, indent=4))
             
             # Update problem with constraint
             new_problem = original_problem.clone()
-            new_problem.add_trajectory_constraint(c)
+            new_problem.add_trajectory_constraint(picked_constraint)
 
             # Write new problem with up
+            problem_name = filename.replace('.json', '')
             w = PDDLWriter(new_problem)
-            w.write_domain('tmp/updated_domain.pddl')
-            w.write_problem('tmp/updated_problem.pddl')
+            w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
+            w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
 
             # Compile
-            # print("Compiling ... ", end='', flush=True)
-            ntcore('tmp/updated_domain.pddl', 'tmp/updated_problem.pddl', "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-            # print("OK")
+            ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
 
             # Plan
-            # print("Planning ... ", end='', flush=True)
-            feedback, plan, stdout = planner(PlanFiles.COMPILED, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+            feedback, plan, stdout = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
 
             # Get Metric
             if feedback=='success':
-                # print('Success')
                 i1_metric = plan.find('Metric (Search):')+len('Metric (Search):')
                 i2_metric = plan.find('\n', i1_metric)
                 metric = float(plan[i1_metric:i2_metric])
-                # print('Metric: ', metric)
                 
                 test['result'] = 'success'
                 test['plan'] = plan
                 test['metric'] = metric
             else:
-                # print('Failed')
                 test['result'] = 'failed'
-                if stdout.find('Unsolvable Problem'):
+                if stdout.find('Unsolvable Problem')!=-1:
                     reason = 'Unsolvable Problem'
                 else:
                     reason = 'Timeout'
                 test['reason'] = reason
-                # print('Reason: ', reason)
                 
-            with open(filename, 'w') as f:
+            with open(path+filename, 'w') as f:
                 f.write(json.dumps(result, indent=4))
                 
             bar.next()
     
+        result['elapsed'] = str(bar.elapsed_td)
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(result, indent=4))
+        
 if __name__=="__main__":
+    
     try:
         main()
     except KeyboardInterrupt:
