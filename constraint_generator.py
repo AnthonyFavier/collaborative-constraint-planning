@@ -21,6 +21,12 @@ from unified_planning.model.types import _BoolType as upBool
 dp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl' # type: str
 pp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
 
+# ZenoTravel
+names_of_constants = ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit']
+# Rover
+# names_of_constants = ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges']
+# to extract automatically?
+
 ###################################
 
 NB_EXPRESSION =         50
@@ -69,7 +75,7 @@ def generate_constraints(original_problem):
     # Select only changing fluents (not constants)
     changing_fluents = []
     for f in original_problem.fluents:
-        if not f.name in ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit']:
+        if not f.name in names_of_constants:
             changing_fluents.append(f)
             
     # EXPRESSIONS
@@ -220,6 +226,9 @@ class MyIterator:
 ##########
 
 def main():
+    run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
+    print(run_name)
+    
     # Parse original problem
     reader = PDDLReader()
     original_problem: upProblem = reader.parse_problem(dp, pp) 
@@ -321,6 +330,8 @@ def main():
 if __name__=="__main__":
     
     try:
+        if len(sys.argv)>1:
+            TIMEOUT = int(sys.argv[1])
         main()
     except KeyboardInterrupt:
         print("Ctrl+C detected. Exiting...")
