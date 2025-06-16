@@ -26,16 +26,20 @@ def nx_to_cytoscape_elements(G: nx.MultiDiGraph):
             if d['type'] == 'task':
                     color = 'darkblue'
                     shape = 'box'
+                    layer = 0
             elif d['type'] == 'method':
                     color = 'darkgreen'
                     shape = 'ellipse'
+                    layer = 1
             elif d['type'] == 'action':
                     color = 'black'
                     shape = 'box3d'
+                    layer = 2
             elif d['type'] == 'root':
                     color = 'red'
                     shape = 'dot'
-            nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color, 'type': d['type'], 'shape': shape}})
+                    layer = 0
+            nodes.append({'data': {'id': str(n), 'label': str(n), 'color': color, 'type': d['type'], 'shape': shape, 'layer': layer}})
     edges = []
     for u, v, key, data in G.edges(keys=True, data=True):
             # edge_id = f"{u}-{v}-{key}"
@@ -74,16 +78,19 @@ def digraph_to_cytoscape_elements(G: nx.DiGraph):
             if d['type'] == 'task':
                     color = 'darkblue'
                     shape = 'roundrectangle'
+                    
             elif d['type'] == 'method':
                     color = 'darkgreen'
                     shape = 'ellipse'
+                    
             elif d['type'] == 'action':
                     color = 'black'
                     shape = 'rectangle'
+                    
             elif d['type'] == 'root':
                     color = 'red'
                     shape = 'diamond'
-            nodes.append({'data': {'id': str(n), 'label': d['label'], 'color': color, 'type': d['type'], 'shape': shape}})
+            nodes.append({'data': {'id': str(n), 'label': d['label'], 'color': color, 'type': d['type'], 'shape': shape, 'step': d['step']}})
     edges = []
     for u, v, data in G.edges(data=True):
             edge = {
@@ -186,7 +193,7 @@ def load_problem():
 def view_htn():
     global DOMAIN_TEXT, DOMAIN_PATH
     DOMAIN_TEXT = request.json.get('domainText', '')
-    print('domain text:',DOMAIN_TEXT)
+    # print('domain text:',DOMAIN_TEXT)
     
     # # Use LLM to interpret the domain and problem, then show in the display frame:
     # prompt_input = [{"role": "user", "content":f"Describe the following domain and problem from the HDDL files in a more human-interpretable language. \nDomain: {DOMAIN_TEXT}\nProblem: {PROBLEM_TEXT}"}]

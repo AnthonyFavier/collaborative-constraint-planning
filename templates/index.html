@@ -11,7 +11,7 @@
     .scroll-area { width: 100%; height: 100px; overflow: auto; border: 1px solid #ccc; resize:both; background-color: white;}
     .frame-box { border: 1px solid #999; height: 280px; width: 100%; overflow: hidden;background-color: white; resize: both; align-items: center;}
     #cy { width: 99%; height: 100%; overflow: hidden;} 
-    #cy_plan { width: 99.9%; height: 100%;} 
+    #cy_plan { width: 99%; height: 100%; overflow: hidden;} 
     .section { 
         margin-bottom: 15px; 
         border: 1px solid #ccc; /* Add a light gray border */
@@ -23,7 +23,7 @@
         /* display: flex; */
         align-items: stretch;
     }
-    .checkbox-list { width: 100%; height: 280px; display: flex; flex-direction: column; flex-grow: 1; background-color: white; overflow: auto;border: 1px solid #999;resize: both;}
+    .checkbox-list { width: 99.9%; height: 280px; display: flex; flex-direction: column; flex-grow: 1; background-color: white; overflow: auto;border: 1px solid #999;resize: both;}
     label {
         display: inline-block; /* Change label to inline-block to respect width */
         width: auto; /* Set width appropriately */
@@ -116,6 +116,7 @@
         <div style="display: flex; gap: 10px;">
             <div style="flex: 2;">
                 <label>Graph Viewer: </label>
+                    <input type="checkbox" id="noOverlapCheckbox" unchecked> Avoid Overlap
                     <button onclick="viewHTN()">View Domain</button>
                     <button onclick="filterGraph()">View Selected Operators</button>
                 
@@ -124,8 +125,9 @@
 
             <div style="flex: 1;">
                 <label>Operators:</label>
-                <button onclick="filterGraph()">View Graph</button>
-                <button onclick="askLLMOperators()">View Text</button>
+                <button onclick="filterGraph()">Graph</button>
+                <button onclick="askLLMOperators()">Text</button>
+                <button id="uncheckedAllOperators" onclick="uncheckedAllOperators()">Uncheck All</button>
                 <button onclick="deleteMethods()">Delete</button>
                 <div class="checkbox-list" id="optionsList">
                 </div>
@@ -163,19 +165,21 @@
         <div style="display: flex; gap: 20px;">
         <div style="flex: 2;">
         <label>Plan Diagram  </label>
-            <button onclick="runPlanner()">Run Planner</button>
-            <div class="frame-box" >
-                <div id="cy_plan"></div>
-            </div>
+        <input type="checkbox" id="noOverlapCheckboxPlan" unchecked> Avoid Overlap
+        <button onclick="runPlanner()">Run Planner</button>
+        <div class="frame-box" >
+            <div id="cy_plan"></div>
         </div>
-        <div style="flex: 1;gap: 20px;">
+        </div>
+        <div style="flex: 1;">
             <label>Plan Steps</label>
-            <button id="showPlanStep" onclick="showPlanStep()">Show Steps</button>
+            <button id="showPlanStep" onclick="filterPlanGraph()">Show Steps</button>
             <button id="uncheckedAllSteps" onclick="uncheckedAllSteps()">Uncheck All</button>
             <div class="checkbox-list" id="planStepList">
             </div>
         </div>
-      </div></div>
+      </div>
+    </div>
     
     <div style="flex: 1;">
         <label>Previous Plan</label>
@@ -184,7 +188,7 @@
         <textarea id="planText" rows="11" readonly placeholder="Plan result appears here..."></textarea>
     </div>
     </div>
-    </div>
+  </div>
 
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://unpkg.com/@hpcc-js/wasm@1.4.1/dist/index.min.js" type="javascript/worker"></script>
@@ -371,29 +375,48 @@
                 /* const methodsList = document.getElementById('methodsList'); */
                 optionsList.innerHTML = ''; // Clear existing checkboxes
                 data.graph.elements.forEach(element => {
-                if (element.data &&  !element.data.source) { // Check if it's a node
+                if (element.data && !element.data.source) { // Check if it's a node
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.value = element.data.id;
+
                     const label = document.createElement('label');
                     label.style.color = element.data.color || '#000000';
                     label.textContent = element.data.label || element.data.id;
                     label.prepend(checkbox);
 
-                    optionsList.appendChild(label);
-                    optionsList.appendChild(document.createElement('br'));
-                    /* if (element.data.type === 'method') {
-                        const methodCheckbox = document.createElement('input');
-                        methodCheckbox.type = 'checkbox';
-                        methodCheckbox.value = element.data.id;
-                        const methodLabel = document.createElement('label');
-                        methodLabel.textContent = element.data.label || element.data.id;
-                        methodLabel.style.color = element.data.color || '#000000';
-                        methodLabel.prepend(methodCheckbox);
-
-                        methodsList.appendChild(methodLabel);
-                        methodsList.appendChild(document.createElement('br')); */
-                    /* } */
+                    // Append label to the appropriate section based on the type
+                    if (element.data.type === 'task') {
+                        if (!document.getElementById('taskLabel')) {
+                            const taskLabel = document.createElement('h4');
+                            taskLabel.id = 'taskLabel';
+                            taskLabel.textContent = 'Tasks:';
+                            taskLabel.style.color = element.data.color || '#000000';
+                            optionsList.appendChild(taskLabel);
+                        }
+                        optionsList.appendChild(label);
+                        optionsList.appendChild(document.createElement('br'));
+                    } else if (element.data.type === 'method') {
+                        if (!document.getElementById('methodLabel')) {
+                            const methodLabel = document.createElement('h4');
+                            methodLabel.id = 'methodLabel';
+                            methodLabel.textContent = 'Methods:';
+                            methodLabel.style.color = element.data.color || '#000000';
+                            optionsList.appendChild(methodLabel);
+                        }
+                        optionsList.appendChild(label);
+                        optionsList.appendChild(document.createElement('br'));
+                    } else if (element.data.type === 'action') {
+                        if (!document.getElementById('actionLabel')) {
+                            const actionLabel = document.createElement('h4');
+                            actionLabel.id = 'actionLabel';
+                            actionLabel.textContent = 'Actions:';
+                            actionLabel.style.color = element.data.color || '#000000';
+                            optionsList.appendChild(actionLabel);
+                        }
+                        optionsList.appendChild(label);
+                        optionsList.appendChild(document.createElement('br'));
+                    }
                 }
                 });
             });
@@ -402,63 +425,118 @@
 
 
         function renderGraph(elements) {
-        const cy = cytoscape({
-            container: document.getElementById('cy'),
-            elements: elements,
-            style: [
-            {
-                selector: 'node',
-                style: {
-                    'label': 'data(label)', // Display the label from the data field
-                    'text-valign': 'center', // Center the label vertically
-                    'text-halign': 'center', // Center the label horizontally
-                    'background-color': 'data(color)', // Use the color from the data field
-                    'color': '#FFFFFF', // Label text color
-                    'shape': 'roundrectangle', // Node shape
-                    'width': 'label', // Dynamically calculate width
-                    'height': 20, // Fixed height
-                    'padding': 3, // Add padding around the label
-                    'font-size': '12px' // Font size for the label
-                }
-            },            
-            {   selector: 'edge', 
-                style: { 
-                    'label': 'data(label)', 
-                    'target-arrow-shape': 'triangle', 
-                    'curve-style': 'bezier', 
-                    'line-color': '#aaa', 
-                    'target-arrow-color': '#aaa', 
-                    'arrow-scale': 0.8 /* Reduce the arrow size to make it shorter */
-                }
-            }],
-            layout: { name: 'breadthfirst', directed: true },
-            // nodeDimensionsIncludeLabels: true
-        });
-        cy.fit();
-        // Adjust the graph dynamically when the window is resized
-        window.addEventListener('resize', () => {
-            cy.resize(); // Recalculate the container size
-            cy.fit(null, 20); // Fit the graph with padding
-        });
+            const overlapCheckbox = document.getElementById('noOverlapCheckbox');
+            const isNoOverlap = overlapCheckbox.checked; // Set the value to a boolean indicating if the checkbox is checked
+            const cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)', // Display the label from the data field
+                        'text-valign': 'center', // Center the label vertically
+                        'text-halign': 'center', // Center the label horizontally
+                        'background-color': 'data(color)', // Use the color from the data field
+                        'color': '#FFFFFF', // Label text color
+                        'shape': 'roundrectangle', // Node shape
+                        'width': 'label', // Dynamically calculate width
+                        'height': 15, // Fixed height
+                        'padding': 5, // Add padding around the label
+                        'font-size': '15px' // Font size for the label
+                    }
+                },            
+                {   selector: 'edge', 
+                    style: { 
+                        'label': 'data(label)', 
+                        'target-arrow-shape': 'triangle', 
+                        'curve-style': 'bezier', 
+                        'line-color': '#aaa', 
+                        'target-arrow-color': '#aaa', 
+                        'arrow-scale': 1, /* Reduce the arrow size to make it shorter */
+                        'control-point-step-size': 1, /* Reduce the step size to make edges shorter */
+                    }
+                }],
+                layout: { name: 'breadthfirst', directed: true, avoidOverlap: isNoOverlap },
+                // layout: { name: 'concentric', concentric: (node) => parseInt(node.data('layer') || 0) },
+                // nodeDimensionsIncludeLabels: true
+            });
+            cy.fit();
+            // Adjust the graph dynamically when the window is resized
+            window.addEventListener('resize', () => {
+                cy.resize(); // Recalculate the container size
+                cy.fit(null, 20); // Fit the graph with padding
+            });
+            // const layout = cy.layout({
+            //         name: 'concentric',
+            //         concentric: (node) => parseInt(node.data('layer') || 0)
+            //         // spaceFactor: 0.1, // Reduce space factor for smaller spacing between nodes
+                    
+            //     });
+            const layout = cy.layout({
+                name: 'breadthfirst',
+                directed: true,
+                avoidOverlap: isNoOverlap, // Avoid overlapping nodes
+                // spaceFactor: 0.1, // Reduce space factor for smaller spacing between nodes
+                
+            });
+                layout.run();
         }
         function renderPlanGraph(elements) {
+            console.log('renderPlanGraph called with elements:', elements);
+            const overlapCheckbox = document.getElementById('noOverlapCheckboxPlan');
+            const isNoOverlap = overlapCheckbox.checked; // Set the value to a boolean indicating if the checkbox is checked
             const cy_plan = cytoscape({
                 container: document.getElementById('cy_plan'),
                 elements: elements,
                 style: [
-                { selector: 'node', style: { 'label': 'data(label)', 'text-valign': 'center', 'text-halign': 'center', 'background-color': 'data(color)', 'color': '#FFFFFF', 'shape': 'data(shape)', 'width': 'label', 'padding': 10, 'font-size': '12px' } },
+                { selector: 'node', 
+                    style: { 'label': 'data(label)', 
+                            'text-valign': 'center', 
+                            'text-halign': 'center', 
+                            'background-color': 'data(color)', 
+                            'color': '#FFFFFF', 
+                            'shape': 'data(shape)', 
+                            'width': 'label', 
+                            'height': 15, /* Increase height */
+                            'padding': 10, /* Increase padding */
+                            'font-size': '20px' /* Increase font size */
+                        } },
                 { selector: 'edge', 
                     style: { 'label': '', 
                             'target-arrow-shape': 'triangle', 
-                            'curve-style': 'bezier', 
                             'line-color': '#aaa', 
                             'target-arrow-color': '#aaa',
-                            'arrow-scale': 0.1 /* Reduce the arrow size to make it shorter */
+                            'arrow-scale': 1.5, /* Reduce the arrow size to make it shorter */
+                            'curve-style': 'bezier',
+                            'control-point-step-size': 5 /* Reduce the step size to make edges shorter */
                         } 
                 }
                 ],
-                layout: { name: 'breadthfirst', directed: true, spaceFactor: .5 } // Adjust space factor for better layout
+                layout: { 
+                    name: 'breadthfirst', 
+                    directed: true, 
+                    // spaceFactor: 10, // Reduce space factor for smaller spacing between nodes
+                    orientation: 'horizontal', // Set orientation to horizontal
+                    depthSort: (a, b) => {console.log('Sorting nodes:', a.data('step'), b.data('step')); 
+                                        return parseInt(a.data('step')) - parseInt(b.data('step'));}, // Sort nodes by step number
+                    avoidOverlap: isNoOverlap, // Avoid overlapping nodes
+                 } // Adjust space factor for better layout
             });
+
+            const layout = cy_plan.layout({
+                name: 'breadthfirst',
+                directed: true,
+                spaceFactor: 0.1, // Reduce space factor for smaller spacing between nodes
+                orientation: 'horizontal',
+                depthSort: (a, b) => {
+                    console.log('Sorting nodes:', a.data('step'), b.data('step')); // Debug: Log step values
+                    return parseInt(a.data('step')) - parseInt(b.data('step'));
+                },
+                padding: 5,
+                avoidOverlap: isNoOverlap,
+            });
+            layout.run();
         }
 
         // Filter graph based on selected operators
@@ -506,7 +584,7 @@
         }
         function filterPlanGraph() {
             if (!graphPlanData) {
-                alert("No plan graph data available. Please run the planner first.");
+                alert("No plan graph data available. Please click 'Run Planner' first.");
                 return;
             }
 
@@ -518,14 +596,30 @@
                 return;
             }
             console.log("Checked Steps:", checkedValues);
+            // Add nodes that are source of the checkedValues until root
+            let checkedNodes = new Set(checkedValues); // Start with checked steps
+            let nodesToProcess = new Set(checkedValues); // Start with the checked values
+            while (nodesToProcess.size > 0) {
+                const currentNode = nodesToProcess.values().next().value; // Get a value from the set
+                nodesToProcess.delete(currentNode); // Remove the current node from the set
+                graphPlanData.forEach(element => {
+                    if (element.data && element.data.source && element.data.target) { // Edge
+                        if (element.data.target === currentNode && !checkedNodes.has(element.data.source)) {
+                            checkedNodes.add(element.data.source); // Add source node
+                            nodesToProcess.add(element.data.source); // Add source node to process next
+                        }
+                    }
+                });
+            }
+            console.log("Checked Nodes and its higher nodes:", Array.from(checkedNodes));
 
             // Filter graph elements based on checked steps
             const filteredElements = graphPlanData.filter(element => {
                 if (element.data && !element.data.source) { // Node
-                    return checkedValues.includes(element.data.id);
+                    return checkedNodes.has(element.data.id);
                 }
                 if (element.data && element.data.source && element.data.target) { // Edge
-                    return checkedValues.includes(element.data.source) && checkedValues.includes(element.data.target);
+                    return checkedNodes.has(element.data.source) && checkedNodes.has(element.data.target);
                 }
                 return false;
             });
@@ -533,6 +627,14 @@
             // Render the filtered plan graph
             renderPlanGraph(filteredElements);
 
+        }
+        function uncheckedAllOperators() {
+            const checkboxes = document.querySelectorAll('#optionsList input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+        }
+        function uncheckedAllSteps() {
+            const checkboxes = document.querySelectorAll('#planStepList input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
         }
 
         async function askLLMOperators() {
@@ -569,20 +671,23 @@
             // Show plan steps in the planStepList
             const planStepList = document.getElementById('planStepList');
             planStepList.innerHTML = ''; // Clear existing checkboxes
-            data.elements.forEach(element => {
-                if (element.data && !element.data.source) { // Check if it's a node
-                    if (element.data.type === 'action') {
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.value = element.data.id;
-                        const label = document.createElement('label');
-                        label.style.color = element.data.color || '#000000';
-                        label.textContent = element.data.label || element.data.id;
-                        label.prepend(checkbox);
-                        
-                        planStepList.appendChild(label);
-                        planStepList.appendChild(document.createElement('br'));
-                }};
+            // Assuming `elements` is an array of objects containing `element.data`
+            const sortedElements = data.elements
+                .filter(element => element.data && !element.data.source && element.data.type === 'action') // Filter nodes
+                .sort((a, b) => parseInt(a.data.step) - parseInt(b.data.step)); // Sort by step property
+
+            sortedElements.forEach(element => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = element.data.id;
+
+                const label = document.createElement('label');
+                label.style.color = element.data.color || '#000000';
+                label.textContent = element.data.label || element.data.id;
+                label.prepend(checkbox);
+
+                planStepList.appendChild(label);
+                planStepList.appendChild(document.createElement('br'));
             });
         }
         

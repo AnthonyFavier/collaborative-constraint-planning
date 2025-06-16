@@ -22,9 +22,12 @@ def parse_plan_render(plan_text: str) -> Digraph:
         action_match = re.match(r"^(\d+)\s+([\w\s()\-]+)$", l)
         method_match = re.match(r"^(\d+)\s+([\w\s()\-]+?)\s+->\s+([\w\-]+)\s*([\d\s]*)$", l)
         root_match = re.match(r"^root\s*([\d\s]*)$", l)
-
+        step_count = 0
         if action_match:
+            step_count += 1
             idx, label = action_match.groups()
+            label = str(step_count) + ". " + label.strip()
+            print("label:", label)
             data[idx] = (f'{idx}', label, 'box3d', [])
         elif method_match:
             idx, task, method, children = method_match.groups()
@@ -90,7 +93,7 @@ def parse_plan(plan_text: str) -> nx.DiGraph:
 
     # Create a NetworkX directed graph
     graph = nx.DiGraph()
-
+    step_count = 0
     for i, line in enumerate(lines):
         l = line.strip()
         if not l:
@@ -99,15 +102,18 @@ def parse_plan(plan_text: str) -> nx.DiGraph:
         action_match = re.match(r"^(\d+)\s+([\w\s()\-]+)$", l)
         method_match = re.match(r"^(\d+)\s+([\w\s()\-]+?)\s+->\s+([\w\-]+)\s*([\d\s]*)$", l)
         root_match = re.match(r"^root\s*([\d\s]*)$", l)
-
+        
         if action_match:
+            step_count += 1
             idx, label = action_match.groups()
-            data[idx] = (f'{idx}', label, 'action', [])
+            label = str(step_count) + ". " + label.strip()
+            # print("label:", label)
+            data[idx] = (f'{idx}', label, 'action', [], step_count)
         elif method_match:
             idx, task, method, children = method_match.groups()
             child_list = children.strip().split() if children.strip() else []
-            data[idx] = (f'{idx}', task, 'task', child_list)
-            data[f"m{idx}"] = (f"m{idx}", method, 'method', [])
+            data[idx] = (f'{idx}', task, 'task', child_list, 0)
+            data[f"m{idx}"] = (f"m{idx}", method, 'method', [], 0)
         elif root_match:
             order = root_match.group(1).strip().split()
         else:
@@ -117,7 +123,7 @@ def parse_plan(plan_text: str) -> nx.DiGraph:
         raise ValueError("Expected root")
 
     # Add the root node
-    graph.add_node("root", label="root", shape="point", type="root")
+    graph.add_node("root", label="root", shape="point", type="root", step=0)
 
     # Add edges from root to the initial tasks/methods
     for o in order:
@@ -132,8 +138,8 @@ def parse_plan(plan_text: str) -> nx.DiGraph:
             continue
         visited.add(current)
 
-        node_id, label, node_type, children = data[current]
-        graph.add_node(node_id, label=label, type=node_type)
+        node_id, label, node_type, children, step = data[current]
+        graph.add_node(node_id, label=label, type=node_type, step=step)
 
         for child in children:
             # graph.add_edge(node_id, child)
@@ -143,12 +149,22 @@ def parse_plan(plan_text: str) -> nx.DiGraph:
         if current.startswith("m"):
             continue
         if f"m{current}" in data:
-            method_id, method_label, _, _ = data[f"m{current}"]
-            graph.add_node(method_id, label=method_label, type="method")
+            method_id, method_label, _, _, step= data[f"m{current}"]
+            graph.add_node(method_id, label=method_label, type="method", step=step)
             # print(f"Adding edge from {current} to method {method_id}")
             graph.add_edge(current, method_id)
             for child in data[current][3]:
                 graph.add_edge(method_id, child)
+
+    # Assign step values to tasks and methods based on the maximum step of their linked actions
+    for node in reversed(list(nx.topological_sort(graph))):  # Process nodes in reverse topological order
+        if graph.nodes[node]['type'] in {'task', 'method'}:
+            max_step = graph.nodes[node].get('step', 0)
+            for _, child in graph.out_edges(node):
+                max_step = max(max_step, graph.nodes[child].get('step', 0))
+            graph.nodes[node]['step'] = max_step
+            # graph.nodes[node]['label'] += f" (Step: {max_step})"
+    
 
     # Print warnings if any
     if warnings:
