@@ -15,7 +15,7 @@ from numeric_tcore.parsing_extensions import *
 @click.option('--delta_mode', 'achiever_strategy', flag_value=DELTA)
 @click.option('--naive_mode', 'achiever_strategy', flag_value=NAIVE)
 @click.option('--verbose', is_flag=True, default=False)
-def main(domain, problem, output, achiever_strategy="regression", verbose=False):
+def main(domain, problem, output, achiever_strategy="regression", verbose=False, filename=""):
     problem = parse_pddl3(domain, problem)
 
     compiler = NumericCompiler(achiever_computation_strategy=achiever_strategy) 
@@ -28,8 +28,10 @@ def main(domain, problem, output, achiever_strategy="regression", verbose=False)
 
     new_problem.name = "CompiledProblem"
     writer = PDDLWriter(new_problem, needs_requirements=False)
-    writer.write_domain(os.path.join(output, 'compiled_dom.pddl'))
-    writer.write_problem(os.path.join(output, 'compiled_prob.pddl'))
+    if filename!="":
+        filename += "_"
+    writer.write_domain(os.path.join(output, f'{filename}compiled_dom.pddl'))
+    writer.write_problem(os.path.join(output, f'{filename}compiled_prob.pddl'))
 
 import sys
 if __name__ == '__main__':
