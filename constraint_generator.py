@@ -38,8 +38,12 @@ NB_CONSTRAINT_OR3 =     NB_EXPRESSION
 NB_TEST = 200
 TIMEOUT = 5
 
-run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
-print(run_name)
+# Initialize random seed
+SEED = random.randrange(sys.maxsize)
+SEED = 0 # for testing
+random.seed(SEED)
+
+MAX_RETRY_PICK = 300
 
 ###################################
 
@@ -114,7 +118,7 @@ def generate_constraints(original_problem):
             # If too many retry, stop to avoid infite loop in case already picked all possibilities
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("EXPRESSION: Too many retry to pick expression: Probably already picked all...")
     
     constraints_dict = {}
@@ -132,7 +136,7 @@ def generate_constraints(original_problem):
                 constraints_SIMPLE.append(constraint)
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("SIMPLE: Too many retry to pick expression: Probably already picked all...")
     constraints_dict['SIMPLE'] = constraints_SIMPLE
          
@@ -149,7 +153,7 @@ def generate_constraints(original_problem):
                 constraints_AND2.append(constraint)
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("AND2: Too many retry to pick expression: Probably already picked all...")
     constraints_dict['AND2'] = constraints_AND2
              
@@ -166,7 +170,7 @@ def generate_constraints(original_problem):
                 constraints_AND3.append(constraint)
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("AND3: Too many retry to pick expression: Probably already picked all...")
     constraints_dict['AND3'] = constraints_AND3
     
@@ -183,7 +187,7 @@ def generate_constraints(original_problem):
                 constraints_OR2.append(constraint)
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("OR2: Too many retry to pick expression: Probably already picked all...")
     constraints_dict['OR2'] = constraints_OR2
     
@@ -200,7 +204,7 @@ def generate_constraints(original_problem):
                 constraints_OR3.append(constraint)
             else:
                 n_retry+=1
-                if n_retry==100:
+                if n_retry==MAX_RETRY_PICK:
                     raise Exception("OR3: Too many retry to pick expression: Probably already picked all...")
     constraints_dict['OR3'] = constraints_OR3
     
@@ -237,14 +241,11 @@ def main():
     if original_problem.trajectory_constraints!=[]:
         raise Exception('Already some constraints in original problem')
 
-    # Initialize random seed
-    seed = random.randrange(sys.maxsize)
-    seed = 0 # for testing
-    random.seed(seed)
+    
 
     # Create result file
     result = {}
-    result['seed'] = seed
+    result['seed'] = SEED
     result['timeout'] = TIMEOUT
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
