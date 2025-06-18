@@ -237,7 +237,10 @@ def several():
                 if d['timeout']==x_labels[j]:
                     box_wo_pos.append(j)
                     break
-    
+    if box_wo_data==[]:
+        box_wo_data = [np.nan]
+    if box_wo_pos==[]:
+        box_wo_pos = [np.nan]
     
     # Success ratio data with
     line_data = []
@@ -261,7 +264,8 @@ def several():
         
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
-    VIOLIN = True
+    VIOLIN = False
+    showfliers = False
     offset = 0.15
     
     # WITH
@@ -278,7 +282,7 @@ def several():
                 patch_artist=True,
                 widths=0.25,
                 showmeans=False, 
-                # showfliers=False,
+                showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
                 boxprops={"facecolor": "C0", "edgecolor": "white", "linewidth": 0.5},
                 whiskerprops={"color": "C0", "linewidth": 1.5},
@@ -298,7 +302,7 @@ def several():
                 patch_artist=True,
                 widths=0.25,
                 showmeans=False, 
-                # showfliers=False,
+                showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
                 boxprops={"facecolor": "lightcoral", "edgecolor": "white", "linewidth": 0.5},
                 whiskerprops={"color": "lightcoral", "linewidth": 1.5},
@@ -306,7 +310,7 @@ def several():
             )
     # PARAMS
     axs[0].set_ylabel("Metric values")
-    axs[0].set_title(problem_name + " seed" + str(seed) + ' metric and success rate (Unsolvable=' + '{:.1f}'.format(unsolvable) + '%)')
+    axs[0].set_title(problem_name + " seed" + str(seed))
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
     # axs[0].set_ylim(ymax=90000)
     # axs[0].set_ylim(ymin=20000)
@@ -323,7 +327,8 @@ def several():
     # WO
     axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='without constraints')
     # Params
-    axs[1].axhline(y=100-unsolvable, color="black", linestyle="--", label='solvable with constraints')
+    axs[1].axhline(y=100, color="green", linestyle="--")
+    axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable with constraints ({100-unsolvable:.1f}%)')
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
