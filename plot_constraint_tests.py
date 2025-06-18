@@ -7,9 +7,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 @click.command()
-@click.argument('filename')
-def main_cli(filename):
-    extract_result_with_constraint(filename)
+@click.argument('mode', default='several')
+@click.argument('filename', nargs=-1)
+def main_cli(mode: str, filename: tuple[str,...]):
+    if mode=='several':
+        several()
+    elif mode=='analyze_with':
+        extract_result_with_constraint(filename[0])
+    elif mode=='analyze_without':
+        extract_result_without_constraint(filename[0])
     
 def extract_result_with_constraint(filename):
     print(f'File: {filename}')
@@ -349,6 +355,6 @@ if __name__=='__main__':
     # exit()
 
     # sys.argv += ['50-200-TO5_06-16-2025_10:07:57.json']
-    # main_cli()
+    main_cli()
     
-    several()
+    # several()
