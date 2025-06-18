@@ -202,11 +202,13 @@ def add_label(violin, label):
 
 def several():
     
-    all_files = get_two_level_folder_dict('results_constraints')
-    
-    problem_name = 'zenotravel13' # 'zenotravel13', 'rover13'
+    problem_name = 'rover8_n' # 'zenotravel13', 'rover13', 'rover8_n'
     with_constraints_folder = 'seed0' # 'seed0', 'seed2902480765646109827', 'seed6671597656599831408'
     without_constraints_folder = 'WO10' # 'WO10'
+    
+    VIOLIN = True
+    
+    all_files = get_two_level_folder_dict('results_constraints')
     
     datas = []
     for f in all_files[problem_name][with_constraints_folder]:
@@ -270,7 +272,6 @@ def several():
         
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
-    VIOLIN = False
     showfliers = False
     offset = 0.15
     
