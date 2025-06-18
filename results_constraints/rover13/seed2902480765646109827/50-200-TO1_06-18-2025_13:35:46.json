@@ -1,0 +1,1523 @@
+{
+    "seed": 2902480765646109827,
+    "timeout": 1,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl",
+    "generated_constraints": {
+        "EXPRESSIONS": [
+            "supports(camera3, colour)",
+            "(not on_board(camera3, rover3))",
+            "can_traverse(rover1, waypoint0, waypoint6)",
+            "equipped_for_soil_analysis(rover2)",
+            "channel_free(general)",
+            "in_sun(waypoint7)",
+            "(not store_of(rover2store, rover0))",
+            "(not equipped_for_rock_analysis(rover1))",
+            "(not on_board(camera2, rover1))",
+            "(not visible(waypoint6, waypoint5))",
+            "(not in_sun(waypoint2))",
+            "(not supports(camera2, lowres))",
+            "at_soil_sample(waypoint2)",
+            "visible_from(objective1, waypoint6)",
+            "(not equipped_for_rock_analysis(rover0))",
+            "(not at_lander(general, waypoint4))",
+            "(not visible_from(objective0, waypoint4))",
+            "equipped_for_soil_analysis(rover0)",
+            "(not store_of(rover1store, rover2))",
+            "visible_from(objective1, waypoint7)",
+            "(not calibration_target(camera0, objective3))",
+            "(not at_soil_sample(waypoint1))",
+            "at_rock_sample(waypoint7)",
+            "visible(waypoint4, waypoint3)",
+            "(not at_lander(general, waypoint8))",
+            "(not visible(waypoint4, waypoint6))",
+            "equipped_for_soil_analysis(rover3)",
+            "equipped_for_rock_analysis(rover3)",
+            "at_lander(general, waypoint2)",
+            "calibration_target(camera1, objective1)",
+            "(not on_board(camera1, rover3))",
+            "(not calibration_target(camera1, objective2))",
+            "(not can_traverse(rover0, waypoint3, waypoint6))",
+            "at_rock_sample(waypoint0)",
+            "(not at_rock_sample(waypoint3))",
+            "(not calibration_target(camera3, objective0))",
+            "(not at_soil_sample(waypoint8))",
+            "equipped_for_rock_analysis(rover2)",
+            "(not store_of(rover0store, rover1))",
+            "equipped_for_imaging(rover2)",
+            "at_rock_sample(waypoint4)",
+            "visible_from(objective3, waypoint2)",
+            "equipped_for_soil_analysis(rover1)",
+            "visible(waypoint2, waypoint7)",
+            "equipped_for_imaging(rover3)",
+            "at_soil_sample(waypoint4)",
+            "(not in_sun(waypoint4))",
+            "supports(camera4, lowres)",
+            "at_rock_sample(waypoint8)",
+            "on_board(camera3, rover1)"
+        ],
+        "SIMPLE": [
+            "Always(equipped_for_rock_analysis(rover2))",
+            "Always((not in_sun(waypoint2)))",
+            "Always((not visible(waypoint4, waypoint6)))",
+            "Always(at_lander(general, waypoint2))",
+            "Always((not calibration_target(camera0, objective3)))",
+            "Always(can_traverse(rover1, waypoint0, waypoint6))",
+            "Always((not at_rock_sample(waypoint3)))",
+            "Always(channel_free(general))",
+            "Always((not can_traverse(rover0, waypoint3, waypoint6)))",
+            "Always((not equipped_for_rock_analysis(rover1)))",
+            "Always((not visible_from(objective0, waypoint4)))",
+            "Always(at_rock_sample(waypoint8))",
+            "Always((not at_soil_sample(waypoint1)))",
+            "Always(supports(camera3, colour))",
+            "Always(visible_from(objective1, waypoint7))",
+            "Always(equipped_for_soil_analysis(rover3))",
+            "Always(at_rock_sample(waypoint4))",
+            "Always((not store_of(rover2store, rover0)))",
+            "Always(at_soil_sample(waypoint2))",
+            "Always(at_rock_sample(waypoint0))",
+            "Always(equipped_for_soil_analysis(rover2))",
+            "Always(equipped_for_soil_analysis(rover0))",
+            "Always((not in_sun(waypoint4)))",
+            "Always((not at_lander(general, waypoint4)))",
+            "Always(visible(waypoint4, waypoint3))",
+            "Always((not on_board(camera1, rover3)))",
+            "Always((not on_board(camera2, rover1)))",
+            "Always(in_sun(waypoint7))",
+            "Always((not calibration_target(camera3, objective0)))",
+            "Always(visible_from(objective3, waypoint2))",
+            "Always(supports(camera4, lowres))",
+            "Always((not at_lander(general, waypoint8)))",
+            "Always((not at_soil_sample(waypoint8)))",
+            "Always(at_rock_sample(waypoint7))",
+            "Always(on_board(camera3, rover1))",
+            "Always(equipped_for_imaging(rover2))",
+            "Always(visible_from(objective1, waypoint6))",
+            "Always((not store_of(rover1store, rover2)))",
+            "Always((not equipped_for_rock_analysis(rover0)))",
+            "Always((not supports(camera2, lowres)))",
+            "Always(visible(waypoint2, waypoint7))",
+            "Always((not on_board(camera3, rover3)))",
+            "Always((not calibration_target(camera1, objective2)))",
+            "Always(calibration_target(camera1, objective1))",
+            "Always(equipped_for_soil_analysis(rover1))",
+            "Always((not visible(waypoint6, waypoint5)))",
+            "Always(equipped_for_imaging(rover3))",
+            "Always((not store_of(rover0store, rover1)))",
+            "Always(at_soil_sample(waypoint4))",
+            "Always(equipped_for_rock_analysis(rover3))"
+        ],
+        "AND2": [
+            "Always((on_board(camera3, rover1) and equipped_for_rock_analysis(rover2)))",
+            "Always(((not supports(camera2, lowres)) and in_sun(waypoint7)))",
+            "Always((on_board(camera3, rover1) and at_lander(general, waypoint2)))",
+            "Always((at_rock_sample(waypoint4) and (not at_soil_sample(waypoint8))))",
+            "Always((at_soil_sample(waypoint2) and supports(camera4, lowres)))",
+            "Always((at_rock_sample(waypoint7) and (not visible(waypoint4, waypoint6))))",
+            "Always(((not in_sun(waypoint2)) and equipped_for_soil_analysis(rover0)))",
+            "Always((calibration_target(camera1, objective1) and (not in_sun(waypoint2))))",
+            "Always((visible_from(objective1, waypoint6) and (not on_board(camera3, rover3))))",
+            "Always((visible(waypoint4, waypoint3) and visible_from(objective3, waypoint2)))",
+            "Always((in_sun(waypoint7) and (not on_board(camera3, rover3))))",
+            "Always(((not at_rock_sample(waypoint3)) and (not at_lander(general, waypoint8))))",
+            "Always((visible(waypoint4, waypoint3) and (not at_soil_sample(waypoint8))))",
+            "Always(((not store_of(rover2store, rover0)) and equipped_for_soil_analysis(rover2)))",
+            "Always((equipped_for_imaging(rover2) and (not at_lander(general, waypoint8))))",
+            "Always(((not equipped_for_rock_analysis(rover1)) and at_soil_sample(waypoint4)))",
+            "Always(((not store_of(rover1store, rover2)) and equipped_for_rock_analysis(rover2)))",
+            "Always((supports(camera3, colour) and (not in_sun(waypoint4))))",
+            "Always((visible(waypoint4, waypoint3) and at_soil_sample(waypoint2)))",
+            "Always(((not on_board(camera3, rover3)) and equipped_for_rock_analysis(rover3)))",
+            "Always(((not at_soil_sample(waypoint8)) and equipped_for_imaging(rover2)))",
+            "Always(((not supports(camera2, lowres)) and (not visible_from(objective0, waypoint4))))",
+            "Always((equipped_for_soil_analysis(rover1) and supports(camera3, colour)))",
+            "Always((at_rock_sample(waypoint4) and at_soil_sample(waypoint2)))",
+            "Always(((not on_board(camera2, rover1)) and equipped_for_soil_analysis(rover1)))",
+            "Always(((not visible(waypoint6, waypoint5)) and visible_from(objective1, waypoint7)))",
+            "Always((at_soil_sample(waypoint4) and (not visible_from(objective0, waypoint4))))",
+            "Always((at_rock_sample(waypoint8) and (not visible_from(objective0, waypoint4))))",
+            "Always((equipped_for_rock_analysis(rover3) and at_rock_sample(waypoint0)))",
+            "Always((equipped_for_imaging(rover3) and visible_from(objective3, waypoint2)))",
+            "Always((visible_from(objective1, waypoint6) and equipped_for_imaging(rover3)))",
+            "Always((at_rock_sample(waypoint8) and (not visible(waypoint6, waypoint5))))",
+            "Always(((not store_of(rover0store, rover1)) and (not calibration_target(camera0, objective3))))",
+            "Always(((not on_board(camera3, rover3)) and on_board(camera3, rover1)))",
+            "Always(((not supports(camera2, lowres)) and (not equipped_for_rock_analysis(rover0))))",
+            "Always(((not visible(waypoint6, waypoint5)) and at_soil_sample(waypoint2)))",
+            "Always(((not at_rock_sample(waypoint3)) and (not on_board(camera1, rover3))))",
+            "Always((in_sun(waypoint7) and equipped_for_soil_analysis(rover0)))",
+            "Always((calibration_target(camera1, objective1) and at_soil_sample(waypoint4)))",
+            "Always((at_soil_sample(waypoint2) and (not equipped_for_rock_analysis(rover0))))",
+            "Always((equipped_for_soil_analysis(rover2) and at_rock_sample(waypoint0)))",
+            "Always((equipped_for_soil_analysis(rover3) and (not in_sun(waypoint4))))",
+            "Always(((not equipped_for_rock_analysis(rover0)) and (not can_traverse(rover0, waypoint3, waypoint6))))",
+            "Always((visible_from(objective1, waypoint7) and equipped_for_imaging(rover3)))",
+            "Always(((not at_soil_sample(waypoint1)) and equipped_for_imaging(rover2)))",
+            "Always((on_board(camera3, rover1) and (not at_soil_sample(waypoint8))))",
+            "Always((channel_free(general) and visible(waypoint2, waypoint7)))",
+            "Always(((not on_board(camera2, rover1)) and equipped_for_soil_analysis(rover2)))",
+            "Always(((not calibration_target(camera1, objective2)) and (not calibration_target(camera0, objective3))))",
+            "Always((equipped_for_soil_analysis(rover0) and (not at_soil_sample(waypoint8))))"
+        ],
+        "AND3": [
+            "Always(((not visible_from(objective0, waypoint4)) and at_soil_sample(waypoint2) and visible(waypoint2, waypoint7)))",
+            "Always((equipped_for_rock_analysis(rover3) and at_soil_sample(waypoint2) and (not on_board(camera3, rover3))))",
+            "Always((calibration_target(camera1, objective1) and visible(waypoint2, waypoint7) and supports(camera4, lowres)))",
+            "Always((visible_from(objective1, waypoint7) and on_board(camera3, rover1) and at_lander(general, waypoint2)))",
+            "Always(((not equipped_for_rock_analysis(rover0)) and visible_from(objective1, waypoint6) and (not at_soil_sample(waypoint8))))",
+            "Always(((not on_board(camera3, rover3)) and visible_from(objective1, waypoint6) and calibration_target(camera1, objective1)))",
+            "Always(((not at_soil_sample(waypoint1)) and (not can_traverse(rover0, waypoint3, waypoint6)) and (not at_lander(general, waypoint4))))",
+            "Always(((not equipped_for_rock_analysis(rover0)) and (not equipped_for_rock_analysis(rover1)) and in_sun(waypoint7)))",
+            "Always((in_sun(waypoint7) and (not equipped_for_rock_analysis(rover1)) and at_rock_sample(waypoint0)))",
+            "Always((visible_from(objective1, waypoint6) and equipped_for_rock_analysis(rover2) and visible_from(objective3, waypoint2)))",
+            "Always(((not equipped_for_rock_analysis(rover0)) and (not at_soil_sample(waypoint1)) and equipped_for_soil_analysis(rover1)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) and (not on_board(camera1, rover3)) and (not visible(waypoint4, waypoint6))))",
+            "Always(((not at_lander(general, waypoint4)) and equipped_for_soil_analysis(rover2) and equipped_for_soil_analysis(rover1)))",
+            "Always((equipped_for_imaging(rover3) and (not at_soil_sample(waypoint1)) and (not equipped_for_rock_analysis(rover1))))",
+            "Always((visible_from(objective1, waypoint7) and equipped_for_soil_analysis(rover0) and (not on_board(camera3, rover3))))",
+            "Always((at_rock_sample(waypoint4) and (not in_sun(waypoint2)) and at_rock_sample(waypoint8)))",
+            "Always((in_sun(waypoint7) and (not at_soil_sample(waypoint1)) and calibration_target(camera1, objective1)))",
+            "Always(((not supports(camera2, lowres)) and (not at_soil_sample(waypoint1)) and (not at_lander(general, waypoint8))))",
+            "Always((at_rock_sample(waypoint4) and (not at_soil_sample(waypoint8)) and (not at_soil_sample(waypoint1))))",
+            "Always((at_soil_sample(waypoint4) and equipped_for_soil_analysis(rover2) and (not equipped_for_rock_analysis(rover1))))",
+            "Always((equipped_for_soil_analysis(rover1) and at_soil_sample(waypoint2) and at_rock_sample(waypoint0)))",
+            "Always((equipped_for_soil_analysis(rover2) and at_rock_sample(waypoint7) and (not on_board(camera3, rover3))))",
+            "Always((channel_free(general) and (not equipped_for_rock_analysis(rover0)) and at_lander(general, waypoint2)))",
+            "Always(((not on_board(camera2, rover1)) and channel_free(general) and at_rock_sample(waypoint8)))",
+            "Always(((not supports(camera2, lowres)) and equipped_for_imaging(rover2) and in_sun(waypoint7)))",
+            "Always((equipped_for_soil_analysis(rover1) and (not at_lander(general, waypoint8)) and (not on_board(camera3, rover3))))",
+            "Always((visible(waypoint4, waypoint3) and (not at_rock_sample(waypoint3)) and equipped_for_imaging(rover2)))",
+            "Always((equipped_for_imaging(rover3) and (not store_of(rover0store, rover1)) and (not supports(camera2, lowres))))",
+            "Always(((not store_of(rover1store, rover2)) and channel_free(general) and equipped_for_soil_analysis(rover0)))",
+            "Always((equipped_for_soil_analysis(rover0) and visible_from(objective1, waypoint7) and (not visible(waypoint4, waypoint6))))",
+            "Always((can_traverse(rover1, waypoint0, waypoint6) and (not on_board(camera3, rover3)) and equipped_for_rock_analysis(rover2)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) and (not at_soil_sample(waypoint8)) and visible(waypoint4, waypoint3)))",
+            "Always((at_soil_sample(waypoint2) and (not calibration_target(camera1, objective2)) and (not at_lander(general, waypoint4))))",
+            "Always((supports(camera4, lowres) and (not visible(waypoint6, waypoint5)) and (not store_of(rover1store, rover2))))",
+            "Always((at_rock_sample(waypoint8) and (not visible_from(objective0, waypoint4)) and (not at_soil_sample(waypoint8))))",
+            "Always(((not at_soil_sample(waypoint8)) and at_rock_sample(waypoint0) and (not on_board(camera1, rover3))))",
+            "Always(((not at_rock_sample(waypoint3)) and equipped_for_imaging(rover2) and (not visible(waypoint4, waypoint6))))",
+            "Always(((not store_of(rover1store, rover2)) and (not at_soil_sample(waypoint1)) and (not in_sun(waypoint4))))",
+            "Always(((not can_traverse(rover0, waypoint3, waypoint6)) and (not visible(waypoint4, waypoint6)) and (not store_of(rover2store, rover0))))",
+            "Always((equipped_for_imaging(rover2) and (not visible(waypoint4, waypoint6)) and (not at_lander(general, waypoint4))))",
+            "Always((equipped_for_soil_analysis(rover0) and (not store_of(rover2store, rover0)) and equipped_for_rock_analysis(rover2)))",
+            "Always((visible(waypoint2, waypoint7) and visible_from(objective1, waypoint7) and (not on_board(camera3, rover3))))",
+            "Always(((not on_board(camera2, rover1)) and equipped_for_soil_analysis(rover0) and equipped_for_soil_analysis(rover2)))",
+            "Always((at_lander(general, waypoint2) and visible_from(objective1, waypoint7) and supports(camera3, colour)))",
+            "Always(((not visible(waypoint4, waypoint6)) and visible(waypoint2, waypoint7) and (not at_soil_sample(waypoint1))))",
+            "Always((equipped_for_soil_analysis(rover2) and (not on_board(camera3, rover3)) and (not calibration_target(camera0, objective3))))",
+            "Always(((not at_lander(general, waypoint8)) and calibration_target(camera1, objective1) and at_rock_sample(waypoint4)))",
+            "Always((equipped_for_imaging(rover2) and (not in_sun(waypoint2)) and at_soil_sample(waypoint2)))",
+            "Always(((not store_of(rover1store, rover2)) and equipped_for_soil_analysis(rover0) and (not equipped_for_rock_analysis(rover0))))",
+            "Always((equipped_for_rock_analysis(rover3) and in_sun(waypoint7) and visible_from(objective3, waypoint2)))"
+        ],
+        "OR2": [
+            "Always(((not in_sun(waypoint4)) or (not store_of(rover0store, rover1))))",
+            "Always((on_board(camera3, rover1) or at_rock_sample(waypoint4)))",
+            "Always((equipped_for_imaging(rover3) or (not calibration_target(camera0, objective3))))",
+            "Always(((not store_of(rover1store, rover2)) or equipped_for_soil_analysis(rover0)))",
+            "Always(((not on_board(camera2, rover1)) or equipped_for_soil_analysis(rover3)))",
+            "Always(((not can_traverse(rover0, waypoint3, waypoint6)) or (not calibration_target(camera3, objective0))))",
+            "Always(((not in_sun(waypoint2)) or supports(camera4, lowres)))",
+            "Always((supports(camera4, lowres) or supports(camera3, colour)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) or (not on_board(camera1, rover3))))",
+            "Always((visible(waypoint2, waypoint7) or (not store_of(rover2store, rover0))))",
+            "Always(((not calibration_target(camera0, objective3)) or at_soil_sample(waypoint4)))",
+            "Always((at_rock_sample(waypoint7) or at_rock_sample(waypoint4)))",
+            "Always((at_soil_sample(waypoint4) or visible_from(objective3, waypoint2)))",
+            "Always(((not visible(waypoint4, waypoint6)) or (not can_traverse(rover0, waypoint3, waypoint6))))",
+            "Always((equipped_for_soil_analysis(rover3) or (not store_of(rover0store, rover1))))",
+            "Always(((not calibration_target(camera1, objective2)) or in_sun(waypoint7)))",
+            "Always(((not on_board(camera1, rover3)) or (not in_sun(waypoint2))))",
+            "Always(((not at_soil_sample(waypoint8)) or equipped_for_soil_analysis(rover1)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) or on_board(camera3, rover1)))",
+            "Always((equipped_for_rock_analysis(rover2) or (not calibration_target(camera0, objective3))))",
+            "Always(((not equipped_for_rock_analysis(rover0)) or in_sun(waypoint7)))",
+            "Always(((not in_sun(waypoint4)) or visible_from(objective3, waypoint2)))",
+            "Always(((not visible_from(objective0, waypoint4)) or in_sun(waypoint7)))",
+            "Always((equipped_for_rock_analysis(rover2) or (not on_board(camera1, rover3))))",
+            "Always(((not on_board(camera2, rover1)) or equipped_for_soil_analysis(rover2)))",
+            "Always(((not at_soil_sample(waypoint1)) or equipped_for_imaging(rover3)))",
+            "Always((equipped_for_rock_analysis(rover3) or equipped_for_imaging(rover3)))",
+            "Always((supports(camera4, lowres) or equipped_for_imaging(rover2)))",
+            "Always((visible(waypoint2, waypoint7) or in_sun(waypoint7)))",
+            "Always(((not store_of(rover0store, rover1)) or equipped_for_imaging(rover3)))",
+            "Always((supports(camera3, colour) or supports(camera4, lowres)))",
+            "Always(((not at_lander(general, waypoint4)) or (not at_rock_sample(waypoint3))))",
+            "Always((visible_from(objective1, waypoint7) or (not calibration_target(camera0, objective3))))",
+            "Always((can_traverse(rover1, waypoint0, waypoint6) or at_soil_sample(waypoint2)))",
+            "Always((at_lander(general, waypoint2) or (not at_lander(general, waypoint4))))",
+            "Always((channel_free(general) or in_sun(waypoint7)))",
+            "Always((equipped_for_soil_analysis(rover3) or equipped_for_soil_analysis(rover1)))",
+            "Always(((not supports(camera2, lowres)) or (not equipped_for_rock_analysis(rover0))))",
+            "Always((at_lander(general, waypoint2) or (not in_sun(waypoint2))))",
+            "Always(((not visible(waypoint6, waypoint5)) or in_sun(waypoint7)))",
+            "Always(((not calibration_target(camera0, objective3)) or visible_from(objective3, waypoint2)))",
+            "Always((at_lander(general, waypoint2) or equipped_for_imaging(rover3)))",
+            "Always((at_rock_sample(waypoint8) or (not store_of(rover1store, rover2))))",
+            "Always((at_rock_sample(waypoint0) or visible_from(objective1, waypoint6)))",
+            "Always((visible_from(objective1, waypoint6) or (not visible_from(objective0, waypoint4))))",
+            "Always((at_rock_sample(waypoint8) or at_soil_sample(waypoint2)))",
+            "Always(((not calibration_target(camera1, objective2)) or at_rock_sample(waypoint0)))",
+            "Always((supports(camera4, lowres) or at_rock_sample(waypoint4)))",
+            "Always((channel_free(general) or supports(camera3, colour)))",
+            "Always(((not store_of(rover2store, rover0)) or (not at_soil_sample(waypoint1))))"
+        ],
+        "OR3": [
+            "Always(((not at_soil_sample(waypoint8)) or at_soil_sample(waypoint2) or (not supports(camera2, lowres))))",
+            "Always((equipped_for_imaging(rover3) or (not on_board(camera1, rover3)) or (not store_of(rover2store, rover0))))",
+            "Always((calibration_target(camera1, objective1) or supports(camera4, lowres) or visible_from(objective1, waypoint6)))",
+            "Always(((not at_rock_sample(waypoint3)) or (not visible(waypoint6, waypoint5)) or (not at_soil_sample(waypoint1))))",
+            "Always((on_board(camera3, rover1) or at_soil_sample(waypoint4) or in_sun(waypoint7)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) or (not store_of(rover1store, rover2)) or at_rock_sample(waypoint8)))",
+            "Always(((not at_rock_sample(waypoint3)) or (not visible(waypoint4, waypoint6)) or at_rock_sample(waypoint0)))",
+            "Always(((not in_sun(waypoint2)) or on_board(camera3, rover1) or at_rock_sample(waypoint4)))",
+            "Always((at_soil_sample(waypoint4) or at_soil_sample(waypoint2) or (not at_lander(general, waypoint8))))",
+            "Always((equipped_for_rock_analysis(rover2) or equipped_for_soil_analysis(rover3) or (not at_lander(general, waypoint4))))",
+            "Always((equipped_for_soil_analysis(rover2) or visible_from(objective3, waypoint2) or visible(waypoint4, waypoint3)))",
+            "Always(((not at_rock_sample(waypoint3)) or (not store_of(rover0store, rover1)) or (not visible(waypoint6, waypoint5))))",
+            "Always((can_traverse(rover1, waypoint0, waypoint6) or at_rock_sample(waypoint4) or equipped_for_imaging(rover3)))",
+            "Always((equipped_for_soil_analysis(rover3) or visible_from(objective1, waypoint7) or equipped_for_rock_analysis(rover3)))",
+            "Always((visible_from(objective3, waypoint2) or channel_free(general) or at_soil_sample(waypoint4)))",
+            "Always(((not visible(waypoint6, waypoint5)) or (not can_traverse(rover0, waypoint3, waypoint6)) or equipped_for_soil_analysis(rover1)))",
+            "Always(((not calibration_target(camera0, objective3)) or (not at_soil_sample(waypoint8)) or (not on_board(camera2, rover1))))",
+            "Always((at_soil_sample(waypoint2) or at_lander(general, waypoint2) or at_rock_sample(waypoint4)))",
+            "Always((visible_from(objective1, waypoint7) or equipped_for_soil_analysis(rover3) or visible_from(objective1, waypoint6)))",
+            "Always(((not at_soil_sample(waypoint8)) or at_soil_sample(waypoint2) or (not store_of(rover2store, rover0))))",
+            "Always(((not at_lander(general, waypoint4)) or supports(camera3, colour) or at_rock_sample(waypoint7)))",
+            "Always((visible_from(objective3, waypoint2) or (not visible(waypoint6, waypoint5)) or visible(waypoint4, waypoint3)))",
+            "Always(((not store_of(rover2store, rover0)) or supports(camera3, colour) or calibration_target(camera1, objective1)))",
+            "Always((at_rock_sample(waypoint8) or (not at_soil_sample(waypoint1)) or (not at_lander(general, waypoint8))))",
+            "Always(((not calibration_target(camera1, objective2)) or (not store_of(rover2store, rover0)) or (not visible(waypoint6, waypoint5))))",
+            "Always((at_rock_sample(waypoint4) or (not calibration_target(camera3, objective0)) or at_soil_sample(waypoint2)))",
+            "Always((equipped_for_soil_analysis(rover2) or supports(camera3, colour) or in_sun(waypoint7)))",
+            "Always((at_soil_sample(waypoint2) or visible_from(objective3, waypoint2) or at_rock_sample(waypoint0)))",
+            "Always((supports(camera4, lowres) or (not visible(waypoint4, waypoint6)) or equipped_for_rock_analysis(rover3)))",
+            "Always(((not supports(camera2, lowres)) or (not in_sun(waypoint2)) or equipped_for_rock_analysis(rover3)))",
+            "Always(((not visible(waypoint6, waypoint5)) or at_rock_sample(waypoint8) or on_board(camera3, rover1)))",
+            "Always((visible_from(objective1, waypoint7) or (not visible_from(objective0, waypoint4)) or (not on_board(camera2, rover1))))",
+            "Always((supports(camera4, lowres) or (not calibration_target(camera3, objective0)) or (not on_board(camera2, rover1))))",
+            "Always((visible_from(objective1, waypoint6) or (not equipped_for_rock_analysis(rover1)) or (not visible_from(objective0, waypoint4))))",
+            "Always(((not supports(camera2, lowres)) or visible_from(objective1, waypoint6) or calibration_target(camera1, objective1)))",
+            "Always((in_sun(waypoint7) or (not in_sun(waypoint4)) or at_rock_sample(waypoint7)))",
+            "Always((visible_from(objective1, waypoint7) or channel_free(general) or supports(camera4, lowres)))",
+            "Always(((not on_board(camera1, rover3)) or calibration_target(camera1, objective1) or equipped_for_imaging(rover2)))",
+            "Always((visible(waypoint2, waypoint7) or equipped_for_soil_analysis(rover2) or (not on_board(camera3, rover3))))",
+            "Always(((not at_soil_sample(waypoint1)) or (not supports(camera2, lowres)) or equipped_for_soil_analysis(rover0)))",
+            "Always(((not equipped_for_rock_analysis(rover1)) or at_lander(general, waypoint2) or (not visible(waypoint4, waypoint6))))",
+            "Always((visible_from(objective3, waypoint2) or (not equipped_for_rock_analysis(rover1)) or (not at_lander(general, waypoint8))))",
+            "Always((equipped_for_soil_analysis(rover1) or (not in_sun(waypoint4)) or (not calibration_target(camera3, objective0))))",
+            "Always(((not can_traverse(rover0, waypoint3, waypoint6)) or (not at_lander(general, waypoint4)) or (not store_of(rover0store, rover1))))",
+            "Always((at_rock_sample(waypoint8) or at_soil_sample(waypoint4) or (not visible(waypoint4, waypoint6))))",
+            "Always(((not store_of(rover1store, rover2)) or at_soil_sample(waypoint4) or (not in_sun(waypoint2))))",
+            "Always(((not on_board(camera1, rover3)) or (not at_lander(general, waypoint8)) or (not calibration_target(camera1, objective2))))",
+            "Always(((not in_sun(waypoint4)) or in_sun(waypoint7) or equipped_for_imaging(rover2)))",
+            "Always(((not on_board(camera3, rover3)) or at_rock_sample(waypoint8) or calibration_target(camera1, objective1)))",
+            "Always((in_sun(waypoint7) or visible_from(objective1, waypoint7) or at_rock_sample(waypoint4)))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always(can_traverse(rover1, waypoint0, waypoint6))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((on_board(camera3, rover1) and at_lander(general, waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) and (not at_soil_sample(waypoint1)) and (not at_lander(general, waypoint8))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover2) or (not calibration_target(camera0, objective3))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) or at_soil_sample(waypoint4) or (not in_sun(waypoint2))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not in_sun(waypoint4)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((supports(camera3, colour) and (not in_sun(waypoint4))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint3)) and equipped_for_imaging(rover2) and (not visible(waypoint4, waypoint6))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint6) or (not visible_from(objective0, waypoint4))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective3, waypoint2) or (not visible(waypoint6, waypoint5)) or visible(waypoint4, waypoint3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not calibration_target(camera3, objective0)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) and visible(waypoint2, waypoint7)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint4) and (not at_soil_sample(waypoint8)) and (not at_soil_sample(waypoint1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not store_of(rover2store, rover0)) or (not at_soil_sample(waypoint1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) or visible_from(objective1, waypoint6) or calibration_target(camera1, objective1)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not store_of(rover0store, rover1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint4) and (not at_soil_sample(waypoint8))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover1) and at_soil_sample(waypoint2) and at_rock_sample(waypoint0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((channel_free(general) or in_sun(waypoint7)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover2) or visible_from(objective3, waypoint2) or visible(waypoint4, waypoint3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible(waypoint2, waypoint7))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) and equipped_for_soil_analysis(rover0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint4, waypoint6)) and visible(waypoint2, waypoint7) and (not at_soil_sample(waypoint1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) or equipped_for_soil_analysis(rover1)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint7) or equipped_for_soil_analysis(rover3) or visible_from(objective1, waypoint6)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not visible(waypoint6, waypoint5)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover2) and (not at_lander(general, waypoint8))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) and (not at_soil_sample(waypoint8)) and visible(waypoint4, waypoint3)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera2, rover1)) or equipped_for_soil_analysis(rover3)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint2) or at_lander(general, waypoint2) or at_rock_sample(waypoint4)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_imaging(rover3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera1, objective2)) and (not calibration_target(camera0, objective3))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and equipped_for_soil_analysis(rover0) and (not equipped_for_rock_analysis(rover0))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_lander(general, waypoint2) or (not at_lander(general, waypoint4))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera1, objective2)) or (not store_of(rover2store, rover0)) or (not visible(waypoint6, waypoint5))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not on_board(camera1, rover3)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) and (not visible(waypoint6, waypoint5))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and channel_free(general) and equipped_for_soil_analysis(rover0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) or supports(camera3, colour)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint6, waypoint5)) or at_rock_sample(waypoint8) or on_board(camera3, rover1)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible(waypoint4, waypoint3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint6) and equipped_for_imaging(rover3)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover1) and (not at_lander(general, waypoint8)) and (not on_board(camera3, rover3))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) or (not on_board(camera1, rover3))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) or (not at_soil_sample(waypoint1)) or (not at_lander(general, waypoint8))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not on_board(camera2, rover1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint4) and (not visible_from(objective0, waypoint4))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) and (not on_board(camera1, rover3)) and (not visible(waypoint4, waypoint6))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((supports(camera4, lowres) or at_rock_sample(waypoint4)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint4) or at_soil_sample(waypoint2) or (not at_lander(general, waypoint8))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(at_soil_sample(waypoint2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) and (not visible_from(objective0, waypoint4))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint4, waypoint3) and (not at_rock_sample(waypoint3)) and equipped_for_imaging(rover2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint2)) or supports(camera4, lowres)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) or (not in_sun(waypoint4)) or at_rock_sample(waypoint7)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_rock_analysis(rover2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint2) and (not equipped_for_rock_analysis(rover0))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((supports(camera4, lowres) and (not visible(waypoint6, waypoint5)) and (not store_of(rover1store, rover2))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint4)) or (not store_of(rover0store, rover1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera1, rover3)) or calibration_target(camera1, objective1) or equipped_for_imaging(rover2)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(supports(camera3, colour))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera2, rover1)) and equipped_for_soil_analysis(rover1)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint8)) and calibration_target(camera1, objective1) and at_rock_sample(waypoint4)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint6, waypoint5)) or in_sun(waypoint7)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective3, waypoint2) or (not equipped_for_rock_analysis(rover1)) or (not at_lander(general, waypoint8))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not in_sun(waypoint2)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) and in_sun(waypoint7)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover2) and (not in_sun(waypoint2)) and at_soil_sample(waypoint2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint7) or (not calibration_target(camera0, objective3))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) or at_lander(general, waypoint2) or (not visible(waypoint4, waypoint6))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_imaging(rover2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint6) and (not on_board(camera3, rover3))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint8)) and at_rock_sample(waypoint0) and (not on_board(camera1, rover3))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint7) or at_rock_sample(waypoint4)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint3)) or (not visible(waypoint4, waypoint6)) or at_rock_sample(waypoint0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible_from(objective3, waypoint2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover3) and visible_from(objective3, waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover3) and (not store_of(rover0store, rover1)) and (not supports(camera2, lowres))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint8)) or equipped_for_soil_analysis(rover1)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint6) or (not equipped_for_rock_analysis(rover1)) or (not visible_from(objective0, waypoint4))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_soil_analysis(rover1))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint3)) and (not on_board(camera1, rover3))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_lander(general, waypoint2) and visible_from(objective1, waypoint7) and supports(camera3, colour)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint4, waypoint6)) or (not can_traverse(rover0, waypoint3, waypoint6))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera1, rover3)) or (not at_lander(general, waypoint8)) or (not calibration_target(camera1, objective2))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not at_soil_sample(waypoint1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((calibration_target(camera1, objective1) and (not in_sun(waypoint2))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) and (not equipped_for_rock_analysis(rover1)) and at_rock_sample(waypoint0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera1, rover3)) or (not in_sun(waypoint2))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint4)) or in_sun(waypoint7) or equipped_for_imaging(rover2)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not visible_from(objective0, waypoint4)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and equipped_for_rock_analysis(rover2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint2) and (not calibration_target(camera1, objective2)) and (not at_lander(general, waypoint4))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover2) or (not on_board(camera1, rover3))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) or visible_from(objective1, waypoint7) or at_rock_sample(waypoint4)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_soil_analysis(rover2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint4, waypoint3) and visible_from(objective3, waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover3) and in_sun(waypoint7) and visible_from(objective3, waypoint2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((supports(camera4, lowres) or supports(camera3, colour)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover2) or supports(camera3, colour) or in_sun(waypoint7)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible_from(objective1, waypoint6))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint2)) and equipped_for_soil_analysis(rover0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover2) and (not visible(waypoint4, waypoint6)) and (not at_lander(general, waypoint4))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera2, rover1)) or equipped_for_soil_analysis(rover2)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((supports(camera4, lowres) or (not calibration_target(camera3, objective0)) or (not on_board(camera2, rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not calibration_target(camera1, objective2)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((calibration_target(camera1, objective1) and at_soil_sample(waypoint4)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint4) and (not in_sun(waypoint2)) and at_rock_sample(waypoint8)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera1, objective2)) or at_rock_sample(waypoint0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((can_traverse(rover1, waypoint0, waypoint6) or at_rock_sample(waypoint4) or equipped_for_imaging(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(calibration_target(camera1, objective1))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint1)) and equipped_for_imaging(rover2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera3, rover3)) and visible_from(objective1, waypoint6) and calibration_target(camera1, objective1)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_lander(general, waypoint2) or (not in_sun(waypoint2))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint7) or channel_free(general) or supports(camera4, lowres)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_soil_analysis(rover3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover2store, rover0)) and equipped_for_soil_analysis(rover2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((calibration_target(camera1, objective1) and visible(waypoint2, waypoint7) and supports(camera4, lowres)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera1, objective2)) or in_sun(waypoint7)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint8)) or at_soil_sample(waypoint2) or (not supports(camera2, lowres))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(supports(camera4, lowres))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint6, waypoint5)) and visible_from(objective1, waypoint7)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint1)) and (not can_traverse(rover0, waypoint3, waypoint6)) and (not at_lander(general, waypoint4))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera0, objective3)) or visible_from(objective3, waypoint2)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((calibration_target(camera1, objective1) or supports(camera4, lowres) or visible_from(objective1, waypoint6)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(at_lander(general, waypoint2))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible(waypoint6, waypoint5)) and at_soil_sample(waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover0)) and visible_from(objective1, waypoint6) and (not at_soil_sample(waypoint8))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover3) or equipped_for_imaging(rover3)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint3)) or (not store_of(rover0store, rover1)) or (not visible(waypoint6, waypoint5))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(on_board(camera3, rover1))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((on_board(camera3, rover1) and (not at_soil_sample(waypoint8))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover3) and at_soil_sample(waypoint2) and (not on_board(camera3, rover3))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not store_of(rover0store, rover1)) or equipped_for_imaging(rover3)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover0, waypoint3, waypoint6)) or (not at_lander(general, waypoint4)) or (not store_of(rover0store, rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(at_rock_sample(waypoint8))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover0)) and (not can_traverse(rover0, waypoint3, waypoint6))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) and (not at_soil_sample(waypoint1)) and calibration_target(camera1, objective1)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((can_traverse(rover1, waypoint0, waypoint6) or at_soil_sample(waypoint2)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover1) or (not in_sun(waypoint4)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(channel_free(general))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover2) and at_rock_sample(waypoint0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_soil_sample(waypoint4) and equipped_for_soil_analysis(rover2) and (not equipped_for_rock_analysis(rover1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((supports(camera3, colour) or supports(camera4, lowres)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) or at_soil_sample(waypoint4) or (not visible(waypoint4, waypoint6))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible_from(objective1, waypoint7))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover1) and supports(camera3, colour)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) and (not equipped_for_rock_analysis(rover0)) and at_lander(general, waypoint2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover0, waypoint3, waypoint6)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint3)) or (not visible(waypoint6, waypoint5)) or (not at_soil_sample(waypoint1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not can_traverse(rover0, waypoint3, waypoint6)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint4, waypoint3) and at_soil_sample(waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint6) and equipped_for_rock_analysis(rover2) and visible_from(objective3, waypoint2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_imaging(rover3) or (not calibration_target(camera0, objective3))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) or (not in_sun(waypoint2)) or equipped_for_rock_analysis(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_rock_analysis(rover3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera3, rover3)) and on_board(camera3, rover1)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint4)) and equipped_for_soil_analysis(rover2) and equipped_for_soil_analysis(rover1)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) or (not store_of(rover0store, rover1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint1)) or (not supports(camera2, lowres)) or equipped_for_soil_analysis(rover0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not equipped_for_rock_analysis(rover1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) and (not equipped_for_rock_analysis(rover0))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) and (not visible_from(objective0, waypoint4)) and (not at_soil_sample(waypoint8))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint1)) or equipped_for_imaging(rover3)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) or (not store_of(rover1store, rover2)) or at_rock_sample(waypoint8)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not at_rock_sample(waypoint3)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint4) and at_soil_sample(waypoint2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and (not at_soil_sample(waypoint1)) and (not in_sun(waypoint4))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) or equipped_for_soil_analysis(rover0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover2store, rover0)) or supports(camera3, colour) or calibration_target(camera1, objective1)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not store_of(rover2store, rover0)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint7) and equipped_for_imaging(rover3)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((can_traverse(rover1, waypoint0, waypoint6) and (not on_board(camera3, rover3)) and equipped_for_rock_analysis(rover2)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint0) or visible_from(objective1, waypoint6)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_rock_analysis(rover2) or equipped_for_soil_analysis(rover3) or (not at_lander(general, waypoint4))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not on_board(camera3, rover3)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera2, rover1)) and equipped_for_soil_analysis(rover2)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not visible_from(objective0, waypoint4)) and at_soil_sample(waypoint2) and visible(waypoint2, waypoint7)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint4)) or visible_from(objective3, waypoint2)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_soil_sample(waypoint8)) or at_soil_sample(waypoint2) or (not store_of(rover2store, rover0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not calibration_target(camera0, objective3)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) and (not in_sun(waypoint4))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not supports(camera2, lowres)) and equipped_for_imaging(rover2) and in_sun(waypoint7)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera0, objective3)) or at_soil_sample(waypoint4)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((on_board(camera3, rover1) or at_soil_sample(waypoint4) or in_sun(waypoint7)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not store_of(rover1store, rover2)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint7) and (not on_board(camera3, rover3))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover0)) and (not equipped_for_rock_analysis(rover1)) and in_sun(waypoint7)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover1)) or on_board(camera3, rover1)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible_from(objective1, waypoint7) or (not visible_from(objective0, waypoint4)) or (not on_board(camera2, rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(in_sun(waypoint7))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) and (not visible_from(objective0, waypoint4))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover2) and at_rock_sample(waypoint7) and (not on_board(camera3, rover3))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always((at_rock_sample(waypoint8) or at_soil_sample(waypoint2)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not in_sun(waypoint2)) or on_board(camera3, rover1) or at_rock_sample(waypoint4)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not supports(camera2, lowres)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover0) and (not at_soil_sample(waypoint8))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not on_board(camera2, rover1)) and channel_free(general) and at_rock_sample(waypoint8)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not equipped_for_rock_analysis(rover0)) or in_sun(waypoint7)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) or visible_from(objective1, waypoint7) or equipped_for_rock_analysis(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "reason": "Timeout"
+        }
+    ],
+    "elapsed": "0:49:11"
+}

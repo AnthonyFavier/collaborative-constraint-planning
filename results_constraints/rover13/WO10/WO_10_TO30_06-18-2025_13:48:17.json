@@ -1,0 +1,48 @@
+{
+    "timeout": 30,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl",
+    "tests": [
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        }
+    ],
+    "elapsed": "0:05:00"
+}
