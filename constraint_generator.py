@@ -1,3 +1,4 @@
+import click
 from unified_planning.io import PDDLReader, PDDLWriter
 import unified_planning 
 from unified_planning.shortcuts import *
@@ -17,40 +18,56 @@ from unified_planning.model.parameter import Parameter as upParameter
 from unified_planning.model.types import _RealType as upReal
 from unified_planning.model.types import _BoolType as upBool
 
-# ZenoTravel13
-dp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl' # type: str
-pp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
-names_of_constants = ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit']
-    
-# Rover13
-# Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
-# dp = '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl'
-# pp = '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl'
-# names_of_constants = ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges']
+######################
+## HYPER PARAMETERS ##
+######################
 
+PROBLEM_NAME = 'Rover8_n'
+# 'ZenoTravel13', 'Rover13', 'Rover8_n'
 
-###################################
-
-NB_EXPRESSION =         50
+NB_EXPRESSION =         10
 NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
 NB_CONSTRAINT_AND2 =    NB_EXPRESSION
 NB_CONSTRAINT_AND3 =    NB_EXPRESSION
 NB_CONSTRAINT_OR2 =     NB_EXPRESSION
 NB_CONSTRAINT_OR3 =     NB_EXPRESSION
-NB_TEST = 200
+NB_TEST = 50 # Should be less or equal than NB_EXPRESSION * 5 to avoid redundant constraints
 TIMEOUT = 5
+WITH_CONSTRAINT = 'with' # or 'without'
 
 NB_WO = 10
 
-
-# Initialize random seed
 SEED = random.randrange(sys.maxsize)
 SEED = 0 # for testing
-random.seed(SEED)
 
 MAX_RETRY_PICK = 300
 
-###################################
+##############
+## PROBLEMS ##
+##############
+
+problems = {
+    'ZenoTravel13': [    
+        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
+        ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
+    ],
+    'Rover13': [
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl',
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl',
+        ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
+    ],
+    'Rover8_n': [
+    # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl',
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl',
+        ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
+    ],
+}
+
+###############
+### HELPERS ###
+###############
 
 def pickRandomNotAlready(l, already):
     if set(l)==set(already):
@@ -76,6 +93,21 @@ def pick3Random(l):
     i3 = random.randint(0, len(l)-1)
     while i3==i1 or i3==i2: i3 = random.randint(0, len(l)-1)
     return l[i1], l[i2], l[i3]
+
+class MyIterator:
+    def __init__(self, d):
+        self.names = [n for n in d]
+        self.lists = [d[n] for n in d]
+    def __iter__(self):
+        self.i = 0
+        return self
+    def __next__(self):
+        n = self.names[self.i]
+        l = self.lists[self.i]
+        self.i+=1
+        if self.i==len(self.names):
+            self.i=0
+        return n,l
 
 ##########################
 ## GENERATE CONSTRAINTS ##
@@ -215,26 +247,11 @@ def generate_constraints(original_problem):
     
     return expressions, constraints_dict
 
-class MyIterator:
-    def __init__(self, d):
-        self.names = [n for n in d]
-        self.lists = [d[n] for n in d]
-    def __iter__(self):
-        self.i = 0
-        return self
-    def __next__(self):
-        n = self.names[self.i]
-        l = self.lists[self.i]
-        self.i+=1
-        if self.i==len(self.names):
-            self.i=0
-        return n,l
+###########
+## SOLVE ##
+###########
 
-##########
-## MAIN ##
-##########
-
-def main():
+def solve_with_constraints():
     run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
     print(run_name)
     
@@ -245,8 +262,6 @@ def main():
     # Check if original problem has no constraints
     if original_problem.trajectory_constraints!=[]:
         raise Exception('Already some constraints in original problem')
-
-    
 
     # Create result file
     result = {}
@@ -311,7 +326,15 @@ def main():
             if feedback=='success':
                 i1_metric = plan.find('Metric (Search):')+len('Metric (Search):')
                 i2_metric = plan.find('\n', i1_metric)
-                metric = float(plan[i1_metric:i2_metric])
+                try:
+                    metric = float(plan[i1_metric:i2_metric])
+                except:
+                    print('[ERROR]')
+                    print('i1_metric=', i1_metric)
+                    print('i2_metric=', i2_metric)
+                    print(f'<plan>\n{plan}\n</plan>')
+                    print(f'<stdout>\n{stdout}\n</stdout>')
+                    raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
                 
                 test['result'] = 'success'
                 test['plan'] = plan
@@ -332,8 +355,8 @@ def main():
         result['elapsed'] = str(bar.elapsed_td)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(result, indent=4))
-
-def without_constraint():
+    
+def solve_without_constraints():
     
     run_name = f"WO_{NB_WO}_TO{TIMEOUT}"
     print(run_name)
@@ -391,13 +414,63 @@ def without_constraint():
         with open(path+filename, 'w') as f:
             f.write(json.dumps(result, indent=4))
 
-if __name__=="__main__":
+##########
+## MAIN ##
+##########
+
+def testing():
+    run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
+    print(run_name)
     
+    # Parse original problem
+    reader = PDDLReader()
+    original_problem: upProblem = reader.parse_problem(dp, pp) 
+
+    # Check if original problem has no constraints
+    if original_problem.trajectory_constraints!=[]:
+        raise Exception('Already some constraints in original problem')
+
+    # Create result file
+    result = {}
+    result['seed'] = SEED
+    result['timeout'] = TIMEOUT
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    filename = f'{run_name}_{date}.json'
+    path = 'results_constraints/'
+    result['domain'] = dp
+    result['problem'] = pp
+
+    # Generate constraints
+    expressions, constraints_dict = generate_constraints(original_problem)
+    result['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
+    for k,l in constraints_dict.items():
+        result['generated_constraints'][k] = [str(c) for c in l]
+        
+@click.command()
+@click.argument('mode', default=WITH_CONSTRAINT)
+@click.argument('timeout', default=TIMEOUT)
+def main_cli(mode: str, timeout: int):
+    global TIMEOUT, dp, pp, names_of_constants
+    TIMEOUT = timeout
+    
+    random.seed(SEED)
+    
+    dp = problems[PROBLEM_NAME][0]
+    pp = problems[PROBLEM_NAME][1]
+    names_of_constants = problems[PROBLEM_NAME][2]
+    
+    if mode=='with':
+        solve_with_constraints()
+    elif mode=='without':
+        solve_without_constraints()
+    elif mode=='testing':
+        testing()
+    else:
+        print('Unknown mode given')
+
+if __name__=="__main__":
     try:
-        if len(sys.argv)>1:
-            TIMEOUT = int(sys.argv[1])
-        main()
-        # without_constraint()
+        main_cli()
     except KeyboardInterrupt:
         print("Ctrl+C detected. Exiting...")
         # Kill ENHSP java process
