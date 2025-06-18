@@ -199,7 +199,7 @@ def several():
     all_files = get_two_level_folder_dict('results_constraints')
     
     problem_name = 'zenotravel13'
-    with_constraints_folder = 'seed6671597656599831408'
+    with_constraints_folder = 'seed0'
     without_constraints_folder = 'WO10'
     
     datas = []
@@ -222,15 +222,12 @@ def several():
     for i,d in enumerate(datas):
         if 'metrics' in d:
             box_data.append(d['metrics']['all'])
-            # box_pos.append(i)
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
                     box_pos.append(j)
                     break
             
     # Without constraints data
-    # box_wo_data = [[10000,20000,30000,40000,50000],[10000,20000,30000,40000,50000],[10000,20000,30000,40000,50000],[10000,20000,30000,40000,50000]]
-    # box_wo_pos = [0, 1, 2, 3]
     box_wo_data = []
     box_wo_pos = []
     for i,d in enumerate(datas_wo):
@@ -265,8 +262,9 @@ def several():
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
     VIOLIN = True
-    
     offset = 0.15
+    
+    # WITH
     if VIOLIN:
         v = axs[0].violinplot(box_data,
                 positions=[x - offset for x in box_pos],
@@ -286,13 +284,6 @@ def several():
                 whiskerprops={"color": "C0", "linewidth": 1.5},
                 capprops={"color": "C0", "linewidth": 1.5}
             )
-    axs[0].set_ylabel("Metric values")
-    axs[0].set_title(problem_name + " seed" + str(seed) + ' metric and success rate (Unsolvable=' + '{:.1f}'.format(unsolvable) + '%)')
-    axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
-    # axs[0].set_ylim(ymax=90000)
-    # axs[0].set_ylim(ymin=20000)
-    # axs[0].yaxis.grid(True)
-    
     # WO
     if VIOLIN:
         v = axs[0].violinplot(box_wo_data,
@@ -313,6 +304,13 @@ def several():
                 whiskerprops={"color": "lightcoral", "linewidth": 1.5},
                 capprops={"color": "lightcoral", "linewidth": 1.5}
             )
+    # PARAMS
+    axs[0].set_ylabel("Metric values")
+    axs[0].set_title(problem_name + " seed" + str(seed) + ' metric and success rate (Unsolvable=' + '{:.1f}'.format(unsolvable) + '%)')
+    axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
+    # axs[0].set_ylim(ymax=90000)
+    # axs[0].set_ylim(ymin=20000)
+    # axs[0].yaxis.grid(True)
     if VIOLIN:
         axs[0].legend(*zip(*labels), loc='upper left', ncols=3)
     else:
@@ -322,19 +320,15 @@ def several():
     
     # WITH
     axs[1].plot(line_pos, line_data, marker='o', label='with constraints')
+    # WO
+    axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='without constraints')
+    # Params
     axs[1].axhline(y=100-unsolvable, color="black", linestyle="--", label='solvable with constraints')
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
-    
-    # WO
-    axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='without constraints')
-    # axs[1].axhline(y=100-unsolvable, color="black", linestyle="--")
-    # axs[1].set(ylim=(0, 100))
-    # axs[1].set_ylabel("Success ratio (%)")
-    # axs[1].set_xlabel("Timeout (s)")
     axs[1].legend(loc='upper left', ncols=3)
-    
+
     
     plt.xticks(ticks=x_pos, labels=x_labels)
     
