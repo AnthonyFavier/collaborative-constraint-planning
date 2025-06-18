@@ -17,15 +17,17 @@ from unified_planning.model.parameter import Parameter as upParameter
 from unified_planning.model.types import _RealType as upReal
 from unified_planning.model.types import _BoolType as upBool
 
-    
+# ZenoTravel13
 dp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl' # type: str
 pp = '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
-
-# ZenoTravel
 names_of_constants = ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit']
-# Rover
+    
+# Rover13
+# Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
+# dp = '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl'
+# pp = '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl'
 # names_of_constants = ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges']
-# to extract automatically?
+
 
 ###################################
 
@@ -37,6 +39,9 @@ NB_CONSTRAINT_OR2 =     NB_EXPRESSION
 NB_CONSTRAINT_OR3 =     NB_EXPRESSION
 NB_TEST = 200
 TIMEOUT = 5
+
+NB_WO = 10
+
 
 # Initialize random seed
 SEED = random.randrange(sys.maxsize)
