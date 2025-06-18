@@ -327,13 +327,72 @@ def main():
         result['elapsed'] = str(bar.elapsed_td)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(result, indent=4))
-        
+
+def without_constraint():
+    
+    run_name = f"WO_{NB_WO}_TO{TIMEOUT}"
+    print(run_name)
+    
+    # Create result file
+    result = {}
+    result['timeout'] = TIMEOUT
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    filename = f'{run_name}_{date}.json'
+    path = 'results_constraints/'
+    result['domain'] = dp
+    result['problem'] = pp
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(result, indent=4))
+
+
+    result['tests'] = []
+    with IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
+        for i in range(NB_WO):
+            bar.start()
+            test = {}
+                
+            result['tests'].append(test)
+            test['result'] = 'In progress...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(result, indent=4))
+            
+            # plan
+            PROBLEMS[run_name] = (dp, pp)
+            feedback, plan, stdout = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            
+            # Get Metric
+            if feedback=='success':
+                i1_metric = plan.find('Metric (Search):')+len('Metric (Search):')
+                i2_metric = plan.find('\n', i1_metric)
+                metric = float(plan[i1_metric:i2_metric])
+                
+                test['result'] = 'success'
+                test['plan'] = plan
+                test['metric'] = metric
+            else:
+                test['result'] = 'failed'
+                if stdout.find('Unsolvable Problem')!=-1:
+                    reason = 'Unsolvable Problem'
+                else:
+                    reason = 'Timeout'
+                test['reason'] = reason
+                
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(result, indent=4))
+                
+            bar.next()
+    
+        result['elapsed'] = str(bar.elapsed_td)
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(result, indent=4))
+
 if __name__=="__main__":
     
     try:
         if len(sys.argv)>1:
             TIMEOUT = int(sys.argv[1])
         main()
+        # without_constraint()
     except KeyboardInterrupt:
         print("Ctrl+C detected. Exiting...")
         # Kill ENHSP java process

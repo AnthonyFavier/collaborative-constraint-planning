@@ -1,0 +1,48 @@
+{
+    "timeout": 3,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
+    "tests": [
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        },
+        {
+            "result": "failed",
+            "reason": "Timeout"
+        }
+    ],
+    "elapsed": "0:00:30"
+}
