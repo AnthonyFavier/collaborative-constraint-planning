@@ -22,46 +22,31 @@ DUMP_CM = True
 MAX_ENCODING_TRY = 3
 
 ## ADD CONSTRAINT ##
-def addConstraints(nl_constraints, input_times=[]):
-    if len(nl_constraints)!=len(input_times):
-        for nl_constraint in nl_constraints:
-            addConstraint(nl_constraint)
-    else:
-        for i in range(len(nl_constraints)):
-            addConstraint(nl_constraints[i], input_times[i])
-        
-def addConstraint(nl_constraint, input_time=0):
-    t1 = time.time() # TODO: remove? instead sum all sub durations
-    
-    # Initialize constraint
+def createConstraint(nl_constraint, input_time=0):
     r = CM.createRaw(nl_constraint)
     r.time_input = input_time
-    
-    # Decomposition
+    return r
+
+def decompose(r):
     mprint("\n== Decomposition ==")
-    decomposeConstraint(r)
-    feedback = decomp_interaction(r)
-    if 'abort'==feedback: return None
+    initialDecomposition(r)
+    feedback = decompInteraction(r)
+    if 'abort'==feedback: raise Exception('abort')
     while 'OK'!=feedback:
-        r = redecompose(r, feedback)
-        feedback = decomp_interaction(r)
-    
-    # Encoding
-    encoding(r)
+        r = reDecomposition(r, feedback)
+        feedback = decompInteraction(r)
+
+def encode(r):
+    initialEncoding(r)
     for d in r.children:
-        feedback = encoding_interaction(d)
-        if 'abort'==feedback: return None
+        feedback = encodingInteraction(d)
+        if 'abort'==feedback: raise Exception('abort')
         while 'OK'!=feedback:
             encodeDecomposed(d, feedback, reencode_e2nl=True)
-            feedback = encoding_interaction(d)
-        
-    t2 = time.time()
-    mprint(f"\nTranslation time: {t2-t1:.2f} s")
+            feedback = encodingInteraction(d)
     
-    CM.dump()
-
 ## DECOMPOSE ##
-def decomposeConstraint(r):
+def initialDecomposition(r):
     if WITH_DECOMP:
         r.decomp_conv = LLM.ConversationHistory()
         
@@ -89,7 +74,7 @@ def decomposeConstraint(r):
         CM.createDecomposed(r, r.nl_constraint)
         r.time_decomp = 0
         
-def decomp_interaction(r):
+def decompInteraction(r):
     if ASK_DECOMP_FEEDBACK:
         time_validation = time.time()
         answer = minput("Press Enter or give feedback: ")
@@ -108,25 +93,18 @@ def decomp_interaction(r):
             return answer
     return 'OK'
 
-def redecompose(c, feedback):
+def reDecomposition(r, feedback):
     # Re-decompose constraint according to user feedback
     
     time_redecomp = time.time()
     startTimer()
     
-    # save relevant info
-    nl_constraint = c.nl_constraint
-    conv = c.decomp_conv
+    # delete previous children
+    CM.deleteChildren(r)
     
-    # delete previous constraint
-    id = c.symbol[1:]
-    Constraints.Constraint._ID = int(id)
-    CM.deleteConstraints([c.symbol])
-    del c
+    # reset global constraint ID constraint
+    Constraints.Constraint._ID = int(r.symbol[1:])+1
     
-    r = CM.createRaw(nl_constraint)
-    r.decomp_conv = conv
-        
     mprint("\nRe-Decomposing: " + str(r) + " ... ", end="")
     constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback, r.decomp_conv)
     stopTimer()
@@ -143,7 +121,7 @@ def redecompose(c, feedback):
 
 ## ENCODING ##
 
-def encoding(r):
+def initialEncoding(r):
     
     # Encoding
     mprint("\n== Encoding ==")
@@ -155,7 +133,7 @@ def encoding(r):
     
     # THREADING ENCODING
     startTimer()
-    t1 = time.time()
+    t_encoding = time.time()
     threads = []
     for d in r.children:
         t = threading.Thread(target=encodeDecomposed, args=[d])
@@ -166,7 +144,9 @@ def encoding(r):
     t2 = time.time()
     stopTimer()
     
-    mprint(f"\nEncoding done [{t2-t1:.2f}s]")
+    t_encoding = time.time() - t_encoding
+    r.time_initial_encoding = t_encoding
+    mprint(f"\nEncoding done [{r.time_initial_encoding:.2f}s]")
 
 def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
     print('start encoding of ', d)
@@ -223,7 +203,7 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
     
     print('end encoding of ', d)
 
-def encoding_interaction(d):
+def encodingInteraction(d):
     # show decomposed nl + succes or failed + nb retry 
     mprint(f"\n{d}")
     status = "Encoded" if d.encoding!='' else "Failed"

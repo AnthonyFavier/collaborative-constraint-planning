@@ -396,35 +396,43 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.grid()
         self.update()
         self.master.display_frame.textbox.see('end')
-    def showE2NLButton(self):
-        self.buttons["E2NL"].grid()
+    def activateE2NLButton(self):
+        self.buttons['E2NL'].configure(state='enabled')
         self.update()
-        self.master.display_frame.textbox.see('end')
+    def deactivateE2NLButton(self):
+        self.buttons['E2NL'].configure(state='disabled')
+        self.update()
     
     def addT(self):
         threading.Thread(target=self.add).start()
     def add(self):
         self.disableButtons()
-        self.showE2NLButton()
-        self.add_nl_constraints = []
+        self.activateE2NLButton()
         
         mprint("\n=== ADDING CONSTRAINT ===")
         
         t_input = time.time()
         c = minput(txt="\nEnter your constraint: ")
         
-        if c=='':
+        if c in ['', 'abort']:
             self.enableButtons()
             mprint("Aborted\n")
         else:
             mprint("\n> " + c )
-            self.add_nl_constraints.append(c)
             t_input = time.time() - t_input
             try:
-                CAI.addConstraints(self.add_nl_constraints, [t_input])
+                constraint = CAI.createConstraint(c, t_input)
+                CAI.decompose(constraint)
+                self.deactivateE2NLButton()
+                CAI.encode(constraint)
+                CAI.CM.dump()
+                
             except Exception as err:
-                self.master.quit()
-                raise err
+                if err.args[0]=='abort':
+                    mprint('Aborted\n')
+                else:
+                    self.master.quit()
+                    raise err
             
             self.enableButtons()
             self.master.constraints_frame.updateFrame()
