@@ -1,3 +1,4 @@
+from datetime import datetime
 import customtkinter
 from defs import *
 import CAI
@@ -7,6 +8,7 @@ import time
 import threading
 import pyperclip
 import ctypes
+import json
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 except:
@@ -757,6 +759,12 @@ class PlanFrame(customtkinter.CTkFrame):
         
         self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
         self.copy_button.grid(row=0, column=1, padx=10, pady=10)
+        
+        self.dump_cm_button = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command=CAI.CM.dump, width=80)
+        self.dump_cm_button.grid(row=0, column=2, padx=10, pady=10)
+        
+        self.export_button = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
+        self.export_button.grid(row=0, column=3, padx=10, pady=10)
     
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
@@ -771,6 +779,90 @@ class PlanFrame(customtkinter.CTkFrame):
         pyperclip.copy(self.textbox.get("0.0", "end"))
         mprint("\nCopied!")
         
+    def export(self):
+        
+        data = {}
+        
+        data['detailed_translation_times'] = {
+            'input_time': 0,
+            'decomp_time': 0,
+            'decomp_validation_time': 0,
+            'redecomp_time': 0,
+            'initial_encoding_time': 0,
+            'encoding_time': 0,
+            'verifier_time': 0,
+            'reencoding_time': 0,
+            'e2nl_time': 0,
+            'encoding_validation_time': 0,
+            'e2nl_reencoding_time': 0,
+        }
+        for idr,r in CAI.CM.raw_constraints.items():
+            if r.isActivated() or r.isPartiallyActivated():
+                data['detailed_translation_times']['input_time'] += r.time_input
+                data['detailed_translation_times']['decomp_time'] += r.time_decomp
+                data['detailed_translation_times']['decomp_validation_time'] += r.time_validation
+                data['detailed_translation_times']['redecomp_time'] += r.time_redecomp
+                data['detailed_translation_times']['initial_encoding_time'] += r.time_initial_encoding
+                for d in r.children:
+                    if d.isActivated():
+                        data['detailed_translation_times']['encoding_time'] += d.time_encoding
+                        data['detailed_translation_times']['verifier_time'] += d.time_verifier
+                        data['detailed_translation_times']['reencoding_time'] += d.time_reencoding
+                        data['detailed_translation_times']['e2nl_time'] += d.time_e2nl
+                        data['detailed_translation_times']['encoding_validation_time'] += d.time_validation
+                        data['detailed_translation_times']['e2nl_reencoding_time'] += d.time_e2nl_reencoding
+
+        data['translation_time'] = 0
+        data['translation_time'] += data['detailed_translation_times']['input_time']
+        data['translation_time'] += data['detailed_translation_times']['decomp_time']
+        data['translation_time'] += data['detailed_translation_times']['decomp_validation_time']
+        data['translation_time'] += data['detailed_translation_times']['redecomp_time']
+        data['translation_time'] += data['detailed_translation_times']['encoding_time']
+        data['translation_time'] += data['detailed_translation_times']['verifier_time']
+        data['translation_time'] += data['detailed_translation_times']['reencoding_time']
+        data['translation_time'] += data['detailed_translation_times']['e2nl_time']
+        data['translation_time'] += data['detailed_translation_times']['encoding_validation_time']
+        data['translation_time'] += data['detailed_translation_times']['e2nl_reencoding_time']
+        
+        data['decomposition_time'] = 0
+        data['decomposition_time'] += data['detailed_translation_times']['decomp_time']
+        data['decomposition_time'] += data['detailed_translation_times']['decomp_validation_time']
+        data['decomposition_time'] += data['detailed_translation_times']['redecomp_time']
+        
+        data['encoding_time'] = 0
+        data['encoding_time'] += data['detailed_translation_times']['initial_encoding_time'] 
+        data['encoding_time'] += data['detailed_translation_times']['encoding_validation_time']
+        data['encoding_time'] += data['detailed_translation_times']['e2nl_reencoding_time']
+        
+        data['planning_results'] = self.last_results
+        
+        data['solving_time'] = 0
+        if data['planning_results']!={} and data['planning_results']['result']=='success':
+            data['solving_time'] += data['translation_time']
+            data['solving_time'] += data['planning_results']['time_compilation']
+            data['solving_time'] += data['planning_results']['time_planning']
+        
+        mprint('\n== Export ==\n')
+        if data['planning_results']!={} and data['planning_results']['result']=='success':
+            mprint('Solving time = ' + '{:.2f}'.format(data['solving_time']))
+            mprint('\tTranslation time = ' + '{:.2f}'.format(data['translation_time']))
+            mprint('\t\tInput time = ' + '{:.2f}'.format(data['detailed_translation_times']['input_time']))
+            mprint('\t\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
+            mprint('\t\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
+            mprint('\tCompilation time = ' + '{:.2f}'.format(data['planning_results']['time_compilation']))
+            mprint('Plan length = ' + '{:.2f}'.format(data['planning_results']['planlength']))
+            mprint('Plan metric = ' + '{:.2f}'.format(data['planning_results']['metric']))
+        else:
+            mprint('Translation time = ' + '{:.2f}'.format(data['translation_time']))
+            mprint('\tInput time = ' + '{:.2f}'.format(data['detailed_translation_times']['input_time']))
+            mprint('\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
+            mprint('\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
+        
+        date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+        with open(f'export-solving-results_{date}.json', 'w') as f:
+            json.dump(data, f, indent=4)
+        
+                
     def printMain(self, txt):
         self.write_main_lock.acquire()
         self.textbox.configure(state="normal")
