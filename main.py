@@ -293,12 +293,6 @@ def initDemo():
       (exists (?a - aircraft ?c - city) (and (in person3 ?a) (located person1 ?c) (located ?a ?c)))
     )))'''
 
-def loadDump():
-    # put dump code
-    pass
-
-
-
 #########################################################################################################
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
@@ -341,7 +335,7 @@ if __name__ == '__main__':
     # initZeno13()
     # initDemo()
     
-    # loadDump()
+    # CAI.CM.load('dumps_CM/validated.json')
     
     main()
   
