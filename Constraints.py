@@ -21,6 +21,7 @@ class RawConstraint(Constraint):
         self.time_decomp = 0
         self.time_validation = 0
         self.time_redecomp = 0
+        self.time_initial_encoding = 0
     
     def activate(self):
         for c in self.children:
@@ -64,7 +65,7 @@ class RawConstraint(Constraint):
         if self.isActivated():
             symbol_str = symbol_str
         return f"{symbol_str} - {self.nl_constraint}"
-        
+    
 class DecomposedConstraint(Constraint):
     def __init__(self, parent, nl_constraint):
         super().__init__(nl_constraint)
@@ -128,7 +129,7 @@ class ConstraintManager:
         for key,rc in self.raw_constraints.items():
             rc.showWithChildren()
             
-    def deleteConstraints(self, symbols):
+    def deleteConstraints(self, symbols, autoremoveparent=True):
         # if R# remove raw constraint and all decomposed associated
         # if D# remove only decompose from general list and from parent children
         for symbol in symbols:
@@ -153,12 +154,15 @@ class ConstraintManager:
                 self.decomposed_constraints.pop(constraint.symbol)
                 constraint.parent.children.remove(constraint)
                 
-                if len(constraint.parent.children)==0:
+                if autoremoveparent and len(constraint.parent.children)==0:
                     self.constraints.pop(constraint.parent.symbol)
                     self.raw_constraints.pop(constraint.parent.symbol)
                     del constraint.parent
                 
                 del constraint
+                
+    def deleteChildren(self, r):
+        self.deleteConstraints([c.symbol for c in r.children], autoremoveparent=False)
                 
     def clean(self):
         # Look for constraints to delete
