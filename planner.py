@@ -62,14 +62,48 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
 
     if last_found_plan_i==-1:
         feedback = "Failed planning " + stderr
-        plan = ""
+        plan_with_metrics = ""
     else:
         feedback = "success"
-        plan = stdout[last_found_plan_i:last_found_plan_end_i]
+        plan_with_metrics = stdout[last_found_plan_i:last_found_plan_end_i]
         if not hide_plan:
-            print(plan)
+            print(plan_with_metrics)
+            
+            
+    # Get Metric
+    result = plan = fail_reason = ''
+    planlength = 0
+    metric = 0.0
+    if feedback=='success':
+        try:
+            result = 'success'
+            
+            i1_metric = plan_with_metrics.find('Metric (Search):')+len('Metric (Search):')
+            i2_metric = plan_with_metrics.find('\n', i1_metric)
+            metric = float(plan_with_metrics[i1_metric:i2_metric])
+            
+            i1 = plan_with_metrics.find('Plan-Length:')+len('Plan-Length:')
+            i2 = plan_with_metrics.find('\n', i1)
+            planlength = int(plan_with_metrics[i1:i2])
+            
+            i_plan_end = plan_with_metrics[:i1].rfind(')')+1
+            i_plan_start = plan_with_metrics.find('Found Plan:\n') + len('Found Plan:\n')
+            plan = plan_with_metrics[i_plan_start:i_plan_end]
+        except:
+            print('[ERROR]')
+            print('i1_metric=', i1_metric)
+            print('i2_metric=', i2_metric)
+            print(f'<plan>\n{plan_with_metrics}\n</plan>')
+            print(f'<stdout>\n{stdout}\n</stdout>')
+            raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
+    else:
+        result = 'failed'
+        if stdout.find('Unsolvable Problem')!=-1:
+            fail_reason = 'Unsolvable Problem'
+        else:
+            fail_reason = 'Timeout'
                 
-    return feedback, plan, stdout
+    return result, plan, planlength, metric, fail_reason
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
 @click.argument('problem_name')

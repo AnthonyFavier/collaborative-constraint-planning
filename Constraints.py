@@ -14,6 +14,12 @@ class RawConstraint(Constraint):
         self.children = [] # children 
         self.symbol = 'R' + self.symbol[1:]
         self.decomp_conv = None
+        
+        # times
+        self.time_input = 0
+        self.time_decomp = 0
+        self.time_validation = 0
+        self.time_redecomp = 0
     
     def activate(self):
         for c in self.children:
@@ -68,6 +74,15 @@ class DecomposedConstraint(Constraint):
         self._activated = True
         self.encoding_conv = None
         self.nb_retries = 0 # = try -1
+        self.nb_e2nl_retries = 0 # = try -1
+        
+        # times
+        self.time_encoding = 0
+        self.time_verifier = 0
+        self.time_reencoding = 0
+        self.time_e2nl = 0
+        self.time_validation = 0
+        self.time_e2nl_reencoding = 0 
         
     def deactivate(self):
         self._activated = False

@@ -320,32 +320,14 @@ def solve_with_constraints():
 
             # Plan
             PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
-            feedback, plan, stdout = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
 
             # Get Metric
-            if feedback=='success':
-                i1_metric = plan.find('Metric (Search):')+len('Metric (Search):')
-                i2_metric = plan.find('\n', i1_metric)
-                try:
-                    metric = float(plan[i1_metric:i2_metric])
-                except:
-                    print('[ERROR]')
-                    print('i1_metric=', i1_metric)
-                    print('i2_metric=', i2_metric)
-                    print(f'<plan>\n{plan}\n</plan>')
-                    print(f'<stdout>\n{stdout}\n</stdout>')
-                    raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
-                
-                test['result'] = 'success'
-                test['plan'] = plan
-                test['metric'] = metric
-            else:
-                test['result'] = 'failed'
-                if stdout.find('Unsolvable Problem')!=-1:
-                    reason = 'Unsolvable Problem'
-                else:
-                    reason = 'Timeout'
-                test['reason'] = reason
+            test['result'] = result
+            test['plan'] = plan
+            test['planlength'] = planlength
+            test['metric'] = metric
+            test['reason'] = fail_reason
                 
             with open(path+filename, 'w') as f:
                 f.write(json.dumps(result, indent=4))
@@ -386,24 +368,13 @@ def solve_without_constraints():
             
             # plan
             PROBLEMS[run_name] = (dp, pp)
-            feedback, plan, stdout = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            result, plan, planlength, metric, fail_reason = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
             
-            # Get Metric
-            if feedback=='success':
-                i1_metric = plan.find('Metric (Search):')+len('Metric (Search):')
-                i2_metric = plan.find('\n', i1_metric)
-                metric = float(plan[i1_metric:i2_metric])
-                
-                test['result'] = 'success'
-                test['plan'] = plan
-                test['metric'] = metric
-            else:
-                test['result'] = 'failed'
-                if stdout.find('Unsolvable Problem')!=-1:
-                    reason = 'Unsolvable Problem'
-                else:
-                    reason = 'Timeout'
-                test['reason'] = reason
+            test['result'] = result
+            test['reason'] = fail_reason
+            test['plan'] = plan
+            test['planlength'] = planlength
+            test['metric'] = metric
                 
             with open(path+filename, 'w') as f:
                 f.write(json.dumps(result, indent=4))

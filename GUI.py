@@ -410,6 +410,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         mprint("\n=== ADDING CONSTRAINT ===")
         
+        t_input = time.time()
         c = minput(txt="\nEnter your constraint: ")
         
         if c=='':
@@ -418,8 +419,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
         else:
             mprint("\n> " + c )
             self.add_nl_constraints.append(c)
+            t_input = time.time() - t_input
             try:
-                CAI.addConstraints(self.add_nl_constraints)
+                CAI.addConstraints(self.add_nl_constraints, [t_input])
             except Exception as err:
                 self.master.quit()
                 raise err
@@ -479,23 +481,47 @@ class ButtonsFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.plan).start()
     def plan(self):
         self.disableButtons()
-        txt = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
-        if txt[:len("Failed to plan:")]=="Failed to plan:":
-            self.master.plan_frame.printMain(txt)
+        self.master.plan_frame = self.master.plan_frame
+        
+        # Planning
+        result, plan, planlength, metric, fail_reason, time_compilation, time_planning = self.master.display_frame.startWithTimer(CAI.planWithConstraints)
+        
+        # Save results
+        self.master.plan_frame.previous_results = self.master.plan_frame.last_results
+        self.master.plan_frame.last_results = {
+            'result': result,
+            'plan': plan,
+            'planlength': planlength,
+            'metric': metric,
+            'fail_reason': fail_reason,
+            'time_compilation': time_compilation,
+            'time_planning': time_planning,
+        }
+        
+        # Show previous results
+        if self.master.plan_frame.previous_results=={}:
+            self.master.plan_frame.printPrevious("None")
+        elif self.master.plan_frame.previous_results['result']=='failed':
+            self.master.plan_frame.printPrevious('Failed to plan: '+self.master.plan_frame.previous_results['fail_reason'])
         else:
-            # get current metrics and put in previous
-            previous_plan = self.master.plan_frame.textbox.get("0.0", "end")
-            i = previous_plan.find("Plan-Length:")
-            if i!=-1:
-                previous_metrics = previous_plan[i:previous_plan.find("Found Plan:")-2]
-                self.master.plan_frame.printPrevious(previous_metrics)
+            txt = ''
+            txt += 'Plan-Length: ' + str(self.master.plan_frame.previous_results['planlength']) + '\n'
+            txt += 'Metric: ' + str(self.master.plan_frame.previous_results['metric']) + '\n'
+            txt += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.previous_results['time_planning'])
+            self.master.plan_frame.printPrevious(txt)
             
-            
-            # put metrics at top
-            i = txt.find("Plan-Length:")
-            plan = txt[i:] + '\n\n' + txt[:i-2]        
-            self.master.plan_frame.printMain(plan)
-            self.master.plan_frame.updateSimButton()
+        # Show last results
+        if self.master.plan_frame.last_results['result']=='failed':
+            self.master.plan_frame.printMain('Failed to plan: '+self.master.plan_frame.last_results['fail_reason'])
+        else:
+            txt = ''
+            txt += 'Plan-Length: ' + str(self.master.plan_frame.last_results['planlength']) + '\n'
+            txt += 'Metric: ' + str(self.master.plan_frame.last_results['metric']) + '\n'
+            txt += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.last_results['time_planning']) + '\n'
+            txt += 'Found Plan:\n' + self.master.plan_frame.last_results['plan']
+            self.master.plan_frame.printMain(txt)
+        
+        self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):
         threading.Thread(target=self.changePlanMode).start()
@@ -677,6 +703,10 @@ class PlanFrame(customtkinter.CTkFrame):
     
     def __init__(self, master):
         super().__init__(master)
+        
+        self.last_results = {}
+        self.previous_results = {}
+        
         self.grid_columnconfigure(0, weight=1)
         i_self_row = 0
         
@@ -691,7 +721,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.write_previous_lock = threading.Lock()
         self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.printPrevious("None")
-        self.previous_textbox.configure(height=65)
+        self.previous_textbox.configure(height=98)
         self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         # self.grid_rowconfigure(2, weight=1)
         i_self_row+=1
@@ -804,4 +834,3 @@ class App(customtkinter.CTk):
     def suggestions(self):
         t = threading.Thread(target=CAI.suggestions)
         self.after(500, t.start)
-        

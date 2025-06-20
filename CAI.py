@@ -22,29 +22,37 @@ DUMP_CM = True
 MAX_ENCODING_TRY = 3
 
 ## ADD CONSTRAINT ##
-def addConstraints(nl_constraints):
-    for nl_constraint in nl_constraints:
-        addConstraint(nl_constraint)
+def addConstraints(nl_constraints, input_times=[]):
+    if len(nl_constraints)!=len(input_times):
+        for nl_constraint in nl_constraints:
+            addConstraint(nl_constraint)
+    else:
+        for i in range(len(nl_constraints)):
+            addConstraint(nl_constraints[i], input_times[i])
         
-def addConstraint(nl_constraint):
-    t1 = time.time()
+def addConstraint(nl_constraint, input_time=0):
+    t1 = time.time() # TODO: remove? instead sum all sub durations
+    
+    # Initialize constraint
+    r = CM.createRaw(nl_constraint)
+    r.time_input = input_time
     
     # Decomposition
     mprint("\n== Decomposition ==")
-    new_c = decomposeConstraint(nl_constraint)
-    feedback = decomp_interaction(new_c)
+    decomposeConstraint(r)
+    feedback = decomp_interaction(r)
     if 'abort'==feedback: return None
     while 'OK'!=feedback:
-        new_c = redecompose(new_c, feedback)
-        feedback = decomp_interaction(new_c)
+        r = redecompose(r, feedback)
+        feedback = decomp_interaction(r)
     
     # Encoding
-    encoding(new_c)
-    for d in new_c.children:
+    encoding(r)
+    for d in r.children:
         feedback = encoding_interaction(d)
         if 'abort'==feedback: return None
         while 'OK'!=feedback:
-            encodeDecomposed(d, feedback)
+            encodeDecomposed(d, feedback, reencode_e2nl=True)
             feedback = encoding_interaction(d)
         
     t2 = time.time()
@@ -53,18 +61,18 @@ def addConstraint(nl_constraint):
     CM.dump()
 
 ## DECOMPOSE ##
-def decomposeConstraint(nl_constraint):
+def decomposeConstraint(r):
     if WITH_DECOMP:
-        r = CM.createRaw(nl_constraint)
         r.decomp_conv = LLM.ConversationHistory()
         
         t1 = time.time()
         startTimer()
         mprint("\nDecomposing: " + str(r) + " ... ", end="")
-        constraints, explanation = LLM.decompose(nl_constraint, r.decomp_conv)
+        constraints, explanation = LLM.decompose(r.nl_constraint, r.decomp_conv)
         t2 = time.time()
         stopTimer()
-        mprint(f"OK [{t2-t1}s]")
+        r.time_decomp = t2-t1
+        mprint(f"OK [{r.time_decomp:.2f}s]")
             
         for c in constraints.splitlines():
             CM.createDecomposed(r, c)
@@ -78,14 +86,12 @@ def decomposeConstraint(nl_constraint):
             
     elif not WITH_DECOMP:
         # create only decomposed constraint similar to raw constraint
-        r = CM.createRaw(nl_constraint)
-        CM.createDecomposed(r, nl_constraint)
+        CM.createDecomposed(r, r.nl_constraint)
+        r.time_decomp = 0
         
-    # created constraint (RawConstraint)
-    return r
-
 def decomp_interaction(r):
     if ASK_DECOMP_FEEDBACK:
+        time_validation = time.time()
         answer = minput("Press Enter or give feedback: ")
         if answer=='':
             mprint("OK")
@@ -94,7 +100,8 @@ def decomp_interaction(r):
             return 'abort'
         else:
             mprint("\n> " + answer)
-            
+        
+        r.time_validation += time.time() - time_validation
         decompOK = answer==''
         if not decompOK:
             ## Re-decompose with user feedback
@@ -103,6 +110,9 @@ def decomp_interaction(r):
 
 def redecompose(c, feedback):
     # Re-decompose constraint according to user feedback
+    
+    time_redecomp = time.time()
+    startTimer()
     
     # save relevant info
     nl_constraint = c.nl_constraint
@@ -117,8 +127,11 @@ def redecompose(c, feedback):
     r = CM.createRaw(nl_constraint)
     r.decomp_conv = conv
         
-    mprint("\nRe-Decomposing: " + str(r) + " ... ")
+    mprint("\nRe-Decomposing: " + str(r) + " ... ", end="")
     constraints, explanation = LLM.redecompose("Decompose again the constraint while considering the following: " + feedback, r.decomp_conv)
+    stopTimer()
+    r.time_redecomp += time.time()-time_redecomp
+    mprint(f"OK [{r.time_redecomp:.2f}s]")
                 
     for c in constraints.splitlines():
         CM.createDecomposed(r, c)
@@ -155,7 +168,7 @@ def encoding(r):
     
     mprint(f"\nEncoding done [{t2-t1:.2f}s]")
 
-def encodeDecomposed(d, feedback=None):
+def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
     print('start encoding of ', d)
     
     if feedback==None:
@@ -165,21 +178,31 @@ def encodeDecomposed(d, feedback=None):
     i=0
     while not encodingOK and i<MAX_ENCODING_TRY:
         if i==0 and feedback==None:
+            time_encoding = time.time()
             encoding = LLM.encodePrefs(d.nl_constraint, d.encoding_conv)
+            d.time_encoding = time.time()-time_encoding
         else:
+            time_reencoding = time.time()
             encoding = LLM.reencodePrefs(feedback, d.encoding_conv)
+            if not reencode_e2nl:
+                d.time_reencoding = time.time()-time_reencoding
+            else:
+                d.time_e2nl_reencoding = time.time()-time_reencoding
         encoding = tools.initialFixes(encoding)
         
         # VERIFIER
         if WITH_VERIFIER:
+            time_verifier = time.time()
             updatedProblem = tools.updateProblem(g_problem, [encoding])
             result = tools.verifyEncoding(updatedProblem, g_domain, encoding)
-            
+            d.time_verifier = time.time()-time_verifier
             encodingOK = result=='OK'
             if encodingOK:
                 d.encoding = encoding
                 if g_with_e2nl:
+                    time_e2nl = time.time()
                     d.e2nl = LLM.E2NL(d.encoding)
+                    d.time_e2nl = time.time()-time_e2nl
                     increase_e2nl_done()
                 
             elif not encodingOK:
@@ -209,6 +232,7 @@ def encoding_interaction(d):
 
     # E2NL
     if g_with_e2nl:
+        time_validation = time.time()
         mprint(f'E2NL: "{d.e2nl}"')
         mprint("\nDoes this back-translation sounds correct?")
         answer = minput("Press Enter for yes or give feedback: ")
@@ -220,6 +244,7 @@ def encoding_interaction(d):
         else:
             mprint("\n> " + answer + '\n')
         
+        d.time_validation = time.time()-time_validation
         e2nlOK = answer==''
         if not e2nlOK:
             return answer
@@ -245,7 +270,7 @@ def planWithConstraints():
     if not len(activated_encodings):
         mprint("\nNo active constraints: Planning without constraints")
         problem_name = g_problem_name
-    
+        time_compilation = 0
     else:
         problem_name = PlanFiles.COMPILED
         
@@ -257,19 +282,22 @@ def planWithConstraints():
         
         # Compile the updated problem
         mprint("\nCompiling ... ", end="")
+        time_compilation = time.time()
         ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-        mprint("OK")
+        time_compilation = time.time() - time_compilation
+        mprint(f"OK [{time_compilation:.2f}s]")
         
     # Plan
     mprint(f"Planning ({g_planning_mode}{'' if g_timeout==None else f', TO={g_timeout}s'}) ... ", end="" )
-    feedback, plan, stdout = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True, timeout=g_timeout)
-    success = feedback=='success'
-    if success:
-        mprint("OK")
-        return plan
+    time_planning = time.time()
+    result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True, timeout=g_timeout)
+    time_planning = time.time()-time_planning
+    
+    if result=='success':
+        mprint(f"OK [{time_planning:.2f}s]")
     else:
-        mprint("Failed")
-        return "Failed to plan:\n" + str(feedback)
+        mprint(f"Failed {fail_reason} [{time_planning:.2f}s]")
+    return result, plan, planlength, metric, fail_reason, time_compilation, time_planning
 
 ## SUGGESTIONS ##
 def suggestions():
