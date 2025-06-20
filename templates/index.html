@@ -23,7 +23,7 @@
         /* display: flex; */
         align-items: stretch;
     }
-    .checkbox-list { width: 99.9%; height: 280px; display: flex; flex-direction: column; flex-grow: 1; background-color: white; overflow: auto;border: 1px solid #999;resize: both;}
+    .checkbox-list { width: 99%; height: 280px; display: flex; flex-direction: column; background-color: white; overflow-y: auto; overflow-x: auto;border: 1px solid #999;resize: both;}
     label {
         display: inline-block; /* Change label to inline-block to respect width */
         width: auto; /* Set width appropriately */
@@ -897,6 +897,7 @@
             .then(data => {
                 // Append the response to the llmOutput textarea
                 document.getElementById('llmOutput').value += '\n***\nQUERY:\n  ' + query + '\n\nANSWER:\n' + data.response + '\n';
+                document.getElementById('llmOutput').scrollTop = document.getElementById('llmOutput').scrollHeight; // Scroll to the bottom
                 // Print the response to the console
                 console.log(data.response);
                 latest_response = data.response;
