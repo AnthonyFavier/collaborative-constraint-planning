@@ -252,7 +252,7 @@ def generate_constraints(original_problem):
 ###########
 
 def solve_with_constraints():
-    run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
+    run_name = f"{PROBLEM_NAME}-W-{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
     print(run_name)
     
     # Parse original problem
@@ -264,27 +264,27 @@ def solve_with_constraints():
         raise Exception('Already some constraints in original problem')
 
     # Create result file
-    result = {}
-    result['seed'] = SEED
-    result['timeout'] = TIMEOUT
+    all_results = {}
+    all_results['seed'] = SEED
+    all_results['timeout'] = TIMEOUT
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    result['domain'] = dp
-    result['problem'] = pp
+    all_results['domain'] = dp
+    all_results['problem'] = pp
     with open(path+filename, 'w') as f:
-        f.write(json.dumps(result, indent=4))
+        f.write(json.dumps(all_results, indent=4))
 
     # Generate constraints
     expressions, constraints_dict = generate_constraints(original_problem)
-    result['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
+    all_results['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
     for k,l in constraints_dict.items():
-        result['generated_constraints'][k] = [str(c) for c in l]
+        all_results['generated_constraints'][k] = [str(c) for c in l]
     with open(path+filename, 'w') as f:
-        f.write(json.dumps(result, indent=4))
+        f.write(json.dumps(all_results, indent=4))
 
     # Tests
-    result['tests'] = []
+    all_results['tests'] = []
     itType = iter(MyIterator(constraints_dict))
     with IncrementalBar('Processsing', max=NB_TEST, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
         for i in range(NB_TEST):
@@ -295,15 +295,19 @@ def solve_with_constraints():
             # Get current type and pickRandom of this type
             type_name, type_list = next(itType)
             picked_constraint = pickRandom(type_list)
-            while str(picked_constraint) in [t['constraint'] for t in result['tests']]:
+            n_retry = 1
+            while str(picked_constraint) in [t['constraint'] for t in all_results['tests']]:
+                if n_retry>MAX_RETRY_PICK:
+                    raise Exception("MAX_RETRY_PICK reached")
                 picked_constraint = pickRandom(type_list)
+                n_retry+=1
             test['constraint'] = str(picked_constraint)
             test['constraint_type'] = type_name
                 
-            result['tests'].append(test)
+            all_results['tests'].append(test)
             test['result'] = 'In progress...'
             with open(path+filename, 'w') as f:
-                f.write(json.dumps(result, indent=4))
+                f.write(json.dumps(all_results, indent=4))
             
             # Update problem with constraint
             new_problem = original_problem.clone()
@@ -330,41 +334,41 @@ def solve_with_constraints():
             test['reason'] = fail_reason
                 
             with open(path+filename, 'w') as f:
-                f.write(json.dumps(result, indent=4))
+                f.write(json.dumps(all_results, indent=4))
                 
             bar.next()
     
-        result['elapsed'] = str(bar.elapsed_td)
+        all_results['elapsed'] = str(bar.elapsed_td)
         with open(path+filename, 'w') as f:
-            f.write(json.dumps(result, indent=4))
+            f.write(json.dumps(all_results, indent=4))
     
 def solve_without_constraints():
     
-    run_name = f"WO_{NB_WO}_TO{TIMEOUT}"
+    run_name = f"{PROBLEM_NAME}-WO-{NB_WO}-TO{TIMEOUT}"
     print(run_name)
     
     # Create result file
-    result = {}
-    result['timeout'] = TIMEOUT
+    all_results = {}
+    all_results['timeout'] = TIMEOUT
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    result['domain'] = dp
-    result['problem'] = pp
+    all_results['domain'] = dp
+    all_results['problem'] = pp
     with open(path+filename, 'w') as f:
-        f.write(json.dumps(result, indent=4))
+        f.write(json.dumps(all_results, indent=4))
 
 
-    result['tests'] = []
+    all_results['tests'] = []
     with IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
         for i in range(NB_WO):
             bar.start()
             test = {}
                 
-            result['tests'].append(test)
-            test['result'] = 'In progress...'
+            all_results['tests'].append(test)
+            test['all_results'] = 'In progress...'
             with open(path+filename, 'w') as f:
-                f.write(json.dumps(result, indent=4))
+                f.write(json.dumps(all_results, indent=4))
             
             # plan
             PROBLEMS[run_name] = (dp, pp)
@@ -377,13 +381,13 @@ def solve_without_constraints():
             test['metric'] = metric
                 
             with open(path+filename, 'w') as f:
-                f.write(json.dumps(result, indent=4))
+                f.write(json.dumps(all_results, indent=4))
                 
             bar.next()
     
-        result['elapsed'] = str(bar.elapsed_td)
+        all_results['elapsed'] = str(bar.elapsed_td)
         with open(path+filename, 'w') as f:
-            f.write(json.dumps(result, indent=4))
+            f.write(json.dumps(all_results, indent=4))
 
 ##########
 ## MAIN ##
@@ -402,20 +406,20 @@ def testing():
         raise Exception('Already some constraints in original problem')
 
     # Create result file
-    result = {}
-    result['seed'] = SEED
-    result['timeout'] = TIMEOUT
+    all_results = {}
+    all_results['seed'] = SEED
+    all_results['timeout'] = TIMEOUT
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    result['domain'] = dp
-    result['problem'] = pp
+    all_results['domain'] = dp
+    all_results['problem'] = pp
 
     # Generate constraints
     expressions, constraints_dict = generate_constraints(original_problem)
-    result['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
+    all_results['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
     for k,l in constraints_dict.items():
-        result['generated_constraints'][k] = [str(c) for c in l]
+        all_results['generated_constraints'][k] = [str(c) for c in l]
         
 @click.command()
 @click.argument('mode', default=WITH_CONSTRAINT)
