@@ -17,6 +17,7 @@ from unified_planning.model.fluent import Fluent as upFluent
 from unified_planning.model.parameter import Parameter as upParameter
 from unified_planning.model.types import _RealType as upReal
 from unified_planning.model.types import _BoolType as upBool
+import itertools
 
 ######################
 ## HYPER PARAMETERS ##
@@ -25,15 +26,13 @@ from unified_planning.model.types import _BoolType as upBool
 PROBLEM_NAME = 'Rover8_n'
 # 'ZenoTravel13', 'Rover13', 'Rover8_n'
 
-NB_EXPRESSION =         10
+NB_EXPRESSION =         50
 NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
 NB_CONSTRAINT_AND2 =    NB_EXPRESSION
 NB_CONSTRAINT_AND3 =    NB_EXPRESSION
 NB_CONSTRAINT_OR2 =     NB_EXPRESSION
 NB_CONSTRAINT_OR3 =     NB_EXPRESSION
-NB_TEST = 50 # Should be less or equal than NB_EXPRESSION * 5 to avoid redundant constraints
-TIMEOUT = 5
-WITH_CONSTRAINT = 'with' # or 'without'
+NB_TEST = 200 # Should be less or equal than NB_EXPRESSION * 5 to avoid redundant constraints
 
 NB_WO = 10
 
@@ -41,6 +40,82 @@ SEED = random.randrange(sys.maxsize)
 SEED = 0 # for testing
 
 MAX_RETRY_PICK = 300
+
+#######################
+## HUMAN CONSTRAINTS ##
+#######################
+
+def initializeHumanConstraintsZenotravel13(pb):
+    constraints_dict = {"SIMPLE":[]}
+    
+    # ONLY USE PLANE1
+    p = Variable('p', pb.user_type('person'))
+    constraint = Always(And(
+        Forall(Not(pb.fluent('in')(p, pb.object('plane2'))), p),
+        Forall(Not(pb.fluent('in')(p, pb.object('plane3'))), p),
+        pb.fluent('located')(pb.object('plane2'), pb.object('city2')),
+        pb.fluent('located')(pb.object('plane3'), pb.object('city3')),
+    ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PERSON7 SHOULD NOT MOVE
+    constraint = Always(pb.fluent('located')(pb.object('person7'), pb.object('city0')))
+    constraints_dict['SIMPLE'].append(constraint)
+
+
+    # PLANES SHOULD ONLY FLY SLOWLY
+    a = Variable('a', pb.user_type('aircraft'))
+    c1 = Variable('c1', pb.user_type('city'))
+    c2 = Variable('c2', pb.user_type('city'))
+    constraint = Always(Forall( Equals(pb.fluent('n_flyfast')(a, c1, c2), 0) , a, c1, c2))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PLANE1 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
+    constraint = Always(Forall(LE(Plus(
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city0'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city1'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city2'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city3'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city4'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city5'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city0'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city1'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city2'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city3'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city4'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city5'), c1),
+        ),3), c1))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    
+    # PERSON1 AND PERSON3 SHOULD TRAVEL TOGETHER
+    constraint = Always(Or(
+        Exists(And( pb.fluent('in')(pb.object('person1'), a), pb.fluent('in')(pb.object('person3'), a) ), a),
+        Exists(And( pb.fluent('located')(pb.object('person1'), c1), pb.fluent('located')(pb.object('person3'), c1) ), c1),
+        Exists(And( pb.fluent('in')(pb.object('person1'), a), pb.fluent('located')(pb.object('person3'), c1), pb.fluent('located')(a, c1)), c1, a),
+        Exists(And( pb.fluent('in')(pb.object('person3'), a), pb.fluent('located')(pb.object('person1'), c1), pb.fluent('located')(a, c1)), c1, a),
+    ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    constraints_dict['AND'] = []
+    for i in range(2, len(constraints_dict['SIMPLE'])):
+        for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+            constraints_dict['AND'].append( And(x) )
+    
+    # constraints_dict['OR'] = []
+    # for i in range(2, len(constraints_dict['SIMPLE'])):
+    #     for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+    #         constraints_dict['OR'].append( Or(x) )
+    
+    return constraints_dict
+
+def initializeHumanConstraintsRover13(pb):
+    constraints_dict = {}
+    return constraints_dict
+
+def initializeHumanConstraintsRover8n(pb):
+    constraints_dict = {}
+    return constraints_dict
 
 ##############
 ## PROBLEMS ##
@@ -51,17 +126,20 @@ problems = {
         '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
         '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
+        initializeHumanConstraintsZenotravel13,
     ],
     'Rover13': [
         '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl',
         '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
+        initializeHumanConstraintsRover13,
     ],
     'Rover8_n': [
     # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
         '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl',
         '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
+        initializeHumanConstraintsRover8n,
     ],
 }
 
@@ -389,6 +467,91 @@ def solve_without_constraints():
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
+def solve_with_human_constraints():
+    run_name = f"{PROBLEM_NAME}-H-TO{TIMEOUT}"
+    print(run_name)
+    
+    # Parse original problem
+    reader = PDDLReader()
+    original_problem: upProblem = reader.parse_problem(dp, pp) 
+
+    # Check if original problem has no constraints
+    if original_problem.trajectory_constraints!=[]:
+        raise Exception('Already some constraints in original problem')
+
+    # Create result file
+    all_results = {}
+    all_results['seed'] = SEED
+    all_results['timeout'] = TIMEOUT
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    filename = f'{run_name}_{date}.json'
+    path = 'results_constraints/'
+    all_results['domain'] = dp
+    all_results['problem'] = pp
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(all_results, indent=4))
+
+    # Generate constraints
+    constraints_dict = human_constraints_init(original_problem)
+    all_results['generated_constraints'] = {}
+    for k,l in constraints_dict.items():
+        all_results['generated_constraints'][k] = [str(c) for c in l]
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(all_results, indent=4))
+
+    # Tests
+    all_results['tests'] = []
+    N_TOTAL = len(constraints_dict['SIMPLE'])+len(constraints_dict['AND'])
+    with IncrementalBar(f'Processsing', max=N_TOTAL, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
+        for type_name in constraints_dict:
+            type_list = constraints_dict[type_name]
+            for picked_constraint in type_list:
+                
+                bar.start()
+                test = {}
+                
+                # Get current type and pickRandom of this type
+                test['constraint'] = str(picked_constraint)
+                test['constraint_type'] = type_name
+                    
+                all_results['tests'].append(test)
+                test['result'] = 'In progress...'
+                with open(path+filename, 'w') as f:
+                    f.write(json.dumps(all_results, indent=4))
+                
+                # Update problem with constraint
+                new_problem = original_problem.clone()
+                new_problem.add_trajectory_constraint(picked_constraint)
+
+                # Write new problem with up
+                problem_name = filename.replace('.json', '')
+                w = PDDLWriter(new_problem)
+                w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
+                w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
+
+                # Compile
+                ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+
+                # Plan
+                PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+
+                # Get Metric
+                test['result'] = result
+                test['plan'] = plan
+                test['planlength'] = planlength
+                test['metric'] = metric
+                test['reason'] = fail_reason
+                    
+                with open(path+filename, 'w') as f:
+                    f.write(json.dumps(all_results, indent=4))
+                    
+                bar.next()
+        
+        all_results['elapsed'] = str(bar.elapsed_td)
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
+
 ##########
 ## MAIN ##
 ##########
@@ -422,10 +585,10 @@ def testing():
         all_results['generated_constraints'][k] = [str(c) for c in l]
         
 @click.command()
-@click.argument('mode', default=WITH_CONSTRAINT)
-@click.argument('timeout', default=TIMEOUT)
+@click.argument('mode', default='with_human')
+@click.argument('timeout', default=1)
 def main_cli(mode: str, timeout: int):
-    global TIMEOUT, dp, pp, names_of_constants
+    global TIMEOUT, dp, pp, names_of_constants, human_constraints_init
     TIMEOUT = timeout
     
     random.seed(SEED)
@@ -433,15 +596,18 @@ def main_cli(mode: str, timeout: int):
     dp = problems[PROBLEM_NAME][0]
     pp = problems[PROBLEM_NAME][1]
     names_of_constants = problems[PROBLEM_NAME][2]
+    human_constraints_init = problems[PROBLEM_NAME][3]
     
-    if mode=='with':
-        solve_with_constraints()
-    elif mode=='without':
-        solve_without_constraints()
-    elif mode=='testing':
-        testing()
+    modes = {
+        'with': solve_with_constraints,
+        'without': solve_without_constraints,
+        'with_human': solve_with_human_constraints,
+        'testing': testing,
+    }
+    if mode not in modes:
+        print('Unknown mode given [' + ', '.join([m for m in modes]) + ']')
     else:
-        print('Unknown mode given')
+        modes[mode]()
 
 if __name__=="__main__":
     try:

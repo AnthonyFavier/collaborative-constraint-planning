@@ -180,6 +180,93 @@ def extract_result_without_constraint(filename):
     
     return data
 
+def extract_result_h(filename):
+    print(f'File: {filename}')
+    with open(filename, 'r') as f:
+        raw_data = json.loads(f.read())
+    
+    data = {}
+    
+    # EXTRACTION
+    tests = raw_data['tests']
+    successful = []
+    timeout = []
+    unsolvable = []
+    simple = []
+    ands = []
+    for t in tests:
+        if t['result']=='success':
+            successful.append(t)
+        elif t['reason']=='Timeout':
+            timeout.append(t)
+        elif t['reason']=='Unsolvable Problem':
+            unsolvable.append(t)
+            
+        if t['constraint_type']=="SIMPLE":
+            simple.append(t)
+        elif t['constraint_type']=="AND":
+            ands.append(t)
+            
+    if successful!=[]:
+        metrics = np.array([t['metric'] for t in successful])
+        mean = metrics.mean()
+        std = metrics.std()
+        min_metric = metrics.min()
+    else:
+        metrics = -1
+        mean = -1
+        std = -1
+        min_metric = -1
+        
+    
+    constraints = [t['constraint'] for t in tests]
+    my_dict = {x:constraints.count(x) for x in constraints}
+    repeated = 0
+    for k,n in my_dict.items():
+        if n>1:
+            print(f'\t{n}: {k}')
+            repeated+=1
+            
+    elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
+    
+    # SAVE extracted
+    data['seed'] = raw_data['seed']
+    data['timeout'] = raw_data['timeout']
+    data['Repeated'] = 100*repeated/len(tests)
+    data['Type_repartition'] = {
+        'SIMPLE': 100*len(simple)/len(tests),
+        'AND': 100*len(ands)/len(tests),
+    }
+    data['success'] = {
+            'ratio': 100*len(successful)/len(tests),
+            'Timeout': 100*len(timeout)/len(tests),
+            'Unsolvable': 100*len(unsolvable)/len(tests),
+    }
+    if successful!=[]:
+        data['metrics'] = {
+            'all': metrics,
+            'mean': mean,
+            'std': std,
+            'best': min_metric
+        }
+    data['elapsed'] = elapsed
+    
+    # PRINT
+    
+    print(f"Repeated = {data['Repeated']:.1f}%")
+    print('Constraint types:')
+    print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
+    print('\tAND: ' + '{:.1f}'.format(data['Type_repartition']['AND']) + '%')
+    print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
+    print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
+    print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
+    if successful!=[]:
+        print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
+        print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
+    print('Elasped = ' + data['elapsed'])
+    
+    return data
+
 def get_two_level_folder_dict(base_path):
     base_path = Path(base_path)
     folder_dict = {}
@@ -202,9 +289,10 @@ def add_label(violin, label):
 
 def several():
     
-    problem_name = 'rover8_n' # 'zenotravel13', 'rover13', 'rover8_n'
+    problem_name = 'zenotravel13' # 'zenotravel13', 'rover13', 'rover8_n'
     with_constraints_folder = 'seed0' # 'seed0', 'seed2902480765646109827', 'seed6671597656599831408'
     without_constraints_folder = 'WO10' # 'WO10'
+    h_folder = 'H'
     
     VIOLIN = True
     
@@ -217,6 +305,10 @@ def several():
     datas_wo = []
     for f in all_files[problem_name][without_constraints_folder]:
         datas_wo.append(extract_result_without_constraint(f))
+        
+    datas_h = []
+    for f in all_files[problem_name][h_folder]:
+        datas_h.append(extract_result_h(f))
         
     seed = datas[-1]['seed']
     unsolvable = datas[-1]['success']['Unsolvable']
@@ -234,8 +326,12 @@ def several():
                 if d['timeout']==x_labels[j]:
                     box_pos.append(j)
                     break
+    if box_data==[]:
+        box_data = [np.nan]
+    if box_pos==[]:
+        box_pos = [np.nan]
             
-    # Without constraints data
+    # original problem data
     box_wo_data = []
     box_wo_pos = []
     for i,d in enumerate(datas_wo):
@@ -249,6 +345,34 @@ def several():
         box_wo_data = [np.nan]
     if box_wo_pos==[]:
         box_wo_pos = [np.nan]
+            
+    # human data
+    box_h_data = []
+    box_h_pos = []
+    for i,d in enumerate(datas_h):
+        if 'metrics' in d:
+            box_h_data.append(d['metrics']['all'])
+            for j in range(len(x_labels)):
+                if d['timeout']==x_labels[j]:
+                    box_h_pos.append(j)
+                    break
+    if box_h_data==[]:
+        box_h_data = [np.nan]
+    if box_h_pos==[]:
+        box_h_pos = [np.nan]
+        
+    # Relevant info extraction
+    # find global min and max
+    minimum_w = float(np.array([d.min() for d in box_data]).min())
+    minimum_wo = float(np.array([d.min() for d in box_wo_data]).min())
+    minimum_h = float(np.array([d.min() for d in box_h_data]).min())
+    minimum = min(minimum_w, minimum_wo, minimum_h)
+    maximum_w = float(np.array([d.max() for d in box_data]).max())
+    maximum_wo = float(np.array([d.max() for d in box_wo_data]).max())
+    maximum_h = float(np.array([d.max() for d in box_h_data]).max())
+    maximum = max(maximum_w, maximum_wo, maximum_h)
+    print("Best plan metric: ", minimum)
+    print("Worst plan metric: ", maximum)
     
     # Success ratio data with
     line_data = []
@@ -273,21 +397,49 @@ def several():
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
     showfliers = False
-    offset = 0.15
+    # offset > widths
+    offset = 0.27
+    widths = 0.25
     
-    # WITH
+    # ORIGINAL
+    data = box_wo_data
+    positions = [x - offset for x in box_wo_pos]
+    label = 'random constraints'
     if VIOLIN:
-        v = axs[0].violinplot(box_data,
-                positions=[x - offset for x in box_pos],
-                widths=0.25,
+        v = axs[0].violinplot(data,
+                positions=positions,
+                widths=widths,
                 showmeans=False,
                 showmedians=True,
             )
-        add_label(v, "with constraints")
+        add_label(v, label)
     else:
-        axs[0].boxplot(box_data, positions=[x - offset for x in box_pos], label='with constraints',
+        axs[0].boxplot(data, positions=positions, label=label,
                 patch_artist=True,
-                widths=0.25,
+                widths=widths,
+                showmeans=False, 
+                showfliers=showfliers,
+                medianprops={"color": "white", "linewidth": 0.5},
+                boxprops={"facecolor": "limegreen", "edgecolor": "white", "linewidth": 0.5},
+                whiskerprops={"color": "limegreen", "linewidth": 1.5},
+                capprops={"color": "limegreen", "linewidth": 1.5}
+            )
+    # RANDOM
+    data = box_data
+    positions = [x for x in box_pos]
+    label = 'original problem'
+    if VIOLIN:
+        v = axs[0].violinplot(data,
+                positions=positions,
+                widths=widths,
+                showmeans=False,
+                showmedians=True,
+            )
+        add_label(v, label)
+    else:
+        axs[0].boxplot(data, positions=positions, label=label,
+                patch_artist=True,
+                widths=widths,
                 showmeans=False, 
                 showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
@@ -295,19 +447,22 @@ def several():
                 whiskerprops={"color": "C0", "linewidth": 1.5},
                 capprops={"color": "C0", "linewidth": 1.5}
             )
-    # WO
+    # H
+    data = box_h_data
+    positions = [x + offset for x in box_h_pos]
+    label = 'human constraints'
     if VIOLIN:
-        v = axs[0].violinplot(box_wo_data,
-                positions=[x + offset for x in box_wo_pos],
-                widths=0.25,
+        v = axs[0].violinplot(data,
+                positions=positions,
+                widths=widths,
                 showmeans=False,
                 showmedians=True,
             )
-        add_label(v, "without constraints")
+        add_label(v, label)
     else:
-        axs[0].boxplot(box_wo_data, positions=[x + offset for x in box_wo_pos], label='without constraints',
+        axs[0].boxplot(data, positions=positions, label=label,
                 patch_artist=True,
-                widths=0.25,
+                widths=widths,
                 showmeans=False, 
                 showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
@@ -319,8 +474,8 @@ def several():
     axs[0].set_ylabel("Metric values")
     axs[0].set_title(problem_name + " seed" + str(seed))
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
-    # axs[0].set_ylim(ymax=90000)
-    # axs[0].set_ylim(ymin=20000)
+    # axs[0].set_ylim(ymin=10290.0 * 0.9)
+    # axs[0].set_ylim(ymax=127454.0 * 1.1)
     # axs[0].yaxis.grid(True)
     if VIOLIN:
         axs[0].legend(*zip(*labels), loc='upper left', ncols=3)
@@ -329,13 +484,13 @@ def several():
     
     #############################
     
-    # WITH
-    axs[1].plot(line_pos, line_data, marker='o', label='with constraints')
-    # WO
-    axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='without constraints')
+    # ORIGINAL
+    axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='original problem')
+    # RANDOM
+    axs[1].plot(line_pos, line_data, marker='o', label='random constraints')
     # Params
     axs[1].axhline(y=100, color="green", linestyle="--")
-    axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable with constraints ({100-unsolvable:.1f}%)')
+    axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
