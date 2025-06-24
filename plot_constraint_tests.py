@@ -17,7 +17,7 @@ def main_cli(mode: str, filename: tuple[str,...]):
     elif mode=='analyze_without':
         extract_result_without_constraint(filename[0])
     
-def extract_result_with_constraint(filename):
+def extract_result_with_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
@@ -101,25 +101,25 @@ def extract_result_with_constraint(filename):
     data['elapsed'] = elapsed
     
     # PRINT
-    
-    print(f"Repeated = {data['Repeated']:.1f}%")
-    print('Constraint types:')
-    print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
-    print('\tAND2: ' + '{:.1f}'.format(data['Type_repartition']['AND2']) + '%')
-    print('\tAND3: ' + '{:.1f}'.format(data['Type_repartition']['AND3']) + '%')
-    print('\tOR2: ' + '{:.1f}'.format(data['Type_repartition']['OR2']) + '%')
-    print('\tOR3: ' + '{:.1f}'.format(data['Type_repartition']['OR3']) + '%')
-    print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
-    print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
-    print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
-    if successful!=[]:
-        print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
-        print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
-    print('Elasped = ' + data['elapsed'])
+    if show:
+        print(f"Repeated = {data['Repeated']:.1f}%")
+        print('Constraint types:')
+        print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
+        print('\tAND2: ' + '{:.1f}'.format(data['Type_repartition']['AND2']) + '%')
+        print('\tAND3: ' + '{:.1f}'.format(data['Type_repartition']['AND3']) + '%')
+        print('\tOR2: ' + '{:.1f}'.format(data['Type_repartition']['OR2']) + '%')
+        print('\tOR3: ' + '{:.1f}'.format(data['Type_repartition']['OR3']) + '%')
+        print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
+        print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
+        print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
+        if successful!=[]:
+            print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
+            print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
+        print('Elasped = ' + data['elapsed'])
     
     return data
 
-def extract_result_without_constraint(filename):
+def extract_result_without_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
@@ -169,18 +169,18 @@ def extract_result_without_constraint(filename):
     data['elapsed'] = elapsed
     
     # PRINT
-    
-    print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
-    print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
-    print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
-    if successful!=[]:
-        print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
-        print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
-    print('Elasped = ' + data['elapsed'])
+    if show:
+        print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
+        print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
+        print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
+        if successful!=[]:
+            print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
+            print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
+        print('Elasped = ' + data['elapsed'])
     
     return data
 
-def extract_result_h(filename):
+def extract_result_h(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
@@ -252,22 +252,22 @@ def extract_result_h(filename):
     data['elapsed'] = elapsed
     
     # PRINT
-    
-    print(f"Repeated = {data['Repeated']:.1f}%")
-    print('Constraint types:')
-    print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
-    print('\tAND: ' + '{:.1f}'.format(data['Type_repartition']['AND']) + '%')
-    print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
-    print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
-    print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
-    if successful!=[]:
-        print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
-        print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
-    print('Elasped = ' + data['elapsed'])
+    if show:
+        print("Repeated = " + '{:.1f}'.format(data['Repeated']) + '%')
+        print('Constraint types:')
+        print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
+        print('\tAND: ' + '{:.1f}'.format(data['Type_repartition']['AND']) + '%')
+        print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
+        print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
+        print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
+        if successful!=[]:
+            print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
+            print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
+        print('Elasped = ' + data['elapsed'])
     
     return data
 
-def extract_all_seeds(filenames):
+def extract_all_seeds(filenames, show=False):
     
     all_data = {}
     
@@ -333,10 +333,8 @@ def extract_all_seeds(filenames):
     # Extract final values
     final_datas = []
     for timeout in all_data:
-        data = {'timeout': timeout}
-        
         N_TESTS = len(all_data[timeout]['tests'])        
-        
+        data = {'timeout': timeout}
         data['Repeated'] = 100*all_data[timeout]['repeated']/N_TESTS
         data['success'] = {
                 'ratio': 100*len(all_data[timeout]['successful'])/N_TESTS,
@@ -355,6 +353,19 @@ def extract_all_seeds(filenames):
         data['seeds'] = all_data[timeout]['seeds']
         
         final_datas.append(data)
+        
+        # PRINT
+        if show:
+            print(f'\nTimeout = ' + str(data['timeout']))
+            print("Repeated = " + '{:.1f}'.format(data['Repeated']) + '%')
+            print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
+            print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
+            print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
+            if all_data[timeout]['successful']!=[]:
+                print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
+                print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
+            print('Elasped mean = ' + '{:.1f}'.format(data['elapsed_mean']))
+            print('Elasped std = ' + '{:.1f}'.format(data['elapsed_std']))
     
     return final_datas
 
