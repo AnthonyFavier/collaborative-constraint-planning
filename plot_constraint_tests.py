@@ -76,7 +76,7 @@ def extract_result_with_constraint(filename):
     elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
     
     # SAVE extracted
-    data['seed'] = raw_data['seed']
+    data['seeds'] = [raw_data['seed']]
     data['timeout'] = raw_data['timeout']
     data['Repeated'] = 100*repeated/len(tests)
     data['Type_repartition'] = {
@@ -230,7 +230,7 @@ def extract_result_h(filename):
     elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
     
     # SAVE extracted
-    data['seed'] = raw_data['seed']
+    data['seeds'] = [raw_data['seed']]
     data['timeout'] = raw_data['timeout']
     data['Repeated'] = 100*repeated/len(tests)
     data['Type_repartition'] = {
@@ -267,6 +267,97 @@ def extract_result_h(filename):
     
     return data
 
+def extract_all_seeds(filenames):
+    
+    all_data = {}
+    
+    # Extract data from all files, sorted by timeout
+    for filename in filenames:
+        print(f'File: {filename}')
+        with open(filename, 'r') as f:
+            raw_data = json.loads(f.read())
+            
+        if 'elapsed' not in raw_data:
+            raise Exception(f"{filename} was interrupted!")
+            
+        timeout = raw_data['timeout']
+        if timeout not in all_data:
+            all_data[timeout] = {
+                'tests': [],
+                'successful': [],
+                'reason_timeout': [],
+                'reason_unsolvable': [],
+                'elapsed': [],
+                'repeated': 0,
+                'seeds': [],
+            }
+            
+        seed = raw_data['seed']
+        if seed not in all_data[timeout]['seeds']:
+            all_data[timeout]['seeds'].append(seed)
+            
+        # Check if not already in all_data[timeout] tests
+        for t in raw_data['tests']:
+            constraints_already_present = [t['constraint'] for t in all_data[timeout]['tests']]
+            if t['constraint'] not in constraints_already_present:
+                all_data[timeout]['tests'].append(t)
+                if t['result']=='success':
+                    all_data[timeout]['successful'].append(t)
+                elif t['reason']=='Timeout':
+                    all_data[timeout]['reason_timeout'].append(t)
+                elif t['reason']=='Unsolvable Problem':
+                    all_data[timeout]['reason_unsolvable'].append(t)
+            else:
+                all_data[timeout]['repeated']+=1
+        
+        h,m,s = [int(x) for x in raw_data['elapsed'].split(':')]
+        elapsed_seconds = h*3600 + m*60 + s
+        all_data[timeout]['elapsed'].append(elapsed_seconds)
+                
+    # for each timeout value, compute values
+    for timeout in all_data:
+        if all_data[timeout]['successful']!=[]:
+            all_data[timeout]['metrics'] = np.array([t['metric'] for t in all_data[timeout]['successful']])
+            all_data[timeout]['mean'] = all_data[timeout]['metrics'].mean()
+            all_data[timeout]['std'] = all_data[timeout]['metrics'].std()
+            all_data[timeout]['min_metric'] = all_data[timeout]['metrics'].min()
+        else:
+            all_data[timeout]['metrics'] = -1
+            all_data[timeout]['mean'] = -1
+            all_data[timeout]['std'] = -1
+            all_data[timeout]['min_metric'] = -1
+            
+        all_data[timeout]['elapsed_mean'] = np.array(all_data[timeout]['elapsed']).mean()
+        all_data[timeout]['elapsed_std'] = np.array(all_data[timeout]['elapsed']).std()
+    
+    # Extract final values
+    final_datas = []
+    for timeout in all_data:
+        data = {'timeout': timeout}
+        
+        N_TESTS = len(all_data[timeout]['tests'])        
+        
+        data['Repeated'] = 100*all_data[timeout]['repeated']/N_TESTS
+        data['success'] = {
+                'ratio': 100*len(all_data[timeout]['successful'])/N_TESTS,
+                'Timeout': 100*len(all_data[timeout]['reason_timeout'])/N_TESTS,
+                'Unsolvable': 100*len(all_data[timeout]['reason_unsolvable'])/N_TESTS,
+        }
+        if all_data[timeout]['successful']!=[]:
+            data['metrics'] = {
+                'all': all_data[timeout]['metrics'],
+                'mean': all_data[timeout]['mean'],
+                'std': all_data[timeout]['std'],
+                'best': all_data[timeout]['min_metric']
+            }
+        data['elapsed_mean'] = all_data[timeout]['elapsed_mean']
+        data['elapsed_std'] = all_data[timeout]['elapsed_std']
+        data['seeds'] = all_data[timeout]['seeds']
+        
+        final_datas.append(data)
+    
+    return final_datas
+
 def get_two_level_folder_dict(base_path):
     base_path = Path(base_path)
     folder_dict = {}
@@ -296,104 +387,123 @@ def several():
     
     VIOLIN = True
     
+#############################################################
+    ## EXTRACT DATA FROM FILES ##
     all_files = get_two_level_folder_dict('results_constraints')
     
-    datas = []
+    all_with_files = all_files[problem_name]['seed0']+all_files[problem_name]['seed2902480765646109827']+all_files[problem_name]['seed6671597656599831408']
+    data_random_all_seeds = extract_all_seeds(all_with_files)
+    
+    data_random = []
     for f in all_files[problem_name][with_constraints_folder]:
-        datas.append(extract_result_with_constraint(f))
-        
-    datas_wo = []
+        data_random.append(extract_result_with_constraint(f))
+    
+    data_original = []
     for f in all_files[problem_name][without_constraints_folder]:
-        datas_wo.append(extract_result_without_constraint(f))
+        data_original.append(extract_result_without_constraint(f))
         
-    datas_h = []
+    data_h = []
     for f in all_files[problem_name][h_folder]:
-        datas_h.append(extract_result_h(f))
-        
-    seed = datas[-1]['seed']
-    unsolvable = datas[-1]['success']['Unsolvable']
-    # x_labels = [int(d['timeout']) for d in datas]
+        data_h.append(extract_result_h(f))
+    
+    
+#############################################################
+    ## PREPARE PLOT DATA ##
+    unsolvable = data_random_all_seeds[-1]['success']['Unsolvable']
+    # x_labels = [int(d['timeout']) for d in data_random_all_seeds].sort() # Might be missing some...
     x_labels = [1, 3, 5, 10, 15, 30]
     x_pos = np.arange(len(x_labels)) 
     
-    # With constraints data
-    box_data = []
-    box_pos = []
-    for i,d in enumerate(datas):
+    # With random constraints data
+    plot_metric_random_data = []
+    plot_metric_random_pos = []
+    for i,d in enumerate(data_random_all_seeds):
         if 'metrics' in d:
-            box_data.append(d['metrics']['all'])
+            plot_metric_random_data.append(d['metrics']['all'])
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
-                    box_pos.append(j)
+                    plot_metric_random_pos.append(j)
                     break
-    if box_data==[]:
-        box_data = [np.nan]
-    if box_pos==[]:
-        box_pos = [np.nan]
+    if plot_metric_random_data==[]:
+        plot_metric_random_data = [np.nan]
+    if plot_metric_random_pos==[]:
+        plot_metric_random_pos = [np.nan]
             
     # original problem data
-    box_wo_data = []
-    box_wo_pos = []
-    for i,d in enumerate(datas_wo):
+    plot_metric_original_data = []
+    plot_metric_original_pos = []
+    for i,d in enumerate(data_original):
         if 'metrics' in d:
-            box_wo_data.append(d['metrics']['all'])
+            plot_metric_original_data.append(d['metrics']['all'])
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
-                    box_wo_pos.append(j)
+                    plot_metric_original_pos.append(j)
                     break
-    if box_wo_data==[]:
-        box_wo_data = [np.nan]
-    if box_wo_pos==[]:
-        box_wo_pos = [np.nan]
+    if plot_metric_original_data==[]:
+        plot_metric_original_data = [np.nan]
+    if plot_metric_original_pos==[]:
+        plot_metric_original_pos = [np.nan]
             
     # human data
-    box_h_data = []
-    box_h_pos = []
-    for i,d in enumerate(datas_h):
+    plot_metric_h_data = []
+    plot_metric_h_pos = []
+    for i,d in enumerate(data_h):
         if 'metrics' in d:
-            box_h_data.append(d['metrics']['all'])
+            plot_metric_h_data.append(d['metrics']['all'])
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
-                    box_h_pos.append(j)
+                    plot_metric_h_pos.append(j)
                     break
-    if box_h_data==[]:
-        box_h_data = [np.nan]
-    if box_h_pos==[]:
-        box_h_pos = [np.nan]
+    if plot_metric_h_data==[]:
+        plot_metric_h_data = [np.nan]
+    if plot_metric_h_pos==[]:
+        plot_metric_h_pos = [np.nan]
         
     # Relevant info extraction
     # find global min and max
-    minimum_w = float(np.array([d.min() for d in box_data]).min())
-    minimum_wo = float(np.array([d.min() for d in box_wo_data]).min())
-    minimum_h = float(np.array([d.min() for d in box_h_data]).min())
-    minimum = min(minimum_w, minimum_wo, minimum_h)
-    maximum_w = float(np.array([d.max() for d in box_data]).max())
-    maximum_wo = float(np.array([d.max() for d in box_wo_data]).max())
-    maximum_h = float(np.array([d.max() for d in box_h_data]).max())
-    maximum = max(maximum_w, maximum_wo, maximum_h)
+    minimum_random = float(np.array([d.min() for d in plot_metric_random_data]).min())
+    minimum_original = float(np.array([d.min() for d in plot_metric_original_data]).min())
+    minimum_h = float(np.array([d.min() for d in plot_metric_h_data]).min())
+    minimum = min(minimum_random, minimum_original, minimum_h)
+    maximum_random = float(np.array([d.max() for d in plot_metric_random_data]).max())
+    maximum_original = float(np.array([d.max() for d in plot_metric_original_data]).max())
+    maximum_h = float(np.array([d.max() for d in plot_metric_h_data]).max())
+    maximum = max(maximum_random, maximum_original, maximum_h)
     print("Best plan metric: ", minimum)
     print("Worst plan metric: ", maximum)
     
-    # Success ratio data with
-    line_data = []
-    line_pos = []
+    # Success ratio data random
+    plot_success_random_data = []
+    plot_success_random_pos = []
     for i in range(len(x_labels)):
-        for d in datas:
+        for d in data_random:
             if d['timeout']==x_labels[i]:
-                line_data.append(d['success']['ratio'])
-                line_pos.append(i)
+                plot_success_random_data.append(d['success']['ratio'])
+                plot_success_random_pos.append(i)
                 break
     
-    # Success ratio data without
-    line_wo_data = []
-    line_wo_pos = []
+    # Success ratio data original
+    plot_success_original_data = []
+    plot_success_original_pos = []
     for i in range(len(x_labels)):
-        for d in datas_wo:
+        for d in data_original:
             if d['timeout']==x_labels[i]:
-                line_wo_data.append(d['success']['ratio'])
-                line_wo_pos.append(i)
+                plot_success_original_data.append(d['success']['ratio'])
+                plot_success_original_pos.append(i)
                 break
-        
+    
+    # Success ratio data h
+    plot_success_h_data = []
+    plot_success_h_pos = []
+    for i in range(len(x_labels)):
+        for d in data_h:
+            if d['timeout']==x_labels[i]:
+                plot_success_h_data.append(d['success']['ratio'])
+                plot_success_h_pos.append(i)
+                break
+    
+#############################################################
+    ## FIGURE PLOTS ##
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
     showfliers = False
@@ -402,9 +512,9 @@ def several():
     widths = 0.25
     
     # ORIGINAL
-    data = box_wo_data
-    positions = [x - offset for x in box_wo_pos]
-    label = 'random constraints'
+    data = plot_metric_original_data
+    positions = [x - offset for x in plot_metric_original_pos]
+    label = 'original problem'
     if VIOLIN:
         v = axs[0].violinplot(data,
                 positions=positions,
@@ -425,9 +535,9 @@ def several():
                 capprops={"color": "limegreen", "linewidth": 1.5}
             )
     # RANDOM
-    data = box_data
-    positions = [x for x in box_pos]
-    label = 'original problem'
+    data = plot_metric_random_data
+    positions = [x for x in plot_metric_random_pos]
+    label = 'random constraints'
     if VIOLIN:
         v = axs[0].violinplot(data,
                 positions=positions,
@@ -448,8 +558,8 @@ def several():
                 capprops={"color": "C0", "linewidth": 1.5}
             )
     # H
-    data = box_h_data
-    positions = [x + offset for x in box_h_pos]
+    data = plot_metric_h_data
+    positions = [x + offset for x in plot_metric_h_pos]
     label = 'human constraints'
     if VIOLIN:
         v = axs[0].violinplot(data,
@@ -472,7 +582,8 @@ def several():
             )
     # PARAMS
     axs[0].set_ylabel("Metric values")
-    axs[0].set_title(problem_name + " seed" + str(seed))
+    seeds = data_random_all_seeds[-1]['seeds']
+    axs[0].set_title(problem_name + f"\nseeds: {seeds}")
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
     # axs[0].set_ylim(ymin=10290.0 * 0.9)
     # axs[0].set_ylim(ymax=127454.0 * 1.1)
@@ -482,12 +593,14 @@ def several():
     else:
         axs[0].legend(loc='upper left', ncols=3)
     
-    #############################
+    ##########################################################
     
     # ORIGINAL
-    axs[1].plot(line_wo_pos, line_wo_data, marker='o', label='original problem')
+    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', label='original problem')
     # RANDOM
-    axs[1].plot(line_pos, line_data, marker='o', label='random constraints')
+    axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', label='random constraints')
+    # H
+    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', label='h constraints')
     # Params
     axs[1].axhline(y=100, color="green", linestyle="--")
     axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
