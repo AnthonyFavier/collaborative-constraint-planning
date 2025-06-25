@@ -402,12 +402,13 @@ def several():
     ## EXTRACT DATA FROM FILES ##
     all_files = get_two_level_folder_dict('results_constraints')
     
-    all_with_files = all_files[problem_name]['seed0']+all_files[problem_name]['seed2902480765646109827']+all_files[problem_name]['seed6671597656599831408']
-    data_random_all_seeds = extract_all_seeds(all_with_files)
+   
+    # data_random = []
+    # for f in all_files[problem_name][with_constraints_folder]:
+    #     data_random.append(extract_result_with_constraint(f))
     
-    data_random = []
-    for f in all_files[problem_name][with_constraints_folder]:
-        data_random.append(extract_result_with_constraint(f))
+    all_with_files = all_files[problem_name]['seed0']+all_files[problem_name]['seed2902480765646109827']+all_files[problem_name]['seed6671597656599831408']
+    data_random = extract_all_seeds(all_with_files)
     
     data_original = []
     for f in all_files[problem_name][without_constraints_folder]:
@@ -420,7 +421,7 @@ def several():
     
 #############################################################
     ## PREPARE PLOT DATA ##
-    unsolvable = data_random_all_seeds[-1]['success']['Unsolvable']
+    unsolvable = data_random[-1]['success']['Unsolvable']
     # x_labels = [int(d['timeout']) for d in data_random_all_seeds].sort() # Might be missing some...
     x_labels = [1, 3, 5, 10, 15, 30]
     x_pos = np.arange(len(x_labels)) 
@@ -428,7 +429,7 @@ def several():
     # With random constraints data
     plot_metric_random_data = []
     plot_metric_random_pos = []
-    for i,d in enumerate(data_random_all_seeds):
+    for i,d in enumerate(data_random):
         if 'metrics' in d:
             plot_metric_random_data.append(d['metrics']['all'])
             for j in range(len(x_labels)):
@@ -472,14 +473,23 @@ def several():
         
     # Relevant info extraction
     # find global min and max
+    minimums = []
     minimum_random = float(np.array([d.min() for d in plot_metric_random_data]).min())
+    minimums.append(minimum_random)
     minimum_original = float(np.array([d.min() for d in plot_metric_original_data]).min())
+    minimums.append(minimum_original)
     minimum_h = float(np.array([d.min() for d in plot_metric_h_data]).min())
-    minimum = min(minimum_random, minimum_original, minimum_h)
+    minimums.append(minimum_h)
+    minimum = min(minimums)
+    
+    maximums = []
     maximum_random = float(np.array([d.max() for d in plot_metric_random_data]).max())
+    maximums.append(maximum_random)
     maximum_original = float(np.array([d.max() for d in plot_metric_original_data]).max())
+    maximums.append(maximum_original)
     maximum_h = float(np.array([d.max() for d in plot_metric_h_data]).max())
-    maximum = max(maximum_random, maximum_original, maximum_h)
+    maximums.append(maximum_h)
+    maximum = max(maximums)
     print("Best plan metric: ", minimum)
     print("Worst plan metric: ", maximum)
     
@@ -593,7 +603,7 @@ def several():
             )
     # PARAMS
     axs[0].set_ylabel("Metric values")
-    seeds = data_random_all_seeds[-1]['seeds']
+    seeds = data_random[-1]['seeds']
     axs[0].set_title(problem_name + f"\nseeds: {seeds}")
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
     # axs[0].set_ylim(ymin=10290.0 * 0.9)
