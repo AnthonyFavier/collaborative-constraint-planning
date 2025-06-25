@@ -391,33 +391,32 @@ def add_label(violin, label):
 
 def several():
     
-    problem_name = 'zenotravel13' # 'zenotravel13', 'rover13', 'rover8_n'
-    with_constraints_folder = 'seed0' # 'seed0', 'seed2902480765646109827', 'seed6671597656599831408'
-    without_constraints_folder = 'WO10' # 'WO10'
+    problem_name = 'rover8_n_t' # zenotravel13, rover13, rover8_n, rover8_n_t
+    seed = 'all' # all, seed0, seed2902480765646109827, seed6671597656599831408
+    without_constraints_folder = 'WO'
     h_folder = 'H'
     
-    VIOLIN = True
+    VIOLIN = False
     
 #############################################################
     ## EXTRACT DATA FROM FILES ##
     all_files = get_two_level_folder_dict('results_constraints')
-    
    
-    # data_random = []
-    # for f in all_files[problem_name][with_constraints_folder]:
-    #     data_random.append(extract_result_with_constraint(f))
+    all_files_random = [] # Includes all TO 
+    all_files_original = [] # One file per TO
+    all_files_H = [] # One file per TO
+    for folder in all_files[problem_name]:
+        if folder[:len('seed')]=='seed':
+            if seed=='all' or folder == seed:
+                all_files_random += all_files[problem_name][folder]
+        elif folder == without_constraints_folder:
+            all_files_original += all_files[problem_name][folder]
+        elif folder == h_folder:
+            all_files_H += all_files[problem_name][folder]
     
-    all_with_files = all_files[problem_name]['seed0']+all_files[problem_name]['seed2902480765646109827']+all_files[problem_name]['seed6671597656599831408']
-    data_random = extract_all_seeds(all_with_files)
-    
-    data_original = []
-    for f in all_files[problem_name][without_constraints_folder]:
-        data_original.append(extract_result_without_constraint(f))
-        
-    data_h = []
-    for f in all_files[problem_name][h_folder]:
-        data_h.append(extract_result_h(f))
-    
+    data_random = extract_all_seeds(all_files_random) 
+    data_original = [extract_result_without_constraint(f) for f in all_files_original]
+    data_h = [extract_result_h(f) for f in all_files_H]
     
 #############################################################
     ## PREPARE PLOT DATA ##
@@ -476,19 +475,23 @@ def several():
     minimums = []
     minimum_random = float(np.array([d.min() for d in plot_metric_random_data]).min())
     minimums.append(minimum_random)
-    minimum_original = float(np.array([d.min() for d in plot_metric_original_data]).min())
-    minimums.append(minimum_original)
-    minimum_h = float(np.array([d.min() for d in plot_metric_h_data]).min())
-    minimums.append(minimum_h)
+    if all_files[problem_name][without_constraints_folder]!=[]:
+        minimum_original = float(np.array([d.min() for d in plot_metric_original_data]).min())
+        minimums.append(minimum_original)
+    if all_files[problem_name][h_folder]!=[]:
+        minimum_h = float(np.array([d.min() for d in plot_metric_h_data]).min())
+        minimums.append(minimum_h)
     minimum = min(minimums)
     
     maximums = []
     maximum_random = float(np.array([d.max() for d in plot_metric_random_data]).max())
     maximums.append(maximum_random)
-    maximum_original = float(np.array([d.max() for d in plot_metric_original_data]).max())
-    maximums.append(maximum_original)
-    maximum_h = float(np.array([d.max() for d in plot_metric_h_data]).max())
-    maximums.append(maximum_h)
+    if all_files[problem_name][without_constraints_folder]!=[]:
+        maximum_original = float(np.array([d.max() for d in plot_metric_original_data]).max())
+        maximums.append(maximum_original)
+    if all_files[problem_name][h_folder]!=[]:
+        maximum_h = float(np.array([d.max() for d in plot_metric_h_data]).max())
+        maximums.append(maximum_h)
     maximum = max(maximums)
     print("Best plan metric: ", minimum)
     print("Worst plan metric: ", maximum)
