@@ -644,8 +644,9 @@ class DisplayFrame(customtkinter.CTkFrame):
     
     def loadConstraints(self):
         filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
-        CAI.CM.load(filename)
-        self.master.constraints_frame.updateFrame()
+        if isinstance(filename, str) and filename!='':
+            CAI.CM.load(filename)
+            self.master.constraints_frame.updateFrame()
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
