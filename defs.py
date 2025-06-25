@@ -31,6 +31,7 @@ PROBLEMS = {
     # "sar1":         ("ENHSP-Public/sar/handcraft/domain.pddl",                              "ENHSP-Public/handcraft/pfile1.pddl"),
     
     "rover3":       ("NumericTCORE/benchmark/Rover-Numeric/domain.pddl",         "NumericTCORE/benchmark/Rover-Numeric/pfile3.pddl"),
+    "rover8_n":       ("NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl",         "NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl"),
 }
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
 
