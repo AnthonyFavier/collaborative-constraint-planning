@@ -1,5 +1,6 @@
 from datetime import datetime
 import customtkinter
+from customtkinter import filedialog
 from defs import *
 import CAI
 from PIL import Image, ImageTk
@@ -628,10 +629,23 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.entry_dark = ('#F9F9FA', '#343638')
         self.entry_light = ('#F9F9FA', '#585a5c')
         
-        self.timer_label = customtkinter.CTkLabel(self, text="Elapsed Time: 0.0 s", font = App.font)
-        self.timer_label.grid(row=2, column=0, padx=10, pady=0, sticky="ew")
+        self.frame_bottom = customtkinter.CTkFrame(self)
+        self.frame_bottom.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky="ewsn")
+        self.frame_bottom.grid_columnconfigure(0, weight=1)
+        self.frame_bottom.grid_columnconfigure(1, weight=1)
+        
+        self.timer_label = customtkinter.CTkLabel(self.frame_bottom, text="Elapsed Time: 0.0 s", font = App.font)
+        self.timer_label.grid(row=0, column=0, padx=10, pady=0, sticky="ew")
         self.start_time = None
         self._timer_running = False
+        
+        self.button_load_CM = customtkinter.CTkButton(self.frame_bottom, text='Load Constraints', font=DisplayFrame.font, command=self.loadConstraints)
+        self.button_load_CM.grid(row=0, column=1, padx=5, pady=5)
+    
+    def loadConstraints(self):
+        filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
+        CAI.CM.load(filename)
+        self.master.constraints_frame.updateFrame()
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
