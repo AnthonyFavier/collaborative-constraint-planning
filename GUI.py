@@ -562,7 +562,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changeTimeoutT(self):
         threading.Thread(target=self.changeTimeout).start()
     def changeTimeout(self):
-        self.disableButtons()
+        self.master.disableAllButtons()
         mprint(f"\nCurrent Timeout: {CAI.g_timeout}")
         mprint("Enter a new timeout ('Empty'=disables timeout): ")
         
