@@ -304,8 +304,7 @@ def initDemo():
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
 @click.option('-t', '--timeout', 'timeout', default=15.0, help="Timeout for planning")
 @click.option('--e2nl', 'e2nl', is_flag=True, default=False, help="Activates the translation of encodings back to NL")
-@click.option('--suggestions', 'suggestions', is_flag=True, default=False, help="Activates the initial suggestions")
-def main(problem_name, planning_mode, timeout, e2nl, suggestions):
+def main(problem_name, planning_mode, timeout, e2nl):
     faulthandler.enable()
     
     
@@ -321,10 +320,6 @@ def main(problem_name, planning_mode, timeout, e2nl, suggestions):
     
     # Show settings
     CAI.showSettings()
-    
-    # Ask for initial suggestions
-    if suggestions:
-      app.suggestions()
     
     # FOR ABLATION # A, B, or C
     # ablation(app, 'A') 
