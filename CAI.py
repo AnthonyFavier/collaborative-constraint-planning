@@ -193,6 +193,7 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
             encodingOK = True
             d.encoding = encoding
             
+        i+=1
     
     if encodingOK:
         increase_encoding_done()
