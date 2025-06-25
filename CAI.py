@@ -278,9 +278,26 @@ def planWithConstraints():
     return result, plan, planlength, metric, fail_reason, time_compilation, time_planning
 
 ## SUGGESTIONS ##
-def suggestions():
-    mprint("\nElaborating strategies suggestions...")
-    mprint(LLM.suggestions())
+g_suggestions = "* No suggestions *"
+def suggestions(show=True):
+    global g_suggestions
+    d = time.time()
+    startTimer()
+    mprint("\nElaborating strategies suggestions ... ", end="")
+    suggestions = LLM.suggestions()
+    # remove empty lines
+    suggestions = suggestions.splitlines()
+    while True:
+        try: suggestions.remove('')
+        except ValueError: break
+    suggestions = '\n'.join(suggestions)
+    # save
+    g_suggestions = suggestions
+    stopTimer()
+    d = time.time() - d
+    mprint(f"OK [{d:.1f}s]")
+    if show:
+        mprint(g_suggestions)
 
 ## INIT ##
 g_with_e2nl = False

@@ -633,8 +633,33 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.start_time = None
         self._timer_running = False
         
+        self.suggestions = "< No suggestions >"
+        self.buttons['suggestions_generate'] = customtkinter.CTkButton(self.frame_bottom, text='Generate\nSuggestions', font=DisplayFrame.font, command=self.generateSuggestionsT)
+        self.buttons['suggestions_generate'].grid(row=0, column=1, padx=5, pady=5)
+        
+        self.buttons['suggestions_print'] = customtkinter.CTkButton(self.frame_bottom, text='Print\nSuggestions', font=DisplayFrame.font, command=self.printSuggestions)
+        self.buttons['suggestions_print'].grid(row=0, column=2, padx=5, pady=5)
+        
         self.buttons['load_CM'] = customtkinter.CTkButton(self.frame_bottom, text='Load\nConstraints', font=DisplayFrame.font, command=self.loadConstraints)
         self.buttons['load_CM'].grid(row=0, column=3, padx=5, pady=5)
+    
+    def disableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='disabled')
+    def enableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='enabled')
+    
+    def generateSuggestionsT(self):
+        threading.Thread(target=self.generateSuggestions).start()
+    def generateSuggestions(self):
+        self.master.disableAllButtons()
+        CAI.suggestions()
+        self.master.enableAllButtons()
+        
+    def printSuggestions(self):
+        mprint("\nSuggestions:")
+        mprint(CAI.g_suggestions)
     
     def loadConstraints(self):
         self.master.disableAllButtons()
