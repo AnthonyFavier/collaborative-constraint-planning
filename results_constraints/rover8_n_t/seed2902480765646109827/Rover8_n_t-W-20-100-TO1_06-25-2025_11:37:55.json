@@ -1,0 +1,1043 @@
+{
+    "seed": 2902480765646109827,
+    "timeout": 1,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl",
+    "generated_constraints": {
+        "EXPRESSIONS": [
+            "(not calibration_target(camera3, objective0))",
+            "(n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)",
+            "(n_calibrate(rover3, camera1, objective1, waypoint0) == 0)",
+            "(total-energy-used == 0)",
+            "(n_drop(rover2, rover0store) == 0)",
+            "visible(waypoint1, waypoint5)",
+            "(not at_rock_sample(waypoint1))",
+            "channel_free(general)",
+            "(not store_of(rover1store, rover2))",
+            "(n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0)",
+            "(n_samplesoil(rover3, rover1store, waypoint0) == 0)",
+            "(not at_lander(general, waypoint2))",
+            "(n_samplesoil(rover0, rover2store, waypoint1) == 0)",
+            "(n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)",
+            "(n_calibrate(rover1, camera3, objective2, waypoint0) == 0)",
+            "in_sun(waypoint3)",
+            "(not equipped_for_soil_analysis(rover1))",
+            "(not can_traverse(rover3, waypoint3, waypoint5))",
+            "(n_samplerock(rover2, rover1store, waypoint0) == 0)",
+            "equipped_for_soil_analysis(rover3)"
+        ],
+        "SIMPLE": [
+            "Always((n_calibrate(rover1, camera3, objective2, waypoint0) == 0))",
+            "Always((n_samplesoil(rover0, rover2store, waypoint1) == 0))",
+            "Always((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0))",
+            "Always(visible(waypoint1, waypoint5))",
+            "Always(equipped_for_soil_analysis(rover3))",
+            "Always((not at_rock_sample(waypoint1)))",
+            "Always((not calibration_target(camera3, objective0)))",
+            "Always((n_drop(rover2, rover0store) == 0))",
+            "Always((not can_traverse(rover3, waypoint3, waypoint5)))",
+            "Always((n_samplerock(rover2, rover1store, waypoint0) == 0))",
+            "Always((not at_lander(general, waypoint2)))",
+            "Always((total-energy-used == 0))",
+            "Always((n_calibrate(rover3, camera1, objective1, waypoint0) == 0))",
+            "Always(channel_free(general))",
+            "Always((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0))",
+            "Always((not equipped_for_soil_analysis(rover1)))",
+            "Always(in_sun(waypoint3))",
+            "Always((n_samplesoil(rover3, rover1store, waypoint0) == 0))",
+            "Always((not store_of(rover1store, rover2)))",
+            "Always((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0))"
+        ],
+        "AND2": [
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not equipped_for_soil_analysis(rover1)) and (total-energy-used == 0)))",
+            "Always(((not store_of(rover1store, rover2)) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) and (not calibration_target(camera3, objective0))))",
+            "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "Always(((total-energy-used == 0) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "Always(((not at_rock_sample(waypoint1)) and (not equipped_for_soil_analysis(rover1))))",
+            "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (not store_of(rover1store, rover2))))",
+            "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "Always(((total-energy-used == 0) and (not equipped_for_soil_analysis(rover1))))",
+            "Always((channel_free(general) and (not at_rock_sample(waypoint1))))",
+            "Always(((not at_lander(general, waypoint2)) and in_sun(waypoint3)))",
+            "Always(((n_drop(rover2, rover0store) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_drop(rover2, rover0store) == 0)))",
+            "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "Always(((not calibration_target(camera3, objective0)) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not at_lander(general, waypoint2)) and (not store_of(rover1store, rover2))))",
+            "Always(((not at_lander(general, waypoint2)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))"
+        ],
+        "AND3": [
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and equipped_for_soil_analysis(rover3) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0) and (not at_rock_sample(waypoint1))))",
+            "Always((channel_free(general) and (not at_lander(general, waypoint2)) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "Always(((not store_of(rover1store, rover2)) and (n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) and (not equipped_for_soil_analysis(rover1))))",
+            "Always((in_sun(waypoint3) and visible(waypoint1, waypoint5) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_samplesoil(rover0, rover2store, waypoint1) == 0) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) and (not store_of(rover1store, rover2)) and in_sun(waypoint3)))",
+            "Always((channel_free(general) and visible(waypoint1, waypoint5) and (not at_rock_sample(waypoint1))))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not calibration_target(camera3, objective0)) and (total-energy-used == 0)))",
+            "Always((visible(waypoint1, waypoint5) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "Always(((not calibration_target(camera3, objective0)) and (not at_rock_sample(waypoint1)) and in_sun(waypoint3)))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not at_rock_sample(waypoint1)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (not store_of(rover1store, rover2))))",
+            "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) and (n_drop(rover2, rover0store) == 0) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "Always(((not calibration_target(camera3, objective0)) and (not at_rock_sample(waypoint1)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "Always(((not at_lander(general, waypoint2)) and (not calibration_target(camera3, objective0)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not calibration_target(camera3, objective0)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) and (not calibration_target(camera3, objective0)) and (not store_of(rover1store, rover2))))",
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and (not calibration_target(camera3, objective0)) and in_sun(waypoint3)))"
+        ],
+        "OR2": [
+            "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (not at_lander(general, waypoint2))))",
+            "Always((visible(waypoint1, waypoint5) or (not calibration_target(camera3, objective0))))",
+            "Always((visible(waypoint1, waypoint5) or (total-energy-used == 0)))",
+            "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always((equipped_for_soil_analysis(rover3) or (total-energy-used == 0)))",
+            "Always((channel_free(general) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "Always((channel_free(general) or (not equipped_for_soil_analysis(rover1))))",
+            "Always(((not at_lander(general, waypoint2)) or (not can_traverse(rover3, waypoint3, waypoint5))))",
+            "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or visible(waypoint1, waypoint5)))",
+            "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "Always(((not at_lander(general, waypoint2)) or (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "Always((visible(waypoint1, waypoint5) or (not store_of(rover1store, rover2))))",
+            "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or visible(waypoint1, waypoint5)))",
+            "Always(((not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))",
+            "Always(((not at_lander(general, waypoint2)) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not calibration_target(camera3, objective0)) or (not can_traverse(rover3, waypoint3, waypoint5))))",
+            "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) or (not at_lander(general, waypoint2))))"
+        ],
+        "OR3": [
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (total-energy-used == 0) or (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "Always((equipped_for_soil_analysis(rover3) or (n_samplesoil(rover0, rover2store, waypoint1) == 0) or (total-energy-used == 0)))",
+            "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or (not calibration_target(camera3, objective0))))",
+            "Always(((not at_lander(general, waypoint2)) or (not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))",
+            "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or equipped_for_soil_analysis(rover3)))",
+            "Always((visible(waypoint1, waypoint5) or (not store_of(rover1store, rover2)) or (not calibration_target(camera3, objective0))))",
+            "Always(((not at_rock_sample(waypoint1)) or (n_drop(rover2, rover0store) == 0) or (n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0)))",
+            "Always(((not store_of(rover1store, rover2)) or (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "Always(((not at_rock_sample(waypoint1)) or (n_drop(rover2, rover0store) == 0) or equipped_for_soil_analysis(rover3)))",
+            "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) or (not calibration_target(camera3, objective0)) or visible(waypoint1, waypoint5)))",
+            "Always((channel_free(general) or (n_drop(rover2, rover0store) == 0) or (not at_rock_sample(waypoint1))))",
+            "Always(((not can_traverse(rover3, waypoint3, waypoint5)) or in_sun(waypoint3) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "Always(((not store_of(rover1store, rover2)) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "Always((channel_free(general) or (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or channel_free(general) or (not equipped_for_soil_analysis(rover1))))",
+            "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) or (n_samplesoil(rover3, rover1store, waypoint0) == 0) or equipped_for_soil_analysis(rover3)))",
+            "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (n_drop(rover2, rover0store) == 0)))",
+            "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) or in_sun(waypoint3) or (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "Always(((not store_of(rover1store, rover2)) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((total-energy-used == 0) and (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera3, objective0)) and (not at_rock_sample(waypoint1)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) or (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint1)) or (n_drop(rover2, rover0store) == 0) or (n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not store_of(rover1store, rover2)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) and (not store_of(rover1store, rover2)) and in_sun(waypoint3)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint1, waypoint5) or (not store_of(rover1store, rover2))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) or (n_drop(rover2, rover0store) == 0) or (not at_rock_sample(waypoint1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(in_sun(waypoint3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (not store_of(rover1store, rover2))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) and visible(waypoint1, waypoint5) and (not at_rock_sample(waypoint1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) and (not calibration_target(camera3, objective0))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not calibration_target(camera3, objective0)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_drop(rover2, rover0store) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) and (not at_rock_sample(waypoint1))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and (n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) and (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or visible(waypoint1, waypoint5)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_samplesoil(rover0, rover2store, waypoint1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and equipped_for_soil_analysis(rover3) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or channel_free(general) or (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not at_rock_sample(waypoint1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_drop(rover2, rover0store) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) and (not calibration_target(camera3, objective0)) and (not store_of(rover1store, rover2))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or visible(waypoint1, waypoint5)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) or (n_samplesoil(rover0, rover2store, waypoint1) == 0) or (total-energy-used == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(visible(waypoint1, waypoint5))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint1)) and (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0) and (not at_rock_sample(waypoint1))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (total-energy-used == 0) or (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(equipped_for_soil_analysis(rover3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_samplesoil(rover0, rover2store, waypoint1) == 0) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover0, rover2store, waypoint1) == 0) or (not at_lander(general, waypoint2))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) or in_sun(waypoint3) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_samplesoil(rover3, rover1store, waypoint0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and (not calibration_target(camera3, objective0)) and in_sun(waypoint3)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) or (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint1)) or (n_drop(rover2, rover0store) == 0) or equipped_for_soil_analysis(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not can_traverse(rover3, waypoint3, waypoint5)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not equipped_for_soil_analysis(rover1)) and (total-energy-used == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not at_rock_sample(waypoint1)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((equipped_for_soil_analysis(rover3) or (total-energy-used == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplesoil(rover3, rover1store, waypoint0) == 0) or (not calibration_target(camera3, objective0)) or visible(waypoint1, waypoint5)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not equipped_for_soil_analysis(rover1)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (not store_of(rover1store, rover2))))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) or (not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) and (not store_of(rover1store, rover2))))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint1, waypoint5) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (not at_lander(general, waypoint2))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (n_samplerock(rover2, rover1store, waypoint0) == 0) or equipped_for_soil_analysis(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_samplerock(rover2, rover1store, waypoint0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_drop(rover2, rover0store) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (not calibration_target(camera3, objective0)) and (total-energy-used == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) or (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (not at_rock_sample(waypoint1)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not at_lander(general, waypoint2)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_calibrate(rover1, camera3, objective2, waypoint0) == 0) and (n_drop(rover2, rover0store) == 0) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint1, waypoint5) or (not store_of(rover1store, rover2)) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_calibrate(rover1, camera3, objective2, waypoint0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera3, objective0)) and (not at_rock_sample(waypoint1)) and in_sun(waypoint3)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (not at_rock_sample(waypoint1))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_samplerock(rover2, rover1store, waypoint0) == 0) or (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) or (n_drop(rover2, rover0store) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(channel_free(general))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((total-energy-used == 0) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) and (not at_lander(general, waypoint2)) and (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) or (not can_traverse(rover3, waypoint3, waypoint5))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover2, general, waypoint1, waypoint4, waypoint1) == 0) or (n_samplesoil(rover3, rover1store, waypoint0) == 0) or equipped_for_soil_analysis(rover3)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not calibration_target(camera3, objective0)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((in_sun(waypoint3) and visible(waypoint1, waypoint5) and (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint1, waypoint5) or (total-energy-used == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) or in_sun(waypoint3) or (n_samplesoil(rover3, rover1store, waypoint0) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_calibrate(rover3, camera1, objective1, waypoint0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera3, objective0)) and (n_samplesoil(rover0, rover2store, waypoint1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not can_traverse(rover3, waypoint3, waypoint5)) and (n_calibrate(rover3, camera1, objective1, waypoint0) == 0) and (n_calibrate(rover1, camera3, objective2, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((visible(waypoint1, waypoint5) or (not calibration_target(camera3, objective0))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((channel_free(general) or (n_communicaterockdata(rover3, general, waypoint0, waypoint1, waypoint0) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((total-energy-used == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) and in_sun(waypoint3)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not at_lander(general, waypoint2)) and (not calibration_target(camera3, objective0)) and (n_samplerock(rover2, rover1store, waypoint0) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not calibration_target(camera3, objective0)) or (not can_traverse(rover3, waypoint3, waypoint5))))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((not store_of(rover1store, rover2)) or (n_takeimage(rover0, waypoint5, objective0, camera2, lowres) == 0) or (not equipped_for_soil_analysis(rover1))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        }
+    ],
+    "elapsed": "0:31:44"
+}
