@@ -199,7 +199,7 @@ class ConstraintManager:
         
         # Check problem name
         if loaded.problem_name!=self.problem_name:
-            mprint("ERROR: can't load constraints from another problem ... Aborted")
+            mprint("\nERROR: can't load constraints from another problem ... Aborted")
             return None
         
         self.constraints = loaded.constraints
@@ -214,5 +214,5 @@ class ConstraintManager:
                 max = n
         Constraint._ID = max+1
         
-        mprint("Constraints loaded")
+        mprint("\nConstraints loaded")
         
