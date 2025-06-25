@@ -389,16 +389,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         for k,x in self.buttons.items():
             x.configure(state='enabled')
         
-    def hideButtons(self):
-        for k,x in self.buttons.items():
-            x.grid_remove()
-        self.update()
-        self.master.display_frame.textbox.see('end')
-    def showButtons(self):
-        for k,x in self.buttons.items():
-            x.grid()
-        self.update()
-        self.master.display_frame.textbox.see('end')
     def activateE2NLButton(self):
         self.buttons['E2NL'].configure(state='enabled')
         self.update()
@@ -409,7 +399,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def addT(self):
         threading.Thread(target=self.add).start()
     def add(self):
-        self.disableButtons()
+        self.master.disableAllButtons()
         self.activateE2NLButton()
         
         mprint("\n=== ADDING CONSTRAINT ===")
@@ -418,7 +408,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         c = minput(txt="\nEnter your constraint: ")
         
         if c in ['', 'abort']:
-            self.enableButtons()
+            self.master.enableAllButtons()
             mprint("Aborted\n")
         else:
             mprint("\n> " + c )
@@ -437,14 +427,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
                     self.master.quit()
                     raise err
             
-            self.enableButtons()
+            self.master.enableAllButtons()
             self.master.constraints_frame.updateFrame()
             # mprint("\nConstraints added")
         
     def delete(self):
         self.master.constraints_frame.unselectAll()
         self.master.constraints_frame.showCheckboxes()
-        self.disableButtons()
+        self.master.disableAllButtons()
         self.showConfirmButton(txt="Delete")
         self.showSelectAllButtons()
         # TODO: Select/Deselect ALL
@@ -463,14 +453,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         self.hideConfirmButton()
         self.hideSelectAllButtons()
-        self.enableButtons()
+        self.master.enableAllButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.confirm_function = None
         
     def activate(self):
         self.master.constraints_frame.selectActivatedCheckboxes()
         self.master.constraints_frame.showCheckboxes()
-        self.disableButtons()
+        self.master.disableAllButtons()
         self.showSelectAllButtons()
         self.showConfirmButton()
         self.confirm_function = self.activateConfirm
@@ -483,7 +473,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
         self.hideConfirmButton()
         self.hideSelectAllButtons()
-        self.enableButtons()
+        self.master.enableAllButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.master.constraints_frame.updateLabels()
         self.confirm_function = None
@@ -491,7 +481,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def planT(self):
         threading.Thread(target=self.plan).start()
     def plan(self):
-        self.disableButtons()
+        self.master.disableAllButtons()
         self.master.plan_frame = self.master.plan_frame
         
         # Planning
@@ -537,7 +527,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changePlanModeT(self):
         threading.Thread(target=self.changePlanMode).start()
     def changePlanMode(self):
-        self.disableButtons()
+        self.master.disableAllButtons()
         
         mprint(f"\nCurrent planning mode: {CAI.g_planning_mode}")
         mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
@@ -567,7 +557,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 mprint("Incorrect input")
             mprint("Aborted\n")
             
-        self.enableButtons()
+        self.master.enableAllButtons()
     
     def changeTimeoutT(self):
         threading.Thread(target=self.changeTimeout).start()
@@ -588,7 +578,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             if CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
 
-        self.enableButtons()
+        self.master.enableAllButtons()
     
     def toggleEncodings(self):
         self.master.constraints_frame.toggleEncodings()
@@ -616,6 +606,8 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox.bind("<Escape>", lambda x: exit())
         self.textbox.bind('<Key>',lambda e: 'break') 
         
+        self.buttons = {}
+        
         
         # Clear display
         N = 20
@@ -632,21 +624,25 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.frame_bottom = customtkinter.CTkFrame(self)
         self.frame_bottom.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky="ewsn")
         self.frame_bottom.grid_columnconfigure(0, weight=1)
-        self.frame_bottom.grid_columnconfigure(1, weight=1)
+        # self.frame_bottom.grid_columnconfigure(1, weight=1)
+        # self.frame_bottom.grid_columnconfigure(2, weight=1)
+        self.frame_bottom.grid_columnconfigure(3, weight=1)
         
         self.timer_label = customtkinter.CTkLabel(self.frame_bottom, text="Elapsed Time: 0.0 s", font = App.font)
         self.timer_label.grid(row=0, column=0, padx=10, pady=0, sticky="ew")
         self.start_time = None
         self._timer_running = False
         
-        self.button_load_CM = customtkinter.CTkButton(self.frame_bottom, text='Load Constraints', font=DisplayFrame.font, command=self.loadConstraints)
-        self.button_load_CM.grid(row=0, column=1, padx=5, pady=5)
+        self.buttons['load_CM'] = customtkinter.CTkButton(self.frame_bottom, text='Load\nConstraints', font=DisplayFrame.font, command=self.loadConstraints)
+        self.buttons['load_CM'].grid(row=0, column=3, padx=5, pady=5)
     
     def loadConstraints(self):
+        self.master.disableAllButtons()
         filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
         if isinstance(filename, str) and filename!='':
             CAI.CM.load(filename)
             self.master.constraints_frame.updateFrame()
+        self.master.enableAllButtons()
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
@@ -666,7 +662,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         t.start()
         self.update_timer()
         r = t.join()
-        self.master.buttons_frame.enableButtons()
+        self.master.enableAllButtons()
         return r
     
     def startTimer(self):
@@ -729,6 +725,8 @@ class PlanFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
         
+        self.buttons = {}
+        
         self.last_results = {}
         self.previous_results = {}
         
@@ -755,7 +753,6 @@ class PlanFrame(customtkinter.CTkFrame):
         self.current_label.grid(row=i_self_row, column=0, padx=10, pady=5, sticky="ew")
         i_self_row+=1
         
-        
         self.write_main_lock = threading.Lock()
         self.textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.printMain("None")
@@ -769,17 +766,24 @@ class PlanFrame(customtkinter.CTkFrame):
         self.buttons_frame.grid_columnconfigure(0, weight=1)
         self.buttons_frame.grid_columnconfigure(1, weight=1)
         
-        self.update_sim_button = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton, width=80)
-        self.update_sim_button.grid(row=0, column=0, padx=10, pady=10)
+        self.buttons['update_sim'] = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton, width=80)
+        self.buttons['update_sim'] .grid(row=0, column=0, padx=10, pady=10)
         
-        self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
-        self.copy_button.grid(row=0, column=1, padx=10, pady=10)
+        self.buttons['copy'] = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
+        self.buttons['copy'].grid(row=0, column=1, padx=10, pady=10)
         
-        self.dump_cm_button = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command= lambda: CAI.CM.dump(CAI.g_problem_name), width=80)
-        self.dump_cm_button.grid(row=0, column=2, padx=10, pady=10)
+        self.buttons['dump_cm'] = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command= lambda: CAI.CM.dump(CAI.g_problem_name), width=80)
+        self.buttons['dump_cm'].grid(row=0, column=2, padx=10, pady=10)
         
-        self.export_button = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
-        self.export_button.grid(row=0, column=3, padx=10, pady=10)
+        self.buttons['export'] = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
+        self.buttons['export'].grid(row=0, column=3, padx=10, pady=10)
+    
+    def disableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='disabled')
+    def enableButtons(self):
+        for k,x in self.buttons.items():
+            x.configure(state='enabled')
     
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
@@ -934,7 +938,6 @@ class App(customtkinter.CTk):
         
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
-        
         setPrintFunction(self.display_frame.prompt)
         setInputFunction(self.display_frame.getFromEntry)
         setReplacePrintFunction(self.display_frame.replace_last_line)
@@ -953,6 +956,11 @@ class App(customtkinter.CTk):
                 except: pass
         return 'break'
     
-    def suggestions(self):
-        t = threading.Thread(target=CAI.suggestions)
-        self.after(500, t.start)
+    def disableAllButtons(self):
+        self.buttons_frame.disableButtons()
+        self.plan_frame.disableButtons()
+        self.display_frame.disableButtons()
+    def enableAllButtons(self):
+        self.buttons_frame.enableButtons()
+        self.plan_frame.enableButtons()
+        self.display_frame.enableButtons()
