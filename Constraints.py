@@ -196,6 +196,12 @@ class ConstraintManager:
             txt = f.read()
         
         loaded = jsonpickle.decode(txt)
+        
+        # Check problem name
+        if loaded.problem_name!=self.problem_name:
+            mprint("ERROR: can't load constraints from another problem ... Aborted")
+            return None
+        
         self.constraints = loaded.constraints
         self.raw_constraints = loaded.raw_constraints
         self.decomposed_constraints = loaded.decomposed_constraints
@@ -207,3 +213,6 @@ class ConstraintManager:
             if n>max:
                 max = n
         Constraint._ID = max+1
+        
+        mprint("Constraints loaded")
+        
