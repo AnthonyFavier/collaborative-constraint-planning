@@ -114,11 +114,31 @@ def initializeHumanConstraintsRover13(pb):
     return constraints_dict
 
 def initializeHumanConstraintsRover8n(pb):
-    constraints_dict = {}
+    constraints_dict = {'SIMPLE':[]}
+    
+    # ENERGY NEVER DROPS BELOW 16
+    r = Variable('r', pb.user_type('rover'))
+    w = Variable('w', pb.user_type('waypoint'))
+    constraint = Always(Forall( Or(Not(pb.fluent('in')(r, w)), pb.fluent('in_sun')(w), LE(16, pb.fluent('energy')(r))), r, w ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # ONLY R0, R2, R3 CAN HAVE ROCK DATA FROM W4
+    constraint = Always(Not(pb.fluent('have_rock_analysis')(pb.object('rover1'), pb.object('waypoint4'))))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # ONLY R1, R2 CAN HAVE ROCK DATA FROM W5
+    constraint = Always(Forall(Or(Not(pb.fluent('have_rock_analysis')(r, pb.object('waypoint5'))), Or(Equals(r, pb.object('rover1')), Equals(r, pb.object('rover2')))), r))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    constraints_dict['AND'] = []
+    for i in range(2, len(constraints_dict['SIMPLE'])):
+        for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+            constraints_dict['AND'].append( And(x) )
+    
     return constraints_dict
 
 def initializeHumanConstraintsRover8nt(pb):
-    return {}
+    return initializeHumanConstraintsRover8n(pb)
 
 ##############
 ## PROBLEMS ##
