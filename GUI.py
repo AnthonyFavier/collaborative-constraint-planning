@@ -428,7 +428,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 CAI.decompose(constraint)
                 self.deactivateE2NLButton()
                 CAI.encode(constraint)
-                CAI.CM.dump()
+                CAI.CM.dump(CAI.g_problem_name)
                 
             except Exception as err:
                 if err.args[0]=='abort':
@@ -775,7 +775,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.copy_button = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
         self.copy_button.grid(row=0, column=1, padx=10, pady=10)
         
-        self.dump_cm_button = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command=CAI.CM.dump, width=80)
+        self.dump_cm_button = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command= lambda: CAI.CM.dump(CAI.g_problem_name), width=80)
         self.dump_cm_button.grid(row=0, column=2, padx=10, pady=10)
         
         self.export_button = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)

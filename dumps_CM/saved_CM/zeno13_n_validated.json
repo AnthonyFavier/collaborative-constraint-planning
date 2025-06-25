@@ -1,5 +1,6 @@
 {
     "py/object": "Constraints.ConstraintManager",
+    "problem_name": "zeno13_n",
     "constraints": {
         "R0": {
             "py/object": "Constraints.RawConstraint",

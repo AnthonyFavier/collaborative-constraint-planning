@@ -10,8 +10,6 @@ from helpers.UserOption import UserOption
 import time
 import threading
         
-CM = Constraints.ConstraintManager()
-
 # ABLATION_FLAGS #
 WITH_VERIFIER = True
 WITH_DECOMP = True
@@ -289,6 +287,7 @@ g_with_e2nl = False
 def init(problem_name, planning_mode, timeout, e2nl):
     global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout, g_with_e2nl
     global DOMAIN_PATH, PROBLEM_PATH
+    global CM
     
     g_with_e2nl = e2nl
     
@@ -313,6 +312,8 @@ def init(problem_name, planning_mode, timeout, e2nl):
         if g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
             print('WARNING: Timeout disabled with Anytime planning mode!')
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
+    
+    CM = Constraints.ConstraintManager(g_problem_name)
     
     # Show selected problem
     print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")

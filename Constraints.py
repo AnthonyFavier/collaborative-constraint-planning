@@ -102,7 +102,8 @@ class DecomposedConstraint(Constraint):
         return f"{symbol_str} - {self.nl_constraint}"
 
 class ConstraintManager:
-    def __init__(self):
+    def __init__(self, problem_name):
+        self.problem_name = problem_name
         self.constraints = {} # symbol: constraint
         self.raw_constraints = {} # symbol: Constraint
         self.decomposed_constraints = {} # symbol: DecomposedConstraint
@@ -183,9 +184,9 @@ class ConstraintManager:
                 to_delete.append(d)
         self.deleteConstraints(to_delete)
         
-    def dump(self):
+    def dump(self, problem_name):
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        with open(f"dumps_CM/dumped_CM_{date}.json", 'w') as f:
+        with open(f"dumps_CM/{problem_name}_{date}.json", 'w') as f:
             json_string = jsonpickle.encode(self, indent=4)
             f.write(json_string)
         
