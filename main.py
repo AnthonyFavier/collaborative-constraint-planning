@@ -296,7 +296,7 @@ def initDemo():
 #########################################################################################################
 
 @click.command(help=f"{KNOWN_PROBLEMS_STR}")
-@click.argument('problem_name')
+@click.argument('problem_name', default='zeno13_n') # zeno13_n, zeno5, rover8_n
 @click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
 @click.option('-aa', '--anytimeauto', 'planning_mode', flag_value=PlanMode.ANYTIMEAUTO, help="Set the planning mode to 'AnytimeAuto'")
 @click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
@@ -304,39 +304,33 @@ def initDemo():
 @click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
 @click.option('-t', '--timeout', 'timeout', default=15.0, help="Timeout for planning")
 @click.option('--e2nl', 'e2nl', is_flag=True, default=False, help="Activates the translation of encodings back to NL")
-def main(problem_name, planning_mode, timeout, e2nl):
+@click.option('--suggestions', 'suggestions', is_flag=True, default=False, help="Activates the initial suggestions")
+def main(problem_name, planning_mode, timeout, e2nl, suggestions):
     faulthandler.enable()
     
-    CAI.g_with_e2nl = e2nl
     
+    # Init CAI 
+    CAI.init(problem_name, planning_mode, timeout, e2nl)
+    # initZeno5()
+    # initZeno13()
+    # initDemo()
+    # CAI.CM.load('validated.json)
+    
+    # Create main GUI app
     app = GUI.App()
-    setPrintFunction(app.display_frame.prompt)
-    setInputFunction(app.display_frame.getFromEntry)
-    setReplacePrintFunction(app.display_frame.replace_last_line)
-    setStartTimer(app.display_frame.startTimer)
-    setStopTimer(app.display_frame.stopTimer)
     
-    CAI.init(problem_name, planning_mode, timeout)
+    # Show settings
+    CAI.showSettings()
     
     # Ask for initial suggestions
-    # app.suggestions()
+    if suggestions:
+      app.suggestions()
     
     # FOR ABLATION # A, B, or C
     # ablation(app, 'A') 
     
     app.mainloop()
 if __name__ == '__main__':
-    # sys.argv += ['zeno13_n']
-    # sys.argv += ['zeno5']
-    # sys.argv += ['rover1']
-    # sys.argv += ['rover3']
-    
-    # initZeno5()
-    # initZeno13()
-    # initDemo()
-    
-    # CAI.CM.load('dumps_CM/validated.json')
-    
     main()
   
 #### Notes ####

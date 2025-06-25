@@ -286,9 +286,11 @@ def suggestions():
 
 ## INIT ##
 g_with_e2nl = False
-def init(problem_name, planning_mode, timeout):
-    global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
+def init(problem_name, planning_mode, timeout, e2nl):
+    global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout, g_with_e2nl
     global DOMAIN_PATH, PROBLEM_PATH
+    
+    g_with_e2nl = e2nl
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
@@ -309,11 +311,11 @@ def init(problem_name, planning_mode, timeout):
     except:
         g_timeout = None
         if g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
-            mprint('WARNING: Timeout disabled with Anytime planning mode!')
+            print('WARNING: Timeout disabled with Anytime planning mode!')
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
     
     # Show selected problem
-    mprint(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+    print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
     
     # Try parsing the initial problem
     try:
@@ -421,6 +423,11 @@ def showEncodingStatus(newline=False):
     f = mprint if newline else mrprint
     e2nl_txt = f" - E2NL:{nb_e2nl_done}/{nb_to_encode}" if g_with_e2nl else ""
     f(f"In progress... done:{nb_encoding_done}/{nb_to_encode} - retries:{nb_encoding_retry} - failed:{nb_encoding_failed}{e2nl_txt}", end="")
+
+def showSettings():
+    timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
+    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    mprint(f"Planning mode: {g_planning_mode}{timeout_str}\nProblem ({g_problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
 
 #################################################################
 ########### TEXT ONLY BELOW, WITHOUT GUI [DEPRECATED] ###########

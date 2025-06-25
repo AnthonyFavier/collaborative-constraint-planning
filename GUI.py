@@ -934,6 +934,13 @@ class App(customtkinter.CTk):
         
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
+        
+        setPrintFunction(self.display_frame.prompt)
+        setInputFunction(self.display_frame.getFromEntry)
+        setReplacePrintFunction(self.display_frame.replace_last_line)
+        setStartTimer(self.display_frame.startTimer)
+        setStopTimer(self.display_frame.stopTimer)
+        
     def handleEventCopy(self):
         try:
             pyperclip.copy(self.display_frame.textbox.selection_get())
