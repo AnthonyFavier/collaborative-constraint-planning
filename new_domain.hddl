@@ -1,181 +1,168 @@
-(define (domain zenotravel)
-	(:requirements :typing :hierarchy :method-preconditions :negative-preconditions :universal-preconditions)
-	(:types
-		Time - Object
-		City - Object
-		Aircraft - Thing
-		Person - Thing
-		Thing - Object
-		FLevel - Object
-	)
-	(:predicates
-		(at ?arg0 - Thing ?arg1 - City)
-		(in ?arg0 - Person ?arg1 - Aircraft)
-		(different ?arg0 - City ?arg1 - City)
-		(next ?arg0 - FLevel ?arg1 - FLevel)
-		(fuel-level ?arg0 - Aircraft ?arg1 - FLevel)
-	)
-
-	(:task transport-person
-		:parameters (?p - Person ?c - City)
-	)
-
-	(:task upper-move-aircraft
-		:parameters (?a - Aircraft ?c - City)
-	)
-
-	(:task move-aircraft
-		:parameters (?a - Aircraft ?c1 - City ?c2 - City)
-	)
-
-	(:task transport-aircraft
-		:parameters (?a - Aircraft ?c - City)
-	)
-
-	(:method m1-ordering-0
-		:parameters (?c - City ?p - Person)
-		:task (transport-person ?p ?c)
-		:precondition (and
-			(at ?p ?c)
-		)
-		:subtasks (
-		)
-	)
-
-	(:method m2-ordering-0
-		:parameters (?a - Aircraft ?c1 - City ?c2 - City ?p - Person)
-		:task (transport-person ?p ?c2)
-		:precondition (and
-			(at ?p ?c1)
-			(at ?a ?c1)
-		)
-		:subtasks (and
-		 (task0 (board ?p ?a ?c1))
-		 (task1 (upper-move-aircraft ?a ?c2))
-		 (task2 (debark ?p ?a ?c2))
-		)
-		:ordering (and
-			(< task0 task1)
-			(< task1 task2)
-		)
-	)	
-
-	
-
-	(:method m4-abort-ordering-0
-		:parameters (?a - Aircraft ?c - City)
-		:task (upper-move-aircraft ?a ?c)
-		:precondition (and
-			(at ?a ?c)
-		)
-		:subtasks (
-		)
-	)
-
-	(:method m4-do-ordering-0
-		:parameters (?a - Aircraft ?c - City ?other - City)
-		:task (upper-move-aircraft ?a ?c)
-		:precondition (and
-			(not (at ?a ?c))
-			(at ?a ?other)
-			(different ?c ?other)
-		)
-		:subtasks (and
-		 (task0 (move-aircraft ?a ?other ?c))
-		)
-	)
-
-	(:method m5-case1-ordering-0
-		:parameters (?a - Aircraft ?c1 - City ?c2 - City ?l1 - FLevel ?l2 - FLevel)
-		:task (move-aircraft ?a ?c1 ?c2)
-		:precondition (and
-			(fuel-level ?a ?l1)
-			(next ?l2 ?l1)
-		)
-		:subtasks (and
-		 (task0 (fly ?a ?c1 ?c2 ?l1 ?l2))
-		)
-	)
-
-	(:method m5-case2-ordering-0
-		:parameters (?a - Aircraft ?c1 - City ?c2 - City ?l - FLevel ?l1 - FLevel)
-		:task (move-aircraft ?a ?c1 ?c2)
-		:precondition (and
-			(fuel-level ?a ?l)
-			(forall (?l2 - FLevel)
-				(not (next ?l2 ?l))
-			)
-		)
-		:subtasks (and
-		 (task0 (refuel ?a ?l ?l1))
-		 (task1 (fly ?a ?c1 ?c2 ?l1 ?l))
-		)
-		:ordering (and
-			(< task0 task1)
-		)
-	)
-
-	(:method m6-ordering-0
-		:parameters (?a - Aircraft ?c - City)
-		:task (transport-aircraft ?a ?c)
-		:subtasks (and
-		 (task0 (upper-move-aircraft ?a ?c))
-		)
-	)
-
-	
-(:action board
-		:parameters (?p - Person ?a - Aircraft ?c - City)
-		:precondition
-			(and
-				(at ?p ?c)
-			)
-		:effect
-			(and
-				(not (at ?p ?c))
-				(in ?p ?a)
-			)
-	)
-
-	(:action debark
-		:parameters (?p - Person ?a - Aircraft ?c - City)
-		:precondition
-			(and
-				(in ?p ?a)
-			)
-		:effect
-			(and
-				(not (in ?p ?a))
-				(at ?p ?c)
-			)
-	)
-
-	(:action refuel
-		:parameters (?a - Aircraft ?l - FLevel ?l1 - FLevel)
-		:precondition
-			(and
-				(fuel-level ?a ?l)
-			)
-		:effect
-			(and
-				(not (fuel-level ?a ?l))
-				(fuel-level ?a ?l1)
-			)
-	)
-
-	(:action fly
-		:parameters (?a - Aircraft ?c1 - City ?c2 - City ?l1 - FLevel ?l2 - FLevel)
-		:precondition
-			(and
-				(at ?a ?c1)
-				(fuel-level ?a ?l1)
-			)
-		:effect
-			(and
-				(not (at ?a ?c1))
-				(not (fuel-level ?a ?l1))
-				(at ?a ?c2)
-				(fuel-level ?a ?l2)
-			)
-	)
+(define (domain SR)
+  (:requirements :negative-preconditions :hierarchy :typing)
+  (:types
+        drone ambulance - agent
+        victim - target
+        location - object
+ )
+  (:predicates
+    (at ?agent - agent ?location - location)
+    (at ?target - target ?location - location)
+    (occupied ?ambulance - ambulance)
+    (connect ?location - location ?location - location)
+    (drone-connect ?location - location ?location - location)
+    (found ?target - target)
+    (observed ?location - location)
+    (hospital-at ?location - location)
+    (rescued ?victim - victim)
+ )
+  (:task find-victim
+        :parameters (?victim - victim)
+ )
+  (:task rescue-victim
+        :parameters (?victim - victim)
+ )
+  (:task t-move-drone
+        :parameters (?drone - drone ?location - location)
+ )
+  (:task t-move-ambulance
+        :parameters (?am - ambulance ?location - location)
+ )
+  (:method m-move-ambulance
+        :parameters (?am - ambulance ?l1 ?l2 ?l3 - location)
+        :task (t-move-ambulance ?am ?l3)
+        :precondition (and
+            (at ?am ?l1)
+            (connect ?l1 ?l2)
+            (not (= ?l2 ?l3))
+           )
+        :ordered-subtasks (and
+            (move-ambulance ?am ?l1 ?l2)
+            (t-move-ambulance ?am ?l3)
+       )
+ )
+  (:method m-move-ambulance-done
+        :parameters (?am - ambulance ?l - location)
+        :task (t-move-ambulance ?am ?l)
+        :precondition (at ?am ?l)
+        :subtasks ()
+ )
+  (:method find-victim-with-drone
+        :parameters (?victim - victim ?drone - drone ?l1 ?l2 - location)
+        :task (find-victim ?victim)
+        :precondition (and
+            (at ?drone ?l1)
+            (or
+                (connect ?l1 ?l2)
+                (drone-connect ?l1 ?l2)
+           )
+       )
+        :ordered-subtasks (and
+            (move-drone ?l1 ?l2)
+            (observe ?drone ?l2)
+            (find-victim ?victim)
+       )
+ )
+  (:method find-victim-with-ambulance
+        :parameters (?victim - victim ?am - ambulance ?l1 ?l2 - location)
+        :task (find-victim ?victim)
+        :precondition (and
+            (at ?am ?l1)
+            (connect ?l1 ?l2)
+       )
+        :ordered-subtasks (and
+            (move-ambulance ?l1 ?l2)
+            (observe ?am ?l2)
+            (find-victim ?victim)
+       )
+ )
+  (:method find-victim-done
+        :parameters (?victim - victim)
+        :task (find-victim ?victim)
+        :precondition (found ?victim)
+        :subtasks ()
+ )
+  (:method m-rescue-victim
+        :parameters (?victim - victim ?am - ambulance ?victimlocation ?hospitallocation - location)
+        :task (rescue-victim ?victim)
+        :precondition (and
+            (at ?victim ?victimlocation)
+            (hospital-at ?hospitallocation))
+        :ordered-subtasks (and
+            (find-victim ?victim)
+            (t-move-ambulance ?am ?victimlocation)
+            (pick-up ?am ?victim ?victimlocation)
+            (t-move-ambulance ?am ?hospitallocation)
+            (drop-off ?am ?victim ?hospitallocation)
+       )
+ )
+  (:action move-drone
+        :parameters (?drone - drone ?la ?lb - location)
+        :precondition (and
+            (at ?drone ?la)
+            (or
+                (connect ?la ?lb)
+                (drone-connect ?la ?lb))
+       )
+        :effect (and
+            (at ?drone ?lb)
+            (not (at ?drone ?la)))
+ )
+  (:action move-ambulance
+        :parameters (?am - ambulance ?la ?lb - location)
+        :precondition (and
+            (at ?am ?la)
+            (connect ?la ?lb)
+       )
+        :effect (and
+            (not (at ?am ?la))
+            (at ?am ?lb))
+ )
+  (:action pick-up
+        :parameters (?ambulance - ambulance ?victim - victim ?location - location)
+        :precondition (and
+            (at ?ambulance ?location)
+            (at ?victim ?location)
+            (found ?victim)
+            (not (occupied ?ambulance))
+       )
+        :effect (and
+            (at ?victim ?ambulance)
+            (not (at ?victim ?location))
+       )
+ )
+  (:action drop-off
+        :parameters (?ambulance - ambulance ?victim - victim ?location - location)
+        :precondition (and
+            (at ?ambulance ?location)
+            (hospital-at ?location)
+            (occupied ?ambulance)
+       )
+        :effect (and
+            (at ?victim ?location)
+            (rescued ?victim)
+            (not (occupied ?ambulance)))
+ )
+  (:action observe
+        :parameters (?agent - agent ?location - location)
+        :precondition (and
+            (at ?agent ?location)
+       )
+        :effect (observed ?location)
+ )
+  (:action found-target-env-action
+        :parameters (?target - target ?location - location)
+        :precondition (and
+            (at ?target ?location)
+            (not (found ?target))
+            (observed ?location))
+        :effect (and
+            (found ?target)
+       )
+ )
+  (:action none
+        :parameters (?a - agent)
+        :precondition ()
+        :effect ()
+ )
 )
