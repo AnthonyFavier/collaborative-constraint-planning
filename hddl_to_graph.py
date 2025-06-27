@@ -133,39 +133,88 @@ class HDDLParser:
                                         self.graph.add_edge(task_name, method_name, priority=-1)
 
                         # Find subtasks or actions used in the method body
+                        # Also consider ":ordered-subtasks" and ":subtasks" blocks
                         subtask_start = method_body.find(":subtasks")
-                        subtask_block = method_body[subtask_start:]
-                        subtask_matches = re.findall(r'\((\S+)', subtask_block)
-                        subtasks_and_orders = extract_priority_from_subtasks_and_ordering(subtask_block)
-                        for (sub, ord) in subtasks_and_orders:
-                                if sub in self.tasks or sub in self.actions:
-                                        self.graph.add_edge(method_name, sub, priority=ord)
-                        # for sub in subtask_matches:
-                        #         if sub in self.tasks or sub in self.actions:
-                        #                 self.graph.add_edge(method_name, sub)
+                        if subtask_start != -1:
+                                subtask_block = method_body[subtask_start:]
+                                subtask_matches = re.findall(r'\((\S+)', subtask_block)
+                                subtasks_and_orders = extract_priority_from_subtasks_and_ordering(subtask_block)
+                                for (sub, ord) in subtasks_and_orders:
+                                        if sub in self.tasks or sub in self.actions:
+                                                self.graph.add_edge(method_name, sub, priority=ord)
+                                # for sub in subtask_matches:
+                                #         if sub in self.tasks or sub in self.actions:
+                                #                 self.graph.add_edge(method_name, sub)
+                        elif ":ordered-subtasks" in method_body:
+                                subtask_start = method_body.find(":ordered-subtasks")
+                                subtask_block = method_body[subtask_start:] if subtask_start != -1 else ""
+                                subtasks_and_orders = extract_priority_from_subtasks_and_ordering(subtask_block)
+                                for (sub, ord) in subtasks_and_orders:
+                                        if sub in self.tasks or sub in self.actions:
+                                                self.graph.add_edge(method_name, sub, priority=ord)
+                        elif ":ordered-tasks" in method_body:
+                                subtask_start = method_body.find(":ordered-tasks")
+                                subtask_block = method_body[subtask_start:] if subtask_start != -1 else ""
+                                subtasks_and_orders = extract_priority_from_subtasks_and_ordering(subtask_block)
+                                for (sub, ord) in subtasks_and_orders:
+                                        if sub in self.tasks or sub in self.actions:
+                                                self.graph.add_edge(method_name, sub, priority=ord)
+
+                                
 
 
 def extract_priority_from_subtasks_and_ordering(block):
-        # Extract subtask labels and their actions
-        subtask_matches = re.findall(r'\(\s*(task\d+)\s+\((\S+)', block)
-        label_to_action = {label: action for label, action in subtask_matches}
+        '''
+        Extracts subtasks and their ordering from a block of text.
+        Args:
+            block (str): The block of text containing subtasks and ordering constraints.
+        Returns:
+                List[Tuple[str, int]]: A list of tuples where each tuple contains a subtask label and its priority index.
+        '''
+        print("block:", block)
+        ordered_actions = []
+        if ":ordered-" in block:
+                
+                # Add subtask strings and their order to the ordered_action list. 
+                # Note that the order is determined by the order of appearance in the block.
+                # block is in format: ":ordered-subtasks (and (subtask1) (subtask2) ...)" or ":ordered-subtasks (subtask)"
+                # save the subtask and order in ordered_actions: [(subtask1, 0), (subtask2, 1), ...]
+                # Match the format ":ordered-subtasks (and (subtask1) (subtask2) ...)" or ":ordered-subtasks (subtask)"
+                # subtask_matches = re.findall(r':ordered-subtasks\s*\((?:and\s*)?([\s\S]+?)\)', block)
+                subtask_matches = re.findall(r':ordered-subtasks\s*\((?:and\s*)?(.*?)\)', block)
+                if not subtask_matches:
+                        subtask_matches = re.findall(r':ordered-tasks\s*\((?:and\s*)?(.*?)\)', block)
+                if subtask_matches:
+                        print("subtask_matches: ", subtask_matches)
+                        # Extract individual subtasks by splitting the matched string
+                        subtasks = re.findall(r'\((.*?)\)', subtask_matches[0])
+                        # Enumerate the subtasks and save them with their order
+                        print("Subtasks: ", subtasks)
+                        ordered_actions = [(subtask, i) for i, subtask in enumerate(subtasks)]
+        
+        elif ":subtasks" in block and ":ordering" in block:
+                # Extract subtask labels and their actions
+                subtask_matches = re.findall(r'\(\s*(task\d+)\s+\((\S+)', block)
+                label_to_action = {label: action for label, action in subtask_matches}
 
-        # Extract ordering constraints
-        ordering_matches = re.findall(r'<\s+(task\d+)\s+(task\d+)', block)
+                # Extract ordering constraints
+                ordering_matches = re.findall(r'<\s+(task\d+)\s+(task\d+)', block)
 
-        # Build dependency graph
-        G = nx.DiGraph()
-        for label in label_to_action:
-                G.add_node(label)
-        for before, after in ordering_matches:
-                G.add_edge(before, after)
+                # Build dependency graph
+                G = nx.DiGraph()
+                for label in label_to_action:
+                        G.add_node(label)
+                for before, after in ordering_matches:
+                        G.add_edge(before, after)
 
-        # Topological sort gives execution order
-        sorted_labels = list(nx.topological_sort(G))
+                # Topological sort gives execution order
+                sorted_labels = list(nx.topological_sort(G))
 
-        # Assign priority index based on topological order
-        ordered_actions = [(label_to_action[label], i) for i, label in enumerate(sorted_labels)]
+                # Assign priority index based on topological order
+                ordered_actions = [(label_to_action[label], i) for i, label in enumerate(sorted_labels)]
+        
         return ordered_actions
+
 def get_domain_graph(domain_path: str) -> nx.MultiDiGraph:
         parser = HDDLParser(domain_path)
         graph = parser.parse()
