@@ -6,17 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-@click.command()
-@click.argument('mode', default='several')
-@click.argument('filename', nargs=-1)
-def main_cli(mode: str, filename: tuple[str,...]):
-    if mode=='several':
-        several()
-    elif mode=='analyze_with':
-        extract_result_with_constraint(filename[0])
-    elif mode=='analyze_without':
-        extract_result_without_constraint(filename[0])
-    
+
 def extract_result_with_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
@@ -389,14 +379,7 @@ def add_label(violin, label):
     color = violin["bodies"][0].get_facecolor().flatten()
     labels.append((mpatches.Patch(color=color), label))
 
-def several():
-    
-    problem_name = 'rover8_n_t' # zenotravel13, rover13, rover8_n, rover8_n_t
-    seed = 'all' # all, seed0, seed2902480765646109827, seed6671597656599831408
-    without_constraints_folder = 'WO'
-    h_folder = 'H'
-    
-    VIOLIN = False
+def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     
 #############################################################
     ## EXTRACT DATA FROM FILES ##
@@ -539,7 +522,7 @@ def several():
     data = plot_metric_original_data
     positions = [x - offset for x in plot_metric_original_pos]
     label = 'original problem'
-    if VIOLIN:
+    if violin:
         v = axs[0].violinplot(data,
                 positions=positions,
                 widths=widths,
@@ -562,7 +545,7 @@ def several():
     data = plot_metric_random_data
     positions = [x for x in plot_metric_random_pos]
     label = 'random constraints'
-    if VIOLIN:
+    if violin:
         v = axs[0].violinplot(data,
                 positions=positions,
                 widths=widths,
@@ -585,7 +568,7 @@ def several():
     data = plot_metric_h_data
     positions = [x + offset for x in plot_metric_h_pos]
     label = 'human constraints'
-    if VIOLIN:
+    if violin:
         v = axs[0].violinplot(data,
                 positions=positions,
                 widths=widths,
@@ -612,7 +595,7 @@ def several():
     # axs[0].set_ylim(ymin=10290.0 * 0.9)
     # axs[0].set_ylim(ymax=127454.0 * 1.1)
     # axs[0].yaxis.grid(True)
-    if VIOLIN:
+    if violin:
         axs[0].legend(*zip(*labels), loc='upper left', ncols=3)
     else:
         axs[0].legend(loc='upper left', ncols=3)
@@ -639,15 +622,49 @@ def several():
     plt.tight_layout()
     plt.show()
     exit()
+
+##################
+### MAIN + CLI ###
+##################
+@click.group()
+def cli():
+    pass
+
+PROBLEM_NAMES = ['zenotravel13', 'rover8_n', 'rover8_n_t']
+SEEDS = ['all', 'seed0', 'seed2902480765646109827', 'seed6671597656599831408']
+@cli.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
+@click.argument('problem_name', default='zenotravel13')
+@click.argument('seed', default='all')
+@click.argument('without_constraints_folder', default='WO')
+@click.argument('h_folder', default='H')
+@click.option('--violin', 'violin', is_flag=True, default=False)
+def several_command(problem_name, seed, without_constraints_folder, h_folder, violin):
+    if problem_name not in PROBLEM_NAMES:
+        click.echo('Unknown problem.\nSupported problems: ' + str(PROBLEM_NAMES))
+        exit()
+        
+    if seed not in SEEDS:
+        click.echo('Unknown seed.\nSupported seeds: ' + str(SEEDS))
+        
+    several(problem_name, seed, without_constraints_folder, h_folder, violin)
+    
+@cli.command(help='Plot results for a specific file with random constraints')
+@click.argument('filename')
+def with_command(filename: str):
+    click.echo("WIP: for now no plot")
+    extract_result_with_constraint(filename)
+    
+@cli.command(help='Plot results for a specific file with original problem')
+@click.argument('filename')
+def without_command(filename: str):
+    click.echo("WIP: for now no plot")
+    extract_result_without_constraint(filename)
+    
+@cli.command(help='Plot results for a specific file with human constraints')
+@click.argument('filename')
+def H_command(filename: str):
+    click.echo("WIP: for now no plot")
+    extract_result_h(filename)
     
 if __name__=='__main__':
-    
-    # Example usage
-    # folder_dict = get_two_level_folder_dict('results_constraints')
-    # print(json.dumps(folder_dict, indent=4))
-    # exit()
-
-    # sys.argv += ['50-200-TO5_06-16-2025_10:07:57.json']
-    main_cli()
-    
-    # several()
+    cli()
