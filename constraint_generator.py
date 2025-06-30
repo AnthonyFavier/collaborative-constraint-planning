@@ -130,6 +130,50 @@ def initializeHumanConstraintsRover8n(pb):
     constraint = Always(Forall(Or(Not(pb.fluent('have_rock_analysis')(r, pb.object('waypoint5'))), Or(Equals(r, pb.object('rover1')), Equals(r, pb.object('rover2')))), r))
     constraints_dict['SIMPLE'].append(constraint)
     
+    # SOIL DATA FROM WAYPOINT3 MUST BE COMMUNICATED BEFORE ANY ROVER COLLECTS SOIL FROM WAYPOINT1"
+    constraint = Always(
+        Or(
+            And(
+                pb.fluent('at_soil_sample')(pb.object('waypoint1')),
+                Not(pb.fluent('communicated_soil_data')(pb.object('waypoint3')))
+            ),
+            
+            And(
+                pb.fluent('at_soil_sample')(pb.object('waypoint1')),
+                pb.fluent('communicated_soil_data')(pb.object('waypoint3'))
+            ),
+            
+            And(
+                Not(pb.fluent('at_soil_sample')(pb.object('waypoint1'))),
+                pb.fluent('communicated_soil_data')(pb.object('waypoint3'))
+            )
+        )
+    )
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # BEFORE ANY ROVER COLLECTS A ROCK SAMPLE FROM WAYPOINT5, THE SOIL DATA FROM WAYPOINT4 MUST HAVE BEEN COMMUNICATED 
+    constraint = Always(
+        Or(
+            And(
+                pb.fluent('at_rock_sample')(pb.object('waypoint5')),
+                Not(pb.fluent('communicated_soil_data')(pb.object('waypoint4')))
+            ),
+            
+            And(
+                pb.fluent('at_rock_sample')(pb.object('waypoint5')),
+                pb.fluent('communicated_soil_data')(pb.object('waypoint4'))
+            ),
+            
+            And(
+                Not(pb.fluent('at_rock_sample')(pb.object('waypoint5'))),
+                pb.fluent('communicated_soil_data')(pb.object('waypoint4'))
+            )
+        )
+    )
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    
+    ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
     for i in range(2, len(constraints_dict['SIMPLE'])):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
