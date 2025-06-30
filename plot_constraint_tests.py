@@ -5,6 +5,7 @@ import click
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from defs import startWith
 
 
 def extract_result_with_constraint(filename, show=False):

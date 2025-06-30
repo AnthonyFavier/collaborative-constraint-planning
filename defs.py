@@ -75,6 +75,9 @@ class NtcoreStrategy:
     DELTA = 'delta'
     
     
+def startWith(s1, s2):
+    return s1[:len(s2)]==s2
+    
 SHELL_PRINTS = False
 GUI_PROMPT = True
 
