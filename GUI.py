@@ -827,6 +827,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         data = {}
         
+        data['problem_name'] = CAI.g_problem_name
         data['detailed_translation_times'] = {
             'input_time': 0,
             'decomp_time': 0,
@@ -886,7 +887,7 @@ class PlanFrame(customtkinter.CTkFrame):
             data['solving_time'] += data['planning_results']['time_compilation']
             data['solving_time'] += data['planning_results']['time_planning']
         
-        mprint('\n== Export ==\n')
+        mprint('\n=== EXPORT ===\n')
         if data['planning_results']!={} and data['planning_results']['result']=='success':
             mprint('Solving time = ' + '{:.2f}'.format(data['solving_time']))
             mprint('\tTranslation time = ' + '{:.2f}'.format(data['translation_time']))
