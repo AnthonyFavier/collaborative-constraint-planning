@@ -182,7 +182,55 @@ def initializeHumanConstraintsRover8n(pb):
     return constraints_dict
 
 def initializeHumanConstraintsRover8nt(pb):
-    return initializeHumanConstraintsRover8n(pb)
+    constraints_dict = {'SIMPLE':[]}
+    
+    r = Variable('r', pb.user_type('rover'))
+    w = Variable('w', pb.user_type('waypoint'))
+    o = Variable('o', pb.user_type('objective'))
+    m = Variable('m', pb.user_type('mode'))
+    
+    # ROVER2 SHOULD NEVER BE USED
+    constraint = Always(And(
+            pb.fluent('in')(pb.object('rover2'), pb.object('waypoint2')),
+            LE(50, pb.fluent('energy')(pb.object('rover2'))),
+            pb.fluent('empty')(pb.object('rover2store')),
+            Forall(Not(pb.fluent('have_soil_analysis')(pb.object('rover2'), w)), w),
+            Forall(Not(pb.fluent('have_rock_analysis')(pb.object('rover2'), w)), w),
+            Forall(Not(pb.fluent('have_image')(pb.object('rover2'), o, m)), o, m),
+    ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # ONLY ROVER3 SHOULD PERFORM THE ROCK AND SOIL ANALYSIS FOR WAYPOINT 3 AND 4
+    constraint = Always(And(
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover0'), pb.object('waypoint3'))),
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover1'), pb.object('waypoint3'))),
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover2'), pb.object('waypoint3'))),
+        
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover0'), pb.object('waypoint4'))),
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover1'), pb.object('waypoint4'))),
+        Not(pb.fluent('have_soil_analysis')(pb.object('rover2'), pb.object('waypoint4'))),
+        
+        Not(pb.fluent('have_rock_analysis')(pb.object('rover0'), pb.object('waypoint3'))),
+        Not(pb.fluent('have_rock_analysis')(pb.object('rover1'), pb.object('waypoint3'))),
+        Not(pb.fluent('have_rock_analysis')(pb.object('rover2'), pb.object('waypoint3'))),
+    ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    
+    # ROVER3 SHOULD NEVER TAKE AN IMAGE
+    constraint = Always(Forall(Not(pb.fluent('have_image')(pb.object('rover3'), o, m)), o, m))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    ### Generate AND constraints from SIMPLE constraints
+    constraints_dict['AND'] = []
+    for i in range(2, len(constraints_dict['SIMPLE'])):
+        for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+            constraints_dict['AND'].append( And(x) )
+    
+    return constraints_dict
+
+def initializeHumanConstraintsRover10nt(pb):
+    return {}
 
 ##############
 ## PROBLEMS ##
