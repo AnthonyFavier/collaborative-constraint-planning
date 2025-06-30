@@ -347,7 +347,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["ChangePlanningMode"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self.frame_always_column, text="Change\nTimeout (TO)", width=buttons_width, fg_color=color_planning, command=self.changeTimeoutT)
+        self.buttons["ChangeTimeout"] = customtkinter.CTkButton(self.frame_always_column, text="Change\nTimeout (TO)", width=buttons_width, fg_color=color_planning, command=self.changeTimeout)
         self.buttons["ChangeTimeout"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
@@ -559,14 +559,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
             
         self.master.enableAllButtons()
     
-    def changeTimeoutT(self):
-        threading.Thread(target=self.changeTimeout).start()
     def changeTimeout(self):
         self.master.disableAllButtons()
-        mprint(f"\nCurrent Timeout: {CAI.g_timeout}")
-        mprint("Enter a new timeout ('Empty'=disables timeout): ")
+        x = customtkinter.CTkInputDialog(title='Enter Timeout', text=f"Current Timeout: {CAI.g_timeout}s\nEnter a new timeout\n(Leave empty to disable timeout): ")
+        c = x.get_input()
         
-        c = minput()
         try:
             t = float(c)
             assert t>0
