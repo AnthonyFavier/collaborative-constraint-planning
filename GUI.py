@@ -602,6 +602,8 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="ewsn")
         self.textbox.bind("<Escape>", lambda x: exit())
         self.textbox.bind('<Key>',lambda e: 'break') 
+        # tab = customtkinter.CTkFont(self.textbox._font).measure('    ')
+        self.textbox.configure(tabs=70)
         
         self.buttons = {}
         
