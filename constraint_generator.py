@@ -263,6 +263,13 @@ problems = {
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
         initializeHumanConstraintsRover8nt,
     ],
+    'Rover10_n_t': [
+    # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl',
+        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl',
+        ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
+        initializeHumanConstraintsRover10nt,
+    ],
 }
 
 ###############
