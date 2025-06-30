@@ -57,20 +57,9 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         
     stdout, stderr = proc.communicate()
     
-    last_found_plan_i = stdout.rfind("Found Plan:")
-    last_found_plan_end_i = stdout.rfind("NEW COST") # minus previous '\n'
-
-    if last_found_plan_i==-1:
-        feedback = "Failed planning " + stderr
-        plan_with_metrics = ""
-    else:
-        feedback = "success"
-        plan_with_metrics = stdout[last_found_plan_i:last_found_plan_end_i]
-        if not hide_plan:
-            print(plan_with_metrics)
+    feedback = 'success' if stdout.find("Metric (Search):")!=-1 else "Failed planning"+stderr
             
-            
-    # Get Metric
+    # Get Info
     result = plan = fail_reason = ''
     planlength = 0
     metric = 0.0
@@ -78,28 +67,33 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         try:
             result = 'success'
             
-            i1_metric = plan_with_metrics.find('Metric (Search):')+len('Metric (Search):')
-            i2_metric = plan_with_metrics.find('\n', i1_metric)
-            metric = float(plan_with_metrics[i1_metric:i2_metric])
+            i1_plan = stdout.rfind('Found Plan:\n') + len('Found Plan:\n')
+            i2_plan = stdout.find('\n\n', i1_plan)
+            plan = stdout[i1_plan:i2_plan]
             
-            i1 = plan_with_metrics.find('Plan-Length:')+len('Plan-Length:')
-            i2 = plan_with_metrics.find('\n', i1)
-            planlength = int(plan_with_metrics[i1:i2])
+            i1_length = stdout.rfind('Plan-Length:')+len('Plan-Length:')
+            i2_length = stdout.find('\n', i1_length)
+            planlength = int(stdout[i1_length:i2_length])
             
-            i_plan_end = plan_with_metrics[:i1].rfind(')')+1
-            i_plan_start = plan_with_metrics.find('Found Plan:\n') + len('Found Plan:\n')
-            plan = plan_with_metrics[i_plan_start:i_plan_end]
+            i1_metric = stdout.rfind('Metric (Search):')+len('Metric (Search):')
+            i2_metric = stdout.find('\n', i1_metric)
+            metric = float(stdout[i1_metric:i2_metric])
         except:
-            print('[ERROR]')
+            print('\n[ERROR]')
+            print('i1_plan=', i1_plan)
+            print('i2_plan=', i2_plan)
+            print('i1_length=', i1_length)
+            print('i2_length=', i2_length)
             print('i1_metric=', i1_metric)
             print('i2_metric=', i2_metric)
-            print(f'<plan>\n{plan_with_metrics}\n</plan>')
             print(f'<stdout>\n{stdout}\n</stdout>')
             raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
     else:
         result = 'failed'
         if stdout.find('Unsolvable Problem')!=-1:
             fail_reason = 'Unsolvable Problem'
+        if stdout.find('Problem Solved')!=-1:
+            fail_reason = 'Weird'
         else:
             fail_reason = 'Timeout'
                 
