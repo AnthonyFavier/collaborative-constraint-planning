@@ -384,7 +384,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
     
     def disableButtons(self):
         for k,x in self.buttons.items():
-            x.configure(state='disabled')
+            if k not in ['ToggleEncodings', 'ToggleDecomps']:
+                x.configure(state='disabled')
     def enableButtons(self):
         for k,x in self.buttons.items():
             x.configure(state='normal')
