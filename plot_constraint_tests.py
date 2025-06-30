@@ -673,3 +673,5 @@ def H_command(filename: str):
     
 if __name__=='__main__':
     cli()
+    ## Below for debugging ##
+    # several('rover13', 'all', 'WO', 'H', False)
