@@ -640,9 +640,9 @@ PROBLEM_NAMES.sort()
 SEEDS = ['all', 'seed0', 'seed2902480765646109827', 'seed6671597656599831408']
 @cli.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
 @click.argument('problem_name')
-@click.argument('seed', default='all')
-@click.argument('without_constraints_folder', default='WO')
-@click.argument('h_folder', default='H')
+@click.option('--seed', 'seed', default='all')
+@click.option('--wofolder', 'without_constraints_folder', default='WO')
+@click.option('--hfolder', 'h_folder', default='H')
 @click.option('--violin', 'violin', is_flag=True, default=False)
 def several_command(problem_name, seed, without_constraints_folder, h_folder, violin):
     if problem_name not in PROBLEM_NAMES:
