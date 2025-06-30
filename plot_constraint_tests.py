@@ -637,7 +637,6 @@ def cli():
 
 PROBLEM_NAMES = [x.name for x in Path('results_constraints').iterdir() if x.is_dir()]
 PROBLEM_NAMES.sort()
-SEEDS = ['all', 'seed0', 'seed2902480765646109827', 'seed6671597656599831408']
 @cli.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
 @click.argument('problem_name')
 @click.option('--seed', 'seed', default='all')
@@ -649,8 +648,10 @@ def several_command(problem_name, seed, without_constraints_folder, h_folder, vi
         click.echo('Unknown problem.\nSupported problems: ' + str(PROBLEM_NAMES))
         exit()
         
+    SEEDS = ['all'] + [x.name for x in Path(Path('results_constraints'), problem_name).iterdir() if (x.is_dir() and startWith(x.name, 'seed'))]
     if seed not in SEEDS:
         click.echo('Unknown seed.\nSupported seeds: ' + str(SEEDS))
+        exit()
         
     several(problem_name, seed, without_constraints_folder, h_folder, violin)
     
