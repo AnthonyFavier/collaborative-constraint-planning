@@ -387,10 +387,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
             x.configure(state='disabled')
     def enableButtons(self):
         for k,x in self.buttons.items():
-            x.configure(state='enabled')
+            x.configure(state='normal')
         
     def activateE2NLButton(self):
-        self.buttons['E2NL'].configure(state='enabled')
+        self.buttons['E2NL'].configure(state='normal')
         self.update()
     def deactivateE2NLButton(self):
         self.buttons['E2NL'].configure(state='disabled')
@@ -647,7 +647,7 @@ class DisplayFrame(customtkinter.CTkFrame):
             x.configure(state='disabled')
     def enableButtons(self):
         for k,x in self.buttons.items():
-            x.configure(state='enabled')
+            x.configure(state='normal')
     
     def generateSuggestionsT(self):
         threading.Thread(target=self.generateSuggestions).start()
@@ -807,7 +807,7 @@ class PlanFrame(customtkinter.CTkFrame):
             x.configure(state='disabled')
     def enableButtons(self):
         for k,x in self.buttons.items():
-            x.configure(state='enabled')
+            x.configure(state='normal')
     
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
