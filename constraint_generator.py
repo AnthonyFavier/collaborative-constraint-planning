@@ -32,7 +32,7 @@ NB_CONSTRAINT_AND2 =    NB_EXPRESSION
 NB_CONSTRAINT_AND3 =    NB_EXPRESSION
 NB_CONSTRAINT_OR2 =     NB_EXPRESSION
 NB_CONSTRAINT_OR3 =     NB_EXPRESSION
-NB_TEST = 200 # Should be less or equal than NB_EXPRESSION * 5 to avoid redundant constraints
+NB_TEST = NB_EXPRESSION*5 # Should be less or equal than NB_EXPRESSION * 5 to avoid redundant constraints
 
 NB_WO = 10
 
