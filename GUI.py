@@ -894,7 +894,7 @@ class PlanFrame(customtkinter.CTkFrame):
             mprint('\t\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
             mprint('\t\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
             mprint('\tCompilation time = ' + '{:.2f}'.format(data['planning_results']['time_compilation']))
-            mprint('Plan length = ' + '{:.2f}'.format(data['planning_results']['planlength']))
+            mprint('Plan length = ' + '{}'.format(data['planning_results']['planlength']))
             mprint('Plan metric = ' + '{:.2f}'.format(data['planning_results']['metric']))
         else:
             mprint('Translation time = ' + '{:.2f}'.format(data['translation_time']))
