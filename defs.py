@@ -36,6 +36,7 @@ PROBLEMS = {
     "rover13_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile13_t.pddl"),
     "rover6_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile6_t.pddl"),
     "rover4_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile4_t.pddl"),
+    "rover10_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl"),
 }
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
 
