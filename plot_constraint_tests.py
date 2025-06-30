@@ -513,6 +513,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     ## FIGURE PLOTS ##
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
     
+    ## Colors
+    original_problem_color = 'lightcoral'
+    random_constraints_color = 'C0'
+    human_constraints_color = 'limegreen'
+    
     showfliers = False
     # offset > widths
     offset = 0.27
@@ -537,9 +542,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 showmeans=False, 
                 showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
-                boxprops={"facecolor": "limegreen", "edgecolor": "white", "linewidth": 0.5},
-                whiskerprops={"color": "limegreen", "linewidth": 1.5},
-                capprops={"color": "limegreen", "linewidth": 1.5}
+                boxprops={"facecolor": original_problem_color, "edgecolor": "white", "linewidth": 0.5},
+                whiskerprops={"color": original_problem_color, "linewidth": 1.5},
+                capprops={"color": original_problem_color, "linewidth": 1.5}
             )
     # RANDOM
     data = plot_metric_random_data
@@ -560,9 +565,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 showmeans=False, 
                 showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
-                boxprops={"facecolor": "C0", "edgecolor": "white", "linewidth": 0.5},
-                whiskerprops={"color": "C0", "linewidth": 1.5},
-                capprops={"color": "C0", "linewidth": 1.5}
+                boxprops={"facecolor": random_constraints_color, "edgecolor": "white", "linewidth": 0.5},
+                whiskerprops={"color": random_constraints_color, "linewidth": 1.5},
+                capprops={"color": random_constraints_color, "linewidth": 1.5}
             )
     # H
     data = plot_metric_h_data
@@ -583,9 +588,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 showmeans=False, 
                 showfliers=showfliers,
                 medianprops={"color": "white", "linewidth": 0.5},
-                boxprops={"facecolor": "lightcoral", "edgecolor": "white", "linewidth": 0.5},
-                whiskerprops={"color": "lightcoral", "linewidth": 1.5},
-                capprops={"color": "lightcoral", "linewidth": 1.5}
+                boxprops={"facecolor": human_constraints_color, "edgecolor": "white", "linewidth": 0.5},
+                whiskerprops={"color": human_constraints_color, "linewidth": 1.5},
+                capprops={"color": human_constraints_color, "linewidth": 1.5}
             )
     # PARAMS
     axs[0].set_ylabel("Metric values")
@@ -603,11 +608,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     ##########################################################
     
     # ORIGINAL
-    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', label='original problem')
+    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original problem')
     # RANDOM
-    axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', label='random constraints')
+    axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints')
     # H
-    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', label='h constraints')
+    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints')
     # Params
     axs[1].axhline(y=100, color="green", linestyle="--")
     axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
