@@ -639,8 +639,11 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.buttons['suggestions_print'] = customtkinter.CTkButton(self.frame_bottom, text='Print\nSuggestions', font=DisplayFrame.font, command=self.printSuggestions)
         self.buttons['suggestions_print'].grid(row=0, column=2, padx=5, pady=5)
         
+        self.buttons['dump_CM'] = customtkinter.CTkButton(self.frame_bottom, text="Dump\nConstraints", font=DisplayFrame.font, command= lambda: CAI.CM.dump(CAI.g_problem_name))
+        self.buttons['dump_CM'].grid(row=0, column=4, padx=10, pady=10)
+        
         self.buttons['load_CM'] = customtkinter.CTkButton(self.frame_bottom, text='Load\nConstraints', font=DisplayFrame.font, command=self.loadConstraints)
-        self.buttons['load_CM'].grid(row=0, column=3, padx=5, pady=5)
+        self.buttons['load_CM'].grid(row=0, column=5, padx=5, pady=5)
     
     def disableButtons(self):
         for k,x in self.buttons.items():
@@ -796,11 +799,8 @@ class PlanFrame(customtkinter.CTkFrame):
         self.buttons['copy'] = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
         self.buttons['copy'].grid(row=0, column=1, padx=10, pady=10)
         
-        self.buttons['dump_cm'] = customtkinter.CTkButton(self.buttons_frame, text="Dump CM", command= lambda: CAI.CM.dump(CAI.g_problem_name), width=80)
-        self.buttons['dump_cm'].grid(row=0, column=2, padx=10, pady=10)
-        
         self.buttons['export'] = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
-        self.buttons['export'].grid(row=0, column=3, padx=10, pady=10)
+        self.buttons['export'].grid(row=0, column=2, padx=10, pady=10)
     
     def disableButtons(self):
         for k,x in self.buttons.items():
