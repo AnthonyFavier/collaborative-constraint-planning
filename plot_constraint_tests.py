@@ -635,10 +635,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 def cli():
     pass
 
-PROBLEM_NAMES = ['zenotravel13', 'rover8_n', 'rover8_n_t']
+PROBLEM_NAMES = [x.name for x in Path('results_constraints').iterdir() if x.is_dir()]
+PROBLEM_NAMES.sort()
 SEEDS = ['all', 'seed0', 'seed2902480765646109827', 'seed6671597656599831408']
 @cli.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
-@click.argument('problem_name', default='zenotravel13')
+@click.argument('problem_name')
 @click.argument('seed', default='all')
 @click.argument('without_constraints_folder', default='WO')
 @click.argument('h_folder', default='H')
