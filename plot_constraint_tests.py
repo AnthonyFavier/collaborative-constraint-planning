@@ -12,6 +12,9 @@ def extract_result_with_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
+        
+    if 'elapsed' not in raw_data:
+        raise Exception(f"{filename} was interrupted!")
     
     data = {}
     
@@ -114,6 +117,9 @@ def extract_result_without_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
+        
+    if 'elapsed' not in raw_data:
+        raise Exception(f"{filename} was interrupted!")
     
     data = {}
     
@@ -175,6 +181,9 @@ def extract_result_h(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
+        
+    if 'elapsed' not in raw_data:
+        raise Exception(f"{filename} was interrupted!")
     
     data = {}
     
