@@ -230,7 +230,66 @@ def initializeHumanConstraintsRover8nt(pb):
     return constraints_dict
 
 def initializeHumanConstraintsRover10nt(pb):
-    return {}
+    constraints_dict = {'SIMPLE':[]}
+    
+    r = Variable('r', pb.user_type('rover'))
+    w = Variable('w', pb.user_type('waypoint'))
+    o = Variable('o', pb.user_type('objective'))
+    m = Variable('m', pb.user_type('mode'))
+    
+    r0 = pb.object('rover0')
+    r1 = pb.object('rover1')
+    r2 = pb.object('rover2')
+    r3 = pb.object('rover3')
+    
+    w0 = pb.object('waypoint0')
+    w1 = pb.object('waypoint1')
+    w2 = pb.object('waypoint2')
+    w3 = pb.object('waypoint3')
+    w4 = pb.object('waypoint4')
+    w5 = pb.object('waypoint5')
+    w6 = pb.object('waypoint6')
+    
+    # ROVER0 SHOULD HANDLE SOIL AND ROCK DATA FROM WAYPOINT4
+    constraint = Always(And(
+            Forall(Or(
+                Equals(r, r0),
+                Not(pb.fluent('have_soil_analysis')(r, w4))
+            ), r),
+            
+            Not(pb.fluent('have_rock_analysis')(r1, w4)),
+            Not(pb.fluent('have_rock_analysis')(r2, w4)),
+            Not(pb.fluent('have_rock_analysis')(r3, w4)),
+    ))
+    constraints_dict["SIMPLE"].append(constraint)
+    
+    # NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
+    constraint = Always(And(
+        Forall(Not(pb.fluent('in')(r, w2)), r),
+        Forall(Not(pb.fluent('in')(r, w5)), r)
+    ))    
+    constraints_dict["SIMPLE"].append(constraint)
+            
+    # ROVER3 SHOULD NEVER TAKE AN IMAGE
+    constraint = Always(And(
+            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('colour'))), o),
+            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('highres'))), o),
+            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('lowres'))), o),
+                            
+        ))
+    constraints_dict["SIMPLE"].append(constraint)
+
+    # WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
+    constraint = Always(pb.fluent('at_rock_sampling')(w6))
+    constraints_dict["SIMPLE"].append(constraint)
+    
+    ### Generate AND constraints from SIMPLE constraints
+    constraints_dict['AND'] = []
+    for i in range(2, len(constraints_dict['SIMPLE'])):
+        for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+            constraints_dict['AND'].append( And(x) )
+
+    return constraints_dict
 
 ##############
 ## PROBLEMS ##
