@@ -57,16 +57,19 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         
     stdout, stderr = proc.communicate()
     
-    feedback = 'success' if stdout.find("Metric (Search):")!=-1 else "Failed planning"+stderr
-            
     # Get Info
     result = plan = fail_reason = ''
     planlength = 0
     metric = 0.0
-    if feedback=='success':
+    if stdout.find('Unsolvable Problem')!=-1 or stdout.find('Problem unsolvable')!=-1:
+        result = 'failed'
+        fail_reason = 'Unsolvable Problem'
+    elif stdout.find('Metric (Search):')==-1:
+        result = 'failed'
+        fail_reason = 'Timeout'
+    else:
+        result = 'success'
         try:
-            result = 'success'
-            
             i1_plan = stdout.rfind('Found Plan:\n') + len('Found Plan:\n')
             i2_plan = stdout.find('\n\n', i1_plan)
             plan = stdout[i1_plan:i2_plan]
@@ -80,22 +83,14 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
             metric = float(stdout[i1_metric:i2_metric])
         except:
             print('\n[ERROR]')
+            print(f'<stdout>\n{stdout}\n</stdout>')
             print('i1_plan=', i1_plan)
             print('i2_plan=', i2_plan)
             print('i1_length=', i1_length)
             print('i2_length=', i2_length)
             print('i1_metric=', i1_metric)
             print('i2_metric=', i2_metric)
-            print(f'<stdout>\n{stdout}\n</stdout>')
             raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
-    else:
-        result = 'failed'
-        if stdout.find('Unsolvable Problem')!=-1:
-            fail_reason = 'Unsolvable Problem'
-        if stdout.find('Problem Solved')!=-1:
-            fail_reason = 'Weird'
-        else:
-            fail_reason = 'Timeout'
                 
     return result, plan, planlength, metric, fail_reason
 
