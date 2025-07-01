@@ -280,7 +280,7 @@ def initializeHumanConstraintsRover10nt(pb):
     constraints_dict["SIMPLE"].append(constraint)
 
     # WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
-    constraint = Always(pb.fluent('at_rock_sampling')(w6))
+    constraint = Always(pb.fluent('at_rock_sample')(w6))
     constraints_dict["SIMPLE"].append(constraint)
     
     ### Generate AND constraints from SIMPLE constraints
