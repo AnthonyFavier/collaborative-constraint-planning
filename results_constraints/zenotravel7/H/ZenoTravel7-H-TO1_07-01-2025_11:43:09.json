@@ -309,6 +309,15 @@
             "planlength": 0,
             "metric": 0.0,
             "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(located(person2, city3)) and Always(located(person3, city3)) and Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "success",
+            "plan": "0.0: (board_person4_plane2_city1)\n1.0: (flyslow_plane2_city1_city3)\n2.0: (flyslow_plane1_city2_city0)\n3.0: (refuel_plane2)\n4.0: (debark_person4_plane2_city3)\n5.0: (board_person5_plane2_city3)\n6.0: (flyslow_plane2_city3_city2)\n7.0: (debark_person5_plane2_city2)\n8.0: (flyslow_plane2_city2_city3)\n9.0: (board_person1_plane2_city3)\n10.0: (flyslow_plane2_city3_city1)\n11.0: (refuel_plane1)\n12.0: (board_person6_plane1_city0)\n13.0: (flyslow_plane1_city0_city2)\n14.0: (flyslow_plane2_city1_city1)\n15.0: (debark_person6_plane1_city2)\n16.0: (flyslow_plane1_city2_city0)\n17.0: (flyslow_plane2_city1_city1)\n18.0: (refuel_plane2)\n19.0: (flyslow_plane1_city0_city3)\n20.0: (board_person4_plane1_city3)\n21.0: (flyslow_plane1_city3_city3)\n22.0: (flyslow_plane1_city3_city3)\n23.0: (refuel_plane1)\n24.0: (debark_person1_plane2_city1)\n25.0: (debark_person4_plane1_city3)\n26.0: (flyslow_plane1_city3_city1)\n27.0: (board_person1_plane1_city1)\n28.0: (flyslow_plane1_city1_city2)\n29.0: (debark_person1_plane1_city2)",
+            "planlength": 30,
+            "metric": 19335.0,
+            "reason": ""
         }
     ],
     "elapsed": "0:01:23"

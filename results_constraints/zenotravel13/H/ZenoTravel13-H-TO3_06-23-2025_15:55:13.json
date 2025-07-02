@@ -309,6 +309,15 @@
             "planlength": 0,
             "metric": 0.0,
             "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always((Forall (person - locatable p) (not in(p, plane2)) and Forall (person - locatable p) (not in(p, plane3)) and located(plane2, city2) and located(plane3, city3))) and Always(located(person7, city0)) and Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyslow(plane1, city5, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1) + n_flyfast(plane1, city5, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person1, a) and in(person3, a)) or Exists (city c1) (located(person1, c1) and located(person3, c1)) or Exists (city c1, aircraft - locatable a) (in(person1, a) and located(person3, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person3, a) and located(person1, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
         }
     ],
     "elapsed": "0:04:48"
