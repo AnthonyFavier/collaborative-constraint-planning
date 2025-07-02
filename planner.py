@@ -16,6 +16,14 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     - feedback: either 'success' if planning is successful, otherwise an error message
     - plan: plan computed, if successful, otherwise empty string
     """
+    if timeout<=0:
+        result = 'failed'
+        plan = ''
+        fail_reason = 'No time budget'
+        planlength = -1
+        metric = -1
+        return result, plan, planlength, metric, fail_reason
+    
     if problem_name==PlanFiles.COMPILED:
         DOMAIN_PATH, PROBLEM_PATH = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
     else:
