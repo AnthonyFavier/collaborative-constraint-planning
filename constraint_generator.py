@@ -161,6 +161,78 @@ def initializeHumanConstraintsZenotravel7(pb):
     
     return constraints_dict
 
+def initializeHumanConstraintsZenotravel10(pb):
+    
+    constraints_dict = {"SIMPLE":[]}
+    
+    # PLANES SHOULD ONLY FLY SLOWLY
+    a = Variable('a', pb.user_type('aircraft'))
+    c1 = Variable('c1', pb.user_type('city'))
+    c2 = Variable('c2', pb.user_type('city'))
+    constraint = Always(Forall( Equals(pb.fluent('n_flyfast')(a, c1, c2), 0) , a, c1, c2))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PLANE1 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
+    constraint = Always(Forall(LE(Plus(
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city0'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city1'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city2'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city3'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane1'), pb.object('city4'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city0'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city1'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city2'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city3'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city4'), c1),
+        ),3), c1))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PLANE2 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
+    constraint = Always(Forall(LE(Plus(
+        pb.fluent('n_flyslow')(pb.object('plane2'), pb.object('city0'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane2'), pb.object('city1'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane2'), pb.object('city2'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane2'), pb.object('city3'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane2'), pb.object('city4'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city0'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city1'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city2'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city3'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city4'), c1),
+        ),3), c1))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PLANE3 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
+    constraint = Always(Forall(LE(Plus(
+        pb.fluent('n_flyslow')(pb.object('plane3'), pb.object('city0'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane3'), pb.object('city1'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane3'), pb.object('city2'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane3'), pb.object('city3'), c1),
+        pb.fluent('n_flyslow')(pb.object('plane3'), pb.object('city4'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane3'), pb.object('city0'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane3'), pb.object('city1'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane3'), pb.object('city2'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane3'), pb.object('city3'), c1),
+        pb.fluent('n_flyfast')(pb.object('plane3'), pb.object('city4'), c1),
+        ),3), c1))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    # PERSON6 AND PERSON8 SHOULD TRAVEL TOGETHER
+    constraint = Always(Or(
+        Exists(And( pb.fluent('in')(pb.object('person6'), a), pb.fluent('in')(pb.object('person8'), a) ), a),
+        Exists(And( pb.fluent('located')(pb.object('person6'), c1), pb.fluent('located')(pb.object('person8'), c1) ), c1),
+        Exists(And( pb.fluent('in')(pb.object('person6'), a), pb.fluent('located')(pb.object('person8'), c1), pb.fluent('located')(a, c1)), c1, a),
+        Exists(And( pb.fluent('in')(pb.object('person8'), a), pb.fluent('located')(pb.object('person6'), c1), pb.fluent('located')(a, c1)), c1, a),
+    ))
+    constraints_dict['SIMPLE'].append(constraint)
+    
+    constraints_dict['AND'] = []
+    for i in range(2, len(constraints_dict['SIMPLE'])):
+        for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
+            constraints_dict['AND'].append( And(x) )
+            
+    return constraints_dict
+
 def initializeHumanConstraintsRover13(pb):
     constraints_dict = {}
     return constraints_dict
@@ -359,6 +431,12 @@ problems = {
         '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel7,
+    ],
+    'ZenoTravel10': [    
+        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl',
+        ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
+        initializeHumanConstraintsZenotravel10,
     ],
     'Rover13': [
         '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl',

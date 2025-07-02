@@ -1,0 +1,315 @@
+{
+    "seed": 0,
+    "timeout": 1,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl",
+    "generated_constraints": {
+        "SIMPLE": [
+            "Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0))",
+            "Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3))",
+            "Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3))",
+            "Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3))",
+            "Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1))))"
+        ],
+        "AND": [
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1))))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (aircraft - locatable a, city c1, city c2) (n_flyfast(a, c1, c2) == 0)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(Forall (city c1) ((n_flyslow(plane1, city0, c1) + n_flyslow(plane1, city1, c1) + n_flyslow(plane1, city2, c1) + n_flyslow(plane1, city3, c1) + n_flyslow(plane1, city4, c1) + n_flyfast(plane1, city0, c1) + n_flyfast(plane1, city1, c1) + n_flyfast(plane1, city2, c1) + n_flyfast(plane1, city3, c1) + n_flyfast(plane1, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane2, city0, c1) + n_flyslow(plane2, city1, c1) + n_flyslow(plane2, city2, c1) + n_flyslow(plane2, city3, c1) + n_flyslow(plane2, city4, c1) + n_flyfast(plane2, city0, c1) + n_flyfast(plane2, city1, c1) + n_flyfast(plane2, city2, c1) + n_flyfast(plane2, city3, c1) + n_flyfast(plane2, city4, c1)) <= 3)) and Always(Forall (city c1) ((n_flyslow(plane3, city0, c1) + n_flyslow(plane3, city1, c1) + n_flyslow(plane3, city2, c1) + n_flyslow(plane3, city3, c1) + n_flyslow(plane3, city4, c1) + n_flyfast(plane3, city0, c1) + n_flyfast(plane3, city1, c1) + n_flyfast(plane3, city2, c1) + n_flyfast(plane3, city3, c1) + n_flyfast(plane3, city4, c1)) <= 3)) and Always((Exists (aircraft - locatable a) (in(person6, a) and in(person8, a)) or Exists (city c1) (located(person6, c1) and located(person8, c1)) or Exists (city c1, aircraft - locatable a) (in(person6, a) and located(person8, c1) and located(a, c1)) or Exists (city c1, aircraft - locatable a) (in(person8, a) and located(person6, c1) and located(a, c1)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        }
+    ],
+    "elapsed": "0:02:55"
+}
