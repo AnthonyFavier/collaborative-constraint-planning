@@ -40,6 +40,7 @@ NB_WO = 10
 SEED = random.randrange(sys.maxsize)
 SEED = 0 # for testing
 # 0, 2902480765646109827, 6671597656599831408
+random.seed(SEED)
 
 MAX_RETRY_PICK = 300
 
