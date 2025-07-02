@@ -18,6 +18,7 @@ from unified_planning.model.parameter import Parameter as upParameter
 from unified_planning.model.types import _RealType as upReal
 from unified_planning.model.types import _BoolType as upBool
 import itertools
+import time
 
 ######################
 ## HYPER PARAMETERS ##
@@ -515,7 +516,7 @@ class MyIterator:
 ##########################
 ## GENERATE CONSTRAINTS ##
 ##########################
-def generate_constraints(original_problem):
+def generate_constraints(original_problem, names_of_constants):
     # Select only changing fluents (not constants)
     changing_fluents = []
     for f in original_problem.fluents:
@@ -654,13 +655,16 @@ def generate_constraints(original_problem):
 ## SOLVE ##
 ###########
 
-def solve_with_constraints():
-    run_name = f"{PROBLEM_NAME}-W-{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
+def randomc(problemname, timeout):
+    run_name = f"{problemname}-W-{NB_EXPRESSION}-{NB_TEST}-TO{timeout}"
     print(run_name)
     
     # Parse original problem
     reader = PDDLReader()
-    original_problem: upProblem = reader.parse_problem(dp, pp) 
+    domain = problems[problemname][0]
+    problem = problems[problemname][1]
+    names_of_constants = problems[problemname][2]
+    original_problem: upProblem = reader.parse_problem(domain, problem) 
 
     # Check if original problem has no constraints
     if original_problem.trajectory_constraints!=[]:
@@ -669,17 +673,17 @@ def solve_with_constraints():
     # Create result file
     all_results = {}
     all_results['seed'] = SEED
-    all_results['timeout'] = TIMEOUT
+    all_results['timeout'] = timeout
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    all_results['domain'] = dp
-    all_results['problem'] = pp
+    all_results['domain'] = domain
+    all_results['problem'] = problem
     with open(path+filename, 'w') as f:
         f.write(json.dumps(all_results, indent=4))
 
     # Generate constraints
-    expressions, constraints_dict = generate_constraints(original_problem)
+    expressions, constraints_dict = generate_constraints(original_problem, names_of_constants)
     all_results['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
     for k,l in constraints_dict.items():
         all_results['generated_constraints'][k] = [str(c) for c in l]
@@ -706,11 +710,7 @@ def solve_with_constraints():
                 n_retry+=1
             test['constraint'] = str(picked_constraint)
             test['constraint_type'] = type_name
-                
             all_results['tests'].append(test)
-            test['result'] = 'In progress...'
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
             
             # Update problem with constraint
             new_problem = original_problem.clone()
@@ -723,11 +723,25 @@ def solve_with_constraints():
             w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
 
             # Compile
+            test['result'] = 'Compiling...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
+            t1_compile = time.time()
             ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+            t2_compile = time.time()
+            compile_duration = t2_compile-t1_compile
+            test['compilation_time'] = compile_duration
 
             # Plan
+            test['result'] = 'Planning...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
             PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
-            result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            t1_plan = time.time()
+            result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
+            t2_plan = time.time()
+            plan_duration = round(t2_plan-t1_plan, 5)
+            test['planning_time'] = plan_duration
 
             # Get Metric
             test['result'] = result
@@ -745,19 +759,22 @@ def solve_with_constraints():
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
     
-def solve_without_constraints():
+def original(problemname, timeout):
     
-    run_name = f"{PROBLEM_NAME}-WO-{NB_WO}-TO{TIMEOUT}"
+    run_name = f"{problemname}-WO-{NB_WO}-TO{timeout}"
     print(run_name)
+    
+    domain = problems[problemname][0]
+    problem = problems[problemname][1]
     
     # Create result file
     all_results = {}
-    all_results['timeout'] = TIMEOUT
+    all_results['timeout'] = timeout
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    all_results['domain'] = dp
-    all_results['problem'] = pp
+    all_results['domain'] = domain
+    all_results['problem'] = problem
     with open(path+filename, 'w') as f:
         f.write(json.dumps(all_results, indent=4))
 
@@ -767,15 +784,18 @@ def solve_without_constraints():
         for i in range(NB_WO):
             bar.start()
             test = {}
-                
             all_results['tests'].append(test)
-            test['all_results'] = 'In progress...'
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
             
             # plan
-            PROBLEMS[run_name] = (dp, pp)
-            result, plan, planlength, metric, fail_reason = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+            test['result'] = 'Planning...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
+            PROBLEMS[run_name] = (domain, problem)
+            t1_plan = time.time()
+            result, plan, planlength, metric, fail_reason = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout)
+            t2_plan = time.time()
+            plan_duration = t2_plan-t1_plan
+            test['planning_time'] = plan_duration
             
             test['result'] = result
             test['reason'] = fail_reason
@@ -792,13 +812,15 @@ def solve_without_constraints():
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
-def solve_with_human_constraints():
-    run_name = f"{PROBLEM_NAME}-H-TO{TIMEOUT}"
+def humanc(problemname, timeout):
+    run_name = f"{problemname}-H-TO{timeout}"
     print(run_name)
     
     # Parse original problem
     reader = PDDLReader()
-    original_problem: upProblem = reader.parse_problem(dp, pp) 
+    domain = problems[problemname][0]
+    problem = problems[problemname][1]
+    original_problem: upProblem = reader.parse_problem(domain, problem) 
 
     # Check if original problem has no constraints
     if original_problem.trajectory_constraints!=[]:
@@ -807,16 +829,17 @@ def solve_with_human_constraints():
     # Create result file
     all_results = {}
     all_results['seed'] = SEED
-    all_results['timeout'] = TIMEOUT
+    all_results['timeout'] = timeout
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
     filename = f'{run_name}_{date}.json'
     path = 'results_constraints/'
-    all_results['domain'] = dp
-    all_results['problem'] = pp
+    all_results['domain'] = domain
+    all_results['problem'] = problem
     with open(path+filename, 'w') as f:
         f.write(json.dumps(all_results, indent=4))
 
     # Generate constraints
+    human_constraints_init = problems[problemname][3]
     constraints_dict = human_constraints_init(original_problem)
     all_results['generated_constraints'] = {}
     for k,l in constraints_dict.items():
@@ -838,11 +861,7 @@ def solve_with_human_constraints():
                 # Get current type and pickRandom of this type
                 test['constraint'] = str(picked_constraint)
                 test['constraint_type'] = type_name
-                    
                 all_results['tests'].append(test)
-                test['result'] = 'In progress...'
-                with open(path+filename, 'w') as f:
-                    f.write(json.dumps(all_results, indent=4))
                 
                 # Update problem with constraint
                 new_problem = original_problem.clone()
@@ -855,11 +874,25 @@ def solve_with_human_constraints():
                 w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
 
                 # Compile
+                test['result'] = 'Compiling...'
+                with open(path+filename, 'w') as f:
+                    f.write(json.dumps(all_results, indent=4))
+                t1_compile = time.time()
                 ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-
+                t2_compile = time.time()
+                compile_duration = t2_compile-t1_compile
+                test['compilation_time'] = compile_duration
+                
                 # Plan
+                test['result'] = 'Planning...'
+                with open(path+filename, 'w') as f:
+                    f.write(json.dumps(all_results, indent=4))
                 PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
-                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=TIMEOUT)
+                t1_plan = time.time()
+                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout)
+                t2_plan = time.time()
+                plan_duration = t2_plan-t1_plan
+                test['planning_time'] = plan_duration
 
                 # Get Metric
                 test['result'] = result
@@ -877,66 +910,35 @@ def solve_with_human_constraints():
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
-##########
-## MAIN ##
-##########
+################
+## MAIN + CLI ##
+################
 
-def testing():
-    run_name = f"{NB_EXPRESSION}-{NB_TEST}-TO{TIMEOUT}"
-    print(run_name)
-    
-    # Parse original problem
-    reader = PDDLReader()
-    original_problem: upProblem = reader.parse_problem(dp, pp) 
+@click.group()
+def cli():
+    pass
 
-    # Check if original problem has no constraints
-    if original_problem.trajectory_constraints!=[]:
-        raise Exception('Already some constraints in original problem')
-
-    # Create result file
-    all_results = {}
-    all_results['seed'] = SEED
-    all_results['timeout'] = TIMEOUT
-    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-    filename = f'{run_name}_{date}.json'
-    path = 'results_constraints/'
-    all_results['domain'] = dp
-    all_results['problem'] = pp
-
-    # Generate constraints
-    expressions, constraints_dict = generate_constraints(original_problem)
-    all_results['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
-    for k,l in constraints_dict.items():
-        all_results['generated_constraints'][k] = [str(c) for c in l]
-        
-@click.command()
-@click.argument('mode', default='with_human')
+@cli.command()
 @click.argument('timeout', default=1)
-def main_cli(mode: str, timeout: int):
-    global TIMEOUT, dp, pp, names_of_constants, human_constraints_init
-    TIMEOUT = timeout
+@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+def randomc_command(timeout: int, problemname: str):
+    randomc(problemname, timeout)
+
+@cli.command()
+@click.argument('timeout', default=1)
+@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+def original_command(timeout: int, problemname: str):
+    original(problemname, timeout)
     
-    random.seed(SEED)
-    
-    dp = problems[PROBLEM_NAME][0]
-    pp = problems[PROBLEM_NAME][1]
-    names_of_constants = problems[PROBLEM_NAME][2]
-    human_constraints_init = problems[PROBLEM_NAME][3]
-    
-    modes = {
-        'with': solve_with_constraints,
-        'without': solve_without_constraints,
-        'with_human': solve_with_human_constraints,
-        'testing': testing,
-    }
-    if mode not in modes:
-        print('Unknown mode given [' + ', '.join([m for m in modes]) + ']')
-    else:
-        modes[mode]()
+@cli.command()
+@click.argument('timeout', default=1)
+@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+def humanc_command(timeout: int, problemname: str):
+    humanc(problemname, timeout)
 
 if __name__=="__main__":
     try:
-        main_cli()
+        cli()
     except KeyboardInterrupt:
         print("Ctrl+C detected. Exiting...")
         # Kill ENHSP java process
