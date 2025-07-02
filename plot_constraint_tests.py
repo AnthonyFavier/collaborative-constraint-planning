@@ -450,10 +450,14 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
             
     # human data
     plot_metric_h_data = []
+    plot_metric_all_h_data = []
     plot_metric_h_pos = []
+    print('H constraint mins:')
     for i,d in enumerate(data_h):
         if 'metrics' in d:
             plot_metric_h_data.append(d['metrics']['all'])
+            plot_metric_all_h_data.append(d['metrics']['all'][-1])
+            print('\tTO' + str(d['timeout']) + ':\tbest=' + str(d['metrics']['all'].min()) + '\tall=' + str(d['metrics']['all'][-1]))
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
                     plot_metric_h_pos.append(j)
@@ -600,8 +604,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 medianprops={"color": "white", "linewidth": 0.5},
                 boxprops={"facecolor": human_constraints_color, "edgecolor": "white", "linewidth": 0.5},
                 whiskerprops={"color": human_constraints_color, "linewidth": 1.5},
-                capprops={"color": human_constraints_color, "linewidth": 1.5}
+                capprops={"color": human_constraints_color, "linewidth": 1.5},
+                zorder=0
             )
+    axs[0].scatter(positions, plot_metric_all_h_data, s=70, c='black', label='All H constraints', marker='+', zorder=10)
+    
     # PARAMS
     axs[0].set_ylabel("Metric values")
     seeds = data_random[-1]['seeds']
