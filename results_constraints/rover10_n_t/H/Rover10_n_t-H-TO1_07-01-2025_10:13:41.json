@@ -20,7 +20,8 @@
             "(Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4)))) and Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))))",
             "(Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4)))) and Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always(at_rock_sample(waypoint6)))",
             "(Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))",
-            "(Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))"
+            "(Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))",
+            "(Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4)))) and Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))"
         ]
     },
     "tests": [
@@ -143,6 +144,15 @@
         },
         {
             "constraint": "(Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4)))) and Always((Forall (rover r) (not in(r, waypoint2)) and Forall (rover r) (not in(r, waypoint5)))) and Always((Forall (objective o) (not have_image(rover3, o, colour)) and Forall (objective o) (not have_image(rover3, o, highres)) and Forall (objective o) (not have_image(rover3, o, lowres)))) and Always(at_rock_sample(waypoint6)))",
             "constraint_type": "AND",
             "result": "failed",
             "plan": "",
