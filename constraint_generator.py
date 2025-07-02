@@ -98,12 +98,12 @@ def initializeHumanConstraintsZenotravel13(pb):
     constraints_dict['SIMPLE'].append(constraint)
     
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
     
     # constraints_dict['OR'] = []
-    # for i in range(2, len(constraints_dict['SIMPLE'])):
+    # for i in range(2, len(constraints_dict['SIMPLE'])+1):
     #     for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
     #         constraints_dict['OR'].append( Or(x) )
     
@@ -155,7 +155,7 @@ def initializeHumanConstraintsZenotravel7(pb):
     constraints_dict['SIMPLE'].append(constraint)
     
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
     
@@ -227,7 +227,7 @@ def initializeHumanConstraintsZenotravel10(pb):
     constraints_dict['SIMPLE'].append(constraint)
     
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
             
@@ -299,7 +299,7 @@ def initializeHumanConstraintsRover8n(pb):
     
     ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
     
@@ -347,7 +347,7 @@ def initializeHumanConstraintsRover8nt(pb):
     
     ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
     
@@ -409,7 +409,7 @@ def initializeHumanConstraintsRover10nt(pb):
     
     ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
-    for i in range(2, len(constraints_dict['SIMPLE'])):
+    for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
             constraints_dict['AND'].append( And(x) )
 
