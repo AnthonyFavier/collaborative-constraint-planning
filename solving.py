@@ -24,8 +24,8 @@ import time
 ## HYPER PARAMETERS ##
 ######################
 
-PROBLEM_NAME = 'Rover8_n'
-# ZenoTravel13, Rover13, Rover8_n, Rover8_n_t, Rover10_n_t, ZenoTravel7
+PROBLEM_NAME = 'Rover8_n_t'
+# ZenoTravel13, Rover13, Rover8_n, Rover8_n_t, Rover10_n_t, ZenoTravel7, ZenoTravel10, Woodworking7
 
 NB_EXPRESSION =         20
 NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
@@ -418,11 +418,26 @@ def initializeHumanConstraintsRover10nt(pb):
 
     return constraints_dict
 
+def initializeHumanConstraintsWoodworking7(pb):
+    return None
+
 ##############
 ## PROBLEMS ##
 ##############
 
 problems = {
+    'Woodworking7': [    
+        '/home/afavier/CAI/domain.pddl',
+        '/home/afavier/CAI/p07.pddl',
+        ['goalsize', 'boardsize-successor', 'has-colour', 'contains-part', 'grind-treatment-change', 'is-smooth', 'spray-varnish-cost', 'glaze-cost', 'grind-cost', 'plane-cost'],
+        initializeHumanConstraintsWoodworking7,
+    ],
+    'Parking283': [    
+        '/home/afavier/CAI/domain.pddl',
+        '/home/afavier/CAI/p28-3.pddl',
+        [],
+        initializeHumanConstraintsWoodworking7,
+    ],
     'ZenoTravel13': [    
         '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
         '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
