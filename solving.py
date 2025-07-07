@@ -905,7 +905,7 @@ def humanc(problemname, timeout):
                     f.write(json.dumps(all_results, indent=4))
                 PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
                 t1_plan = time.time()
-                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout)
+                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
                 t2_plan = time.time()
                 plan_duration = t2_plan-t1_plan
                 test['planning_time'] = plan_duration
