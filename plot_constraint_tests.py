@@ -236,8 +236,9 @@ def extract_result_h(filename, show=False):
         elif t['constraint_type']=="AND":
             ands.append(t)
             
-    compilation_times = [t['compilation_time'] for t in tests] if 'compilation_time' in tests[0] else [-1]
-    planning_times = [t['planning_time'] for t in tests] if 'planning_time' in tests[0] else [-1]
+    compilation_times = [t['compilation_time'] for t in tests] if 'compilation_time' in tests[0] else [0]
+    planning_times = [t['planning_time'] for t in tests] if 'planning_time' in tests[0] else [0]
+    translation_times = [t['translation_time'] for t in tests] if 'translation_time' in tests[0] else [0]
             
     if successful!=[]:
         metrics = [t['metric'] for t in successful]
@@ -282,6 +283,13 @@ def extract_result_h(filename, show=False):
         'std': float(np.array(planning_times).std()),
         'min': float(np.array(planning_times).min()),
         'max': float(np.array(planning_times).max()),
+    }
+    data['translation'] = {
+        'times': translation_times,
+        'mean': float(np.array(translation_times).mean()),
+        'std': float(np.array(translation_times).std()),
+        'min': float(np.array(translation_times).min()),
+        'max': float(np.array(translation_times).max()),
     }
     data['success'] = {
             'ratio': 100*len(successful)/len(tests),
@@ -593,6 +601,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         },
         'human':{
             'pos': [],
+            'Translation': {'mean':[], 'std':[]},
             'Compilation': {'mean':[], 'std':[]},
             'Planning': {'mean':[], 'std':[]},
         },
@@ -617,6 +626,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         for d in data_h:
             if d['timeout']==timeout_values[i]:
                 durations['human']['pos'].append(i)
+                durations['human']['Translation']['mean'].append(d['translation']['mean'])
+                durations['human']['Translation']['std'].append(d['translation']['std'])
                 durations['human']['Compilation']['mean'].append(d['compilation']['mean'])
                 durations['human']['Compilation']['std'].append(d['compilation']['std'])
                 durations['human']['Planning']['mean'].append(d['planning']['mean'])
@@ -635,6 +646,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     random_constraints_dark_color = '#275e84'
     human_constraints_color = '#32cd32'
     human_constraints_dark_color = '#36a336'
+    human_constraints_trans_color = "#a2ff16"
     
     
     ##########################################################
@@ -767,6 +779,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
             'Planning': {'color': random_constraints_color, 'hatch': ''},
         },
         'human':{
+            'Translation': {'color': human_constraints_trans_color, 'hatch': ''},
             'Compilation': {'color': human_constraints_dark_color, 'hatch': '/'},
             'Planning': {'color': human_constraints_color, 'hatch': ''},
         },

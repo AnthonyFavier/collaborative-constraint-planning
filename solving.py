@@ -59,11 +59,13 @@ def initializeHumanConstraintsZenotravel13(pb):
         pb.fluent('located')(pb.object('plane2'), pb.object('city2')),
         pb.fluent('located')(pb.object('plane3'), pb.object('city3')),
     ))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 2.615387201309204 + 16.52852725982666 + 13.851156949996948 + 10.916101217269897 + 16.49752712249756   
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # PERSON7 SHOULD NOT MOVE
     constraint = Always(pb.fluent('located')(pb.object('person7'), pb.object('city0')))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 5.320336818695068 + 14.295466423034668 + 1.1159181594848633 + 0 + 42.560056924819946
+    constraints_dict['SIMPLE'].append((constraint, duration))
 
 
     # PLANES SHOULD ONLY FLY SLOWLY
@@ -71,7 +73,8 @@ def initializeHumanConstraintsZenotravel13(pb):
     c1 = Variable('c1', pb.user_type('city'))
     c2 = Variable('c2', pb.user_type('city'))
     constraint = Always(Forall( Equals(pb.fluent('n_flyfast')(a, c1, c2), 0) , a, c1, c2))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 10.133426904678345 + 13.860996961593628 + 4.325040340423584 + 0 + 13.88686227798462
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # PLANE1 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
     constraint = Always(Forall(LE(Plus(
@@ -88,7 +91,8 @@ def initializeHumanConstraintsZenotravel13(pb):
         pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city4'), c1),
         pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city5'), c1),
         ),3), c1))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 8.530399799346924 + 16.361482858657837 + 8.234846830368042 + 0 + 34.751404762268066
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     
     # PERSON1 AND PERSON3 SHOULD TRAVEL TOGETHER
@@ -98,12 +102,15 @@ def initializeHumanConstraintsZenotravel13(pb):
         Exists(And( pb.fluent('in')(pb.object('person1'), a), pb.fluent('located')(pb.object('person3'), c1), pb.fluent('located')(a, c1)), c1, a),
         Exists(And( pb.fluent('in')(pb.object('person3'), a), pb.fluent('located')(pb.object('person1'), c1), pb.fluent('located')(a, c1)), c1, a),
     ))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 90.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     constraints_dict['AND'] = []
     for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
-            constraints_dict['AND'].append( And(x) )
+            constraints = [c[0] for c in x]
+            times = [c[1] for c in x]
+            constraints_dict['AND'].append( (And(constraints), sum(times)) )
     
     # constraints_dict['OR'] = []
     # for i in range(2, len(constraints_dict['SIMPLE'])+1):
@@ -828,8 +835,11 @@ def original(problemname, timeout):
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
-def humanc(problemname, timeout):
-    run_name = f"{problemname}-H-TO{timeout}"
+def humanc(problemname, timeout, remove_translation_time=False):
+    if not remove_translation_time:
+        run_name = f"{problemname}-H-TO{timeout}"
+    else:
+        run_name = f"{problemname}-HT-TO{timeout}"
     print(run_name)
     
     # Parse original problem
@@ -871,6 +881,9 @@ def humanc(problemname, timeout):
             type_list = constraints_dict[type_name]
             for picked_constraint in type_list:
                 
+                translation_duration = picked_constraint[1] if remove_translation_time else 0.0
+                picked_constraint = picked_constraint[0]
+                
                 bar.start()
                 test = {}
                 
@@ -878,6 +891,7 @@ def humanc(problemname, timeout):
                 test['constraint'] = str(picked_constraint)
                 test['constraint_type'] = type_name
                 all_results['tests'].append(test)
+                test['translation_time'] = translation_duration
                 
                 # Update problem with constraint
                 new_problem = original_problem.clone()
@@ -905,7 +919,7 @@ def humanc(problemname, timeout):
                     f.write(json.dumps(all_results, indent=4))
                 PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
                 t1_plan = time.time()
-                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
+                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration-translation_duration)
                 t2_plan = time.time()
                 plan_duration = t2_plan-t1_plan
                 test['planning_time'] = plan_duration
@@ -925,6 +939,9 @@ def humanc(problemname, timeout):
         all_results['elapsed'] = str(bar.elapsed_td)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
+
+def h_translation(problemname, timeout):
+    humanc(problemname, timeout, remove_translation_time=True)
 
 ################
 ## MAIN + CLI ##
@@ -951,6 +968,13 @@ def original_command(timeout: int, problemname: str):
 @click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
 def humanc_command(timeout: int, problemname: str):
     humanc(problemname, timeout)
+
+    
+@cli.command(help=f'{[p for p in problems]}')
+@click.argument('timeout', default=1)
+@click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
+def h_translation_command(timeout: int, problemname: str):
+    h_translation(problemname, timeout)
 
 if __name__=="__main__":
     try:
