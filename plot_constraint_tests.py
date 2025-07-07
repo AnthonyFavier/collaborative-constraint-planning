@@ -47,6 +47,9 @@ def extract_result_with_constraint(filename, show=False):
         elif t['constraint_type']=="OR3":
             or3.append(t)
             
+    compilation_times = np.array([t['compilation_time'] for t in tests]) if 'compilation_time' in tests[0] else np.array([-1])
+    planning_times = np.array([t['planning_time'] for t in tests]) if 'planning_time' in tests[0] else np.array([-1])
+            
     if successful!=[]:
         metrics = np.array([t['metric'] for t in successful])
         mean = metrics.mean()
@@ -80,6 +83,20 @@ def extract_result_with_constraint(filename, show=False):
         'OR2': 100*len(or2)/len(tests),
         'OR3': 100*len(or3)/len(tests),
     }
+    data['compilation'] = {
+        'times': compilation_times,
+        'mean': compilation_times.mean(),
+        'std': compilation_times.std(),
+        'min': compilation_times.min(),
+        'max': compilation_times.max(),
+    }
+    data['planning'] = {
+        'times': planning_times,
+        'mean': planning_times.mean(),
+        'std': planning_times.std(),
+        'min': planning_times.min(),
+        'max': planning_times.max(),
+    }
     data['success'] = {
             'ratio': 100*len(successful)/len(tests),
             'Timeout': 100*len(timeout)/len(tests),
@@ -103,6 +120,8 @@ def extract_result_with_constraint(filename, show=False):
         print('\tAND3: ' + '{:.1f}'.format(data['Type_repartition']['AND3']) + '%')
         print('\tOR2: ' + '{:.1f}'.format(data['Type_repartition']['OR2']) + '%')
         print('\tOR3: ' + '{:.1f}'.format(data['Type_repartition']['OR3']) + '%')
+        print('Compilation = ' + '{:.1f}'.format(data['compilation']['mean']) + '+-' + '{:.1f} s'.format(data['compilation']['std']))
+        print('Planning = ' + '{:.1f}'.format(data['planning']['mean']) + '+-' + '{:.1f} s'.format(data['planning']['std']))
         print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
         print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
         print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
@@ -136,6 +155,8 @@ def extract_result_without_constraint(filename, show=False):
         elif t['reason']=='Unsolvable Problem':
             unsolvable.append(t)
             
+    planning_times = np.array([t['planning_time'] for t in tests]) if 'planning_time' in tests[0] else np.array([-1])
+            
     if successful!=[]:
         metrics = np.array([t['metric'] for t in successful])
         mean = metrics.mean()
@@ -151,6 +172,13 @@ def extract_result_without_constraint(filename, show=False):
     
     # SAVE extracted
     data['timeout'] = raw_data['timeout']
+    data['planning'] = {
+        'times': planning_times,
+        'mean': planning_times.mean(),
+        'std': planning_times.std(),
+        'min': planning_times.min(),
+        'max': planning_times.max(),
+    }
     data['success'] = {
             'ratio': 100*len(successful)/len(tests),
             'Timeout': 100*len(timeout)/len(tests),
@@ -167,6 +195,7 @@ def extract_result_without_constraint(filename, show=False):
     
     # PRINT
     if show:
+        print('Planning = ' + '{:.1f}'.format(data['planning']['mean']) + '+-' + '{:.1f} s'.format(data['planning']['std']))
         print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
         print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
         print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
@@ -207,11 +236,14 @@ def extract_result_h(filename, show=False):
         elif t['constraint_type']=="AND":
             ands.append(t)
             
+    compilation_times = [t['compilation_time'] for t in tests] if 'compilation_time' in tests[0] else [-1]
+    planning_times = [t['planning_time'] for t in tests] if 'planning_time' in tests[0] else [-1]
+            
     if successful!=[]:
-        metrics = np.array([t['metric'] for t in successful])
-        mean = metrics.mean()
-        std = metrics.std()
-        min_metric = metrics.min()
+        metrics = [t['metric'] for t in successful]
+        mean = float(np.array(metrics).mean())
+        std = float(np.array(metrics).std())
+        min_metric = float(np.array(metrics).min())
     else:
         metrics = -1
         mean = -1
@@ -237,6 +269,20 @@ def extract_result_h(filename, show=False):
         'SIMPLE': 100*len(simple)/len(tests),
         'AND': 100*len(ands)/len(tests),
     }
+    data['compilation'] = {
+        'times': compilation_times,
+        'mean': float(np.array(compilation_times).mean()),
+        'std': float(np.array(compilation_times).std()),
+        'min': float(np.array(compilation_times).min()),
+        'max': float(np.array(compilation_times).max()),
+    }
+    data['planning'] = {
+        'times': planning_times,
+        'mean': float(np.array(planning_times).mean()),
+        'std': float(np.array(planning_times).std()),
+        'min': float(np.array(planning_times).min()),
+        'max': float(np.array(planning_times).max()),
+    }
     data['success'] = {
             'ratio': 100*len(successful)/len(tests),
             'Timeout': 100*len(timeout)/len(tests),
@@ -257,6 +303,8 @@ def extract_result_h(filename, show=False):
         print('Constraint types:')
         print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
         print('\tAND: ' + '{:.1f}'.format(data['Type_repartition']['AND']) + '%')
+        print('Compilation = ' + '{:.1f}'.format(data['compilation']['mean']) + '+-' + '{:.1f} s'.format(data['compilation']['std']))
+        print('Planning = ' + '{:.1f}'.format(data['planning']['mean']) + '+-' + '{:.1f} s'.format(data['planning']['std']))
         print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
         print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
         print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
@@ -316,19 +364,23 @@ def extract_all_seeds(filenames, show=False):
                 
     # for each timeout value, compute values
     for timeout in all_data:
+        all_data[timeout]['compilation_time_mean'] = float(np.array([t['compilation_time'] for t in all_data[timeout]['tests']]).mean())
+        all_data[timeout]['compilation_time_std'] = float(np.array([t['compilation_time'] for t in all_data[timeout]['tests']]).std())
+        all_data[timeout]['planning_time_mean'] = float(np.array([t['planning_time'] for t in all_data[timeout]['tests'] if t['reason']!='Unsolvable Problem']).mean())
+        all_data[timeout]['planning_time_std'] = float(np.array([t['planning_time'] for t in all_data[timeout]['tests'] if t['reason']!='Unsolvable Problem']).std())
         if all_data[timeout]['successful']!=[]:
-            all_data[timeout]['metrics'] = np.array([t['metric'] for t in all_data[timeout]['successful']])
-            all_data[timeout]['mean'] = all_data[timeout]['metrics'].mean()
-            all_data[timeout]['std'] = all_data[timeout]['metrics'].std()
-            all_data[timeout]['min_metric'] = all_data[timeout]['metrics'].min()
+            all_data[timeout]['metrics'] = [t['metric'] for t in all_data[timeout]['successful']]
+            all_data[timeout]['mean'] = float(np.array(all_data[timeout]['metrics']).mean())
+            all_data[timeout]['std'] = float(np.array(all_data[timeout]['metrics']).std())
+            all_data[timeout]['min_metric'] = float(np.array(all_data[timeout]['metrics']).min())
         else:
             all_data[timeout]['metrics'] = -1
             all_data[timeout]['mean'] = -1
             all_data[timeout]['std'] = -1
             all_data[timeout]['min_metric'] = -1
             
-        all_data[timeout]['elapsed_mean'] = np.array(all_data[timeout]['elapsed']).mean()
-        all_data[timeout]['elapsed_std'] = np.array(all_data[timeout]['elapsed']).std()
+        all_data[timeout]['elapsed_mean'] = float(np.array(all_data[timeout]['elapsed']).mean())
+        all_data[timeout]['elapsed_std'] = float(np.array(all_data[timeout]['elapsed']).std())
     
     # Extract final values
     final_datas = []
@@ -336,6 +388,10 @@ def extract_all_seeds(filenames, show=False):
         N_TESTS = len(all_data[timeout]['tests'])        
         data = {'timeout': timeout}
         data['Repeated'] = 100*all_data[timeout]['repeated']/N_TESTS
+        data['compilation_time_mean'] = all_data[timeout]['compilation_time_mean']
+        data['compilation_time_std'] = all_data[timeout]['compilation_time_std']
+        data['planning_time_mean'] = all_data[timeout]['planning_time_mean']
+        data['planning_time_std'] = all_data[timeout]['planning_time_std']
         data['success'] = {
                 'ratio': 100*len(all_data[timeout]['successful'])/N_TESTS,
                 'Timeout': 100*len(all_data[timeout]['reason_timeout'])/N_TESTS,
@@ -457,7 +513,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         if 'metrics' in d:
             plot_metric_h_data.append(d['metrics']['all'])
             plot_metric_all_h_data.append(d['metrics']['all'][-1])
-            print('\tTO' + str(d['timeout']) + ':\tbest=' + str(d['metrics']['all'].min()) + '\tall=' + str(d['metrics']['all'][-1]))
+            print('\tTO' + str(d['timeout']) + ':\tbest=' + str(np.array(d['metrics']['all']).min()) + '\tall=' + str(d['metrics']['all'][-1]))
             for j in range(len(x_labels)):
                 if d['timeout']==x_labels[j]:
                     plot_metric_h_pos.append(j)
@@ -470,24 +526,24 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # Relevant info extraction
     # find global min and max
     minimums = []
-    minimum_random = float(np.array([d.min() for d in plot_metric_random_data]).min())
+    minimum_random = float(np.array([np.array(d).min() for d in plot_metric_random_data]).min())
     minimums.append(minimum_random)
     if all_files[problem_name][without_constraints_folder]!=[]:
-        minimum_original = float(np.array([d.min() for d in plot_metric_original_data]).min())
+        minimum_original = float(np.array([np.array(d).min() for d in plot_metric_original_data]).min())
         minimums.append(minimum_original)
     if all_files[problem_name][h_folder]!=[]:
-        minimum_h = float(np.array([d.min() for d in plot_metric_h_data]).min())
+        minimum_h = float(np.array([np.array(d).min() for d in plot_metric_h_data]).min())
         minimums.append(minimum_h)
     minimum = min(minimums)
     
     maximums = []
-    maximum_random = float(np.array([d.max() for d in plot_metric_random_data]).max())
+    maximum_random = float(np.array([np.array(d).max() for d in plot_metric_random_data]).max())
     maximums.append(maximum_random)
     if all_files[problem_name][without_constraints_folder]!=[]:
-        maximum_original = float(np.array([d.max() for d in plot_metric_original_data]).max())
+        maximum_original = float(np.array([np.array(d).max() for d in plot_metric_original_data]).max())
         maximums.append(maximum_original)
     if all_files[problem_name][h_folder]!=[]:
-        maximum_h = float(np.array([d.max() for d in plot_metric_h_data]).max())
+        maximum_h = float(np.array([np.array(d).max() for d in plot_metric_h_data]).max())
         maximums.append(maximum_h)
     maximum = max(maximums)
     print("Best plan metric: ", minimum)
@@ -522,15 +578,62 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 plot_success_h_data.append(d['success']['ratio'])
                 plot_success_h_pos.append(i)
                 break
-    
+            
+    # Durations
+    durations = {
+        'original':{
+            'Compilation': {'mean':[], 'std':[]},
+            'Planning': {'mean':[], 'std':[]},
+        },
+        'random':{
+            'Compilation': {'mean':[], 'std':[]},
+            'Planning': {'mean':[], 'std':[]},
+        },
+        'human':{
+            'Compilation': {'mean':[], 'std':[]},
+            'Planning': {'mean':[], 'std':[]},
+        },
+    }
+    for i in range(len(x_labels)):
+        for d in data_original:
+            if d['timeout']==x_labels[i]:
+                durations['original']['Compilation']['mean'].append(0)
+                durations['original']['Compilation']['std'].append(0)
+                durations['original']['Planning']['mean'].append(d['planning']['mean'])
+                durations['original']['Planning']['std'].append(d['planning']['std'])
+                break
+        for d in data_random:
+            if d['timeout']==x_labels[i]:
+                durations['random']['Compilation']['mean'].append(d['compilation_time_mean'])
+                durations['random']['Compilation']['std'].append(d['compilation_time_std'])
+                durations['random']['Planning']['mean'].append(d['planning_time_mean'])
+                durations['random']['Planning']['std'].append(d['planning_time_std'])
+                break
+        for d in data_h:
+            if d['timeout']==x_labels[i]:
+                durations['human']['Compilation']['mean'].append(d['compilation']['mean'])
+                durations['human']['Compilation']['std'].append(d['compilation']['std'])
+                durations['human']['Planning']['mean'].append(d['planning']['mean'])
+                durations['human']['Planning']['std'].append(d['planning']['std'])
+                break
+
 #############################################################
-    ## FIGURE PLOTS ##
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(15, 10))
+    ###################### FIGURE PLOTS #####################
+    #########################################################
+    fig, axs = plt.subplots(3, 1, sharex=True, figsize=(20, 15))
     
     ## Colors
-    original_problem_color = 'lightcoral'
-    random_constraints_color = 'C0'
-    human_constraints_color = 'limegreen'
+    original_problem_color = '#f08080'
+    original_problem_dark_color = '#b06363'
+    random_constraints_color = '#1f77b4'
+    random_constraints_dark_color = '#275e84'
+    human_constraints_color = '#32cd32'
+    human_constraints_dark_color = '#36a336'
+    
+    
+    ##########################################################
+    ######################### Metrics ########################
+    ##########################################################
     
     showfliers = False
     # offset > widths
@@ -611,6 +714,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     
     # PARAMS
     axs[0].set_ylabel("Metric values")
+    axs[0].set_xlabel("Timeout (s)")
     seeds = data_random[-1]['seeds']
     axs[0].set_title(problem_name + f"\nseeds: {seeds}")
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
@@ -621,7 +725,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         axs[0].legend(*zip(*labels), loc='upper left', ncols=3)
     else:
         axs[0].legend(loc='upper left', ncols=3)
+    # axs[0].axhline(y=7236, color="green", linestyle="--")
+        
     
+    ##########################################################
+    ##################### Success Ratio ######################
     ##########################################################
     
     # ORIGINAL
@@ -636,7 +744,47 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
-    axs[1].legend(loc='upper left', ncols=3)
+    axs[1].legend(loc='upper left')
+    axs[1].tick_params(labelbottom=True)  # <-- Show x labels on top plot
+    
+    # ##########################################################
+    # ############# Compilation + Planning Times ###############
+    # ##########################################################
+
+    durations_styles = {
+        'original':{
+            'Compilation': {'color': original_problem_dark_color, 'hatch': '/'},
+            'Planning': {'color': original_problem_color, 'hatch': ''},
+        },
+        'random':{
+            'Compilation': {'color': random_constraints_dark_color, 'hatch': '/'},
+            'Planning': {'color': random_constraints_color, 'hatch': ''},
+        },
+        'human':{
+            'Compilation': {'color': human_constraints_dark_color, 'hatch': '/'},
+            'Planning': {'color': human_constraints_color, 'hatch': ''},
+        },
+    }
+
+    width = 0.25
+    multiplier = -1
+    for run_type, durations in durations.items():
+        bottom = np.zeros(6)
+        offset = width * multiplier
+        for duration_type, duration in durations.items():
+            p = axs[2].bar(x_pos+offset, duration['mean'], width, label=run_type+' '+duration_type, bottom=bottom,
+                       yerr=duration['std'],
+                       color=durations_styles[run_type][duration_type]['color'],
+                       hatch=durations_styles[run_type][duration_type]['hatch'])
+            bottom += duration['mean']
+            axs[2].bar_label(p, fmt=duration_type[:1]+':{:.1f}', label_type='center')
+        multiplier+=1
+            
+    axs[2].legend(loc='upper left')
+    axs[2].set_ylabel("Time (s)")
+    axs[2].set_xlabel("Timeout (s)")
+    
+    ##########################################################
 
     
     plt.xticks(ticks=x_pos, labels=x_labels)
@@ -693,4 +841,4 @@ def H_command(filename: str):
 if __name__=='__main__':
     cli()
     ## Below for debugging ##
-    # several('rover13', 'all', 'WO', 'H', False)
+    # several('zenotravel7', 'all', 'WO', 'H', False)
