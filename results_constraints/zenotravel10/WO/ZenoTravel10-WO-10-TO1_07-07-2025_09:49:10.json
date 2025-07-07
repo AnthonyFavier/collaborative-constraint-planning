@@ -1,0 +1,88 @@
+{
+    "timeout": 1,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl",
+    "tests": [
+        {
+            "result": "failed",
+            "planning_time": 1.0339045524597168,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0811283588409424,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.054816484451294,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0218071937561035,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0188782215118408,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.020484209060669,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0135326385498047,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0299408435821533,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0142872333526611,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "result": "failed",
+            "planning_time": 1.0224974155426025,
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        }
+    ],
+    "elapsed": "0:00:10"
+}
