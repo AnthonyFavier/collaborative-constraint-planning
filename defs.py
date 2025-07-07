@@ -9,6 +9,7 @@ PROBLEMS = {
     "zeno5_bis_n":  ("NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",              "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5_bis.pddl"),
     "zeno6":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile6.pddl"),
     "zeno7":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl"),
+    "zeno7_n":      ("NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",              "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl"),
     "zeno8":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile8.pddl"),
     "zeno9":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile9.pddl"),
     "zeno10":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl"),
