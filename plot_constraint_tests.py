@@ -470,9 +470,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 #############################################################
     ## PREPARE PLOT DATA ##
     unsolvable = data_random[-1]['success']['Unsolvable']
-    # x_labels = [int(d['timeout']) for d in data_random_all_seeds].sort() # Might be missing some...
-    x_labels = [1, 3, 5, 10, 15, 30]
-    x_pos = np.arange(len(x_labels)) 
+    # timeout_values = [int(d['timeout']) for d in data_random_all_seeds].sort() # Might be missing some...
+    timeout_values = [1, 3, 5, 10, 15, 30]
+    x_pos = np.arange(len(timeout_values)) 
     
     # With random constraints data
     plot_metric_random_data = []
@@ -480,8 +480,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     for i,d in enumerate(data_random):
         if 'metrics' in d:
             plot_metric_random_data.append(d['metrics']['all'])
-            for j in range(len(x_labels)):
-                if d['timeout']==x_labels[j]:
+            for j in range(len(timeout_values)):
+                if d['timeout']==timeout_values[j]:
                     plot_metric_random_pos.append(j)
                     break
     if plot_metric_random_data==[]:
@@ -495,8 +495,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     for i,d in enumerate(data_original):
         if 'metrics' in d:
             plot_metric_original_data.append(d['metrics']['all'])
-            for j in range(len(x_labels)):
-                if d['timeout']==x_labels[j]:
+            for j in range(len(timeout_values)):
+                if d['timeout']==timeout_values[j]:
                     plot_metric_original_pos.append(j)
                     break
     if plot_metric_original_data==[]:
@@ -514,8 +514,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
             plot_metric_h_data.append(d['metrics']['all'])
             plot_metric_all_h_data.append(d['metrics']['all'][-1])
             print('\tTO' + str(d['timeout']) + ':\tbest=' + str(np.array(d['metrics']['all']).min()) + '\tall=' + str(d['metrics']['all'][-1]))
-            for j in range(len(x_labels)):
-                if d['timeout']==x_labels[j]:
+            for j in range(len(timeout_values)):
+                if d['timeout']==timeout_values[j]:
                     plot_metric_h_pos.append(j)
                     break
     if plot_metric_h_data==[]:
@@ -552,9 +552,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # Success ratio data random
     plot_success_random_data = []
     plot_success_random_pos = []
-    for i in range(len(x_labels)):
+    for i in range(len(timeout_values)):
         for d in data_random:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
                 plot_success_random_data.append(d['success']['ratio'])
                 plot_success_random_pos.append(i)
                 break
@@ -562,9 +562,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # Success ratio data original
     plot_success_original_data = []
     plot_success_original_pos = []
-    for i in range(len(x_labels)):
+    for i in range(len(timeout_values)):
         for d in data_original:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
                 plot_success_original_data.append(d['success']['ratio'])
                 plot_success_original_pos.append(i)
                 break
@@ -572,9 +572,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # Success ratio data h
     plot_success_h_data = []
     plot_success_h_pos = []
-    for i in range(len(x_labels)):
+    for i in range(len(timeout_values)):
         for d in data_h:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
                 plot_success_h_data.append(d['success']['ratio'])
                 plot_success_h_pos.append(i)
                 break
@@ -582,35 +582,41 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # Durations
     durations = {
         'original':{
+            'pos': [],
             'Compilation': {'mean':[], 'std':[]},
             'Planning': {'mean':[], 'std':[]},
         },
         'random':{
+            'pos': [],
             'Compilation': {'mean':[], 'std':[]},
             'Planning': {'mean':[], 'std':[]},
         },
         'human':{
+            'pos': [],
             'Compilation': {'mean':[], 'std':[]},
             'Planning': {'mean':[], 'std':[]},
         },
     }
-    for i in range(len(x_labels)):
+    for i in range(len(timeout_values)):
         for d in data_original:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
+                durations['original']['pos'].append(i)
                 durations['original']['Compilation']['mean'].append(0)
                 durations['original']['Compilation']['std'].append(0)
                 durations['original']['Planning']['mean'].append(d['planning']['mean'])
                 durations['original']['Planning']['std'].append(d['planning']['std'])
                 break
         for d in data_random:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
+                durations['random']['pos'].append(i)
                 durations['random']['Compilation']['mean'].append(d['compilation_time_mean'])
                 durations['random']['Compilation']['std'].append(d['compilation_time_std'])
                 durations['random']['Planning']['mean'].append(d['planning_time_mean'])
                 durations['random']['Planning']['std'].append(d['planning_time_std'])
                 break
         for d in data_h:
-            if d['timeout']==x_labels[i]:
+            if d['timeout']==timeout_values[i]:
+                durations['human']['pos'].append(i)
                 durations['human']['Compilation']['mean'].append(d['compilation']['mean'])
                 durations['human']['Compilation']['std'].append(d['compilation']['std'])
                 durations['human']['Planning']['mean'].append(d['planning']['mean'])
@@ -620,7 +626,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 #############################################################
     ###################### FIGURE PLOTS #####################
     #########################################################
-    fig, axs = plt.subplots(3, 1, sharex=True, figsize=(20, 15))
+    fig, axs = plt.subplots(3, 1, sharex=True, figsize=(15, 13))
     
     ## Colors
     original_problem_color = '#f08080'
@@ -722,9 +728,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # axs[0].set_ylim(ymax=127454.0 * 1.1)
     # axs[0].yaxis.grid(True)
     if violin:
-        axs[0].legend(*zip(*labels), loc='upper left', ncols=3)
+        axs[0].legend(*zip(*labels), loc='upper left', ncols=4)
     else:
-        axs[0].legend(loc='upper left', ncols=3)
+        axs[0].legend(loc='upper left', ncols=4)
     # axs[0].axhline(y=7236, color="green", linestyle="--")
         
     
@@ -744,7 +750,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
-    axs[1].legend(loc='upper left')
+    axs[1].legend(loc='upper left', ncols=4)
     axs[1].tick_params(labelbottom=True)  # <-- Show x labels on top plot
     
     # ##########################################################
@@ -768,11 +774,13 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 
     width = 0.25
     multiplier = -1
-    for run_type, durations in durations.items():
-        bottom = np.zeros(6)
+    for run_type, durs in durations.items():
+        bottom = np.zeros(len(durs['pos']))
         offset = width * multiplier
-        for duration_type, duration in durations.items():
-            p = axs[2].bar(x_pos+offset, duration['mean'], width, label=run_type+' '+duration_type, bottom=bottom,
+        for duration_type, duration in durs.items():
+            if duration_type=='pos':
+                continue
+            p = axs[2].bar(np.array(durs['pos'])+offset, duration['mean'], width, label=run_type+' '+duration_type, bottom=bottom,
                        yerr=duration['std'],
                        color=durations_styles[run_type][duration_type]['color'],
                        hatch=durations_styles[run_type][duration_type]['hatch'])
@@ -787,7 +795,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     ##########################################################
 
     
-    plt.xticks(ticks=x_pos, labels=x_labels)
+    plt.xticks(ticks=x_pos, labels=timeout_values)
+    x_padding = 0.5
+    plt.xlim(x_pos[0]-x_padding, x_pos[-1]+x_padding)
     
     plt.tight_layout()
     plt.show()
