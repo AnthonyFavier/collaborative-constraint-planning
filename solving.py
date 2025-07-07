@@ -930,25 +930,25 @@ def humanc(problemname, timeout):
 ## MAIN + CLI ##
 ################
 
-@click.group()
+@click.group(help=f'{[p for p in problems]}')
 def cli():
     pass
 
-@cli.command()
+@cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
-@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+@click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
 def randomc_command(timeout: int, problemname: str):
     randomc(problemname, timeout)
 
-@cli.command()
+@cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
-@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+@click.option('-p', '--problamname', 'problemname', default=PROBLEM_NAME)
 def original_command(timeout: int, problemname: str):
     original(problemname, timeout)
     
-@cli.command()
+@cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
-@click.option('--problemname', 'problemname', default=PROBLEM_NAME)
+@click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
 def humanc_command(timeout: int, problemname: str):
     humanc(problemname, timeout)
 
