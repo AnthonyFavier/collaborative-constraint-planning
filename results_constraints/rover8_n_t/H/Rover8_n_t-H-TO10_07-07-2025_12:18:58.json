@@ -1,0 +1,99 @@
+{
+    "seed": 0,
+    "timeout": 10,
+    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
+    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl",
+    "generated_constraints": {
+        "SIMPLE": [
+            "Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m))))",
+            "Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3))))",
+            "Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))"
+        ],
+        "AND": [
+            "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))))",
+            "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "(Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m))))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "compilation_time": 15.438227415084839,
+            "planning_time": 1.0967254638671875e-05,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3))))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "compilation_time": 15.628570795059204,
+            "planning_time": 3.337860107421875e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "compilation_time": 16.12095069885254,
+            "planning_time": 2.6226043701171875e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "compilation_time": 15.646746635437012,
+            "planning_time": 3.5762786865234375e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "compilation_time": 15.665669918060303,
+            "planning_time": 3.0994415283203125e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "(Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "compilation_time": 16.119699001312256,
+            "planning_time": 3.337860107421875e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "result": "failed",
+            "compilation_time": 16.700045824050903,
+            "planning_time": 2.86102294921875e-06,
+            "plan": "",
+            "planlength": -1,
+            "metric": -1,
+            "reason": "No time budget"
+        }
+    ],
+    "elapsed": "0:01:54"
+}
