@@ -478,8 +478,12 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 #############################################################
     ## PREPARE PLOT DATA ##
     unsolvable = data_random[-1]['success']['Unsolvable']
-    # timeout_values = [int(d['timeout']) for d in data_random_all_seeds].sort() # Might be missing some...
-    timeout_values = [1, 3, 5, 10, 15, 30]
+    timeout_values = set()
+    timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_random]))
+    timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_original]))
+    timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_h]))
+    timeout_values = list(timeout_values)
+    timeout_values.sort()
     x_pos = np.arange(len(timeout_values)) 
     
     # With random constraints data
