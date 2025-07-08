@@ -236,7 +236,7 @@ def extract_result_h(filename, show=False):
         elif t['constraint_type']=="AND":
             ands.append(t)
             
-    compilation_times = [t['compilation_time'] for t in tests] if 'compilation_time' in tests[0] else [0]
+    compilation_times = [t['compilation_time'] if t['compilation_time']<raw_data['timeout'] else raw_data['timeout'] for t in tests]
     planning_times = [t['planning_time'] for t in tests] if 'planning_time' in tests[0] else [0]
     translation_times = [t['translation_time'] for t in tests] if 'translation_time' in tests[0] else [0]
             
@@ -372,8 +372,9 @@ def extract_all_seeds(filenames, show=False):
                 
     # for each timeout value, compute values
     for timeout in all_data:
-        all_data[timeout]['compilation_time_mean'] = float(np.array([t['compilation_time'] for t in all_data[timeout]['tests']]).mean())
-        all_data[timeout]['compilation_time_std'] = float(np.array([t['compilation_time'] for t in all_data[timeout]['tests']]).std())
+        compilation_times = np.array([t['compilation_time'] if t['compilation_time']<timeout else timeout for t in all_data[timeout]['tests']])
+        all_data[timeout]['compilation_time_mean'] = float(compilation_times.mean())
+        all_data[timeout]['compilation_time_std'] = float(compilation_times.std())
         all_data[timeout]['planning_time_mean'] = float(np.array([t['planning_time'] for t in all_data[timeout]['tests'] if t['reason']!='Unsolvable Problem']).mean())
         all_data[timeout]['planning_time_std'] = float(np.array([t['planning_time'] for t in all_data[timeout]['tests'] if t['reason']!='Unsolvable Problem']).std())
         if all_data[timeout]['successful']!=[]:
