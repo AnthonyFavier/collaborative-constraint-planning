@@ -477,6 +477,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     data_h = [extract_result_h(f) for f in all_files_H]
     
 #############################################################
+    WITH_RANDOM = True
+    
     ## PREPARE PLOT DATA ##
     unsolvable = data_random[-1]['success']['Unsolvable']
     timeout_values = set()
@@ -485,6 +487,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_h]))
     timeout_values = list(timeout_values)
     timeout_values.sort()
+    timeout_values = [t for t in timeout_values if t<=30]
+    # timeout_values = [t for t in timeout_values if t>30]
     x_pos = np.arange(len(timeout_values)) 
     
     # With random constraints data
@@ -492,9 +496,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     plot_metric_random_pos = []
     for i,d in enumerate(data_random):
         if 'metrics' in d:
-            plot_metric_random_data.append(d['metrics']['all'])
             for j in range(len(timeout_values)):
                 if d['timeout']==timeout_values[j]:
+                    plot_metric_random_data.append(d['metrics']['all'])
                     plot_metric_random_pos.append(j)
                     break
     if plot_metric_random_data==[]:
@@ -507,9 +511,9 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     plot_metric_original_pos = []
     for i,d in enumerate(data_original):
         if 'metrics' in d:
-            plot_metric_original_data.append(d['metrics']['all'])
             for j in range(len(timeout_values)):
                 if d['timeout']==timeout_values[j]:
+                    plot_metric_original_data.append(d['metrics']['all'])
                     plot_metric_original_pos.append(j)
                     break
     if plot_metric_original_data==[]:
@@ -524,11 +528,11 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     print('H constraint mins:')
     for i,d in enumerate(data_h):
         if 'metrics' in d:
-            plot_metric_h_data.append(d['metrics']['all'])
-            plot_metric_all_h_data.append(d['metrics']['all'][-1])
             print('\tTO' + str(d['timeout']) + ':\tbest=' + str(np.array(d['metrics']['all']).min()) + '\tall=' + str(d['metrics']['all'][-1]))
             for j in range(len(timeout_values)):
                 if d['timeout']==timeout_values[j]:
+                    plot_metric_h_data.append(d['metrics']['all'])
+                    plot_metric_all_h_data.append(d['metrics']['all'][-1])
                     plot_metric_h_pos.append(j)
                     break
     if plot_metric_h_data==[]:
@@ -596,7 +600,6 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     durations = {
         'original':{
             'pos': [],
-            'Compilation': {'mean':[], 'std':[]},
             'Planning': {'mean':[], 'std':[]},
         },
         'random':{
@@ -615,8 +618,6 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         for d in data_original:
             if d['timeout']==timeout_values[i]:
                 durations['original']['pos'].append(i)
-                durations['original']['Compilation']['mean'].append(0)
-                durations['original']['Compilation']['std'].append(0)
                 durations['original']['Planning']['mean'].append(d['planning']['mean'])
                 durations['original']['Planning']['std'].append(d['planning']['std'])
                 break
@@ -660,12 +661,14 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     
     showfliers = False
     # offset > widths
-    offset = 0.27
     widths = 0.25
+    multiplier = -1.0 if WITH_RANDOM else -0.5
     
     # ORIGINAL
     data = plot_metric_original_data
-    positions = [x - offset for x in plot_metric_original_pos]
+    offset = (widths+0.02)*multiplier
+    multiplier+=1
+    positions = [x + offset for x in plot_metric_original_pos]
     label = 'original problem'
     if violin:
         v = axs[0].violinplot(data,
@@ -687,30 +690,35 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 capprops={"color": original_problem_color, "linewidth": 1.5}
             )
     # RANDOM
-    data = plot_metric_random_data
-    positions = [x for x in plot_metric_random_pos]
-    label = 'random constraints'
-    if violin:
-        v = axs[0].violinplot(data,
-                positions=positions,
-                widths=widths,
-                showmeans=False,
-                showmedians=True,
-            )
-        add_label(v, label)
-    else:
-        axs[0].boxplot(data, positions=positions, label=label,
-                patch_artist=True,
-                widths=widths,
-                showmeans=False, 
-                showfliers=showfliers,
-                medianprops={"color": "white", "linewidth": 0.5},
-                boxprops={"facecolor": random_constraints_color, "edgecolor": "white", "linewidth": 0.5},
-                whiskerprops={"color": random_constraints_color, "linewidth": 1.5},
-                capprops={"color": random_constraints_color, "linewidth": 1.5}
-            )
+    if WITH_RANDOM:
+        data = plot_metric_random_data
+        offset = (widths+0.02)*multiplier
+        multiplier+=1
+        positions = [x + offset for x in plot_metric_random_pos]
+        label = 'random constraints'
+        if violin:
+            v = axs[0].violinplot(data,
+                    positions=positions,
+                    widths=widths,
+                    showmeans=False,
+                    showmedians=True,
+                )
+            add_label(v, label)
+        else:
+            axs[0].boxplot(data, positions=positions, label=label,
+                    patch_artist=True,
+                    widths=widths,
+                    showmeans=False, 
+                    showfliers=showfliers,
+                    medianprops={"color": "white", "linewidth": 0.5},
+                    boxprops={"facecolor": random_constraints_color, "edgecolor": "white", "linewidth": 0.5},
+                    whiskerprops={"color": random_constraints_color, "linewidth": 1.5},
+                    capprops={"color": random_constraints_color, "linewidth": 1.5}
+                )
     # H
     data = plot_metric_h_data
+    offset = (widths+0.02)*multiplier
+    multiplier+=1
     positions = [x + offset for x in plot_metric_h_pos]
     label = 'human constraints'
     if violin:
@@ -758,7 +766,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # ORIGINAL
     axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original problem')
     # RANDOM
-    axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints')
+    if WITH_RANDOM:
+        axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints')
     # H
     axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints')
     # Params
@@ -776,23 +785,24 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 
     durations_styles = {
         'original':{
-            'Compilation': {'color': original_problem_dark_color, 'hatch': '/'},
-            'Planning': {'color': original_problem_color, 'hatch': ''},
+            'Planning': {'color': original_problem_color, 'hatch': '', 'label_color':"#000000FF"},
         },
         'random':{
-            'Compilation': {'color': random_constraints_dark_color, 'hatch': '/'},
-            'Planning': {'color': random_constraints_color, 'hatch': ''},
+            'Compilation': {'color': random_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
+            'Planning': {'color': random_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
         },
         'human':{
-            'Translation': {'color': human_constraints_trans_color, 'hatch': ''},
-            'Compilation': {'color': human_constraints_dark_color, 'hatch': '/'},
-            'Planning': {'color': human_constraints_color, 'hatch': ''},
+            'Translation': {'color': human_constraints_trans_color, 'hatch': '', 'label_color':"#000000FF"},
+            'Compilation': {'color': human_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
+            'Planning': {'color': human_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
         },
     }
 
     width = 0.25
-    multiplier = -1
+    multiplier = -1.0 if WITH_RANDOM else -0.5
     for run_type, durs in durations.items():
+        if not WITH_RANDOM and run_type=='random':
+            continue
         bottom = np.zeros(len(durs['pos']))
         offset = width * multiplier
         for duration_type, duration in durs.items():
@@ -803,7 +813,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                        color=durations_styles[run_type][duration_type]['color'],
                        hatch=durations_styles[run_type][duration_type]['hatch'])
             bottom += duration['mean']
-            axs[2].bar_label(p, fmt=duration_type[:1]+':{:.1f}', label_type='center')
+            axs[2].bar_label(p, fmt=duration_type[:1]+':{:.1f}', label_type='center', color=durations_styles[run_type][duration_type]['label_color'])
         multiplier+=1
             
     axs[2].legend(loc='upper left')
