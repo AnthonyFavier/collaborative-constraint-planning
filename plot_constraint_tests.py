@@ -646,13 +646,12 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     fig, axs = plt.subplots(3, 1, sharex=True, figsize=(15, 13))
     
     ## Colors
-    original_problem_color = '#f08080'
-    original_problem_dark_color = '#b06363'
-    random_constraints_color = '#1f77b4'
-    random_constraints_dark_color = '#275e84'
-    human_constraints_color = '#32cd32'
-    human_constraints_dark_color = '#36a336'
-    human_constraints_trans_color = "#a2ff16"
+    original_problem_color = "#f08080ff"
+    random_constraints_color = "#1f76b4ff"
+    random_constraints_dark_color = "#275d84ff"
+    human_constraints_color = "#32cd32ff"
+    human_constraints_dark_color = "#36a336ff"
+    human_constraints_trans_color = "#a2ff16ff"
     
     
     ##########################################################
