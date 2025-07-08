@@ -16,7 +16,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     - feedback: either 'success' if planning is successful, otherwise an error message
     - plan: plan computed, if successful, otherwise empty string
     """
-    if timeout<=0:
+    if timeout!=None and timeout<=0:
         result = 'failed'
         plan = ''
         fail_reason = 'No time budget'
