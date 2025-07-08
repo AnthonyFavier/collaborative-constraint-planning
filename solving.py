@@ -124,11 +124,13 @@ def initializeHumanConstraintsZenotravel7(pb):
 
     # PERSON2 SHOULD NOT MOVE
     constraint = Always(pb.fluent('located')(pb.object('person2'), pb.object('city3')))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # PERSON3 SHOULD NOT MOVE
     constraint = Always(pb.fluent('located')(pb.object('person3'), pb.object('city3')))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
 
 
     # PLANES SHOULD ONLY FLY SLOWLY
@@ -136,7 +138,8 @@ def initializeHumanConstraintsZenotravel7(pb):
     c1 = Variable('c1', pb.user_type('city'))
     c2 = Variable('c2', pb.user_type('city'))
     constraint = Always(Forall( Equals(pb.fluent('n_flyfast')(a, c1, c2), 0) , a, c1, c2))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # PLANE1 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
     constraint = Always(Forall(LE(Plus(
@@ -149,7 +152,8 @@ def initializeHumanConstraintsZenotravel7(pb):
         pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city2'), c1),
         pb.fluent('n_flyfast')(pb.object('plane1'), pb.object('city3'), c1),
         ),3), c1))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # PLANE2 SHOULD NEVER FLY TO A SAME CITY MORE THAN 3 TIMES
     constraint = Always(Forall(LE(Plus(
@@ -162,12 +166,15 @@ def initializeHumanConstraintsZenotravel7(pb):
         pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city2'), c1),
         pb.fluent('n_flyfast')(pb.object('plane2'), pb.object('city3'), c1),
         ),3), c1))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     constraints_dict['AND'] = []
     for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
-            constraints_dict['AND'].append( And(x) )
+            constraints = [c[0] for c in x]
+            times = [c[1] for c in x]
+            constraints_dict['AND'].append( (And(constraints), sum(times)) )
     
     return constraints_dict
 
@@ -332,7 +339,8 @@ def initializeHumanConstraintsRover8nt(pb):
             Forall(Not(pb.fluent('have_rock_analysis')(pb.object('rover2'), w)), w),
             Forall(Not(pb.fluent('have_image')(pb.object('rover2'), o, m)), o, m),
     ))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     # ONLY ROVER3 SHOULD PERFORM THE ROCK AND SOIL ANALYSIS FOR WAYPOINT 3 AND 4
     constraint = Always(And(
@@ -348,18 +356,22 @@ def initializeHumanConstraintsRover8nt(pb):
         Not(pb.fluent('have_rock_analysis')(pb.object('rover1'), pb.object('waypoint3'))),
         Not(pb.fluent('have_rock_analysis')(pb.object('rover2'), pb.object('waypoint3'))),
     ))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     
     # ROVER3 SHOULD NEVER TAKE AN IMAGE
     constraint = Always(Forall(Not(pb.fluent('have_image')(pb.object('rover3'), o, m)), o, m))
-    constraints_dict['SIMPLE'].append(constraint)
+    duration = 0.0
+    constraints_dict['SIMPLE'].append((constraint, duration))
     
     ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
     for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
-            constraints_dict['AND'].append( And(x) )
+            constraints = [c[0] for c in x]
+            times = [c[1] for c in x]
+            constraints_dict['AND'].append( (And(constraints), sum(times)) )
     
     return constraints_dict
 
