@@ -994,6 +994,6 @@ if __name__=="__main__":
     except KeyboardInterrupt:
         print("Ctrl+C detected. Exiting...")
         # Kill ENHSP java process
-        for proc in psutil.process_iter():
-            if proc.name() == "java":
-                proc.kill()
+        # for proc in psutil.process_iter():
+        #     if proc.name() == "java":
+        #         proc.kill()
