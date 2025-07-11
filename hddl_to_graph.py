@@ -161,7 +161,51 @@ class HDDLParser:
                                                 self.graph.add_edge(method_name, sub, priority=ord)
 
                                 
+def extract_ordered_subtasks(block):
+        """
+        Extracts the content of :ordered-subtasks while ensuring parentheses match correctly.
+        Args:
+                block (str): The block of text containing :ordered-subtasks.
+        Returns:
+                List[str]: A list of subtask strings.
+        """
+        # Find the start of :ordered-subtasks
+        match = re.search(r':ordered-subtasks\s*\(', block)
+        if not match:
+                return []
 
+        # Extract the substring starting from :ordered-subtasks
+        start_index = match.end() - 1  # Position after the opening parenthesis
+        end_index = find_matching_parenthesis(block, start_index)
+
+        if end_index == -1:
+                raise ValueError("Unmatched parentheses in :ordered-subtasks block.")
+
+        # Extract the content between the matched parentheses
+        content = block[start_index + 1:end_index]
+        
+        # Extract individual subtasks enclosed in parentheses
+        subtasks = re.findall(r'\((.*?)\)', content)
+        return subtasks
+
+def find_matching_parenthesis(text, start_index):
+    """
+    Finds the index of the matching closing parenthesis for the opening parenthesis at start_index.
+    Args:
+        text (str): The text to search.
+        start_index (int): The index of the opening parenthesis.
+    Returns:
+        int: The index of the matching closing parenthesis, or -1 if unmatched.
+    """
+    stack = 0
+    for i in range(start_index, len(text)):
+        if text[i] == '(':
+            stack += 1
+        elif text[i] == ')':
+            stack -= 1
+            if stack == 0:
+                return i
+    return -1  # No matching closing parenthesis found
 
 def extract_priority_from_subtasks_and_ordering(block):
         '''
