@@ -1,8 +1,8 @@
 {
     "seed": 0,
     "timeout": 3,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl",
     "generated_constraints": {
         "EXPRESSIONS": [
             "(not on_board(camera3, rover0))",

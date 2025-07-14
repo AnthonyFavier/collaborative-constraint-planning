@@ -446,59 +446,59 @@ def initializeHumanConstraintsWoodworking7(pb):
 
 problems = {
     'Woodworking7': [    
-        '/home/afavier/CAI/domain.pddl',
-        '/home/afavier/CAI/p07.pddl',
+        '/home/afavier/ws/CAI/domain.pddl',
+        '/home/afavier/ws/CAI/p07.pddl',
         ['goalsize', 'boardsize-successor', 'has-colour', 'contains-part', 'grind-treatment-change', 'is-smooth', 'spray-varnish-cost', 'glaze-cost', 'grind-cost', 'plane-cost'],
         initializeHumanConstraintsWoodworking7,
     ],
     'Parking283': [    
-        '/home/afavier/CAI/domain.pddl',
-        '/home/afavier/CAI/p28-3.pddl',
+        '/home/afavier/ws/CAI/domain.pddl',
+        '/home/afavier/ws/CAI/p28-3.pddl',
         [],
         initializeHumanConstraintsWoodworking7,
     ],
     'ZenoTravel13': [    
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel13,
     ],
     'ZenoTravel7': [    
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel7,
     ],
     'ZenoTravel10': [    
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel10,
     ],
     'Rover13': [
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile13.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
         initializeHumanConstraintsRover13,
     ],
     'Rover8_n': [
     # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
         initializeHumanConstraintsRover8n,
     ],
     'Rover8_n_t': [
     # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
         initializeHumanConstraintsRover8nt,
     ],
     'Rover10_n_t': [
     # Comment: Can't find a valid in within 15min, neither using anytime or sat-hmrph. But can find a 55 long solution with just 5 TO and random constraints
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl',
-        '/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl',
         ['in', 'empty', 'have_rock_analysis', 'have_soil_analysis', 'full', 'calibrated', 'available', 'have_image', 'communicated_soil_data', 'communicated_rock_data', 'communicated_image_data', 'energy', 'recharges'],
         initializeHumanConstraintsRover10nt,
     ],

@@ -1,8 +1,8 @@
 {
     "seed": 2902480765646109827,
     "timeout": 15,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
     "generated_constraints": {
         "EXPRESSIONS": [
             "(n_board(person8, plane1, city3) == 0)",

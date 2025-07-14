@@ -1,8 +1,8 @@
 {
     "seed": 0,
     "timeout": 30,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl",
     "generated_constraints": {
         "SIMPLE": [
             "Always((Forall (rover r) ((r == rover0) or (not have_soil_analysis(r, waypoint4))) and (not have_rock_analysis(rover1, waypoint4)) and (not have_rock_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover3, waypoint4))))",

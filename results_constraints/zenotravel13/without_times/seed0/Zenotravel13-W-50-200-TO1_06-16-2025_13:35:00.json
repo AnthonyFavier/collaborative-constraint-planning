@@ -1,8 +1,8 @@
 {
     "seed": 0,
     "timeout": 1,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
     "generated_constraints": {
         "EXPRESSIONS": [
             "(n_debark(person7, plane1, city2) == 0)",

@@ -1,7 +1,7 @@
 {
     "timeout": 1,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl",
     "tests": [
         {
             "result": "success",

@@ -1,8 +1,8 @@
 {
     "seed": 0,
     "timeout": 30,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
     "generated_constraints": {
         "SIMPLE": [
             "Always((Forall (person - locatable p) (not in(p, plane2)) and Forall (person - locatable p) (not in(p, plane3)) and located(plane2, city2) and located(plane3, city3)))",

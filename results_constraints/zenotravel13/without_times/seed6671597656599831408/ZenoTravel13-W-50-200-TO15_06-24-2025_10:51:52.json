@@ -1,8 +1,8 @@
 {
     "seed": 6671597656599831408,
     "timeout": 15,
-    "domain": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
-    "problem": "/home/afavier/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl",
     "generated_constraints": {
         "EXPRESSIONS": [
             "(onboard(plane2) == 0)",
