@@ -75,6 +75,18 @@ Problems and options can be listed using `python main.py --help`.
 
 ---
 
+### Adding new problems
+
+To add to new problems open `defs.py` and add a new key to the `PROBLEMS` dictionary such as: 
+```
+PROBLEMS = {
+    ...
+    *existing_problems*
+    ...
+    'new_problem_name': ('Path/To/Domain.pddl', 'Path/To/Problem.pddl'),
+}
+```
+
 ### Run Planner Only
 
 You can also directly run the planner, only.
