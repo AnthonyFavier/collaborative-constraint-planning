@@ -407,14 +407,16 @@ def initializeHumanConstraintsRover10nt(pb):
             Not(pb.fluent('have_rock_analysis')(r2, w4)),
             Not(pb.fluent('have_rock_analysis')(r3, w4)),
     ))
-    constraints_dict["SIMPLE"].append(constraint)
+    duration = 11.641509294509888 + 44.54672193527222 + 15.726255416870117 + 0 + 34.23581695556640
+    constraints_dict["SIMPLE"].append((constraint, duration))
     
     # NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
     constraint = Always(And(
         Forall(Not(pb.fluent('in')(r, w2)), r),
         Forall(Not(pb.fluent('in')(r, w5)), r)
-    ))    
-    constraints_dict["SIMPLE"].append(constraint)
+    ))
+    duration = 0.8064041137695312 + 12.046087741851807 + 3.909336566925049 + 0 + 14.28100085258483
+    constraints_dict["SIMPLE"].append((constraint, duration))
             
     # ROVER3 SHOULD NEVER TAKE AN IMAGE
     constraint = Always(And(
@@ -423,17 +425,21 @@ def initializeHumanConstraintsRover10nt(pb):
             Forall(Not(pb.fluent('have_image')(r3, o, pb.object('lowres'))), o),
                             
         ))
-    constraints_dict["SIMPLE"].append(constraint)
+    duration = 40.21577548980713 + 19.244122982025146 + 8.325299739837646 + 0 + 26.8240303993225
+    constraints_dict["SIMPLE"].append((constraint, duration))
 
     # WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
     constraint = Always(pb.fluent('at_rock_sample')(w6))
-    constraints_dict["SIMPLE"].append(constraint)
+    duration = 17.851055145263672 + 18.543925762176514 + 14.049310684204102 + 0 + 9.07705426216125
+    constraints_dict["SIMPLE"].append((constraint, duration))
     
     ### Generate AND constraints from SIMPLE constraints
     constraints_dict['AND'] = []
     for i in range(2, len(constraints_dict['SIMPLE'])+1):
         for x in list(itertools.combinations(constraints_dict['SIMPLE'], i)):
-            constraints_dict['AND'].append( And(x) )
+            constraints = [c[0] for c in x]
+            times = [c[1] for c in x]
+            constraints_dict['AND'].append( (And(constraints), sum(times)) )
 
     return constraints_dict
 
