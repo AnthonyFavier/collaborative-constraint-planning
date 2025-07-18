@@ -525,16 +525,18 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     plot_metric_h_data = []
     plot_metric_all_h_data = []
     plot_metric_h_pos = []
-    print('H constraint mins:')
+    lines = []
     for i,d in enumerate(data_h):
         if 'metrics' in d:
-            print('\tTO' + str(d['timeout']) + ':\tbest=' + str(np.array(d['metrics']['all']).min()) + '\tall=' + str(d['metrics']['all'][-1]))
+            lines.append( (d['timeout'], np.array(d['metrics']['all']).min(), d['metrics']['all'][-1]) )
             for j in range(len(timeout_values)):
                 if d['timeout']==timeout_values[j]:
                     plot_metric_h_data.append(d['metrics']['all'])
                     plot_metric_all_h_data.append(d['metrics']['all'][-1])
                     plot_metric_h_pos.append(j)
                     break
+    lines.sort(key=lambda x: x[0])
+    print('H constraint mins:\n' + "\n".join(['\tTO' + str(l[0]) + ':\tbest=' + str(l[1]) + '\tall=' + str(l[2]) for l in lines]))
     if plot_metric_h_data==[]:
         plot_metric_h_data = [np.nan]
     if plot_metric_h_pos==[]:
