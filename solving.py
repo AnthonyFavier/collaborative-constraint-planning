@@ -8,7 +8,6 @@ from NumericTCORE.bin.ntcore import main as ntcore
 from planner import planner
 import json
 from progress.bar import IncrementalBar
-import psutil
 from datetime import datetime
 
 import typing
@@ -27,7 +26,7 @@ import time
 PROBLEM_NAME = 'Rover8_n_t'
 # ZenoTravel13, Rover13, Rover8_n, Rover8_n_t, Rover10_n_t, ZenoTravel7, ZenoTravel10, Woodworking7
 
-NB_EXPRESSION =         20
+NB_EXPRESSION =         10
 NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
 NB_CONSTRAINT_AND2 =    NB_EXPRESSION
 NB_CONSTRAINT_AND3 =    NB_EXPRESSION
@@ -557,6 +556,32 @@ class MyIterator:
 ##########################
 ## GENERATE CONSTRAINTS ##
 ##########################
+def make_random_expression(changing_fluents, original_problem, names_of_constants):
+            
+    # pick random changing fluent
+    fluent:upFluent = pickRandom(changing_fluents)
+    
+    # randomly ground fluent
+    objects = []
+    for p in fluent.signature:
+        p:upParameter
+        valid_objects = list(original_problem.objects(p.type))
+        objects.append(pickRandom(valid_objects))
+    grounded_fluent = fluent(*objects)
+    
+    # make expression with initial value
+    if isinstance(grounded_fluent.type, upReal):
+        initial_value = original_problem.initial_values[grounded_fluent]
+        exp = Equals(grounded_fluent, initial_value)
+    elif isinstance(grounded_fluent.type, upBool):
+        initial_value = original_problem.initial_values[grounded_fluent]
+        if initial_value.constant_value():
+            exp = grounded_fluent
+        else:
+            exp = Not(grounded_fluent)
+            
+    return exp
+                
 def generate_constraints(original_problem, names_of_constants):
     # Select only changing fluents (not constants)
     changing_fluents = []
@@ -564,132 +589,55 @@ def generate_constraints(original_problem, names_of_constants):
         if not f.name in names_of_constants:
             changing_fluents.append(f)
             
-    # EXPRESSIONS
-    expressions = []
-    for i in range(NB_EXPRESSION):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            # pick random changing fluent
-            fluent:upFluent = pickRandom(changing_fluents)
-            
-            # randomly ground fluent
-            objects = []
-            for p in fluent.signature:
-                p:upParameter
-                valid_objects = list(original_problem.objects(p.type))
-                objects.append(pickRandom(valid_objects))
-            grounded_fluent = fluent(*objects)
-            
-            # make expression with initial value
-            if isinstance(grounded_fluent.type, upReal):
-                initial_value = original_problem.initial_values[grounded_fluent]
-                exp = Equals(grounded_fluent, initial_value)
-            elif isinstance(grounded_fluent.type, upBool):
-                initial_value = original_problem.initial_values[grounded_fluent]
-                if initial_value.constant_value():
-                    exp = grounded_fluent
-                else:
-                    exp = Not(grounded_fluent)
-                    
-            # check if already present, if so retry until new 
-            if not exp in expressions:
-                keep_picking = False
-                expressions.append(exp)
-            
-            # If too many retry, stop to avoid infite loop in case already picked all possibilities
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("EXPRESSION: Too many retry to pick expression: Probably already picked all...")
-    
     constraints_dict = {}
+    expressions = []
     
     # SIMPLE
-    constraints_SIMPLE = []
+    constraints_dict['SIMPLE'] = []
     for i in range(NB_CONSTRAINT_SIMPLE):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            exp = pickRandom(expressions)
-            constraint = Always(exp)
-            if not constraint in constraints_SIMPLE:
-                keep_picking = False
-                constraints_SIMPLE.append(constraint)
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("SIMPLE: Too many retry to pick expression: Probably already picked all...")
-    constraints_dict['SIMPLE'] = constraints_SIMPLE
+        exp = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        constraint = Always(exp)
+        constraints_dict['SIMPLE'].append(constraint)
+        expressions += [exp]
          
     # AND2   
-    constraints_AND2 = []
+    constraints_dict['AND2'] = []
     for i in range(NB_CONSTRAINT_AND2):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            e1, e2 = pick2Random(expressions)
-            constraint = Always(And(e1, e2))
-            if not constraint in constraints_AND2:
-                keep_picking = False
-                constraints_AND2.append(constraint)
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("AND2: Too many retry to pick expression: Probably already picked all...")
-    constraints_dict['AND2'] = constraints_AND2
+        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        constraint = Always(And(e1, e2))
+        constraints_dict['AND2'].append(constraint)
+        expressions += [e1, e2]
              
     # AND3
-    constraints_AND3 = []
+    constraints_dict['AND3'] = []
     for i in range(NB_CONSTRAINT_AND3):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            e1, e2, e3 = pick3Random(expressions)
-            constraint = Always(And(e1, e2, e3))
-            if not constraint in constraints_AND3:
-                keep_picking = False
-                constraints_AND3.append(constraint)
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("AND3: Too many retry to pick expression: Probably already picked all...")
-    constraints_dict['AND3'] = constraints_AND3
-    
+        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e3 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        constraint = Always(And(e1, e2, e3))
+        constraints_dict['AND3'].append(constraint)
+        expressions += [e1, e2, e3]
+        
     # OR2    
-    constraints_OR2 = []
+    constraints_dict['OR2'] = []
     for i in range(NB_CONSTRAINT_OR2):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            e1, e2 = pick2Random(expressions)
-            constraint = Always(Or(e1, e2))
-            if not constraint in constraints_OR2:
-                keep_picking = False
-                constraints_OR2.append(constraint)
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("OR2: Too many retry to pick expression: Probably already picked all...")
-    constraints_dict['OR2'] = constraints_OR2
-    
+        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        constraint = Always(Or(e1, e2))
+        constraints_dict['OR2'].append(constraint)
+        expressions += [e1, e2]
+        
     # OR3                
-    constraints_OR3 = []
+    constraints_dict['OR3'] = []
     for i in range(NB_CONSTRAINT_OR3):
-        keep_picking = True
-        n_retry = 0
-        while keep_picking:
-            e1, e2, e3 = pick3Random(expressions)
-            constraint = Always(Or(e1, e2, e3))
-            if not constraint in constraints_OR3:
-                keep_picking = False
-                constraints_OR3.append(constraint)
-            else:
-                n_retry+=1
-                if n_retry==MAX_RETRY_PICK:
-                    raise Exception("OR3: Too many retry to pick expression: Probably already picked all...")
-    constraints_dict['OR3'] = constraints_OR3
-    
+        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e3 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        constraint = Always(Or(e1, e2, e3))
+        constraints_dict['OR3'].append(constraint)
+        expressions += [e1, e2, e3]
+        
     return expressions, constraints_dict
 
 ###########
