@@ -696,7 +696,7 @@ def generate_constraints(original_problem, names_of_constants):
 ## SOLVE ##
 ###########
 
-def randomc(problemname, timeout):
+def randomc(problemname, timeout, hideprogressbar=False):
     run_name = f"{problemname}-W-{NB_EXPRESSION}-{NB_TEST}-TO{timeout}"
     print(run_name)
     
@@ -734,73 +734,77 @@ def randomc(problemname, timeout):
     # Tests
     all_results['tests'] = []
     itType = iter(MyIterator(constraints_dict))
-    with IncrementalBar('Processsing', max=NB_TEST, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
-        for i in range(NB_TEST):
-            
+    t_elapsed = time.time()
+    if not hideprogressbar:
+        bar = IncrementalBar('Processsing', max=NB_TEST, suffix = '%(percent).1f%% - ETA %(eta_td)s')
+    for i in range(NB_TEST):
+        
+        if not hideprogressbar:
             bar.start()
-            test = {}
-            
-            # Get current type and pickRandom of this type
-            type_name, type_list = next(itType)
+        test = {}
+        
+        # Get current type and pickRandom of this type
+        type_name, type_list = next(itType)
+        picked_constraint = pickRandom(type_list)
+        n_retry = 1
+        while str(picked_constraint) in [t['constraint'] for t in all_results['tests']]:
+            if n_retry>MAX_RETRY_PICK:
+                raise Exception("MAX_RETRY_PICK reached")
             picked_constraint = pickRandom(type_list)
-            n_retry = 1
-            while str(picked_constraint) in [t['constraint'] for t in all_results['tests']]:
-                if n_retry>MAX_RETRY_PICK:
-                    raise Exception("MAX_RETRY_PICK reached")
-                picked_constraint = pickRandom(type_list)
-                n_retry+=1
-            test['constraint'] = str(picked_constraint)
-            test['constraint_type'] = type_name
-            all_results['tests'].append(test)
+            n_retry+=1
+        test['constraint'] = str(picked_constraint)
+        test['constraint_type'] = type_name
+        all_results['tests'].append(test)
+        
+        # Update problem with constraint
+        new_problem = original_problem.clone()
+        new_problem.add_trajectory_constraint(picked_constraint)
+
+        # Write new problem with up
+        problem_name = filename.replace('.json', '')
+        w = PDDLWriter(new_problem)
+        w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
+        w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
+
+        # Compile
+        test['result'] = 'Compiling...'
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
+        t1_compile = time.time()
+        ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+        t2_compile = time.time()
+        compile_duration = t2_compile-t1_compile
+        test['compilation_time'] = compile_duration
+
+        # Plan
+        test['result'] = 'Planning...'
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
+        PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+        t1_plan = time.time()
+        result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
+        t2_plan = time.time()
+        plan_duration = round(t2_plan-t1_plan, 5)
+        test['planning_time'] = plan_duration
+
+        # Get Metric
+        test['result'] = result
+        test['plan'] = plan
+        test['planlength'] = planlength
+        test['metric'] = metric
+        test['reason'] = fail_reason
             
-            # Update problem with constraint
-            new_problem = original_problem.clone()
-            new_problem.add_trajectory_constraint(picked_constraint)
-
-            # Write new problem with up
-            problem_name = filename.replace('.json', '')
-            w = PDDLWriter(new_problem)
-            w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
-            w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
-
-            # Compile
-            test['result'] = 'Compiling...'
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
-            t1_compile = time.time()
-            ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-            t2_compile = time.time()
-            compile_duration = t2_compile-t1_compile
-            test['compilation_time'] = compile_duration
-
-            # Plan
-            test['result'] = 'Planning...'
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
-            PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
-            t1_plan = time.time()
-            result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
-            t2_plan = time.time()
-            plan_duration = round(t2_plan-t1_plan, 5)
-            test['planning_time'] = plan_duration
-
-            # Get Metric
-            test['result'] = result
-            test['plan'] = plan
-            test['planlength'] = planlength
-            test['metric'] = metric
-            test['reason'] = fail_reason
-                
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
-                
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
+            
+        if not hideprogressbar:
             bar.next()
     
-        all_results['elapsed'] = str(bar.elapsed_td)
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
     
-def original(problemname, timeout):
+def original(problemname, timeout, hideprogressbar=False):
     
     run_name = f"{problemname}-WO-{NB_WO}-TO{timeout}"
     print(run_name)
@@ -821,44 +825,49 @@ def original(problemname, timeout):
 
 
     all_results['tests'] = []
-    with IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
-        for i in range(NB_WO):
+    t_elapsed = time.time()
+    if not hideprogressbar:
+        bar = IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s')
+    for i in range(NB_WO):
+        if not hideprogressbar:
             bar.start()
-            test = {}
-            all_results['tests'].append(test)
+        test = {}
+        all_results['tests'].append(test)
+        
+        # plan
+        test['result'] = 'Planning...'
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
+        PROBLEMS[run_name] = (domain, problem)
+        t1_plan = time.time()
+        result, plan, planlength, metric, fail_reason = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout)
+        t2_plan = time.time()
+        plan_duration = t2_plan-t1_plan
+        test['planning_time'] = plan_duration
+        
+        test['result'] = result
+        test['reason'] = fail_reason
+        test['plan'] = plan
+        test['planlength'] = planlength
+        test['metric'] = metric
             
-            # plan
-            test['result'] = 'Planning...'
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
-            PROBLEMS[run_name] = (domain, problem)
-            t1_plan = time.time()
-            result, plan, planlength, metric, fail_reason = planner(run_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout)
-            t2_plan = time.time()
-            plan_duration = t2_plan-t1_plan
-            test['planning_time'] = plan_duration
+        with open(path+filename, 'w') as f:
+            f.write(json.dumps(all_results, indent=4))
             
-            test['result'] = result
-            test['reason'] = fail_reason
-            test['plan'] = plan
-            test['planlength'] = planlength
-            test['metric'] = metric
-                
-            with open(path+filename, 'w') as f:
-                f.write(json.dumps(all_results, indent=4))
-                
+        if not hideprogressbar:
             bar.next()
     
-        all_results['elapsed'] = str(bar.elapsed_td)
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
-def humanc(problemname, timeout, remove_translation_time=False):
+def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=False):
     if not remove_translation_time:
         run_name = f"{problemname}-H-TO{timeout}"
     else:
         run_name = f"{problemname}-HT-TO{timeout}"
-    print(run_name)
+    if not hideprogressbar:
+        print(run_name)
     
     # Parse original problem
     reader = PDDLReader()
@@ -894,72 +903,77 @@ def humanc(problemname, timeout, remove_translation_time=False):
     # Tests
     all_results['tests'] = []
     N_TOTAL = len(constraints_dict['SIMPLE'])+len(constraints_dict['AND'])
-    with IncrementalBar(f'Processsing', max=N_TOTAL, suffix = '%(percent).1f%% - ETA %(eta_td)s') as bar:
-        for type_name in constraints_dict:
-            type_list = constraints_dict[type_name]
-            for picked_constraint in type_list:
-                
-                translation_duration = picked_constraint[1] if remove_translation_time else 0.0
-                picked_constraint = picked_constraint[0]
-                
+    t_elapsed = time.time()
+    if not hideprogressbar:
+        bar =  IncrementalBar(f'Processsing', max=N_TOTAL, suffix = '%(percent).1f%% - ETA %(eta_td)s')
+    for type_name in constraints_dict:
+        type_list = constraints_dict[type_name]
+        for picked_constraint in type_list:
+            
+            translation_duration = picked_constraint[1] if remove_translation_time else 0.0
+            picked_constraint = picked_constraint[0]
+            
+            if not hideprogressbar:
                 bar.start()
-                test = {}
-                
-                # Get current type and pickRandom of this type
-                test['constraint'] = str(picked_constraint)
-                test['constraint_type'] = type_name
-                all_results['tests'].append(test)
-                test['translation_time'] = translation_duration
-                
-                # Update problem with constraint
-                new_problem = original_problem.clone()
-                new_problem.add_trajectory_constraint(picked_constraint)
+            test = {}
+            
+            # Get current type and pickRandom of this type
+            test['constraint'] = str(picked_constraint)
+            test['constraint_type'] = type_name
+            all_results['tests'].append(test)
+            test['translation_time'] = translation_duration
+            
+            # Update problem with constraint
+            new_problem = original_problem.clone()
+            new_problem.add_trajectory_constraint(picked_constraint)
 
-                # Write new problem with up
-                problem_name = filename.replace('.json', '')
-                w = PDDLWriter(new_problem)
-                w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
-                w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
+            # Write new problem with up
+            problem_name = filename.replace('.json', '')
+            w = PDDLWriter(new_problem)
+            w.write_domain(f'tmp/{problem_name}_updated_domain.pddl')
+            w.write_problem(f'tmp/{problem_name}_updated_problem.pddl')
 
-                # Compile
-                test['result'] = 'Compiling...'
-                with open(path+filename, 'w') as f:
-                    f.write(json.dumps(all_results, indent=4))
-                t1_compile = time.time()
-                ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
-                t2_compile = time.time()
-                compile_duration = t2_compile-t1_compile
-                test['compilation_time'] = compile_duration
+            # Compile
+            test['result'] = 'Compiling...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
+            t1_compile = time.time()
+            ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+            t2_compile = time.time()
+            compile_duration = t2_compile-t1_compile
+            test['compilation_time'] = compile_duration
+            
+            # Plan
+            test['result'] = 'Planning...'
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
+            PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+            t1_plan = time.time()
+            compile_duration=0.0
+            result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration-translation_duration)
+            t2_plan = time.time()
+            plan_duration = t2_plan-t1_plan
+            test['planning_time'] = plan_duration
+
+            # Get Metric
+            test['result'] = result
+            test['plan'] = plan
+            test['planlength'] = planlength
+            test['metric'] = metric
+            test['reason'] = fail_reason
                 
-                # Plan
-                test['result'] = 'Planning...'
-                with open(path+filename, 'w') as f:
-                    f.write(json.dumps(all_results, indent=4))
-                PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
-                t1_plan = time.time()
-                result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration-translation_duration)
-                t2_plan = time.time()
-                plan_duration = t2_plan-t1_plan
-                test['planning_time'] = plan_duration
-
-                # Get Metric
-                test['result'] = result
-                test['plan'] = plan
-                test['planlength'] = planlength
-                test['metric'] = metric
-                test['reason'] = fail_reason
-                    
-                with open(path+filename, 'w') as f:
-                    f.write(json.dumps(all_results, indent=4))
-                    
+            with open(path+filename, 'w') as f:
+                f.write(json.dumps(all_results, indent=4))
+                
+            if not hideprogressbar:
                 bar.next()
         
-        all_results['elapsed'] = str(bar.elapsed_td)
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         with open(path+filename, 'w') as f:
             f.write(json.dumps(all_results, indent=4))
 
-def h_translation(problemname, timeout):
-    humanc(problemname, timeout, remove_translation_time=True)
+def h_translation(problemname, timeout, hideprogressbar=False):
+    humanc(problemname, timeout, remove_translation_time=True, hideprogressbar=hideprogressbar)
 
 ################
 ## MAIN + CLI ##
@@ -972,27 +986,30 @@ def cli():
 @cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
 @click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
-def randomc_command(timeout: int, problemname: str):
-    randomc(problemname, timeout)
+@click.option('--hideprogressbar', 'hideprogressbar', is_flag=True, default=False)
+def randomc_command(timeout: int, problemname: str, hideprogressbar: bool):
+    randomc(problemname, timeout, hideprogressbar)
 
 @cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
 @click.option('-p', '--problamname', 'problemname', default=PROBLEM_NAME)
-def original_command(timeout: int, problemname: str):
-    original(problemname, timeout)
+@click.option('--hideprogressbar', 'hideprogressbar', is_flag=True, default=False)
+def original_command(timeout: int, problemname: str, hideprogressbar: bool):
+    original(problemname, timeout, hideprogressbar)
     
 @cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
 @click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
-def humanc_command(timeout: int, problemname: str):
-    humanc(problemname, timeout)
+@click.option('--hideprogressbar', 'hideprogressbar', is_flag=True, default=False)
+def humanc_command(timeout: int, problemname: str, hideprogressbar: bool):
+    humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=hideprogressbar)
 
-    
 @cli.command(help=f'{[p for p in problems]}')
 @click.argument('timeout', default=1)
 @click.option('-p', '--problemname', 'problemname', default=PROBLEM_NAME)
-def h_translation_command(timeout: int, problemname: str):
-    h_translation(problemname, timeout)
+@click.option('--hideprogressbar', 'hideprogressbar', is_flag=True, default=False)
+def h_translation_command(timeout: int, problemname: str, hideprogressbar: bool):
+    h_translation(problemname, timeout, hideprogressbar=hideprogressbar)
 
 if __name__=="__main__":
     try:
