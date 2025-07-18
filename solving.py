@@ -646,7 +646,8 @@ def generate_constraints(original_problem, names_of_constants):
 
 def randomc(problemname, timeout, hideprogressbar=False):
     run_name = f"{problemname}-W-{NB_EXPRESSION}-{NB_TEST}-TO{timeout}"
-    print(run_name)
+    if not hideprogressbar:
+        print(run_name)
     
     # Parse original problem
     reader = PDDLReader()
@@ -755,7 +756,8 @@ def randomc(problemname, timeout, hideprogressbar=False):
 def original(problemname, timeout, hideprogressbar=False):
     
     run_name = f"{problemname}-WO-{NB_WO}-TO{timeout}"
-    print(run_name)
+    if not hideprogressbar:
+        print(run_name)
     
     domain = problems[problemname][0]
     problem = problems[problemname][1]
