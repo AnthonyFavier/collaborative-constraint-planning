@@ -1,5 +1,5 @@
 import solving
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import time
 from datetime import datetime
 
@@ -9,9 +9,13 @@ def job(problem, mode, time_budget, id, max_id):
     t0 = time.time()
     
     time_formatted = '[' + datetime.now().strftime("%H:%M:%S") + ']'
-    print(time_formatted + " Start - ", job_name)
+    print(time_formatted + " Start - " + job_name)
     
-    solving.cli([mode, '-p', problem, str(time_budget), '--hideprogressbar'])
+    try:
+        solving.cli([mode, '-p', problem, str(time_budget), '--hideprogressbar'])
+    except SystemExit as err:
+        if err.code:
+            raise
     # time.sleep(time_budget)
     
     t1 = time.time()
@@ -33,13 +37,15 @@ for problem in problems:
         for tb in time_budgets:
             job_list.append([problem, mode, tb, id, max_id])
             id+=1
-    
+for problem in problems:
+    solving.init_global_constraints(problem)
+
 # Use a thread pool with max 6 workers
 max_workers = 6
-with ThreadPoolExecutor(max_workers=max_workers) as executor:
+with ProcessPoolExecutor(max_workers=max_workers) as executor:
     futures = [executor.submit(job, *job_params) for job_params in job_list]
-
-    # Optionally wait for all to complete and get results
+    remaining = len(job_list)
     for future in as_completed(futures):
-        result = future.result()
-        # print(result)
+        remaining -= 1
+        time_formatted = '[' + datetime.now().strftime("%H:%M:%S") + ']'
+        print(time_formatted + "\t> " + str(remaining) + " jobs remaining")

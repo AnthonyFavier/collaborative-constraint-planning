@@ -556,30 +556,40 @@ class MyIterator:
 ##########################
 ## GENERATE CONSTRAINTS ##
 ##########################
-def make_random_expression(changing_fluents, original_problem, names_of_constants):
-            
-    # pick random changing fluent
-    fluent:upFluent = pickRandom(changing_fluents)
+def make_random_expression(changing_fluents, original_problem, expressions):
     
-    # randomly ground fluent
-    objects = []
-    for p in fluent.signature:
-        p:upParameter
-        valid_objects = list(original_problem.objects(p.type))
-        objects.append(pickRandom(valid_objects))
-    grounded_fluent = fluent(*objects)
-    
-    # make expression with initial value
-    if isinstance(grounded_fluent.type, upReal):
-        initial_value = original_problem.initial_values[grounded_fluent]
-        exp = Equals(grounded_fluent, initial_value)
-    elif isinstance(grounded_fluent.type, upBool):
-        initial_value = original_problem.initial_values[grounded_fluent]
-        if initial_value.constant_value():
-            exp = grounded_fluent
-        else:
-            exp = Not(grounded_fluent)
-            
+    i=0
+    while i<MAX_RETRY_PICK:
+        # pick random changing fluent
+        fluent:upFluent = pickRandom(changing_fluents)
+        
+        # randomly ground fluent
+        objects = []
+        for p in fluent.signature:
+            p:upParameter
+            valid_objects = list(original_problem.objects(p.type))
+            objects.append(pickRandom(valid_objects))
+        grounded_fluent = fluent(*objects)
+        
+        # make expression with initial value
+        if isinstance(grounded_fluent.type, upReal):
+            initial_value = original_problem.initial_values[grounded_fluent]
+            exp = Equals(grounded_fluent, initial_value)
+        elif isinstance(grounded_fluent.type, upBool):
+            initial_value = original_problem.initial_values[grounded_fluent]
+            if initial_value.constant_value():
+                exp = grounded_fluent
+            else:
+                exp = Not(grounded_fluent)
+                
+        # Only go out if not already in expressions
+        if not exp in expressions:
+            break
+        elif i+1==MAX_RETRY_PICK:
+            raise Exception("make_random_expression: MAX_RETRY_PICK reached")
+        i+=1
+        
+    expressions.append(exp)
     return exp
                 
 def generate_constraints(original_problem, names_of_constants):
@@ -595,7 +605,7 @@ def generate_constraints(original_problem, names_of_constants):
     # SIMPLE
     constraints_dict['SIMPLE'] = []
     for i in range(NB_CONSTRAINT_SIMPLE):
-        exp = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        exp = make_random_expression(changing_fluents, original_problem, expressions)
         constraint = Always(exp)
         constraints_dict['SIMPLE'].append(constraint)
         expressions += [exp]
@@ -603,8 +613,8 @@ def generate_constraints(original_problem, names_of_constants):
     # AND2   
     constraints_dict['AND2'] = []
     for i in range(NB_CONSTRAINT_AND2):
-        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e1 = make_random_expression(changing_fluents, original_problem, expressions)
+        e2 = make_random_expression(changing_fluents, original_problem, expressions)
         constraint = Always(And(e1, e2))
         constraints_dict['AND2'].append(constraint)
         expressions += [e1, e2]
@@ -612,9 +622,9 @@ def generate_constraints(original_problem, names_of_constants):
     # AND3
     constraints_dict['AND3'] = []
     for i in range(NB_CONSTRAINT_AND3):
-        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e3 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e1 = make_random_expression(changing_fluents, original_problem, expressions)
+        e2 = make_random_expression(changing_fluents, original_problem, expressions)
+        e3 = make_random_expression(changing_fluents, original_problem, expressions)
         constraint = Always(And(e1, e2, e3))
         constraints_dict['AND3'].append(constraint)
         expressions += [e1, e2, e3]
@@ -622,8 +632,8 @@ def generate_constraints(original_problem, names_of_constants):
     # OR2    
     constraints_dict['OR2'] = []
     for i in range(NB_CONSTRAINT_OR2):
-        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e1 = make_random_expression(changing_fluents, original_problem, expressions)
+        e2 = make_random_expression(changing_fluents, original_problem, expressions)
         constraint = Always(Or(e1, e2))
         constraints_dict['OR2'].append(constraint)
         expressions += [e1, e2]
@@ -631,14 +641,35 @@ def generate_constraints(original_problem, names_of_constants):
     # OR3                
     constraints_dict['OR3'] = []
     for i in range(NB_CONSTRAINT_OR3):
-        e1 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e2 = make_random_expression(changing_fluents, original_problem, names_of_constants)
-        e3 = make_random_expression(changing_fluents, original_problem, names_of_constants)
+        e1 = make_random_expression(changing_fluents, original_problem, expressions)
+        e2 = make_random_expression(changing_fluents, original_problem, expressions)
+        e3 = make_random_expression(changing_fluents, original_problem, expressions)
         constraint = Always(Or(e1, e2, e3))
         constraints_dict['OR3'].append(constraint)
         expressions += [e1, e2, e3]
         
     return expressions, constraints_dict
+
+g_expressions = {}
+g_constraints_dict = {}
+def init_global_constraints(problemname):
+    global g_expressions, g_constraints_dict
+    random.seed(SEED)
+    
+    print(f"Generates random constraints for {problemname} with seed={SEED} ... ", end='', flush=True)
+    reader = PDDLReader()
+    domain = problems[problemname][0]
+    problem = problems[problemname][1]
+    names_of_constants = problems[problemname][2]
+    original_problem: upProblem = reader.parse_problem(domain, problem) 
+    
+    # Check if original problem has no constraints
+    if original_problem.trajectory_constraints!=[]:
+        raise Exception('Already some constraints in original problem')
+    
+    g_expressions[problemname], g_constraints_dict[problemname] = generate_constraints(original_problem, names_of_constants)
+        
+    print('Done')
 
 ###########
 ## SOLVE ##
@@ -649,11 +680,10 @@ def randomc(problemname, timeout, hideprogressbar=False):
     if not hideprogressbar:
         print(run_name)
     
-    # Parse original problem
+    # # Parse original problem
     reader = PDDLReader()
     domain = problems[problemname][0]
     problem = problems[problemname][1]
-    names_of_constants = problems[problemname][2]
     original_problem: upProblem = reader.parse_problem(domain, problem) 
 
     # Check if original problem has no constraints
@@ -672,8 +702,11 @@ def randomc(problemname, timeout, hideprogressbar=False):
     with open(path+filename, 'w') as f:
         f.write(json.dumps(all_results, indent=4))
 
-    # Generate constraints
-    expressions, constraints_dict = generate_constraints(original_problem, names_of_constants)
+    # Init constraints
+    if problemname not in g_constraints_dict:
+        init_global_constraints(problemname)
+    expressions = g_expressions[problemname]
+    constraints_dict = g_constraints_dict[problemname]
     all_results['generated_constraints'] = {'EXPRESSIONS': [str(e) for e in expressions]}
     for k,l in constraints_dict.items():
         all_results['generated_constraints'][k] = [str(c) for c in l]
@@ -681,9 +714,13 @@ def randomc(problemname, timeout, hideprogressbar=False):
         f.write(json.dumps(all_results, indent=4))
 
     # Tests
-    all_results['tests'] = []
-    itType = iter(MyIterator(constraints_dict))
     t_elapsed = time.time()
+    all_results['tests'] = []
+    all_results['general_status'] = 'in progress'
+    with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
+        f.write(json.dumps(all_results, indent=4))
+    itType = iter(MyIterator(constraints_dict))
     if not hideprogressbar:
         bar = IncrementalBar('Processsing', max=NB_TEST, suffix = '%(percent).1f%% - ETA %(eta_td)s')
     for i in range(NB_TEST):
@@ -718,6 +755,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         # Compile
         test['result'] = 'Compiling...'
         with open(path+filename, 'w') as f:
+            all_results['elapsed'] = str(time.time()-t_elapsed)
             f.write(json.dumps(all_results, indent=4))
         t1_compile = time.time()
         ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
@@ -728,6 +766,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         # Plan
         test['result'] = 'Planning...'
         with open(path+filename, 'w') as f:
+            all_results['elapsed'] = str(time.time()-t_elapsed)
             f.write(json.dumps(all_results, indent=4))
         PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
         t1_plan = time.time()
@@ -742,15 +781,17 @@ def randomc(problemname, timeout, hideprogressbar=False):
         test['planlength'] = planlength
         test['metric'] = metric
         test['reason'] = fail_reason
-            
         with open(path+filename, 'w') as f:
+            all_results['elapsed'] = str(time.time()-t_elapsed)
             f.write(json.dumps(all_results, indent=4))
             
         if not hideprogressbar:
             bar.next()
     
-    all_results['elapsed'] = str(time.time()-t_elapsed)
+        
+    all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         f.write(json.dumps(all_results, indent=4))
     
 def original(problemname, timeout, hideprogressbar=False):
@@ -758,7 +799,7 @@ def original(problemname, timeout, hideprogressbar=False):
     run_name = f"{problemname}-WO-{NB_WO}-TO{timeout}"
     if not hideprogressbar:
         print(run_name)
-    
+
     domain = problems[problemname][0]
     problem = problems[problemname][1]
     
@@ -775,7 +816,11 @@ def original(problemname, timeout, hideprogressbar=False):
 
 
     all_results['tests'] = []
+    all_results['general_status'] = 'in progress'
     t_elapsed = time.time()
+    with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
+        f.write(json.dumps(all_results, indent=4))
     if not hideprogressbar:
         bar = IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s')
     for i in range(NB_WO):
@@ -787,6 +832,7 @@ def original(problemname, timeout, hideprogressbar=False):
         # plan
         test['result'] = 'Planning...'
         with open(path+filename, 'w') as f:
+            all_results['elapsed'] = str(time.time()-t_elapsed)
             f.write(json.dumps(all_results, indent=4))
         PROBLEMS[run_name] = (domain, problem)
         t1_plan = time.time()
@@ -802,13 +848,15 @@ def original(problemname, timeout, hideprogressbar=False):
         test['metric'] = metric
             
         with open(path+filename, 'w') as f:
+            all_results['elapsed'] = str(time.time()-t_elapsed)
             f.write(json.dumps(all_results, indent=4))
             
         if not hideprogressbar:
             bar.next()
     
-    all_results['elapsed'] = str(time.time()-t_elapsed)
+    all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         f.write(json.dumps(all_results, indent=4))
 
 def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=False):
@@ -851,9 +899,13 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
         f.write(json.dumps(all_results, indent=4))
 
     # Tests
-    all_results['tests'] = []
-    N_TOTAL = len(constraints_dict['SIMPLE'])+len(constraints_dict['AND'])
     t_elapsed = time.time()
+    all_results['tests'] = []
+    all_results['general_status'] = 'in progress'
+    with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
+        f.write(json.dumps(all_results, indent=4))
+    N_TOTAL = len(constraints_dict['SIMPLE'])+len(constraints_dict['AND'])
     if not hideprogressbar:
         bar =  IncrementalBar(f'Processsing', max=N_TOTAL, suffix = '%(percent).1f%% - ETA %(eta_td)s')
     for type_name in constraints_dict:
@@ -886,6 +938,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             # Compile
             test['result'] = 'Compiling...'
             with open(path+filename, 'w') as f:
+                all_results['elapsed'] = str(time.time()-t_elapsed)
                 f.write(json.dumps(all_results, indent=4))
             t1_compile = time.time()
             ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
@@ -896,6 +949,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             # Plan
             test['result'] = 'Planning...'
             with open(path+filename, 'w') as f:
+                all_results['elapsed'] = str(time.time()-t_elapsed)
                 f.write(json.dumps(all_results, indent=4))
             PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
             t1_plan = time.time()
@@ -913,15 +967,17 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             test['reason'] = fail_reason
                 
             with open(path+filename, 'w') as f:
+                all_results['elapsed'] = str(time.time()-t_elapsed)
                 f.write(json.dumps(all_results, indent=4))
                 
             if not hideprogressbar:
                 bar.next()
         
-    all_results['elapsed'] = str(time.time()-t_elapsed)
+    all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
+        all_results['elapsed'] = str(time.time()-t_elapsed)
         f.write(json.dumps(all_results, indent=4))
-
+            
 def h_translation(problemname, timeout, hideprogressbar=False):
     humanc(problemname, timeout, remove_translation_time=True, hideprogressbar=hideprogressbar)
 
