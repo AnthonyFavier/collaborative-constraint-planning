@@ -22,7 +22,7 @@ def extract_result_without_constraint(filename, show=False):
     # EXTRACTION
     tests = []
     for t in raw_data['tests']:
-        if t['result'] in ['sucess', 'failed']:
+        if t['result'] in ['success', 'failed']:
             tests.append(t)
     successful = []
     timeout = []
@@ -98,7 +98,7 @@ def extract_result_h(filename, show=False):
     # EXTRACTION
     tests = []
     for t in raw_data['tests']:
-        if t['result'] in ['sucess', 'failed']:
+        if t['result'] in ['success', 'failed']:
             tests.append(t)
     successful = []
     timeout = []
@@ -218,7 +218,7 @@ def extract_all_seeds(filenames, show=False):
         
         tests = []
         for t in raw_data['tests']:
-            if t['result'] in ['sucess', 'failed']:
+            if t['result'] in ['success', 'failed']:
                 tests.append(t)
                 
         timeout = raw_data['timeout']
