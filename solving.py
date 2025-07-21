@@ -749,9 +749,9 @@ def randomc(problemname, timeout, hideprogressbar=False):
         if not hideprogressbar:
             bar.next()
     
-        all_results['elapsed'] = str(time.time()-t_elapsed)
-        with open(path+filename, 'w') as f:
-            f.write(json.dumps(all_results, indent=4))
+    all_results['elapsed'] = str(time.time()-t_elapsed)
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(all_results, indent=4))
     
 def original(problemname, timeout, hideprogressbar=False):
     
@@ -807,9 +807,9 @@ def original(problemname, timeout, hideprogressbar=False):
         if not hideprogressbar:
             bar.next()
     
-        all_results['elapsed'] = str(time.time()-t_elapsed)
-        with open(path+filename, 'w') as f:
-            f.write(json.dumps(all_results, indent=4))
+    all_results['elapsed'] = str(time.time()-t_elapsed)
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(all_results, indent=4))
 
 def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=False):
     if not remove_translation_time:
@@ -918,9 +918,9 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             if not hideprogressbar:
                 bar.next()
         
-        all_results['elapsed'] = str(time.time()-t_elapsed)
-        with open(path+filename, 'w') as f:
-            f.write(json.dumps(all_results, indent=4))
+    all_results['elapsed'] = str(time.time()-t_elapsed)
+    with open(path+filename, 'w') as f:
+        f.write(json.dumps(all_results, indent=4))
 
 def h_translation(problemname, timeout, hideprogressbar=False):
     humanc(problemname, timeout, remove_translation_time=True, hideprogressbar=hideprogressbar)
