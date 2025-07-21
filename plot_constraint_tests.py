@@ -7,145 +7,23 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from defs import startWith
 
-
-def extract_result_with_constraint(filename, show=False):
-    print(f'File: {filename}')
-    with open(filename, 'r') as f:
-        raw_data = json.loads(f.read())
-        
-    if 'elapsed' not in raw_data:
-        raise Exception(f"{filename} was interrupted!")
-    
-    data = {}
-    
-    # EXTRACTION
-    tests = raw_data['tests']
-    successful = []
-    timeout = []
-    unsolvable = []
-    simple = []
-    and2 = []
-    and3 = []
-    or2 = []
-    or3 = []
-    for t in tests:
-        if t['result']=='success':
-            successful.append(t)
-        elif t['reason']=='Timeout':
-            timeout.append(t)
-        elif t['reason']=='Unsolvable Problem':
-            unsolvable.append(t)
-            
-        if t['constraint_type']=="SIMPLE":
-            simple.append(t)
-        elif t['constraint_type']=="AND2":
-            and2.append(t)
-        elif t['constraint_type']=="AND3":
-            and3.append(t)
-        elif t['constraint_type']=="OR2":
-            or2.append(t)
-        elif t['constraint_type']=="OR3":
-            or3.append(t)
-            
-    compilation_times = np.array([t['compilation_time'] for t in tests]) if 'compilation_time' in tests[0] else np.array([-1])
-    planning_times = np.array([t['planning_time'] for t in tests]) if 'planning_time' in tests[0] else np.array([-1])
-            
-    if successful!=[]:
-        metrics = np.array([t['metric'] for t in successful])
-        mean = metrics.mean()
-        std = metrics.std()
-        min_metric = metrics.min()
-    else:
-        metrics = -1
-        mean = -1
-        std = -1
-        min_metric = -1
-        
-    
-    constraints = [t['constraint'] for t in tests]
-    my_dict = {x:constraints.count(x) for x in constraints}
-    repeated = 0
-    for k,n in my_dict.items():
-        if n>1:
-            print(f'\t{n}: {k}')
-            repeated+=1
-        
-    if raw_data['general_status']!='completed':
-        raise Exception(f'Extract: {filename} has been interrupted.')
-    elapsed = raw_data['elapsed']
-    
-    # SAVE extracted
-    data['seeds'] = [raw_data['seed']]
-    data['timeout'] = raw_data['timeout']
-    data['Repeated'] = 100*repeated/len(tests)
-    data['Type_repartition'] = {
-        'SIMPLE': 100*len(simple)/len(tests),
-        'AND2': 100*len(and2)/len(tests),
-        'AND3': 100*len(and3)/len(tests),
-        'OR2': 100*len(or2)/len(tests),
-        'OR3': 100*len(or3)/len(tests),
-    }
-    data['compilation'] = {
-        'times': compilation_times,
-        'mean': compilation_times.mean(),
-        'std': compilation_times.std(),
-        'min': compilation_times.min(),
-        'max': compilation_times.max(),
-    }
-    data['planning'] = {
-        'times': planning_times,
-        'mean': planning_times.mean(),
-        'std': planning_times.std(),
-        'min': planning_times.min(),
-        'max': planning_times.max(),
-    }
-    data['success'] = {
-            'ratio': 100*len(successful)/len(tests),
-            'Timeout': 100*len(timeout)/len(tests),
-            'Unsolvable': 100*len(unsolvable)/len(tests),
-    }
-    if successful!=[]:
-        data['metrics'] = {
-            'all': metrics,
-            'mean': mean,
-            'std': std,
-            'best': min_metric
-        }
-    data['elapsed'] = elapsed
-    
-    # PRINT
-    if show:
-        print(f"Repeated = {data['Repeated']:.1f}%")
-        print('Constraint types:')
-        print('\tSIMPLE: ' + '{:.1f}'.format(data['Type_repartition']['SIMPLE']) + '%')
-        print('\tAND2: ' + '{:.1f}'.format(data['Type_repartition']['AND2']) + '%')
-        print('\tAND3: ' + '{:.1f}'.format(data['Type_repartition']['AND3']) + '%')
-        print('\tOR2: ' + '{:.1f}'.format(data['Type_repartition']['OR2']) + '%')
-        print('\tOR3: ' + '{:.1f}'.format(data['Type_repartition']['OR3']) + '%')
-        print('Compilation = ' + '{:.1f}'.format(data['compilation']['mean']) + '+-' + '{:.1f} s'.format(data['compilation']['std']))
-        print('Planning = ' + '{:.1f}'.format(data['planning']['mean']) + '+-' + '{:.1f} s'.format(data['planning']['std']))
-        print('Success = ' + '{:.1f}'.format(data['success']['ratio']) + '%')
-        print('\tTimeout = ' + '{:.1f}'.format(data['success']['Timeout']) + ' %')
-        print('\tUnsolvable = ' + '{:.1f}'.format(data['success']['Unsolvable']) + '%')
-        if successful!=[]:
-            print('Metric = ' + '{:.1f}'.format(data['metrics']['mean']) + '+-' + '{:.1f}'.format(data['metrics']['std']))
-            print('Best = ' + '{:.1f}'.format(data['metrics']['best']))
-        print('Elasped = ' + data['elapsed'])
-    
-    return data
+ASSERT_IF_INTERRUPTED = False
 
 def extract_result_without_constraint(filename, show=False):
     print(f'File: {filename}')
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
-        
-    if 'elapsed' not in raw_data:
-        raise Exception(f"{filename} was interrupted!")
+    
+    if ASSERT_IF_INTERRUPTED and raw_data['general_status']!='completed':
+        raise Exception(f'Extract: {filename} has been interrupted.')
     
     data = {}
     
     # EXTRACTION
-    tests = raw_data['tests']
+    tests = []
+    for t in raw_data['tests']:
+        if t['result'] in ['sucess', 'failed']:
+            tests.append(t)
     successful = []
     timeout = []
     unsolvable = []
@@ -170,9 +48,6 @@ def extract_result_without_constraint(filename, show=False):
         std = -1
         min_metric = -1
         
-    if raw_data['general_status']!='completed':
-        raise Exception(f'Extract: {filename} has been interrupted.')
-    elapsed = raw_data['elapsed']
     
     # SAVE extracted
     data['timeout'] = raw_data['timeout']
@@ -195,7 +70,7 @@ def extract_result_without_constraint(filename, show=False):
             'std': std,
             'best': min_metric
         }
-    data['elapsed'] = elapsed
+    data['elapsed'] = raw_data['elapsed']
     
     # PRINT
     if show:
@@ -215,14 +90,16 @@ def extract_result_h(filename, show=False):
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
         
-    if raw_data['general_status']!='completed':
+    if ASSERT_IF_INTERRUPTED and raw_data['general_status']!='completed':
         raise Exception(f'Extract: {filename} has been interrupted.')
-    elapsed = raw_data['elapsed']
     
     data = {}
     
     # EXTRACTION
-    tests = raw_data['tests']
+    tests = []
+    for t in raw_data['tests']:
+        if t['result'] in ['sucess', 'failed']:
+            tests.append(t)
     successful = []
     timeout = []
     unsolvable = []
@@ -306,7 +183,7 @@ def extract_result_h(filename, show=False):
             'std': std,
             'best': min_metric
         }
-    data['elapsed'] = elapsed
+    data['elapsed'] = raw_data['elapsed']
     
     # PRINT
     if show:
@@ -336,9 +213,14 @@ def extract_all_seeds(filenames, show=False):
         with open(filename, 'r') as f:
             raw_data = json.loads(f.read())
             
-        if 'elapsed' not in raw_data:
-            raise Exception(f"{filename} was interrupted!")
-            
+        if ASSERT_IF_INTERRUPTED and raw_data['general_status']!='completed':
+            raise Exception(f'Extract: {filename} has been interrupted.')
+        
+        tests = []
+        for t in raw_data['tests']:
+            if t['result'] in ['sucess', 'failed']:
+                tests.append(t)
+                
         timeout = raw_data['timeout']
         if timeout not in all_data:
             all_data[timeout] = {
@@ -356,7 +238,7 @@ def extract_all_seeds(filenames, show=False):
             all_data[timeout]['seeds'].append(seed)
             
         # Check if not already in all_data[timeout] tests
-        for t in raw_data['tests']:
+        for t in tests:
             constraints_already_present = [t['constraint'] for t in all_data[timeout]['tests']]
             if t['constraint'] not in constraints_already_present:
                 all_data[timeout]['tests'].append(t)
