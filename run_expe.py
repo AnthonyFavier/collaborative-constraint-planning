@@ -5,18 +5,18 @@ from datetime import datetime
 
 # job function
 def job(problem, mode, time_budget, id, max_id):
-    job_name = f"Job{id}/{max_id} " + "-".join([problem, mode, str(time_budget)])
+    job_name = f"Job:{id}/{max_id} " + "-".join([problem, mode, str(time_budget)])
     t0 = time.time()
     
     time_formatted = '[' + datetime.now().strftime("%H:%M:%S") + ']'
-    print(time_formatted + " Start: ", job_name)
+    print(time_formatted + " Start - ", job_name)
     
     solving.cli([mode, '-p', problem, str(time_budget), '--hideprogressbar'])
     # time.sleep(time_budget)
     
     t1 = time.time()
     time_formatted = '[' + datetime.now().strftime("%H:%M:%S") + ']'
-    print(time_formatted + " Completed: " + job_name + f" [{t1-t0:.1f}s]")
+    print(time_formatted + " Completed - " + job_name + f" [{t1-t0:.1f}s]")
     return None
 
 # Create job list
