@@ -542,6 +542,8 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         plot_metric_h_data = [np.nan]
     if plot_metric_h_pos==[]:
         plot_metric_h_pos = [np.nan]
+    if plot_metric_all_h_data==[]:
+        plot_metric_all_h_data = [np.nan]
         
     # Relevant info extraction
     # find global min and max
