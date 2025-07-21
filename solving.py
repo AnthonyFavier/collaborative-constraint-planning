@@ -718,7 +718,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
     all_results['tests'] = []
     all_results['general_status'] = 'in progress'
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
     itType = iter(MyIterator(constraints_dict))
     if not hideprogressbar:
@@ -755,7 +755,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         # Compile
         test['result'] = 'Compiling...'
         with open(path+filename, 'w') as f:
-            all_results['elapsed'] = str(time.time()-t_elapsed)
+            all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
         t1_compile = time.time()
         ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
@@ -766,7 +766,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         # Plan
         test['result'] = 'Planning...'
         with open(path+filename, 'w') as f:
-            all_results['elapsed'] = str(time.time()-t_elapsed)
+            all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
         PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
         t1_plan = time.time()
@@ -782,7 +782,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         test['metric'] = metric
         test['reason'] = fail_reason
         with open(path+filename, 'w') as f:
-            all_results['elapsed'] = str(time.time()-t_elapsed)
+            all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
             
         if not hideprogressbar:
@@ -791,7 +791,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         
     all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
     
 def original(problemname, timeout, hideprogressbar=False):
@@ -819,7 +819,7 @@ def original(problemname, timeout, hideprogressbar=False):
     all_results['general_status'] = 'in progress'
     t_elapsed = time.time()
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
     if not hideprogressbar:
         bar = IncrementalBar('Processsing', max=NB_WO, suffix = '%(percent).1f%% - ETA %(eta_td)s')
@@ -832,7 +832,7 @@ def original(problemname, timeout, hideprogressbar=False):
         # plan
         test['result'] = 'Planning...'
         with open(path+filename, 'w') as f:
-            all_results['elapsed'] = str(time.time()-t_elapsed)
+            all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
         PROBLEMS[run_name] = (domain, problem)
         t1_plan = time.time()
@@ -848,7 +848,7 @@ def original(problemname, timeout, hideprogressbar=False):
         test['metric'] = metric
             
         with open(path+filename, 'w') as f:
-            all_results['elapsed'] = str(time.time()-t_elapsed)
+            all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
             
         if not hideprogressbar:
@@ -856,7 +856,7 @@ def original(problemname, timeout, hideprogressbar=False):
     
     all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
 
 def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=False):
@@ -903,7 +903,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
     all_results['tests'] = []
     all_results['general_status'] = 'in progress'
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
     N_TOTAL = len(constraints_dict['SIMPLE'])+len(constraints_dict['AND'])
     if not hideprogressbar:
@@ -938,7 +938,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             # Compile
             test['result'] = 'Compiling...'
             with open(path+filename, 'w') as f:
-                all_results['elapsed'] = str(time.time()-t_elapsed)
+                all_results['elapsed'] = time.time()-t_elapsed
                 f.write(json.dumps(all_results, indent=4))
             t1_compile = time.time()
             ntcore(f'tmp/{problem_name}_updated_domain.pddl', f'tmp/{problem_name}_updated_problem.pddl', "tmp/", filename=problem_name, achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
@@ -949,7 +949,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             # Plan
             test['result'] = 'Planning...'
             with open(path+filename, 'w') as f:
-                all_results['elapsed'] = str(time.time()-t_elapsed)
+                all_results['elapsed'] = time.time()-t_elapsed
                 f.write(json.dumps(all_results, indent=4))
             PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
             t1_plan = time.time()
@@ -967,7 +967,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             test['reason'] = fail_reason
                 
             with open(path+filename, 'w') as f:
-                all_results['elapsed'] = str(time.time()-t_elapsed)
+                all_results['elapsed'] = time.time()-t_elapsed
                 f.write(json.dumps(all_results, indent=4))
                 
             if not hideprogressbar:
@@ -975,7 +975,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
         
     all_results['general_status'] = 'completed'
     with open(path+filename, 'w') as f:
-        all_results['elapsed'] = str(time.time()-t_elapsed)
+        all_results['elapsed'] = time.time()-t_elapsed
         f.write(json.dumps(all_results, indent=4))
             
 def h_translation(problemname, timeout, hideprogressbar=False):
