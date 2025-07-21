@@ -794,7 +794,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints')
     # Params
     axs[1].axhline(y=100, color="green", linestyle="--")
-    axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
+    # axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
     axs[1].set(ylim=(0, 110))
     axs[1].set_ylabel("Success ratio (%)")
     axs[1].set_xlabel("Timeout (s)")
@@ -899,6 +899,5 @@ def H_command(filename: str):
     extract_result_h(filename)
     
 if __name__=='__main__':
+    # sys.argv += ['several', 'new_zeno13']
     cli()
-    ## Below for debugging ##
-    # several('zenotravel13', 'all', 'WO', 'H', False)

@@ -26,7 +26,7 @@ import time
 PROBLEM_NAME = 'Rover8_n_t'
 # ZenoTravel13, Rover13, Rover8_n, Rover8_n_t, Rover10_n_t, ZenoTravel7, ZenoTravel10, Woodworking7
 
-NB_EXPRESSION =         10
+NB_EXPRESSION =         6
 NB_CONSTRAINT_SIMPLE =  NB_EXPRESSION
 NB_CONSTRAINT_AND2 =    NB_EXPRESSION
 NB_CONSTRAINT_AND3 =    NB_EXPRESSION
@@ -676,6 +676,8 @@ def init_global_constraints(problemname):
 ###########
 
 def randomc(problemname, timeout, hideprogressbar=False):
+    random.seed(SEED)
+    
     run_name = f"{problemname}-W-{NB_EXPRESSION}-{NB_TEST}-TO{timeout}"
     if not hideprogressbar:
         print(run_name)
@@ -795,6 +797,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         f.write(json.dumps(all_results, indent=4))
     
 def original(problemname, timeout, hideprogressbar=False):
+    random.seed(SEED)
     
     run_name = f"{problemname}-WO-{NB_WO}-TO{timeout}"
     if not hideprogressbar:
@@ -860,6 +863,8 @@ def original(problemname, timeout, hideprogressbar=False):
         f.write(json.dumps(all_results, indent=4))
 
 def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=False):
+    random.seed(SEED)
+    
     if not remove_translation_time:
         run_name = f"{problemname}-H-TO{timeout}"
     else:

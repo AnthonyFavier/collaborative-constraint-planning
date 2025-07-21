@@ -5,6 +5,7 @@ from datetime import datetime
 
 # job function
 def job(problem, mode, time_budget, id, max_id):
+    time.sleep(0.1)
     job_name = f"Job:{id}/{max_id} " + "-".join([problem, mode, str(time_budget)])
     t0 = time.time()
     
@@ -16,7 +17,6 @@ def job(problem, mode, time_budget, id, max_id):
     except SystemExit as err:
         if err.code:
             raise
-    # time.sleep(time_budget)
     
     t1 = time.time()
     time_formatted = '[' + datetime.now().strftime("%H:%M:%S") + ']'
@@ -27,21 +27,22 @@ def job(problem, mode, time_budget, id, max_id):
 modes = ['original', 'randomc', 'h-translation']
 problems = ['Rover10_n_t']
 time_budgets = [60, 90, 120, 200, 300, 400]
-# time_budgets = [1, 2, 3, 4]
-max_id = len(modes)*len(problems)*len(time_budgets)
+max_id = len(modes)*len(problems)*len(time_budgets)+1
 
 job_list = []
-id = 0
+id = 1
 for problem in problems:
     for mode in modes:
         for tb in time_budgets:
             job_list.append([problem, mode, tb, id, max_id])
             id+=1
+          
+# Init global constraints  
 for problem in problems:
     solving.init_global_constraints(problem)
 
-# Use a thread pool with max 6 workers
-max_workers = 6
+# Use a process pool with max 10 workers
+max_workers = 10
 with ProcessPoolExecutor(max_workers=max_workers) as executor:
     futures = [executor.submit(job, *job_params) for job_params in job_list]
     remaining = len(job_list)
