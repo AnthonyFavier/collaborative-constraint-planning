@@ -69,8 +69,10 @@ def extract_result_with_constraint(filename, show=False):
         if n>1:
             print(f'\t{n}: {k}')
             repeated+=1
-            
-    elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
+        
+    if raw_data['general_status']!='completed':
+        raise Exception(f'Extract: {filename} has been interrupted.')
+    elapsed = raw_data['elapsed']
     
     # SAVE extracted
     data['seeds'] = [raw_data['seed']]
@@ -168,7 +170,9 @@ def extract_result_without_constraint(filename, show=False):
         std = -1
         min_metric = -1
         
-    elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
+    if raw_data['general_status']!='completed':
+        raise Exception(f'Extract: {filename} has been interrupted.')
+    elapsed = raw_data['elapsed']
     
     # SAVE extracted
     data['timeout'] = raw_data['timeout']
@@ -211,8 +215,9 @@ def extract_result_h(filename, show=False):
     with open(filename, 'r') as f:
         raw_data = json.loads(f.read())
         
-    if 'elapsed' not in raw_data:
-        raise Exception(f"{filename} was interrupted!")
+    if raw_data['general_status']!='completed':
+        raise Exception(f'Extract: {filename} has been interrupted.')
+    elapsed = raw_data['elapsed']
     
     data = {}
     
@@ -260,8 +265,6 @@ def extract_result_h(filename, show=False):
             print(f'\t{n}: {k}')
             repeated+=1
             
-    elapsed = raw_data['elapsed'] if 'elapsed' in raw_data else 'Interrupted'
-    
     # SAVE extracted
     data['seeds'] = [raw_data['seed']]
     data['timeout'] = raw_data['timeout']
@@ -366,9 +369,7 @@ def extract_all_seeds(filenames, show=False):
             else:
                 all_data[timeout]['repeated']+=1
         
-        h,m,s = [int(x) for x in raw_data['elapsed'].split(':')]
-        elapsed_seconds = h*3600 + m*60 + s
-        all_data[timeout]['elapsed'].append(elapsed_seconds)
+        all_data[timeout]['elapsed'].append(raw_data['elapsed'])
                 
     # for each timeout value, compute values
     for timeout in all_data:
