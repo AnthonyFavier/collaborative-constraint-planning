@@ -40,7 +40,7 @@ for problem in problems:
 all_problems = set()
 for j in job_list:
     if j[0] not in all_problems:
-        all_problems.union(set([j[0]]))
+        all_problems = all_problems.union(set([j[0]]))
 for problem in all_problems:
     solving.init_global_constraints(problem)
 
