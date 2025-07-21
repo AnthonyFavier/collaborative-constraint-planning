@@ -241,7 +241,7 @@ def extract_result_h(filename, show=False):
         elif t['constraint_type']=="AND":
             ands.append(t)
             
-    compilation_times = [t['compilation_time'] if t['compilation_time']<raw_data['timeout'] else raw_data['timeout'] for t in tests]
+    compilation_times = [t['compilation_time'] for t in tests]
     planning_times = [t['planning_time'] for t in tests] if 'planning_time' in tests[0] else [0]
     translation_times = [t['translation_time'] for t in tests] if 'translation_time' in tests[0] else [0]
             
@@ -373,7 +373,7 @@ def extract_all_seeds(filenames, show=False):
                 
     # for each timeout value, compute values
     for timeout in all_data:
-        compilation_times = np.array([t['compilation_time'] if t['compilation_time']<timeout else timeout for t in all_data[timeout]['tests']])
+        compilation_times = np.array([t['compilation_time'] for t in all_data[timeout]['tests']])
         all_data[timeout]['compilation_time_mean'] = float(compilation_times.mean())
         all_data[timeout]['compilation_time_std'] = float(compilation_times.std())
         all_data[timeout]['planning_time_mean'] = float(np.array([t['planning_time'] for t in all_data[timeout]['tests'] if t['reason']!='Unsolvable Problem']).mean())
@@ -602,6 +602,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 break
             
     # Durations
+    WITH_CROP = False
     durations = {
         'original':{
             'pos': [],
@@ -629,18 +630,35 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         for d in data_random:
             if d['timeout']==timeout_values[i]:
                 durations['random']['pos'].append(i)
-                durations['random']['Compilation']['mean'].append(d['compilation_time_mean'])
-                durations['random']['Compilation']['std'].append(d['compilation_time_std'])
+                
+                if not WITH_CROP or d['compilation_time_mean']<d['timeout']:
+                    durations['random']['Compilation']['mean'].append(d['compilation_time_mean'])
+                    durations['random']['Compilation']['std'].append(d['compilation_time_std'])
+                else:
+                    durations['random']['Compilation']['mean'].append(d['timeout'])
+                    durations['random']['Compilation']['std'].append(0)
+                    
                 durations['random']['Planning']['mean'].append(d['planning_time_mean'])
                 durations['random']['Planning']['std'].append(d['planning_time_std'])
                 break
         for d in data_h:
             if d['timeout']==timeout_values[i]:
                 durations['human']['pos'].append(i)
-                durations['human']['Translation']['mean'].append(d['translation']['mean'])
-                durations['human']['Translation']['std'].append(d['translation']['std'])
-                durations['human']['Compilation']['mean'].append(d['compilation']['mean'])
-                durations['human']['Compilation']['std'].append(d['compilation']['std'])
+                
+                if not WITH_CROP or d['translation']['mean']<d['timeout']:
+                    durations['human']['Translation']['mean'].append(d['translation']['mean'])
+                    durations['human']['Translation']['std'].append(d['translation']['std'])
+                else:
+                    durations['human']['Translation']['mean'].append(d['timeout'])
+                    durations['human']['Translation']['std'].append(0)
+                    
+                if not WITH_CROP or d['translation']['mean'] + d['compilation']['mean']<d['timeout']:
+                    durations['human']['Compilation']['mean'].append(d['compilation']['mean'])
+                    durations['human']['Compilation']['std'].append(d['compilation']['std'])
+                else:
+                    durations['human']['Compilation']['mean'].append(d['timeout']-d['translation']['mean'] if d['timeout']-d['translation']['mean']>0 else 0)
+                    durations['human']['Compilation']['std'].append(0)
+                
                 durations['human']['Planning']['mean'].append(d['planning']['mean'])
                 durations['human']['Planning']['std'].append(d['planning']['std'])
                 break
