@@ -395,6 +395,17 @@ def initializeHumanConstraintsRover10nt(pb):
     w5 = pb.object('waypoint5')
     w6 = pb.object('waypoint6')
     
+    #   - ROVER2 SHOULD NEVER BE USED
+    constraint = Always(And(
+        pb.fluent('in')(r2, w3),
+        Not(pb.fluent('have_rock_analysis')(r2, w3)),
+        Not(pb.fluent('have_soil_analysis')(r2, w3)),
+        Not(pb.fluent('calibrated')(pb.object('camera4'), r2)),
+    ))
+    duration = 0
+    constraints_dict["SIMPLE"].append((constraint, duration))
+    
+    
     # ROVER0 SHOULD HANDLE SOIL AND ROCK DATA FROM WAYPOINT4
     constraint = Always(And(
             Forall(Or(
@@ -407,29 +418,37 @@ def initializeHumanConstraintsRover10nt(pb):
             Not(pb.fluent('have_rock_analysis')(r3, w4)),
     ))
     duration = 11.641509294509888 + 44.54672193527222 + 15.726255416870117 + 0 + 34.23581695556640
+    duration = 0
     constraints_dict["SIMPLE"].append((constraint, duration))
     
     # NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
-    constraint = Always(And(
-        Forall(Not(pb.fluent('in')(r, w2)), r),
-        Forall(Not(pb.fluent('in')(r, w5)), r)
-    ))
+    constraint = Always(Forall(And(
+                    Not(pb.fluent('in')(r, w2)),
+                    Not(pb.fluent('in')(r, w5))), r)
+                )
     duration = 0.8064041137695312 + 12.046087741851807 + 3.909336566925049 + 0 + 14.28100085258483
+    duration = 0
     constraints_dict["SIMPLE"].append((constraint, duration))
             
-    # ROVER3 SHOULD NEVER TAKE AN IMAGE
-    constraint = Always(And(
-            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('colour'))), o),
-            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('highres'))), o),
-            Forall(Not(pb.fluent('have_image')(r3, o, pb.object('lowres'))), o),
-                            
-        ))
-    duration = 40.21577548980713 + 19.244122982025146 + 8.325299739837646 + 0 + 26.8240303993225
+
+#   - ROVER1 SHOULD TAKE ALL IMAGE
+    constraint = Always(
+            Forall( 
+                    Or(Equals(r, r1),
+                       And(
+                        Not(pb.fluent('have_image')(r, o, pb.object('colour'))),
+                        Not(pb.fluent('have_image')(r, o, pb.object('lowres'))),
+                        Not(pb.fluent('have_image')(r, o, pb.object('highres'))),
+                       )
+                    ), 
+            r, o))
+    duration = 0
     constraints_dict["SIMPLE"].append((constraint, duration))
 
     # WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
     constraint = Always(pb.fluent('at_rock_sample')(w6))
     duration = 17.851055145263672 + 18.543925762176514 + 14.049310684204102 + 0 + 9.07705426216125
+    duration = 0
     constraints_dict["SIMPLE"].append((constraint, duration))
     
     ### Generate AND constraints from SIMPLE constraints
