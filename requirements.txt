@@ -11,3 +11,4 @@ pyperclip
 progress
 matplotlib
 numpy
+jsonpickle
