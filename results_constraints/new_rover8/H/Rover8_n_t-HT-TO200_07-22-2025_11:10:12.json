@@ -1,0 +1,107 @@
+{
+    "seed": 0,
+    "timeout": 200,
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",
+    "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl",
+    "generated_constraints": {
+        "SIMPLE": [
+            "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))), 0.0)",
+            "(Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))), 0.0)",
+            "(Always(Forall (objective o, mode m) (not have_image(rover3, o, m))), 0.0)"
+        ],
+        "AND": [
+            "((Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3))))), 0.0)",
+            "((Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))), 0.0)",
+            "((Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))), 0.0)",
+            "((Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))), 0.0)"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m))))",
+            "constraint_type": "SIMPLE",
+            "translation_time": 0.0,
+            "result": "success",
+            "compilation_time": 22.650646448135376,
+            "planning_time": 200.12435173988342,
+            "plan": "0.0: (navigate_rover0_waypoint2_waypoint4)\n1.0: (calibrate_rover1_camera2_objective0_waypoint2)\n2.0: (samplerock_rover0_rover0store_waypoint4)\n3.0: (communicaterockdata_rover0_general_waypoint4_waypoint4_waypoint0)\n4.0: (samplesoil_rover3_rover3store_waypoint3)\n5.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n6.0: (drop_rover3_rover3store)\n7.0: (drop_rover0_rover0store)\n8.0: (samplesoil_rover0_rover0store_waypoint4)\n9.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n10.0: (navigate_rover3_waypoint3_waypoint0)\n11.0: (navigate_rover3_waypoint0_waypoint1)\n12.0: (samplesoil_rover3_rover3store_waypoint1)\n13.0: (communicatesoildata_rover3_general_waypoint1_waypoint1_waypoint0)\n14.0: (calibrate_rover3_camera1_objective0_waypoint1)\n15.0: (takeimage_rover3_waypoint1_objective0_camera1_highres)\n16.0: (communicateimagedata_rover3_general_objective0_highres_waypoint1_waypoint0)\n17.0: (recharge_rover0_waypoint4)\n18.0: (navigate_rover3_waypoint1_waypoint0)\n19.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n20.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n21.0: (drop_rover0_rover0store)\n22.0: (recharge_rover3_waypoint0)\n23.0: (calibrate_rover3_camera0_objective1_waypoint0)\n24.0: (navigate_rover3_waypoint0_waypoint1)\n25.0: (takeimage_rover1_waypoint2_objective2_camera2_lowres)\n26.0: (communicateimagedata_rover1_general_objective2_lowres_waypoint2_waypoint0)\n27.0: (takeimage_rover3_waypoint1_objective0_camera0_lowres)\n28.0: (communicateimagedata_rover3_general_objective0_lowres_waypoint1_waypoint0)\n29.0: (navigate_rover1_waypoint2_waypoint5)\n30.0: (samplerock_rover1_rover1store_waypoint5)\n31.0: (navigate_rover1_waypoint5_waypoint2)\n32.0: (communicaterockdata_rover1_general_waypoint5_waypoint2_waypoint0)",
+            "planlength": 33,
+            "metric": 133.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3))))",
+            "constraint_type": "SIMPLE",
+            "translation_time": 0.0,
+            "result": "success",
+            "compilation_time": 23.595319747924805,
+            "planning_time": 200.16725850105286,
+            "plan": "0.0: (navigate_rover0_waypoint2_waypoint4)\n1.0: (calibrate_rover1_camera2_objective0_waypoint2)\n2.0: (samplerock_rover0_rover0store_waypoint4)\n3.0: (communicaterockdata_rover0_general_waypoint4_waypoint4_waypoint0)\n4.0: (samplesoil_rover3_rover3store_waypoint3)\n5.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n6.0: (drop_rover3_rover3store)\n7.0: (navigate_rover2_waypoint2_waypoint5)\n8.0: (samplerock_rover2_rover2store_waypoint5)\n9.0: (navigate_rover2_waypoint5_waypoint2)\n10.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n11.0: (navigate_rover3_waypoint3_waypoint4)\n12.0: (navigate_rover0_waypoint4_waypoint2)\n13.0: (samplesoil_rover3_rover3store_waypoint4)\n14.0: (communicatesoildata_rover3_general_waypoint4_waypoint4_waypoint0)\n15.0: (drop_rover0_rover0store)\n16.0: (navigate_rover0_waypoint2_waypoint0)\n17.0: (navigate_rover0_waypoint0_waypoint1)\n18.0: (samplesoil_rover0_rover0store_waypoint1)\n19.0: (communicatesoildata_rover0_general_waypoint1_waypoint1_waypoint0)\n20.0: (drop_rover3_rover3store)\n21.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n22.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n23.0: (calibrate_rover1_camera2_objective0_waypoint2)\n24.0: (navigate_rover2_waypoint2_waypoint0)\n25.0: (drop_rover0_rover0store)\n26.0: (recharge_rover3_waypoint4)\n27.0: (communicatesoildata_rover3_general_waypoint3_waypoint4_waypoint0)\n28.0: (communicatesoildata_rover3_general_waypoint3_waypoint4_waypoint0)\n29.0: (calibrate_rover2_camera3_objective1_waypoint0)\n30.0: (navigate_rover3_waypoint4_waypoint3)\n31.0: (takeimage_rover2_waypoint0_objective0_camera3_lowres)\n32.0: (recharge_rover2_waypoint0)\n33.0: (navigate_rover2_waypoint0_waypoint2)\n34.0: (communicateimagedata_rover2_general_objective0_lowres_waypoint2_waypoint0)\n35.0: (navigate_rover3_waypoint3_waypoint2)\n36.0: (calibrate_rover3_camera1_objective0_waypoint2)\n37.0: (takeimage_rover1_waypoint2_objective2_camera2_lowres)\n38.0: (communicateimagedata_rover1_general_objective2_lowres_waypoint2_waypoint0)\n39.0: (takeimage_rover3_waypoint2_objective0_camera1_highres)\n40.0: (communicateimagedata_rover3_general_objective0_highres_waypoint2_waypoint0)",
+            "planlength": 41,
+            "metric": 176.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(Forall (objective o, mode m) (not have_image(rover3, o, m)))",
+            "constraint_type": "SIMPLE",
+            "translation_time": 0.0,
+            "result": "success",
+            "compilation_time": 20.693989992141724,
+            "planning_time": 200.0998775959015,
+            "plan": "0.0: (navigate_rover0_waypoint2_waypoint4)\n1.0: (calibrate_rover1_camera2_objective0_waypoint2)\n2.0: (samplerock_rover0_rover0store_waypoint4)\n3.0: (communicaterockdata_rover0_general_waypoint4_waypoint4_waypoint0)\n4.0: (samplesoil_rover3_rover3store_waypoint3)\n5.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n6.0: (drop_rover3_rover3store)\n7.0: (drop_rover0_rover0store)\n8.0: (samplesoil_rover0_rover0store_waypoint4)\n9.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n10.0: (navigate_rover3_waypoint3_waypoint0)\n11.0: (navigate_rover3_waypoint0_waypoint1)\n12.0: (samplesoil_rover3_rover3store_waypoint1)\n13.0: (communicatesoildata_rover3_general_waypoint1_waypoint1_waypoint0)\n14.0: (navigate_rover2_waypoint2_waypoint5)\n15.0: (samplerock_rover2_rover2store_waypoint5)\n16.0: (navigate_rover2_waypoint5_waypoint2)\n17.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n18.0: (calibrate_rover1_camera2_objective0_waypoint2)\n19.0: (navigate_rover2_waypoint2_waypoint4)\n20.0: (calibrate_rover1_camera2_objective0_waypoint2)\n21.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n22.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n23.0: (drop_rover3_rover3store)\n24.0: (navigate_rover3_waypoint1_waypoint0)\n25.0: (calibrate_rover3_camera0_objective1_waypoint0)\n26.0: (recharge_rover3_waypoint0)\n27.0: (recharge_rover0_waypoint4)\n28.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n29.0: (recharge_rover3_waypoint0)\n30.0: (recharge_rover2_waypoint4)\n31.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n32.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n33.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n34.0: (navigate_rover3_waypoint0_waypoint3)\n35.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n36.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n37.0: (communicatesoildata_rover0_general_waypoint4_waypoint4_waypoint0)\n38.0: (navigate_rover3_waypoint3_waypoint4)\n39.0: (navigate_rover0_waypoint4_waypoint2)\n40.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n41.0: (communicaterockdata_rover2_general_waypoint5_waypoint4_waypoint0)\n42.0: (calibrate_rover1_camera2_objective0_waypoint2)\n43.0: (drop_rover2_rover2store)\n44.0: (recharge_rover3_waypoint4)\n45.0: (navigate_rover3_waypoint4_waypoint3)\n46.0: (navigate_rover0_waypoint2_waypoint0)\n47.0: (navigate_rover0_waypoint0_waypoint1)\n48.0: (communicatesoildata_rover0_general_waypoint4_waypoint1_waypoint0)\n49.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n50.0: (recharge_rover2_waypoint4)\n51.0: (communicatesoildata_rover0_general_waypoint4_waypoint1_waypoint0)\n52.0: (samplerock_rover3_rover3store_waypoint3)\n53.0: (navigate_rover2_waypoint4_waypoint2)\n54.0: (navigate_rover2_waypoint2_waypoint0)\n55.0: (calibrate_rover2_camera3_objective1_waypoint0)\n56.0: (takeimage_rover2_waypoint0_objective0_camera3_lowres)\n57.0: (recharge_rover2_waypoint0)\n58.0: (navigate_rover2_waypoint0_waypoint3)\n59.0: (communicateimagedata_rover2_general_objective0_lowres_waypoint3_waypoint0)\n60.0: (recharge_rover2_waypoint3)\n61.0: (navigate_rover2_waypoint3_waypoint0)\n62.0: (calibrate_rover2_camera3_objective1_waypoint0)\n63.0: (navigate_rover2_waypoint0_waypoint2)\n64.0: (takeimage_rover1_waypoint2_objective0_camera2_highres)\n65.0: (communicateimagedata_rover1_general_objective0_highres_waypoint2_waypoint0)\n66.0: (takeimage_rover2_waypoint2_objective2_camera3_lowres)\n67.0: (communicateimagedata_rover2_general_objective2_lowres_waypoint2_waypoint0)",
+            "planlength": 68,
+            "metric": 283.0,
+            "reason": ""
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))))",
+            "constraint_type": "AND",
+            "translation_time": 0.0,
+            "result": "success",
+            "compilation_time": 21.665618896484375,
+            "planning_time": 200.10103511810303,
+            "plan": "0.0: (navigate_rover3_waypoint3_waypoint4)\n1.0: (calibrate_rover1_camera2_objective0_waypoint2)\n2.0: (samplerock_rover3_rover3store_waypoint4)\n3.0: (communicaterockdata_rover3_general_waypoint4_waypoint4_waypoint0)\n4.0: (drop_rover3_rover3store)\n5.0: (samplesoil_rover3_rover3store_waypoint4)\n6.0: (navigate_rover3_waypoint4_waypoint3)\n7.0: (communicatesoildata_rover3_general_waypoint4_waypoint3_waypoint0)\n8.0: (drop_rover3_rover3store)\n9.0: (samplesoil_rover3_rover3store_waypoint3)\n10.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n11.0: (navigate_rover0_waypoint2_waypoint0)\n12.0: (navigate_rover0_waypoint0_waypoint1)\n13.0: (samplesoil_rover0_rover0store_waypoint1)\n14.0: (communicatesoildata_rover0_general_waypoint1_waypoint1_waypoint0)\n15.0: (navigate_rover3_waypoint3_waypoint4)\n16.0: (recharge_rover3_waypoint4)\n17.0: (navigate_rover3_waypoint4_waypoint3)\n18.0: (navigate_rover3_waypoint3_waypoint0)\n19.0: (calibrate_rover3_camera0_objective1_waypoint0)\n20.0: (drop_rover0_rover0store)\n21.0: (recharge_rover3_waypoint0)\n22.0: (navigate_rover3_waypoint0_waypoint1)\n23.0: (takeimage_rover1_waypoint2_objective0_camera2_highres)\n24.0: (communicateimagedata_rover1_general_objective0_highres_waypoint2_waypoint0)\n25.0: (navigate_rover1_waypoint2_waypoint5)\n26.0: (samplerock_rover1_rover1store_waypoint5)\n27.0: (navigate_rover1_waypoint5_waypoint2)\n28.0: (communicaterockdata_rover1_general_waypoint5_waypoint2_waypoint0)\n29.0: (calibrate_rover1_camera2_objective0_waypoint2)\n30.0: (takeimage_rover1_waypoint2_objective2_camera2_lowres)\n31.0: (communicateimagedata_rover1_general_objective2_lowres_waypoint2_waypoint0)\n32.0: (takeimage_rover3_waypoint1_objective0_camera0_lowres)\n33.0: (communicateimagedata_rover3_general_objective0_lowres_waypoint1_waypoint0)",
+            "planlength": 34,
+            "metric": 149.0,
+            "reason": ""
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "translation_time": 0.0,
+            "result": "failed",
+            "compilation_time": 23.426233530044556,
+            "planning_time": 200.22242212295532,
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "(Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "translation_time": 0.0,
+            "result": "success",
+            "compilation_time": 20.235214471817017,
+            "planning_time": 200.22671604156494,
+            "plan": "0.0: (navigate_rover3_waypoint3_waypoint4)\n1.0: (calibrate_rover1_camera2_objective0_waypoint2)\n2.0: (samplerock_rover3_rover3store_waypoint4)\n3.0: (communicaterockdata_rover3_general_waypoint4_waypoint4_waypoint0)\n4.0: (drop_rover3_rover3store)\n5.0: (samplesoil_rover3_rover3store_waypoint4)\n6.0: (navigate_rover3_waypoint4_waypoint3)\n7.0: (communicatesoildata_rover3_general_waypoint4_waypoint3_waypoint0)\n8.0: (drop_rover3_rover3store)\n9.0: (samplesoil_rover3_rover3store_waypoint3)\n10.0: (communicatesoildata_rover3_general_waypoint3_waypoint3_waypoint0)\n11.0: (navigate_rover0_waypoint2_waypoint0)\n12.0: (navigate_rover0_waypoint0_waypoint1)\n13.0: (samplesoil_rover0_rover0store_waypoint1)\n14.0: (communicatesoildata_rover0_general_waypoint1_waypoint1_waypoint0)\n15.0: (navigate_rover3_waypoint3_waypoint0)\n16.0: (navigate_rover2_waypoint2_waypoint5)\n17.0: (samplerock_rover2_rover2store_waypoint5)\n18.0: (navigate_rover2_waypoint5_waypoint2)\n19.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n20.0: (communicaterockdata_rover2_general_waypoint5_waypoint2_waypoint0)\n21.0: (communicatesoildata_rover0_general_waypoint1_waypoint1_waypoint0)\n22.0: (navigate_rover0_waypoint1_waypoint0)\n23.0: (recharge_rover3_waypoint0)\n24.0: (samplerock_rover1_rover1store_waypoint2)\n25.0: (drop_rover1_rover1store)\n26.0: (recharge_rover0_waypoint0)\n27.0: (recharge_rover0_waypoint0)\n28.0: (navigate_rover0_waypoint0_waypoint2)\n29.0: (navigate_rover2_waypoint2_waypoint0)\n30.0: (communicatesoildata_rover0_general_waypoint1_waypoint2_waypoint0)\n31.0: (calibrate_rover2_camera3_objective1_waypoint0)\n32.0: (takeimage_rover2_waypoint0_objective2_camera3_lowres)\n33.0: (navigate_rover2_waypoint0_waypoint3)\n34.0: (recharge_rover2_waypoint3)\n35.0: (communicateimagedata_rover2_general_objective2_lowres_waypoint3_waypoint0)\n36.0: (communicaterockdata_rover2_general_waypoint5_waypoint3_waypoint0)\n37.0: (navigate_rover2_waypoint3_waypoint0)\n38.0: (calibrate_rover2_camera3_objective1_waypoint0)\n39.0: (recharge_rover2_waypoint0)\n40.0: (navigate_rover2_waypoint0_waypoint2)\n41.0: (takeimage_rover1_waypoint2_objective0_camera2_highres)\n42.0: (communicateimagedata_rover1_general_objective0_highres_waypoint2_waypoint0)\n43.0: (takeimage_rover2_waypoint2_objective0_camera3_lowres)\n44.0: (communicateimagedata_rover2_general_objective0_lowres_waypoint2_waypoint0)",
+            "planlength": 45,
+            "metric": 194.0,
+            "reason": ""
+        },
+        {
+            "constraint": "(Always((in(rover2, waypoint2) and (50 <= energy(rover2)) and empty(rover2store) and Forall (waypoint w) (not have_soil_analysis(rover2, w)) and Forall (waypoint w) (not have_rock_analysis(rover2, w)) and Forall (objective o, mode m) (not have_image(rover2, o, m)))) and Always(((not have_soil_analysis(rover0, waypoint3)) and (not have_soil_analysis(rover1, waypoint3)) and (not have_soil_analysis(rover2, waypoint3)) and (not have_soil_analysis(rover0, waypoint4)) and (not have_soil_analysis(rover1, waypoint4)) and (not have_soil_analysis(rover2, waypoint4)) and (not have_rock_analysis(rover0, waypoint3)) and (not have_rock_analysis(rover1, waypoint3)) and (not have_rock_analysis(rover2, waypoint3)))) and Always(Forall (objective o, mode m) (not have_image(rover3, o, m))))",
+            "constraint_type": "AND",
+            "translation_time": 0.0,
+            "result": "failed",
+            "compilation_time": 18.205852270126343,
+            "planning_time": 200.15490627288818,
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        }
+    ],
+    "general_status": "completed",
+    "elapsed": 1557.7365944385529
+}
