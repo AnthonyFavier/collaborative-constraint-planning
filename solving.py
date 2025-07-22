@@ -395,60 +395,45 @@ def initializeHumanConstraintsRover10nt(pb):
     w5 = pb.object('waypoint5')
     w6 = pb.object('waypoint6')
     
-    #   - ROVER2 SHOULD NEVER BE USED
-    constraint = Always(And(
-        pb.fluent('in')(r2, w3),
-        Not(pb.fluent('have_rock_analysis')(r2, w3)),
-        Not(pb.fluent('have_soil_analysis')(r2, w3)),
-        Not(pb.fluent('calibrated')(pb.object('camera4'), r2)),
-    ))
-    duration = 0
+    # "Rover2 should never be used",
+    constraint = Always(Equals(pb.fluent('energy')(r2), 50))
+    duration = 4.7304368019104 + 17.731674909591675 + 33.710217237472534 + 12.373441219329834 + 6.722154378890991
     constraints_dict["SIMPLE"].append((constraint, duration))
     
-    
-    # ROVER0 SHOULD HANDLE SOIL AND ROCK DATA FROM WAYPOINT4
+    # Rover0 should handle soil and rock data from waypoint4
     constraint = Always(And(
-            Forall(Or(
-                Equals(r, r0),
-                Not(pb.fluent('have_soil_analysis')(r, w4))
-            ), r),
+            Not(Exists(And(
+                Not(Equals(r, r0)),
+                pb.fluent('have_soil_analysis')(r, pb.object('waypoint4'))
+            ), r)),
             
-            Not(pb.fluent('have_rock_analysis')(r1, w4)),
-            Not(pb.fluent('have_rock_analysis')(r2, w4)),
-            Not(pb.fluent('have_rock_analysis')(r3, w4)),
+            Forall(Or(
+                    Equals(r, r0),
+                    Not(pb.fluent('have_rock_analysis')(pb.object('waypoint4')))
+                ), r)
     ))
-    duration = 11.641509294509888 + 44.54672193527222 + 15.726255416870117 + 0 + 34.23581695556640
-    duration = 0
+    duration = 4.319699287414551 + 35.94367551803589 + 72.81270480155945 + 19.83346962928772 + 36.55491662025452
     constraints_dict["SIMPLE"].append((constraint, duration))
     
-    # NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
+    # No rover should ever be in waypoint2 or waypoint5
     constraint = Always(Forall(And(
                     Not(pb.fluent('in')(r, w2)),
                     Not(pb.fluent('in')(r, w5))), r)
                 )
-    duration = 0.8064041137695312 + 12.046087741851807 + 3.909336566925049 + 0 + 14.28100085258483
-    duration = 0
-    constraints_dict["SIMPLE"].append((constraint, duration))
-            
-
-#   - ROVER1 SHOULD TAKE ALL IMAGE
-    constraint = Always(
-            Forall( 
-                    Or(Equals(r, r1),
-                       And(
-                        Not(pb.fluent('have_image')(r, o, pb.object('colour'))),
-                        Not(pb.fluent('have_image')(r, o, pb.object('lowres'))),
-                        Not(pb.fluent('have_image')(r, o, pb.object('highres'))),
-                       )
-                    ), 
-            r, o))
-    duration = 0
+    duration = 1.4092330932617188 + 16.265753030776978 + 4.92797064781189 + 0 + 33.36148118972778
     constraints_dict["SIMPLE"].append((constraint, duration))
 
-    # WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
+#   - Rover1 should take all images. Other rovers should never take an image.
+    constraint = Always(Forall(Or(
+            Equals(r, r1),
+            Not(pb.fluent('have_image')(r, o, m))
+        ), r, o, m))
+    duration = 1.1101369857788086 + 14.411915063858032 + 8.933538675308228 + 0 + 32.77331280708313
+    constraints_dict["SIMPLE"].append((constraint, duration))
+
+    # Waypoint6 should always have same rock sample
     constraint = Always(pb.fluent('at_rock_sample')(w6))
-    duration = 17.851055145263672 + 18.543925762176514 + 14.049310684204102 + 0 + 9.07705426216125
-    duration = 0
+    duration = 0.9058091640472412 + 13.67638111114502 + 4.023973226547241 + 0 + 10.192837476730347
     constraints_dict["SIMPLE"].append((constraint, duration))
     
     ### Generate AND constraints from SIMPLE constraints
