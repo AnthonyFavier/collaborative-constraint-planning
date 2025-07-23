@@ -1,0 +1,83 @@
+{
+    "py/object": "Constraints.ConstraintManager",
+    "problem_name": "zeno13_n",
+    "constraints": {
+        "R0": {
+            "py/object": "Constraints.RawConstraint",
+            "symbol": "R0",
+            "nl_constraint": "Person7, plane2 and plane3 should be ignored",
+            "children": [
+                {
+                    "py/object": "Constraints.DecomposedConstraint",
+                    "symbol": "D1",
+                    "nl_constraint": "Person7, plane2 and plane3 should be ignored",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (and\n  (not (in person7 plane1))\n  (not (in person7 plane2))\n  (not (in person7 plane3))\n  (= (onboard plane2) 0)\n  (= (onboard plane3) 0)\n  (located plane2 city2)\n  (located plane3 city3)\n))",
+                    "e2nl": "",
+                    "_activated": true,
+                    "encoding_conv": {
+                        "py/object": "LLM.ConversationHistory",
+                        "turns": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.\n</information>\n\n<instructions> \n- Translate the input constraint into correct PDDL3.0.\n- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.\n- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.\n- Be sure to include temporal logic like operators in your translation.\n- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.\n</instructions>\n\n<user_input>\nPerson7, plane2 and plane3 should be ignored\n</user_input>"
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "The user wants me to translate the natural language constraint \"Person7, plane2 and plane3 should be ignored\" into PDDL3.0.\n\nLet me think about what \"should be ignored\" means in the context of a PDDL planning problem. Looking at the problem, I can see that:\n\n1. person7 is located at city0 initially\n2. plane2 is located at city2 initially \n3. plane3 is located at city3 initially\n\nThe goal doesn't mention person7, plane2, or plane3, so they're not required to be moved anywhere specific.\n\n\"Should be ignored\" in planning context likely means that these entities should not be used or involved in the plan. For a person, this would mean they should not board any aircraft. For aircraft, this would mean they should not be used for any actions (no boarding, no flying, no refueling).\n\nIn PDDL3.0, I need to express constraints that prevent these entities from being involved in actions. Since PDDL constraints are state-based and can only refer to predicates and fluents (not actions directly), I need to think about what states would indicate that these entities are being \"used\".\n\nFor person7: The constraint should be that person7 never boards any aircraft. So person7 should never satisfy the predicate (in person7 ?a) for any aircraft ?a.\n\nFor plane2 and plane3: The constraint should be that these planes are never used. This could mean:\n- No one ever boards them: (onboard plane2) = 0 and (onboard plane3) = 0\n- They never move from their initial locations\n- Their fuel is never consumed (stays at initial level) or increases (no refueling)\n\nActually, let me look at the domain more carefully. The domain has action counters like:\n- (n_board ?p - person ?a - aircraft ?c - city)\n- (n_debark ?p - person ?a - aircraft ?c - city)  \n\n\n- (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n- (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n- (n_refuel ?a - aircraft)\n\nThese action counters track the number of times specific actions occur. I can use these to precisely constrain the involvement of person7, plane2, and plane3. Specifically, I'll ensure zero occurrences of boarding, flying, or refueling actions for these entities across all possible scenarios.\n\nI'll modify the state constraints to directly prevent unwanted configurations. Plane2 and plane3 will be locked into their initial locations, and person7 will be prohibited from entering any aircraft. This approach simplifies the modeling by directly specifying the desired state restrictions.\n\nI'll use PDDL3.0's always operator to enforce these constraints throughout the entire plan, ensuring person7 remains grounded and specific planes stay in predetermined positions.\n\nThe constraint will explicitly list each aircraft to prevent person7's boarding, while maintaining precise location and occupancy requirements for the specified planes.\n\nThis approach creates a rigid planning framework that isolates certain transportation resources, effectively removing them from potential route calculations by establishing immutable conditions."
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<pddl>\n(always (and\n  (not (in person7 plane1))\n  (not (in person7 plane2))\n  (not (in person7 plane3))\n  (= (onboard plane2) 0)\n  (= (onboard plane3) 0)\n  (located plane2 city2)\n  (located plane3 city3)\n))\n</pddl>"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 22.27925395965576,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_validation": 0,
+                    "time_e2nl_reencoding": 0
+                }
+            ],
+            "decomp_conv": null,
+            "time_input": 7.941110610961914,
+            "time_decomp": 0,
+            "time_validation": 0,
+            "time_redecomp": 0,
+            "time_initial_encoding": 22.27987051010132
+        },
+        "D1": {
+            "py/id": 4
+        }
+    },
+    "raw_constraints": {
+        "R0": {
+            "py/id": 2
+        }
+    },
+    "decomposed_constraints": {
+        "D1": {
+            "py/id": 4
+        }
+    }
+}

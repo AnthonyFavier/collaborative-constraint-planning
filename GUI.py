@@ -434,10 +434,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
             
             # For ablation
             self.master.plan_frame.export()
-            if CAI.checkIfUpdatedProblemIsParsable():
+            result, encodingsStr, err = CAI.checkIfUpdatedProblemIsParsable()
+            if result:
                 mprint('Parsable problem')
             else:
                 mprint("Can't parse new problem (Syntax error)")
+                mprint(str(err))
+            pyperclip.copy(encodingsStr)
+            
         
     def delete(self):
         self.master.constraints_frame.unselectAll()

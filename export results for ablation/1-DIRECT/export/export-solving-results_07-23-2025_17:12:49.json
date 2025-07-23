@@ -1,0 +1,21 @@
+{
+    "problem_name": "zeno13_n",
+    "detailed_translation_times": {
+        "input_time": 14.237232446670532,
+        "decomp_time": 0,
+        "decomp_validation_time": 0,
+        "redecomp_time": 0,
+        "initial_encoding_time": 62.96625471115112,
+        "encoding_time": 62.96467995643616,
+        "verifier_time": 0,
+        "reencoding_time": 0,
+        "e2nl_time": 0,
+        "encoding_validation_time": 0,
+        "e2nl_reencoding_time": 0
+    },
+    "translation_time": 77.20191240310669,
+    "decomposition_time": 0,
+    "encoding_time": 62.96625471115112,
+    "planning_results": {},
+    "solving_time": 0
+}

@@ -241,15 +241,16 @@ from unified_planning.io import PDDLReader
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
     activated_encodings = [c.encoding for k,c in CM.decomposed_constraints.items() if c.isActivated()]
+    encodingsStr = "\n".join(activated_encodings)
     updatedProblem = tools.updateProblem(g_problem, activated_encodings)
     with open(UPDATED_PROBLEM_PATH, "w") as f:
         f.write(updatedProblem)
     reader = PDDLReader()
     try:
         pb = reader.parse_problem(DOMAIN_PATH, UPDATED_PROBLEM_PATH)
-        return True
-    except:
-        return False
+        return True, encodingsStr, None
+    except Exception as err:
+        return False, encodingsStr, err
         
 ## PLAN ##
 def planWithConstraints():
