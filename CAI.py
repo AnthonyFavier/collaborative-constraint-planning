@@ -10,14 +10,19 @@ from helpers.UserOption import UserOption
 import time
 import threading
         
+# OTHER FEATURE FLAGS #
+WITH_CHECK_DOMAIN_MODIFICATION = False
+DUMP_CM = True
+
 # ABLATION_FLAGS #
+WITH_E2NL = True
 WITH_VERIFIER = True
 WITH_DECOMP = True
-ASK_DECOMP_FEEDBACK = True
-WITH_CHECK_DOMAIN_MODIFICATION = False
+WITH_DECOMP_CONFIRM = True
 
-DUMP_CM = True
+# CONSTANTS
 MAX_ENCODING_TRY = 3
+SETTING_NAME = 'DEFAULT'
 
 ## ADD CONSTRAINT ##
 def createConstraint(nl_constraint, input_time=0):
@@ -68,12 +73,13 @@ def initialDecomposition(r):
             mprint(result)
             
     elif not WITH_DECOMP:
+        mprint('DECOMP: disabled')
         # create only decomposed constraint similar to raw constraint
         CM.createDecomposed(r, r.nl_constraint)
         r.time_decomp = 0
         
 def decompInteraction(r):
-    if ASK_DECOMP_FEEDBACK:
+    if WITH_DECOMP_CONFIRM:
         time_validation = time.time()
         answer = minput("Press Enter or give feedback: ")
         if answer=='':
@@ -89,6 +95,8 @@ def decompInteraction(r):
         if not decompOK:
             ## Re-decompose with user feedback
             return answer
+    elif not WITH_DECOMP_CONFIRM:
+        mprint('DECOMP_CONFIRM: disabled')
     return 'OK'
 
 def reDecomposition(r, feedback):
@@ -177,7 +185,7 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
             encodingOK = result=='OK'
             if encodingOK:
                 d.encoding = encoding
-                if g_with_e2nl:
+                if WITH_E2NL:
                     time_e2nl = time.time()
                     d.e2nl = LLM.E2NL(d.encoding)
                     d.time_e2nl = time.time()-time_e2nl
@@ -188,11 +196,11 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
                 increase_encoding_retry()
                 feedback = result
                 d.nb_retries += 1
-                
         elif not WITH_VERIFIER:
+            mprint('VERIFIER: disabled')
             encodingOK = True
             d.encoding = encoding
-            
+                
         i+=1
     
     if encodingOK:
@@ -210,7 +218,7 @@ def encodingInteraction(d):
     mprint(f"\t{status} - {retries}")
 
     # E2NL
-    if g_with_e2nl:
+    if WITH_E2NL:
         time_validation = time.time()
         mprint(f'E2NL: "{d.e2nl}"')
         mprint("\nDoes this back-translation sounds correct?")
@@ -301,13 +309,10 @@ def suggestions(show=True):
         mprint(g_suggestions)
 
 ## INIT ##
-g_with_e2nl = False
-def init(problem_name, planning_mode, timeout, e2nl):
-    global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout, g_with_e2nl
+def init(problem_name, planning_mode, timeout):
+    global g_problem_name, g_domain, g_problem, g_planning_mode, g_timeout
     global DOMAIN_PATH, PROBLEM_PATH
     global CM
-    
-    g_with_e2nl = e2nl
     
     if not problem_name in PROBLEMS:
         click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
@@ -440,12 +445,13 @@ def reset_nb_e2nl_done():
 
 def showEncodingStatus(newline=False):
     f = mprint if newline else mrprint
-    e2nl_txt = f" - E2NL:{nb_e2nl_done}/{nb_to_encode}" if g_with_e2nl else ""
+    e2nl_txt = f" - E2NL:{nb_e2nl_done}/{nb_to_encode}" if WITH_E2NL else ""
     f(f"In progress... done:{nb_encoding_done}/{nb_to_encode} - retries:{nb_encoding_retry} - failed:{nb_encoding_failed}{e2nl_txt}", end="")
 
 def showSettings():
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
     DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    mprint(f"Setting: {SETTING_NAME}")
     mprint(f"Planning mode: {g_planning_mode}{timeout_str}\nProblem ({g_problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
 
 #################################################################

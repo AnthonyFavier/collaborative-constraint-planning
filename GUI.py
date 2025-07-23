@@ -335,7 +335,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Activate"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["E2NL"] = customtkinter.CTkButton(self.frame_always_column, text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
+        self.buttons["E2NL"] = customtkinter.CTkButton(self.frame_always_column, text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
         self.buttons["E2NL"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
@@ -583,8 +583,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons['ToggleEncodings'].configure(text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings")
         
     def toggleE2NL(self):
-        CAI.g_with_e2nl = not CAI.g_with_e2nl
-        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.g_with_e2nl else "Deactivate\nE2NL")
+        CAI.WITH_E2NL = not CAI.WITH_E2NL
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")
         
     def toggleDecomps(self):
         self.master.constraints_frame.toggleDecomps()
