@@ -93,7 +93,6 @@ def extract_result_h(filename, show=False):
     if ASSERT_IF_INTERRUPTED and raw_data['general_status']!='completed':
         raise Exception(f'Extract: {filename} has been interrupted.')
     
-    data = {}
     
     # EXTRACTION
     tests = []
@@ -142,7 +141,13 @@ def extract_result_h(filename, show=False):
             print(f'\t{n}: {k}')
             repeated+=1
             
+    # Look for metric of ALL CONSTRAINTS
+    test_all_constraints = tests[-1]
+    test_all_constraints_success = test_all_constraints['result']=='success'
+    test_all_constraints_metric = test_all_constraints['metric'] if test_all_constraints_success else np.nan
+        
     # SAVE extracted
+    data = {}
     data['seeds'] = [raw_data['seed']]
     data['timeout'] = raw_data['timeout']
     data['Repeated'] = 100*repeated/len(tests)
@@ -183,6 +188,10 @@ def extract_result_h(filename, show=False):
             'std': std,
             'best': min_metric
         }
+    data['all_constraints'] = {
+        'success': test_all_constraints_success,
+        'metric': test_all_constraints_metric
+    }
     data['elapsed'] = raw_data['elapsed']
     
     # PRINT
@@ -363,7 +372,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     WITH_RANDOM = True
     
     ## PREPARE PLOT DATA ##
-    unsolvable = data_random[-1]['success']['Unsolvable']
+    # unsolvable = data_random[-1]['success']['Unsolvable']
     timeout_values = set()
     timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_random]))
     timeout_values = timeout_values.union(set([int(d['timeout']) for d in data_original]))
@@ -406,7 +415,6 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
             
     # human data
     plot_metric_h_data = []
-    plot_metric_all_h_data = []
     plot_metric_h_pos = []
     lines = []
     for i,d in enumerate(data_h):
@@ -415,7 +423,6 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
             for j in range(len(timeout_values)):
                 if d['timeout']==timeout_values[j]:
                     plot_metric_h_data.append(d['metrics']['all'])
-                    plot_metric_all_h_data.append(d['metrics']['all'][-1])
                     plot_metric_h_pos.append(j)
                     break
     lines.sort(key=lambda x: x[0])
@@ -424,6 +431,12 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         plot_metric_h_data = [np.nan]
     if plot_metric_h_pos==[]:
         plot_metric_h_pos = [np.nan]
+    
+    plot_metric_all_h_data = []
+    for i,d in enumerate(data_h):
+        for j in range(len(timeout_values)):
+            if d['timeout']==timeout_values[j]:
+                plot_metric_all_h_data.append(d['all_constraints']['metric'])
     if plot_metric_all_h_data==[]:
         plot_metric_all_h_data = [np.nan]
         
@@ -645,7 +658,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 capprops={"color": human_constraints_color, "linewidth": 1.5},
                 zorder=0
             )
-    axs[0].scatter(positions, plot_metric_all_h_data, s=70, c='black', label='All H constraints', marker='+', zorder=10)
+    axs[0].scatter(positions, plot_metric_all_h_data, s=70, c='black', label='All HC', marker='+', zorder=10)
     
     # PARAMS
     axs[0].set_ylabel("Metric values")
