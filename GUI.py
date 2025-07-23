@@ -106,7 +106,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                     self.constraint_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.symbol}- {c.nl_constraint}", font = ConstraintsFrame.font)
                     self.constraint_labels[c.symbol].grid(row=0, column=1, padx=0, pady=0, sticky="w")
                 
-                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", font = ConstraintsFrame.encoding_font)
+                    self.encoding_labels[c.symbol] = customtkinter.CTkLabel(frame, text=f"{c.encoding}", justify='left', font = ConstraintsFrame.encoding_font)
                     self.encoding_labels[c.symbol].grid(row=1, column=1, padx=20, pady=0, sticky="w")
                     
                     i_self_row+=1
