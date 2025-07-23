@@ -460,12 +460,6 @@ problems = {
         ['goalsize', 'has-colour', 'contains-part', 'grind-treatment-change', 'is-smooth', 'boardsize-successor', 'spray-varnish-cost', 'glaze-cost', 'grind-cost ', 'plane-cost'],
         initializeHumanConstraintsWoodworking1,
     ],
-    'Parking283': [    
-        '/home/afavier/ws/CAI/domain.pddl',
-        '/home/afavier/ws/CAI/p28-3.pddl',
-        [],
-        initializeHumanConstraintsWoodworking7,
-    ],
     'ZenoTravel13': [    
         '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
         '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
