@@ -1,0 +1,88 @@
+{
+    "seed": 0,
+    "timeout": 60,
+    "domain": "/home/afavier/ws/CAI/woodworking_domain.pddl",
+    "problem": "/home/afavier/ws/CAI/woodworking_pb1.pddl",
+    "generated_constraints": {
+        "EXPRESSIONS": [
+            "(not boardsize(b6, s0))",
+            "(not boardsize(b6, s0))",
+            "(not colour(p16, blue))",
+            "(not colour(p16, blue))",
+            "(not boardsize(b4, s7))",
+            "(not wood(p18, oak))",
+            "(not boardsize(b4, s7))",
+            "(not wood(p18, oak))",
+            "empty(highspeed-saw0)",
+            "(not colour(p4, white))",
+            "empty(highspeed-saw0)",
+            "(not colour(p4, white))",
+            "(not available(p19))",
+            "(not colour(p17, black))",
+            "(total-cost == 0)",
+            "(not available(p19))",
+            "(not colour(p17, black))",
+            "(total-cost == 0)",
+            "(not surface-condition(p9, verysmooth))",
+            "available(b7)",
+            "(grind-cost(p10) == 15)",
+            "(not surface-condition(p9, verysmooth))",
+            "available(b7)",
+            "(grind-cost(p10) == 15)",
+            "(not in-highspeed-saw(b8, highspeed-saw0))",
+            "(not wood(p13, beech))",
+            "(not in-highspeed-saw(b8, highspeed-saw0))",
+            "(not wood(p13, beech))",
+            "(grind-cost(p6) == 45)",
+            "unused(p17)",
+            "(grind-cost(p6) == 45)",
+            "unused(p17)",
+            "unused(p2)",
+            "(not boardsize(b0, s9))",
+            "(not in-highspeed-saw(b5, highspeed-saw0))",
+            "unused(p2)",
+            "(not boardsize(b0, s9))",
+            "(not in-highspeed-saw(b5, highspeed-saw0))",
+            "(not wood(b1, mahogany))",
+            "(not treatment(p18, glazed))",
+            "(not treatment(p4, colourfragments))",
+            "(not wood(b1, mahogany))",
+            "(not treatment(p18, glazed))",
+            "(not treatment(p4, colourfragments))"
+        ],
+        "SIMPLE": [
+            "Always((not boardsize(b6, s0)))",
+            "Always((not colour(p16, blue)))"
+        ],
+        "AND2": [
+            "Always(((not boardsize(b4, s7)) and (not wood(p18, oak))))",
+            "Always((empty(highspeed-saw0) and (not colour(p4, white))))"
+        ],
+        "AND3": [
+            "Always(((not available(p19)) and (not colour(p17, black)) and (total-cost == 0)))",
+            "Always(((not surface-condition(p9, verysmooth)) and available(b7) and (grind-cost(p10) == 15)))"
+        ],
+        "OR2": [
+            "Always(((not in-highspeed-saw(b8, highspeed-saw0)) or (not wood(p13, beech))))",
+            "Always(((grind-cost(p6) == 45) or unused(p17)))"
+        ],
+        "OR3": [
+            "Always((unused(p2) or (not boardsize(b0, s9)) or (not in-highspeed-saw(b5, highspeed-saw0))))",
+            "Always(((not wood(b1, mahogany)) or (not treatment(p18, glazed)) or (not treatment(p4, colourfragments))))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always((not boardsize(b6, s0)))",
+            "constraint_type": "SIMPLE",
+            "result": "Compiling..."
+        }
+    ],
+    "general_status": "in progress",
+    "elapsed": 0.1716296672821045
+}
+compilation started at 1:30PM
+now 17minutes...
+1:56PM -> 26minutes..
+2:20PM -> 50minutes
+2:53PM -> 83minutes...stopped manually..

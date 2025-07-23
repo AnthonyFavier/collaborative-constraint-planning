@@ -446,7 +446,7 @@ def initializeHumanConstraintsRover10nt(pb):
 
     return constraints_dict
 
-def initializeHumanConstraintsWoodworking7(pb):
+def initializeHumanConstraintsWoodworking1(pb):
     return None
 
 ##############
@@ -454,11 +454,11 @@ def initializeHumanConstraintsWoodworking7(pb):
 ##############
 
 problems = {
-    'Woodworking7': [    
-        '/home/afavier/ws/CAI/domain.pddl',
-        '/home/afavier/ws/CAI/p07.pddl',
-        ['goalsize', 'boardsize-successor', 'has-colour', 'contains-part', 'grind-treatment-change', 'is-smooth', 'spray-varnish-cost', 'glaze-cost', 'grind-cost', 'plane-cost'],
-        initializeHumanConstraintsWoodworking7,
+    'WoodWorking1': [    
+        '/home/afavier/ws/CAI/woodworking_domain.pddl',
+        '/home/afavier/ws/CAI/woodworking_pb1.pddl',
+        ['goalsize', 'has-colour', 'contains-part', 'grind-treatment-change', 'is-smooth', 'boardsize-successor', 'spray-varnish-cost', 'glaze-cost', 'grind-cost ', 'plane-cost'],
+        initializeHumanConstraintsWoodworking1,
     ],
     'Parking283': [    
         '/home/afavier/ws/CAI/domain.pddl',
