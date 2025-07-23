@@ -383,6 +383,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     timeout_values.sort()
     # timeout_values = [t for t in timeout_values if t<=30]
     # timeout_values = [t for t in timeout_values if t>30]
+    # timeout_values = [50, 100, 200, 300, 400, 600]
     x_pos = np.arange(len(timeout_values)) 
     
     # With random constraints data
