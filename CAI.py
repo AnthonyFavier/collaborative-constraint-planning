@@ -197,7 +197,6 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
                 feedback = result
                 d.nb_retries += 1
         elif not WITH_VERIFIER:
-            mprint('VERIFIER: disabled')
             encodingOK = True
             d.encoding = encoding
                 
@@ -238,7 +237,20 @@ def encodingInteraction(d):
     
     return 'OK'
     
-
+from unified_planning.io import PDDLReader
+def checkIfUpdatedProblemIsParsable():
+    # Get activated constraints
+    activated_encodings = [c.encoding for k,c in CM.decomposed_constraints.items() if c.isActivated()]
+    updatedProblem = tools.updateProblem(g_problem, activated_encodings)
+    with open(UPDATED_PROBLEM_PATH, "w") as f:
+        f.write(updatedProblem)
+    reader = PDDLReader()
+    try:
+        pb = reader.parse_problem(DOMAIN_PATH, UPDATED_PROBLEM_PATH)
+        return True
+    except:
+        return False
+        
 ## PLAN ##
 def planWithConstraints():
     # get activated constraints

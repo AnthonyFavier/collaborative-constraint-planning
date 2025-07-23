@@ -431,6 +431,13 @@ class ButtonsFrame(customtkinter.CTkFrame):
             self.master.enableAllButtons()
             self.master.constraints_frame.updateFrame()
             # mprint("\nConstraints added")
+            
+            # For ablation
+            self.master.plan_frame.export()
+            if CAI.checkIfUpdatedProblemIsParsable():
+                mprint('Parsable problem')
+            else:
+                mprint("Can't parse new problem (Syntax error)")
         
     def delete(self):
         self.master.constraints_frame.unselectAll()
