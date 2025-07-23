@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from defs import startWith
+import matplotlib.ticker as ticker
+from matplotlib.lines import Line2D  
 
 ASSERT_IF_INTERRUPTED = False
 
@@ -561,13 +563,15 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 #############################################################
     ###################### FIGURE PLOTS #####################
     #########################################################
-    fig, axs = plt.subplots(3, 1, sharex=True, figsize=(15, 13))
+    
+    # fig, axs = plt.subplots(3, 1, sharex=True, figsize=(15, 13))
+    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(7, 4.67))
     
     ## Colors
-    original_problem_color = "#f08080ff"
-    random_constraints_color = "#1f76b4ff"
+    original_problem_color = "C0" 
+    random_constraints_color = "C1"
     random_constraints_dark_color = "#275d84ff"
-    human_constraints_color = "#32cd32ff"
+    human_constraints_color = "C2"
     human_constraints_dark_color = "#36a336ff"
     human_constraints_trans_color = "#a2ff16ff"
     
@@ -578,7 +582,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     
     showfliers = False
     # offset > widths
-    widths = 0.25
+    widths = 0.3
     multiplier = -1.0 if WITH_RANDOM else -0.5
     
     # ORIGINAL
@@ -586,7 +590,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     offset = (widths+0.02)*multiplier
     multiplier+=1
     positions = [x + offset for x in plot_metric_original_pos]
-    label = 'original problem'
+    label = 'original'
     if violin:
         v = axs[0].violinplot(data,
                 positions=positions,
@@ -612,7 +616,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         offset = (widths+0.02)*multiplier
         multiplier+=1
         positions = [x + offset for x in plot_metric_random_pos]
-        label = 'random constraints'
+        label = 'random'
         if violin:
             v = axs[0].violinplot(data,
                     positions=positions,
@@ -637,7 +641,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     offset = (widths+0.02)*multiplier
     multiplier+=1
     positions = [x + offset for x in plot_metric_h_pos]
-    label = 'human constraints'
+    label = 'human'
     if violin:
         v = axs[0].violinplot(data,
                 positions=positions,
@@ -659,41 +663,50 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 zorder=0
             )
     axs[0].scatter(positions, plot_metric_all_h_data, s=70, c='black', label='All HC', marker='+', zorder=10)
+    if violin:
+        labels.append((Line2D([0], [0], marker='+', color='black', linestyle='None', markersize=7, markeredgewidth=1.5), 'All HC'))
+
+    formatter = ticker.ScalarFormatter(useMathText=True)
+    formatter.set_scientific(True)
+    formatter.set_powerlimits((0, 2))
+
+    axs[0].yaxis.set_major_formatter(formatter)
     
     # PARAMS
     axs[0].set_ylabel("Metric values")
-    axs[0].set_xlabel("Timeout (s)")
-    seeds = data_random[-1]['seeds']
-    axs[0].set_title(problem_name + f"\nseeds: {seeds}")
+    # axs[0].set_xlabel("Timeout (s)")
+    # seeds = data_random[-1]['seeds']
+    # axs[0].set_title(problem_name + f"\nseeds: {seeds}")
     axs[0].tick_params(labelbottom=True)  # <-- Show x labels on top plot
-    # axs[0].set_ylim(ymin=10290.0 * 0.9)
-    # axs[0].set_ylim(ymax=127454.0 * 1.1)
+    if problem_name=='new_zeno13':
+        axs[0].set_ylim(ymax=85000) # Zeno13
+    if problem_name=='new_rover10':
+        axs[0].set_ylim(ymax=220) # Rover10
     # axs[0].yaxis.grid(True)
     if violin:
         axs[0].legend(*zip(*labels), loc='upper left', ncols=4)
     else:
         axs[0].legend(loc='upper left', ncols=4)
-    # axs[0].axhline(y=7236, color="green", linestyle="--")
-        
     
     ##########################################################
     ##################### Success Ratio ######################
     ##########################################################
     
     # ORIGINAL
-    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original problem')
+    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original problem', zorder=10)
     # RANDOM
     if WITH_RANDOM:
-        axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints')
+        axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints', zorder=10)
     # H
-    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints')
+    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints', zorder=10)
     # Params
-    axs[1].axhline(y=100, color="green", linestyle="--")
+    axs[1].axhline(y=100, color="green", linestyle="--", linewidth=1)
     # axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
-    axs[1].set(ylim=(0, 110))
+    axs[1].set(ylim=(0, 130))
     axs[1].set_ylabel("Success ratio (%)")
-    axs[1].set_xlabel("Timeout (s)")
+    axs[1].set_xlabel("Time budget (s)")
     axs[1].legend(loc='upper left', ncols=4)
+    axs[1].set_yticks([0, 25, 50, 75, 100])
     axs[1].tick_params(labelbottom=True)  # <-- Show x labels on top plot
     
     # ##########################################################
@@ -715,27 +728,27 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         },
     }
 
-    width = 0.25
-    multiplier = -1.0 if WITH_RANDOM else -0.5
-    for run_type, durs in durations.items():
-        if not WITH_RANDOM and run_type=='random':
-            continue
-        bottom = np.zeros(len(durs['pos']))
-        offset = width * multiplier
-        for duration_type, duration in durs.items():
-            if duration_type=='pos':
-                continue
-            p = axs[2].bar(np.array(durs['pos'])+offset, duration['mean'], width, label=run_type+' '+duration_type, bottom=bottom,
-                       yerr=duration['std'],
-                       color=durations_styles[run_type][duration_type]['color'],
-                       hatch=durations_styles[run_type][duration_type]['hatch'])
-            bottom += duration['mean']
-            axs[2].bar_label(p, fmt=duration_type[:1]+':{:.1f}', label_type='center', color=durations_styles[run_type][duration_type]['label_color'])
-        multiplier+=1
+    # width = 0.25
+    # multiplier = -1.0 if WITH_RANDOM else -0.5
+    # for run_type, durs in durations.items():
+    #     if not WITH_RANDOM and run_type=='random':
+    #         continue
+    #     bottom = np.zeros(len(durs['pos']))
+    #     offset = width * multiplier
+    #     for duration_type, duration in durs.items():
+    #         if duration_type=='pos':
+    #             continue
+    #         p = axs[2].bar(np.array(durs['pos'])+offset, duration['mean'], width, label=run_type+' '+duration_type, bottom=bottom,
+    #                    yerr=duration['std'],
+    #                    color=durations_styles[run_type][duration_type]['color'],
+    #                    hatch=durations_styles[run_type][duration_type]['hatch'])
+    #         bottom += duration['mean']
+    #         axs[2].bar_label(p, fmt=duration_type[:1]+':{:.1f}', label_type='center', color=durations_styles[run_type][duration_type]['label_color'])
+    #     multiplier+=1
             
-    axs[2].legend(loc='upper left')
-    axs[2].set_ylabel("Time (s)")
-    axs[2].set_xlabel("Timeout (s)")
+    # axs[2].legend(loc='upper left', ncols=2)
+    # axs[2].set_ylabel("Time (s)")
+    # axs[2].set_xlabel("Time budget (s)")
     
     ##########################################################
 
@@ -751,19 +764,16 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
 ##################
 ### MAIN + CLI ###
 ##################
-@click.group()
-def cli():
-    pass
 
 PROBLEM_NAMES = [x.name for x in Path('results_constraints').iterdir() if x.is_dir()]
 PROBLEM_NAMES.sort()
-@cli.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
+@click.command(help=f'Plot all results of a problem. {PROBLEM_NAMES}')
 @click.argument('problem_name')
 @click.option('--seed', 'seed', default='all')
 @click.option('--wofolder', 'without_constraints_folder', default='WO')
 @click.option('--hfolder', 'h_folder', default='H')
 @click.option('--violin', 'violin', is_flag=True, default=False)
-def several_command(problem_name, seed, without_constraints_folder, h_folder, violin):
+def cli_command(problem_name, seed, without_constraints_folder, h_folder, violin):
     if problem_name not in PROBLEM_NAMES:
         click.echo('Unknown problem.\nSupported problems: ' + str(PROBLEM_NAMES))
         exit()
@@ -775,24 +785,7 @@ def several_command(problem_name, seed, without_constraints_folder, h_folder, vi
         
     several(problem_name, seed, without_constraints_folder, h_folder, violin)
     
-@cli.command(help='Plot results for a specific file with random constraints')
-@click.argument('filename')
-def with_command(filename: str):
-    click.echo("WIP: for now no plot")
-    extract_result_with_constraint(filename)
-    
-@cli.command(help='Plot results for a specific file with original problem')
-@click.argument('filename')
-def without_command(filename: str):
-    click.echo("WIP: for now no plot")
-    extract_result_without_constraint(filename)
-    
-@cli.command(help='Plot results for a specific file with human constraints')
-@click.argument('filename')
-def H_command(filename: str):
-    click.echo("WIP: for now no plot")
-    extract_result_h(filename)
     
 if __name__=='__main__':
     # sys.argv += ['several', 'new_zeno13']
-    cli()
+    cli_command()
