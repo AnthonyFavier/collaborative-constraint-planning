@@ -694,12 +694,12 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     ##########################################################
     
     # ORIGINAL
-    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original problem', zorder=10)
+    axs[1].plot(plot_success_original_pos, plot_success_original_data, marker='o', color=original_problem_color, label='original', zorder=10)
     # RANDOM
     if WITH_RANDOM:
-        axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random constraints', zorder=10)
+        axs[1].plot(plot_success_random_pos, plot_success_random_data, marker='o', color=random_constraints_color, label='random', zorder=10)
     # H
-    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='h constraints', zorder=10)
+    axs[1].plot(plot_success_h_pos, plot_success_h_data, marker='o', color=human_constraints_color, label='human', zorder=10)
     # Params
     axs[1].axhline(y=100, color="green", linestyle="--", linewidth=1)
     # axs[1].axhline(y=100-unsolvable, color="black", linestyle=":", label=f'solvable random constraints ({100-unsolvable:.1f}%)')
