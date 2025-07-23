@@ -469,6 +469,51 @@ The user will give as input PDDL3.0 constraints.
     e2nl = e2nl.replace('\n', '')
     return e2nl
 
+# Plan improvement suggestions
+def planImprovementSuggestions(plan):
+    conv = ConversationHistory()
+    
+    tag = 'suggestions'
+    
+    conv.add_turn_user(f"""
+<documents>
+<pddl_domain>
+{g_domain}
+</pddl_domain>
+<pddl_problem>
+{g_problem}
+</pddl_problem>
+
+</documents> 
+
+<information>
+The problem being addressed is described by the PDDL domain and problem given above. The problem has been solved and the obtained sub-optimal solution plan will be given below.
+</information>
+
+<instructions> 
+- Analyze the given solution plan.
+- Identify the useless or redundant parts of the plan.
+- Generate suggestions on how to improve the plan.
+- Format your answer such as there is no preambule and such that the suggestion is between the tags <{tag}> and </{tag}>.
+</instructions>
+
+<current_solution_plan>
+{plan}
+</current_solution_plan>
+"""[1:-1])
+    
+    tagOK = False
+    while not tagOK:
+        # Call
+        assistant_replies = clients["ANTHROPIC"].call(system_message, conv.get_turns(), thinking=True, stop_sequences=[f"</{tag}>"])
+        for r in assistant_replies:
+            conv.add_turn_assistant(r)
+            
+        tagOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
+        
+    suggestions = tools.extractTag(tag, assistant_replies[-1])
+    return suggestions
+
 # MAIN
 if __name__=='__main__':
     pass
