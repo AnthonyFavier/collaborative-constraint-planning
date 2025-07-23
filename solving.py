@@ -409,7 +409,7 @@ def initializeHumanConstraintsRover10nt(pb):
             
             Forall(Or(
                     Equals(r, r0),
-                    Not(pb.fluent('have_rock_analysis')(pb.object('waypoint4')))
+                    Not(pb.fluent('have_rock_analysis')(r, pb.object('waypoint4')))
                 ), r)
     ))
     duration = 4.319699287414551 + 35.94367551803589 + 72.81270480155945 + 19.83346962928772 + 36.55491662025452

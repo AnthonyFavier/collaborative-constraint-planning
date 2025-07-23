@@ -30,6 +30,7 @@ id = 1
 modes = ['original', 'randomc', 'h-translation']
 problems = ['ZenoTravel13', 'Rover10_n_t']
 time_budgets = [60, 90, 120, 200, 300, 400]
+time_budgets.sort(reverse=True)
 for problem in problems:
     for mode in modes:
         for tb in time_budgets:
