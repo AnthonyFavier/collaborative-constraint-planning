@@ -185,12 +185,6 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
             encodingOK = result=='OK'
             if encodingOK:
                 d.encoding = encoding
-                if WITH_E2NL:
-                    time_e2nl = time.time()
-                    d.e2nl = LLM.E2NL(d.encoding)
-                    d.time_e2nl = time.time()-time_e2nl
-                    increase_e2nl_done()
-                
             elif not encodingOK:
                 d.encoding = ''
                 increase_encoding_retry()
@@ -199,6 +193,13 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
         elif not WITH_VERIFIER:
             encodingOK = True
             d.encoding = encoding
+        
+        # Generate E2NL
+        if WITH_E2NL:
+            time_e2nl = time.time()
+            d.e2nl = LLM.E2NL(d.encoding)
+            d.time_e2nl = time.time()-time_e2nl
+            increase_e2nl_done()
                 
         i+=1
     
