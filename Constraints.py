@@ -17,6 +17,7 @@ class RawConstraint(Constraint):
         self.decomp_conv = None
         
         # times
+        self.time_total = 0
         self.time_input = 0
         self.time_initial_decomp = 0
         self.time_decomp_validation = 0

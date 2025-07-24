@@ -146,11 +146,9 @@ def initialEncoding(r):
         t.start()
     for t in threads:
         t.join()
-    t2 = time.time()
     stopTimer()
     
-    t_encoding = time.time() - t_encoding
-    r.time_initial_encoding += t_encoding
+    r.time_initial_encoding += time.time() - t_encoding
     mprint(f"\nEncoding done [{r.time_initial_encoding:.2f}s]")
 
 def encodeDecomposed(d, feedback=None, reencode_e2nl=False):

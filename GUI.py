@@ -405,6 +405,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.activateE2NLButton()
         
         mprint("\n=== ADDING CONSTRAINT ===")
+        time_total = time.time()
         
         t_input = time.time()
         c = minput(txt="\nEnter your constraint: ")
@@ -420,6 +421,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 CAI.decompose(constraint)
                 self.deactivateE2NLButton()
                 CAI.encode(constraint)
+                constraint.time_total = time.time() - time_total
                 CAI.CM.dump(CAI.g_problem_name)
                 
             except Exception as err:
@@ -841,6 +843,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         data['problem_name'] = CAI.g_problem_name
         data['detailed_translation_times'] = {
+            'total_time': 0,
             'input_time': 0,
             'decomp_time': 0,
             'decomp_validation_time': 0,
@@ -855,6 +858,7 @@ class PlanFrame(customtkinter.CTkFrame):
         }
         for idr,r in CAI.CM.raw_constraints.items():
             if r.isActivated() or r.isPartiallyActivated():
+                data['detailed_translation_times']['total_time'] += r.time_total
                 data['detailed_translation_times']['input_time'] += r.time_input
                 data['detailed_translation_times']['decomp_time'] += r.time_initial_decomp
                 data['detailed_translation_times']['decomp_validation_time'] += r.time_decomp_validation
@@ -870,26 +874,24 @@ class PlanFrame(customtkinter.CTkFrame):
                         data['detailed_translation_times']['e2nl_reencoding_time'] += d.time_e2nl_reencoding
 
         data['translation_time'] = 0
-        data['translation_time'] += data['detailed_translation_times']['input_time']
-        data['translation_time'] += data['detailed_translation_times']['decomp_time']
-        data['translation_time'] += data['detailed_translation_times']['decomp_validation_time']
-        data['translation_time'] += data['detailed_translation_times']['redecomp_time']
-        data['translation_time'] += data['detailed_translation_times']['encoding_time']
-        data['translation_time'] += data['detailed_translation_times']['verifier_time']
-        data['translation_time'] += data['detailed_translation_times']['reencoding_time']
-        data['translation_time'] += data['detailed_translation_times']['e2nl_time']
-        data['translation_time'] += data['detailed_translation_times']['encoding_validation_time']
-        data['translation_time'] += data['detailed_translation_times']['e2nl_reencoding_time']
+        data['translation_time'] += data['detailed_translation_times']['total_time']
         
         data['decomposition_time'] = 0
         data['decomposition_time'] += data['detailed_translation_times']['decomp_time']
-        data['decomposition_time'] += data['detailed_translation_times']['decomp_validation_time']
         data['decomposition_time'] += data['detailed_translation_times']['redecomp_time']
         
         data['encoding_time'] = 0
         data['encoding_time'] += data['detailed_translation_times']['initial_encoding_time'] 
-        data['encoding_time'] += data['detailed_translation_times']['encoding_validation_time']
+        data['encoding_time'] += data['detailed_translation_times']['verifier_time']
+        data['encoding_time'] += data['detailed_translation_times']['e2nl_time']
         data['encoding_time'] += data['detailed_translation_times']['e2nl_reencoding_time']
+        
+        data['input_time'] = 0
+        data['input_time'] += data['detailed_translation_times']['input_time'] 
+        
+        data['interaction_time'] = 0
+        data['interaction_time'] += data['detailed_translation_times']['decomp_validation_time']
+        data['interaction_time'] += data['detailed_translation_times']['encoding_validation_time']
         
         data['planning_results'] = self.last_results
         
@@ -900,26 +902,21 @@ class PlanFrame(customtkinter.CTkFrame):
             data['solving_time'] += data['planning_results']['time_planning']
         
         mprint('\n=== EXPORT ===\n')
+        mprint('Translation time = ' + '{:.2f}'.format(data['translation_time']))
+        mprint('\tInput time = ' + '{:.2f}'.format(data['input_time']))
+        mprint('\tInteraction time = ' + '{:.2f}'.format(data['interaction_time']))
+        mprint('\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
+        mprint('\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
         if data['planning_results']!={} and data['planning_results']['result']=='success':
             mprint('Solving time = ' + '{:.2f}'.format(data['solving_time']))
-            mprint('\tTranslation time = ' + '{:.2f}'.format(data['translation_time']))
-            mprint('\t\tInput time = ' + '{:.2f}'.format(data['detailed_translation_times']['input_time']))
-            mprint('\t\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
-            mprint('\t\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
-            mprint('\tCompilation time = ' + '{:.2f}'.format(data['planning_results']['time_compilation']))
             mprint('Plan length = ' + '{}'.format(data['planning_results']['planlength']))
             mprint('Plan metric = ' + '{:.2f}'.format(data['planning_results']['metric']))
-        else:
-            mprint('Translation time = ' + '{:.2f}'.format(data['translation_time']))
-            mprint('\tInput time = ' + '{:.2f}'.format(data['detailed_translation_times']['input_time']))
-            mprint('\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
-            mprint('\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
         
         data_CM = (data, CAI.CM)
         json_string= jsonpickle.encode(data_CM, indent=4)
         
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        filename = f'export-solving-results_{date}.json' 
+        filename = f'export_results/{CAI.g_problem_name}_{date}.json' 
         
         with open(filename, 'w') as f:
             f.write(json_string)
