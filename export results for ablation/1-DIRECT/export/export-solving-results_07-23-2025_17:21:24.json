@@ -1,0 +1,21 @@
+{
+    "problem_name": "rover10_n_t",
+    "detailed_translation_times": {
+        "input_time": 4.117270469665527,
+        "decomp_time": 0,
+        "decomp_validation_time": 0,
+        "redecomp_time": 0,
+        "initial_encoding_time": 37.529942989349365,
+        "encoding_time": 37.52756905555725,
+        "verifier_time": 0,
+        "reencoding_time": 0,
+        "e2nl_time": 0,
+        "encoding_validation_time": 0,
+        "e2nl_reencoding_time": 0
+    },
+    "translation_time": 41.64483952522278,
+    "decomposition_time": 0,
+    "encoding_time": 37.529942989349365,
+    "planning_results": {},
+    "solving_time": 0
+}
