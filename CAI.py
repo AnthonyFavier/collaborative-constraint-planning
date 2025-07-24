@@ -27,7 +27,7 @@ SETTING_NAME = 'DEFAULT'
 ## ADD CONSTRAINT ##
 def createConstraint(nl_constraint, input_time=0):
     r = CM.createRaw(nl_constraint)
-    r.time_input = input_time
+    r.time_input += input_time
     return r
 
 def decompose(r):
@@ -59,8 +59,8 @@ def initialDecomposition(r):
         constraints, explanation = LLM.decompose(r.nl_constraint, r.decomp_conv)
         t2 = time.time()
         stopTimer()
-        r.time_decomp = t2-t1
-        mprint(f"OK [{r.time_decomp:.2f}s]")
+        r.time_initial_decomp += t2-t1
+        mprint(f"OK [{r.time_initial_decomp:.2f}s]")
             
         for c in constraints.splitlines():
             CM.createDecomposed(r, c)
@@ -76,11 +76,10 @@ def initialDecomposition(r):
         mprint('DECOMP: disabled')
         # create only decomposed constraint similar to raw constraint
         CM.createDecomposed(r, r.nl_constraint)
-        r.time_decomp = 0
         
 def decompInteraction(r):
     if WITH_DECOMP_CONFIRM:
-        time_validation = time.time()
+        time_decomp_validation = time.time()
         answer = minput("Press Enter or give feedback: ")
         if answer=='':
             mprint("OK")
@@ -90,7 +89,7 @@ def decompInteraction(r):
         else:
             mprint("\n> " + answer)
         
-        r.time_validation += time.time() - time_validation
+        r.time_decomp_validation += time.time() - time_decomp_validation
         decompOK = answer==''
         if not decompOK:
             ## Re-decompose with user feedback
@@ -151,7 +150,7 @@ def initialEncoding(r):
     stopTimer()
     
     t_encoding = time.time() - t_encoding
-    r.time_initial_encoding = t_encoding
+    r.time_initial_encoding += t_encoding
     mprint(f"\nEncoding done [{r.time_initial_encoding:.2f}s]")
 
 def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
@@ -166,14 +165,14 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
         if i==0 and feedback==None:
             time_encoding = time.time()
             encoding = LLM.encodePrefs(d.nl_constraint, d.encoding_conv)
-            d.time_encoding = time.time()-time_encoding
+            d.time_encoding += time.time()-time_encoding
         else:
             time_reencoding = time.time()
             encoding = LLM.reencodePrefs(feedback, d.encoding_conv)
             if not reencode_e2nl:
-                d.time_reencoding = time.time()-time_reencoding
+                d.time_reencoding += time.time()-time_reencoding
             else:
-                d.time_e2nl_reencoding = time.time()-time_reencoding
+                d.time_e2nl_reencoding += time.time()-time_reencoding
         encoding = tools.initialFixes(encoding)
         
         # VERIFIER
@@ -181,7 +180,7 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
             time_verifier = time.time()
             updatedProblem = tools.updateProblem(g_problem, [encoding])
             result = tools.verifyEncoding(updatedProblem, g_domain, encoding)
-            d.time_verifier = time.time()-time_verifier
+            d.time_verifier += time.time()-time_verifier
             encodingOK = result=='OK'
             if encodingOK:
                 d.encoding = encoding
@@ -198,7 +197,7 @@ def encodeDecomposed(d, feedback=None, reencode_e2nl=False):
         if WITH_E2NL:
             time_e2nl = time.time()
             d.e2nl = LLM.E2NL(d.encoding)
-            d.time_e2nl = time.time()-time_e2nl
+            d.time_e2nl += time.time()-time_e2nl
             increase_e2nl_done()
                 
         i+=1
@@ -219,7 +218,7 @@ def encodingInteraction(d):
 
     # E2NL
     if WITH_E2NL:
-        time_validation = time.time()
+        time_e2nl_validation = time.time()
         mprint(f'E2NL: "{d.e2nl}"')
         mprint("\nDoes this back-translation sounds correct?")
         answer = minput("Press Enter for yes or give feedback: ")
@@ -231,7 +230,7 @@ def encodingInteraction(d):
         else:
             mprint("\n> " + answer + '\n')
         
-        d.time_validation = time.time()-time_validation
+        d.time_e2nl_validation += time.time()-time_e2nl_validation
         e2nlOK = answer==''
         if not e2nlOK:
             return answer

@@ -18,8 +18,8 @@ class RawConstraint(Constraint):
         
         # times
         self.time_input = 0
-        self.time_decomp = 0
-        self.time_validation = 0
+        self.time_initial_decomp = 0
+        self.time_decomp_validation = 0
         self.time_redecomp = 0
         self.time_initial_encoding = 0
     
@@ -83,7 +83,7 @@ class DecomposedConstraint(Constraint):
         self.time_verifier = 0
         self.time_reencoding = 0
         self.time_e2nl = 0
-        self.time_validation = 0
+        self.time_e2nl_validation = 0
         self.time_e2nl_reencoding = 0 
         
     def deactivate(self):

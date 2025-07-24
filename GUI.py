@@ -855,8 +855,8 @@ class PlanFrame(customtkinter.CTkFrame):
         for idr,r in CAI.CM.raw_constraints.items():
             if r.isActivated() or r.isPartiallyActivated():
                 data['detailed_translation_times']['input_time'] += r.time_input
-                data['detailed_translation_times']['decomp_time'] += r.time_decomp
-                data['detailed_translation_times']['decomp_validation_time'] += r.time_validation
+                data['detailed_translation_times']['decomp_time'] += r.time_initial_decomp
+                data['detailed_translation_times']['decomp_validation_time'] += r.time_decomp_validation
                 data['detailed_translation_times']['redecomp_time'] += r.time_redecomp
                 data['detailed_translation_times']['initial_encoding_time'] += r.time_initial_encoding
                 for d in r.children:
@@ -865,7 +865,7 @@ class PlanFrame(customtkinter.CTkFrame):
                         data['detailed_translation_times']['verifier_time'] += d.time_verifier
                         data['detailed_translation_times']['reencoding_time'] += d.time_reencoding
                         data['detailed_translation_times']['e2nl_time'] += d.time_e2nl
-                        data['detailed_translation_times']['encoding_validation_time'] += d.time_validation
+                        data['detailed_translation_times']['encoding_validation_time'] += d.time_e2nl_validation
                         data['detailed_translation_times']['e2nl_reencoding_time'] += d.time_e2nl_reencoding
 
         data['translation_time'] = 0
