@@ -185,9 +185,12 @@ class ConstraintManager:
         self.deleteConstraints(to_delete)
         
     def dump(self, problem_name):
+        json_string = jsonpickle.encode(self, indent=4)
+        
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        with open(f"dumps_CM/{problem_name}_{date}.json", 'w') as f:
-            json_string = jsonpickle.encode(self, indent=4)
+        filename = f"dumps_CM/{problem_name}_{date}.json"
+        
+        with open(filename, 'w') as f:
             f.write(json_string)
         
     def load(self, filename):

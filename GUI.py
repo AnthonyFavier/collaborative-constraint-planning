@@ -10,6 +10,7 @@ import threading
 import pyperclip
 import ctypes
 import json
+import jsonpickle
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 except:
@@ -914,9 +915,14 @@ class PlanFrame(customtkinter.CTkFrame):
             mprint('\tDecomposition time = ' + '{:.2f}'.format(data['decomposition_time']))
             mprint('\tEncoding time = ' + '{:.2f}'.format(data['encoding_time']))
         
+        data_CM = (data, CAI.CM)
+        json_string= jsonpickle.encode(data_CM, indent=4)
+        
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        with open(f'export-solving-results_{date}.json', 'w') as f:
-            json.dump(data, f, indent=4)
+        filename = f'export-solving-results_{date}.json' 
+        
+        with open(filename, 'w') as f:
+            f.write(json_string)
         
                 
     def printMain(self, txt):
