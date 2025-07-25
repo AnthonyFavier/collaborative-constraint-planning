@@ -128,6 +128,13 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     authorized_keywords = PDDL_keywords + TEMPORAL_keywords + g_fluent_names + g_all_objects + [object_type for object_type in g_typed_objects] + ['(', ')']
 
     L = filteredEncoding
+    # remove comments
+    while True:
+        i1 = L.find(';')
+        if i1==-1:
+            break
+        i2 = L.find('\n', i1)
+        L = L[:i1] + L[i2:]
     L = " ( ".join(L.split('('))
     L = " ) ".join(L.split(')'))
     L = " ".join(L.split())
