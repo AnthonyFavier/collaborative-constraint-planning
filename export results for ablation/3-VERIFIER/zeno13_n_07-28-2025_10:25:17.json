@@ -1,0 +1,139 @@
+{
+    "py/tuple": [
+        {
+            "problem_name": "zeno13_n",
+            "detailed_translation_times": {
+                "total_time": 66.96326160430908,
+                "input_time": 14.143062353134155,
+                "decomp_time": 0,
+                "decomp_validation_time": 0,
+                "redecomp_time": 0,
+                "initial_encoding_time": 52.808101654052734,
+                "encoding_time": 29.387097597122192,
+                "verifier_time": 0.27489352226257324,
+                "reencoding_time": 23.144761085510254,
+                "e2nl_time": 0,
+                "encoding_validation_time": 0,
+                "e2nl_reencoding_time": 0
+            },
+            "translation_time": 66.96326160430908,
+            "decomposition_time": 0,
+            "encoding_time": 53.08299517631531,
+            "input_time": 14.143062353134155,
+            "interaction_time": 0,
+            "planning_results": {},
+            "solving_time": 0
+        },
+        {
+            "py/object": "Constraints.ConstraintManager",
+            "problem_name": "zeno13_n",
+            "constraints": {
+                "R16": {
+                    "py/object": "Constraints.RawConstraint",
+                    "symbol": "R16",
+                    "nl_constraint": "The flying route from city0 to city3 is too windy and unsafe. There should be no flight on that rout",
+                    "children": [
+                        {
+                            "py/object": "Constraints.DecomposedConstraint",
+                            "symbol": "D17",
+                            "nl_constraint": "The flying route from city0 to city3 is too windy and unsafe. There should be no flight on that rout",
+                            "parent": {
+                                "py/id": 5
+                            },
+                            "encoding": "(always (forall (?a - aircraft)\n    (and \n        (= (n_flyslow ?a city0 city3) 0)\n        (= (n_flyfast ?a city0 city3) 0))))",
+                            "e2nl": "",
+                            "_activated": true,
+                            "encoding_conv": {
+                                "py/object": "LLM.ConversationHistory",
+                                "turns": [
+                                    {
+                                        "role": "user",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.\n</information>\n\n<instructions> \n- Translate the input constraint into correct PDDL3.0.\n- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.\n- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.\n- Be sure to include temporal logic like operators in your translation.\n- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.\n</instructions>\n\n<user_input>\nThe flying route from city0 to city3 is too windy and unsafe. There should be no flight on that rout\n</user_input>"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "The user wants me to translate a natural language constraint into PDDL3.0. The constraint is:\n\n\"The flying route from city0 to city3 is too windy and unsafe. There should be no flight on that route\"\n\nThis means that no aircraft should ever fly directly from city0 to city3. In PDDL, this would mean that we should never have a state where an aircraft that was located in city0 becomes located in city3 through a flight action.\n\nLet me think about how to express this in PDDL3.0. Since PDDL3.0 constraints are state-based and can use temporal logic operators, I need to think about what states would indicate that a flight has occurred from city0 to city3.\n\nLooking at the domain, there are two flying actions: flyslow and flyfast. Both of these actions take an aircraft from one city to another.\n\nIn PDDL3.0, I can use temporal logic operators like:\n- always (G): something must always be true\n- eventually (F): something must eventually be true\n- next (X): something must be true in the next state\n- until (U): something must be true until something else becomes true\n\nSince I want to prevent flights from city0 to city3, I need to express that it should never be the case that an aircraft moves from city0 to city3.\n\nOne way to think about this: if an aircraft is located in city0 in one state, then in the next state, if the aircraft is located in city3, that would indicate a direct flight from city0 to city3 occurred.\n\nSo I want to express: \"It should never be the case that an aircraft is located in city0 and in the next state the same aircraft is located in city3\"\n\nIn PDDL3.0, this could be written as:\n(always (forall (?a - aircraft) \n    (imply (located ?a city0) \n        (always (not (located ?a city3))))))\n\nI realize this constraint is too strict. The goal is to prevent direct flights between specific cities, not completely block all potential routes that might pass through those cities.\n\nThe key is to carefully craft a constraint that specifically targets direct flights while allowing indirect routes that might involve intermediate cities.\n\nIn PDDL temporal logic, I want to express a rule that prevents an aircraft from moving directly from city0 to city3 in a single transition, without eliminating more complex multi-city travel paths.\n\nThe constraint needs to capture the nuance of preventing immediate, single-step movement between these specific cities while preserving overall route flexibility.\n\nI'll need to carefully construct a state-based predicate that tracks location changes, ensuring the rule applies universally across all aircraft without blocking more complex routing strategies.\n\nThe challenge is translating this spatial restriction into a logical constraint that operates purely on state predicates, without referencing specific actions like flying.\n\nMy approach must leverage PDDL3.0's state-based constraint mechanisms to create a rule that effectively blocks direct city0-to-city3 transitions while maintaining overall route planning capabilities.\n\nI'm exploring how to formulate a constraint that universally prevents aircraft from making this specific direct route transition, focusing on state properties rather than action-specific prohibitions.\n\nMy current formulation uses a temporal logic approach, applying a universal quantifier across all aircraft. The constraint ensures that whenever an aircraft is in city0, its subsequent state must exclude being in city3.\n\nThe key insight is using the \"imply\" logical operator to create a conditional constraint that applies across all aircraft, effectively blocking this particular route transition while maintaining flexibility in other movement scenarios.\n\nI'm carefully considering the precise temporal logic syntax to accurately represent this routing restriction in the planning domain specification."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<pddl>\n(always (forall (?a - aircraft) \n    (imply (located ?a city0) \n        (next (not (located ?a city3))))))\n</pddl>"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "user",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "next is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "The user is right - \"next\" is not a supported PDDL keyword. I need to think about this differently.\n\nLooking at the PDDL3.0 specification and the domain, I need to express that no flight should occur from city0 to city3. Since PDDL3.0 constraints are state-based and can only refer to existing predicates and fluents, I need to think about what states would be invalid.\n\nThe constraint should prevent any aircraft from being located in city3 if it was previously located in city0 in a direct transition. But since I can't use \"next\", I need to think about other temporal operators or state-based constraints.\n\nIn PDDL3.0, the main temporal operators are:\n- always (or G)\n- eventually (or F) \n- until (U)\n\nLooking at this again, maybe I should approach it differently. If I want to prevent flights from city0 to city3, I could say that whenever an aircraft is located in city0, it should never eventually be located in city3 directly after that. But this might be too restrictive as it would prevent any route from city0 to city3, even with intermediate stops.\n\nActually, let me reconsider the problem. The constraint is about preventing direct flights from city0 to city3. In a state-based approach, this is tricky because I can't directly refer to the action that caused the state change.\n\nOne approach could be to use a combination of always and imply to say that it should never be the case that an aircraft is both located in city0 and city3 simultaneously (which would be impossible anyway), or some other logical constraint.\n\nWait, I think I'm overcomplicating this. Let me look at what temporal operators are actually available in PDDL3.0.\n\nActually, looking at standard PDDL3.0, the main temporal logic operators are:\n- always\n- sometime\n- at-most-once\n- sometime-before\n- sometime-after\n\n\n- \nI'm exploring a nuanced approach to constraint design. The challenge lies in crafting a state-based restriction that prevents direct flights between specific cities. I'll investigate how temporal logic operators might help express this complex routing constraint without overly limiting aircraft movement.\n\nThe domain's action tracking functions suggest potential ways to model these restrictions precisely. I'll need to carefully analyze how to leverage these predicates to create a meaningful constraint that prevents direct travel between city0 and city3.\n\nMy strategy involves using universal quantification to create a generalized rule that applies across all aircraft, avoiding the need to manually list each plane. This approach offers a more elegant and scalable solution to routing restrictions.\n\nI'll define a constraint that universally prevents any aircraft from executing slow or fast flights between city0 and city3, ensuring zero flights for all planes."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<pddl>\n(always (forall (?a - aircraft)\n    (and \n        (= (n_flyslow ?a city0 city3) 0)\n        (= (n_flyfast ?a city0 city3) 0))))\n</pddl>"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "nb_retries": 1,
+                            "nb_e2nl_retries": 0,
+                            "time_encoding": 29.387097597122192,
+                            "time_verifier": 0.27489352226257324,
+                            "time_reencoding": 23.144761085510254,
+                            "time_e2nl": 0,
+                            "time_e2nl_validation": 0,
+                            "time_e2nl_reencoding": 0
+                        }
+                    ],
+                    "decomp_conv": null,
+                    "time_total": 66.96326160430908,
+                    "time_input": 14.143062353134155,
+                    "time_initial_decomp": 0,
+                    "time_decomp_validation": 0,
+                    "time_redecomp": 0,
+                    "time_initial_encoding": 52.808101654052734
+                },
+                "D17": {
+                    "py/id": 7
+                }
+            },
+            "raw_constraints": {
+                "R16": {
+                    "py/id": 5
+                }
+            },
+            "decomposed_constraints": {
+                "D17": {
+                    "py/id": 7
+                }
+            }
+        }
+    ]
+}

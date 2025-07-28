@@ -1,0 +1,72 @@
+"(always (located person7 city0))
+(always (located plane2 city2))
+(always (located plane3 city3))
+(always (= (onboard plane2) 0))
+(always (= (onboard plane3) 0))
+(always (= (fuel plane2) 1469))
+(always (= (fuel plane3) 1532))",1,6.830439329147339,24.671903371810913,0,62.07861828804016,88.24757552146912,1,2,1,"> Also avoid the two planes from being refueled"
+"(always 
+  (and
+    ;; person7 should not board or debark any aircraft at any city
+    (forall (?a - aircraft ?c - city) 
+      (= (n_board person7 ?a ?c) 0))
+    (forall (?a - aircraft ?c - city) 
+      (= (n_debark person7 ?a ?c) 0))
+    
+    ;; plane2 should not be used in any actions
+    (= (n_refuel plane2) 0)
+    (forall (?c1 ?c2 - city) 
+      (= (n_flyslow plane2 ?c1 ?c2) 0))
+    (forall (?c1 ?c2 - city) 
+      (= (n_flyfast plane2 ?c1 ?c2) 0))
+    (forall (?p - person ?c - city) 
+      (= (n_board ?p plane2 ?c) 0))
+    (forall (?p - person ?c - city) 
+      (= (n_debark ?p plane2 ?c) 0))
+    
+    ;; plane3 should not be used in any actions
+    (= (n_refuel plane3) 0)
+    (forall (?c1 ?c2 - city) 
+      (= (n_flyslow plane3 ?c1 ?c2) 0))
+    (forall (?c1 ?c2 - city) 
+      (= (n_flyfast plane3 ?c1 ?c2) 0))
+    (forall (?p - person ?c - city) 
+      (= (n_board ?p plane3 ?c) 0))
+    (forall (?p - person ?c - city) 
+      (= (n_debark ?p plane3 ?c) 0))
+  )
+)",1,7.731528043746948,14.044011354446411,0,55.40207076072693,59.62042784690857,1,1,0,
+"(always (and
+    (forall (?p - person) (not (in ?p plane2)))
+    (forall (?p - person) (not (in ?p plane3)))
+    (located plane2 city2)
+    (located plane3 city3)
+    (= (n_refuel plane2) 0)
+    (= (n_refuel plane3) 0)
+))",1,4.138385534286499,23.579445362091064,0,41.24737739562988,63.131380796432495,1,2,1,"> Also avoid refueling"
+"(always (forall (?p - person) (not (in ?p plane2))))
+(always (forall (?p - person) (not (in ?p plane3))))
+(always (located plane2 city2))
+(always (located plane3 city3))
+(always (= (fuel plane2) 1469))
+(always (= (fuel plane3) 1532))",1,2.6201093196868896,36.12533664703369,0,58.240657806396484,83.74043226242065,1,2,1,"> Also avoid the two planes from being refueled"
+"(always 
+  (forall (?dest - city) 
+    (<= (+ (n_flyslow plane1 city0 ?dest) (n_flyslow plane1 city1 ?dest) (n_flyslow plane1 city2 ?dest) (n_flyslow plane1 city3 ?dest) (n_flyslow plane1 city4 ?dest) (n_flyslow plane1 city5 ?dest)
+           (n_flyfast plane1 city0 ?dest) (n_flyfast plane1 city1 ?dest) (n_flyfast plane1 city2 ?dest) (n_flyfast plane1 city3 ?dest) (n_flyfast plane1 city4 ?dest) (n_flyfast plane1 city5 ?dest)) 3)))",1,8.531087875366211,7.949727773666382,0,49.70879673957825,61.837342739105225,1,1,0,
+"(always (forall (?c - city) 
+  (<= (+ (n_flyslow plane1 city0 ?c) (n_flyslow plane1 city1 ?c) (n_flyslow plane1 city2 ?c) (n_flyslow plane1 city3 ?c) (n_flyslow plane1 city4 ?c) (n_flyslow plane1 city5 ?c)
+         (n_flyfast plane1 city0 ?c) (n_flyfast plane1 city1 ?c) (n_flyfast plane1 city2 ?c) (n_flyfast plane1 city3 ?c) (n_flyfast plane1 city4 ?c) (n_flyfast plane1 city5 ?c)) 3)))",1,9.73,5.84,0.0,52.29,52.31,1,1,0,
+"(always (or
+  (exists (?c - city) (and (located person1 ?c) (located person3 ?c) 
+                          (forall (?a - aircraft) (and (not (in person1 ?a)) (not (in person3 ?a))))))
+  (exists (?a - aircraft) (and (in person1 ?a) (in person3 ?a)))
+  (exists (?a - aircraft ?c - city) (and (in person1 ?a) (located person3 ?c) (located ?a ?c)))
+  (exists (?a - aircraft ?c - city) (and (in person3 ?a) (located person1 ?c) (located ?a ?c)))))",1,5.927238941192627,84.4585931301117,0,92.86850428581238,174.40090680122375,1,3,2,"> By traveling together I mean that they should always either be in the same city, in the same plane, on sequentially board a same plane from a same city
+> Person1 and person3 can't board a same plane at the same time. Account for the transition state of sequentially boarding a plane"
+"(always (or 
+    (exists (?c - city) (and (located person1 ?c) (located person3 ?c)))
+    (exists (?a - aircraft) (and (in person1 ?a) (in person3 ?a)))
+    (exists (?a - aircraft ?c - city) (and (in person1 ?a) (located person3 ?c) (located ?a ?c)))
+    (exists (?a - aircraft ?c - city) (and (in person3 ?a) (located person1 ?c) (located ?a ?c)))
+))",1,5.927248001098633,52.85746455192566,0,72.88333678245544,114.08886647224426,1,2,1,"> I actually mean that they should always either be in the same city, in the same plane, or when one is boarding a plane then the other in the same city as the plane is located in"

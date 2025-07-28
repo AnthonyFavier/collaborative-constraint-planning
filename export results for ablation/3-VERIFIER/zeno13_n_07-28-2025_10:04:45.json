@@ -1,0 +1,112 @@
+{
+    "py/tuple": [
+        {
+            "problem_name": "zeno13_n",
+            "detailed_translation_times": {
+                "total_time": 39.85532999038696,
+                "input_time": 8.023714303970337,
+                "decomp_time": 0,
+                "decomp_validation_time": 0,
+                "redecomp_time": 0,
+                "initial_encoding_time": 31.820834159851074,
+                "encoding_time": 31.441579818725586,
+                "verifier_time": 0.37862634658813477,
+                "reencoding_time": 0,
+                "e2nl_time": 0,
+                "encoding_validation_time": 0,
+                "e2nl_reencoding_time": 0
+            },
+            "translation_time": 39.85532999038696,
+            "decomposition_time": 0,
+            "encoding_time": 32.19946050643921,
+            "input_time": 8.023714303970337,
+            "interaction_time": 0,
+            "planning_results": {},
+            "solving_time": 0
+        },
+        {
+            "py/object": "Constraints.ConstraintManager",
+            "problem_name": "zeno13_n",
+            "constraints": {
+                "R10": {
+                    "py/object": "Constraints.RawConstraint",
+                    "symbol": "R10",
+                    "nl_constraint": "Plane1 should never fly to a same city more than 3 times",
+                    "children": [
+                        {
+                            "py/object": "Constraints.DecomposedConstraint",
+                            "symbol": "D11",
+                            "nl_constraint": "Plane1 should never fly to a same city more than 3 times",
+                            "parent": {
+                                "py/id": 5
+                            },
+                            "encoding": "(always (and\n  (<= (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0) (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0)) 3)\n  (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 3)\n  (<= (+ (n_flyslow plane1 city0 city2) (n_flyslow plane1 city1 city2) (n_flyslow plane1 city2 city2) (n_flyslow plane1 city3 city2) (n_flyslow plane1 city4 city2) (n_flyslow plane1 city5 city2) (n_flyfast plane1 city0 city2) (n_flyfast plane1 city1 city2) (n_flyfast plane1 city2 city2) (n_flyfast plane1 city3 city2) (n_flyfast plane1 city4 city2) (n_flyfast plane1 city5 city2)) 3)\n  (<= (+ (n_flyslow plane1 city0 city3) (n_flyslow plane1 city1 city3) (n_flyslow plane1 city2 city3) (n_flyslow plane1 city3 city3) (n_flyslow plane1 city4 city3) (n_flyslow plane1 city5 city3) (n_flyfast plane1 city0 city3) (n_flyfast plane1 city1 city3) (n_flyfast plane1 city2 city3) (n_flyfast plane1 city3 city3) (n_flyfast plane1 city4 city3) (n_flyfast plane1 city5 city3)) 3)\n  (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 3)\n  (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyslow plane1 city5 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5) (n_flyfast plane1 city5 city5)) 3)\n))",
+                            "e2nl": "",
+                            "_activated": true,
+                            "encoding_conv": {
+                                "py/object": "LLM.ConversationHistory",
+                                "turns": [
+                                    {
+                                        "role": "user",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.\n</information>\n\n<instructions> \n- Translate the input constraint into correct PDDL3.0.\n- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.\n- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.\n- Be sure to include temporal logic like operators in your translation.\n- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.\n</instructions>\n\n<user_input>\nPlane1 should never fly to a same city more than 3 times\n</user_input>"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "The user wants me to translate the constraint \"Plane1 should never fly to a same city more than 3 times\" into PDDL3.0.\n\nLet me analyze this constraint:\n- It's about plane1 specifically\n- It's about flying to cities \n- It should never fly to the same city more than 3 times\n- This means that for any city, plane1 can fly to it at most 3 times\n\nLooking at the domain, I can see there are actions `flyslow` and `flyfast` that represent flying. Both of these actions have functions that count the number of times they are executed:\n- `(n_flyslow ?a - aircraft ?c1 ?c2 - city)` - counts slow flights from c1 to c2\n- `(n_flyfast ?a - aircraft ?c1 ?c2 - city)` - counts fast flights from c1 to c2\n\nSo for plane1 to never fly to the same city more than 3 times, I need to ensure that for any city c, the sum of `(n_flyslow plane1 ?c1 c)` and `(n_flyfast plane1 ?c1 c)` over all possible origin cities ?c1 is at most 3.\n\nWait, let me think about this more carefully. The constraint is about flying \"to\" a city. So if plane1 flies from city1 to city2, that counts as flying \"to\" city2.\n\nSo for any destination city c, I need:\n\u2211_{c1} (n_flyslow plane1 c1 c) + \u2211_{c1} (n_flyfast plane1 c1 c) \u2264 3\n\nBut PDDL3.0 doesn't have universal quantifiers over objects in constraints. I need to think of this differently.\n\nActually, let me look at the problem again. \n\nI'll need to explicitly track flights for each specific city in the problem. With six cities (city0 through city5), I'll need to create detailed constraints that limit plane1's total flights to each destination to no more than 3 times. This means carefully summing up all possible flight paths to each individual city, considering both slow and fast flight actions.\n\nThe temporal logic approach using the `always` operator provides a more elegant solution. By applying this constraint, I can ensure that across the entire planning timeline, no city receives more than 3 total flights from plane1, regardless of the flight type or origin city.\n\nThe constraint will systematically sum flight frequencies for each city, preventing excessive visitation while maintaining flexibility in route planning. I'll complete the partial thought from the previous thinking by copying over the next part of the thinking, which finishes the cut-off line about (n_flyfast plane1 city4 city1):\n\n(n_flyfast plane1 city5 city1)) 3)\n  (<= (+ (n_flyslow plane1 city0 city2) (n_flyslow plane1 city1 city2) (n_flyslow plane1 city2 city2) (n_flyslow plane1 city3 city2) (n_flyslow plane1 city4 city2) (n_flyslow plane1 city5 city2) (n_flyfast plane1 city0 city2) (n_flyfast plane1 city1 city2) (n_flyfast plane1 city2 city2) (n_flyfast plane1 city3 city2) (n_flyfast plane1 city4 city2) (n_flyfast plane1 city5 city2)) 3)\n\nI notice a pattern of flight constraints for plane1 across different cities, with both slow and fast flight options limited to 3 movements. The constraints systematically cover all possible city combinations for the plane's travel.\n\nThe logic ensures that plane1 has restricted mobility, tracking its potential movements between various city pairs using both slow and fast flight modes, with a maximum of 3 total movements.\n\nI'm verifying the constraint applies uniformly across all destination cities, limiting total flights to prevent excessive travel."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<pddl>\n(always (and\n  (<= (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0) (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0)) 3)\n  (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 3)\n  (<= (+ (n_flyslow plane1 city0 city2) (n_flyslow plane1 city1 city2) (n_flyslow plane1 city2 city2) (n_flyslow plane1 city3 city2) (n_flyslow plane1 city4 city2) (n_flyslow plane1 city5 city2) (n_flyfast plane1 city0 city2) (n_flyfast plane1 city1 city2) (n_flyfast plane1 city2 city2) (n_flyfast plane1 city3 city2) (n_flyfast plane1 city4 city2) (n_flyfast plane1 city5 city2)) 3)\n  (<= (+ (n_flyslow plane1 city0 city3) (n_flyslow plane1 city1 city3) (n_flyslow plane1 city2 city3) (n_flyslow plane1 city3 city3) (n_flyslow plane1 city4 city3) (n_flyslow plane1 city5 city3) (n_flyfast plane1 city0 city3) (n_flyfast plane1 city1 city3) (n_flyfast plane1 city2 city3) (n_flyfast plane1 city3 city3) (n_flyfast plane1 city4 city3) (n_flyfast plane1 city5 city3)) 3)\n  (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 3)\n  (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyslow plane1 city5 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5) (n_flyfast plane1 city5 city5)) 3)\n))\n</pddl>"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "nb_retries": 0,
+                            "nb_e2nl_retries": 0,
+                            "time_encoding": 31.441579818725586,
+                            "time_verifier": 0.37862634658813477,
+                            "time_reencoding": 0,
+                            "time_e2nl": 0,
+                            "time_e2nl_validation": 0,
+                            "time_e2nl_reencoding": 0
+                        }
+                    ],
+                    "decomp_conv": null,
+                    "time_total": 39.85532999038696,
+                    "time_input": 8.023714303970337,
+                    "time_initial_decomp": 0,
+                    "time_decomp_validation": 0,
+                    "time_redecomp": 0,
+                    "time_initial_encoding": 31.820834159851074
+                },
+                "D11": {
+                    "py/id": 7
+                }
+            },
+            "raw_constraints": {
+                "R10": {
+                    "py/id": 5
+                }
+            },
+            "decomposed_constraints": {
+                "D11": {
+                    "py/id": 7
+                }
+            }
+        }
+    ]
+}
