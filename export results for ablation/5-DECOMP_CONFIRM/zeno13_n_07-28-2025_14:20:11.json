@@ -1,0 +1,143 @@
+{
+    "py/tuple": [
+        {
+            "problem_name": "zeno13_n",
+            "detailed_translation_times": {
+                "total_time": 41.89179468154907,
+                "input_time": 8.825805425643921,
+                "decomp_time": 14.602836847305298,
+                "decomp_validation_time": 3.1137986183166504,
+                "redecomp_time": 0,
+                "initial_encoding_time": 15.326091766357422,
+                "encoding_time": 15.159038305282593,
+                "verifier_time": 0.16604375839233398,
+                "reencoding_time": 0,
+                "e2nl_time": 0,
+                "encoding_validation_time": 0,
+                "e2nl_reencoding_time": 0
+            },
+            "translation_time": 41.89179468154907,
+            "decomposition_time": 14.602836847305298,
+            "encoding_time": 15.492135524749756,
+            "input_time": 8.825805425643921,
+            "interaction_time": 3.1137986183166504,
+            "planning_results": {},
+            "solving_time": 0
+        },
+        {
+            "py/object": "Constraints.ConstraintManager",
+            "problem_name": "zeno13_n",
+            "constraints": {
+                "R11": {
+                    "py/object": "Constraints.RawConstraint",
+                    "symbol": "R11",
+                    "nl_constraint": "A person should never be debarked in a same city more than once",
+                    "children": [
+                        {
+                            "py/object": "Constraints.DecomposedConstraint",
+                            "symbol": "D12",
+                            "nl_constraint": "For each person and each city, the total number of times that person has been debarked in that city across all aircraft should never exceed 1.",
+                            "parent": {
+                                "py/id": 5
+                            },
+                            "encoding": "(always (forall (?p - person ?c - city)\n    (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))",
+                            "e2nl": "",
+                            "_activated": true,
+                            "encoding_conv": {
+                                "py/object": "LLM.ConversationHistory",
+                                "turns": [
+                                    {
+                                        "role": "user",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.\n</information>\n\n<instructions> \n- Translate the input constraint into correct PDDL3.0.\n- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.\n- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.\n- Be sure to include temporal logic like operators in your translation.\n- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.\n</instructions>\n\n<user_input>\nFor each person and each city, the total number of times that person has been debarked in that city across all aircraft should never exceed 1.\n</user_input>"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "The user wants me to translate a natural language constraint into PDDL3.0. The constraint is:\n\n\"For each person and each city, the total number of times that person has been debarked in that city across all aircraft should never exceed 1.\"\n\nLet me analyze this constraint:\n\n1. It's about the total number of times a person has been debarked in a city\n2. This should be summed across all aircraft\n3. This total should never exceed 1\n4. This applies to each person-city pair\n\nLooking at the domain, I can see there's a function `(n_debark ?p - person ?a - aircraft ?c - city)` which counts the number of times person ?p has been debarked from aircraft ?a in city ?c.\n\nSo for a given person ?p and city ?c, I need to sum `(n_debark ?p ?a ?c)` across all aircraft ?a, and this sum should never exceed 1.\n\nSince this is a \"never exceed\" constraint, I need to use the `always` temporal operator, and the constraint should be that the sum is <= 1.\n\nIn PDDL3.0, I would write this as:\n\n```\n(always (forall (?p - person ?c - city)\n    (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))\n```\n\nWait, but this hardcodes the aircraft names. I need to think about this more carefully.\n\nActually, looking at the problem, I can see there are exactly 3 aircraft: plane1, plane2, plane3. So I can explicitly sum over these.\n\nBut let me think about the PDDL3.0 syntax more carefully. In PDDL3.0, I can use quantifiers in constraints.\n\nActually, let me reconsider. The constraint should be that for each person-city pair, the sum of n_debark over all aircraft should never exceed 1.\n\n\nI'll explicitly sum the debark counts for the three known aircraft, ensuring no person debarks more than once in any given city across all planes. The constraint uses the `always` temporal operator to enforce this rule consistently throughout the problem's execution.\n\nThe PDDL3.0 syntax confirms the constraint's structure, with the `forall` quantifier checking every person-city combination and limiting total debarks to one or zero."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<pddl>\n(always (forall (?p - person ?c - city)\n    (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))\n</pddl>"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "nb_retries": 0,
+                            "nb_e2nl_retries": 0,
+                            "time_encoding": 15.159038305282593,
+                            "time_verifier": 0.16604375839233398,
+                            "time_reencoding": 0,
+                            "time_e2nl": 0,
+                            "time_e2nl_validation": 0,
+                            "time_e2nl_reencoding": 0
+                        }
+                    ],
+                    "decomp_conv": {
+                        "py/object": "LLM.ConversationHistory",
+                        "turns": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a constraint in natural language. This constraint must be used as a transjectory hard constraint for the solution plan of the given the PDDL problem. \n</information>\n\n<instructions> \n- Refine the user constraint to make it applicable to the given PDDL problem.\n- You can rephrase and decompose the initial constraint into several other contraints.\n- These constraints should be complementary and they will be later combined with AND operators.\n- Constraints must be state-based and follow a Linear Temporal Logic. So constraints can't directly refer to actions.\n- Avoid explicit PDDL language in your answer, the user can't understand PDDL.\n- The set of all refined constraints must capture the meaning of the initial user constraint. \n- Format your answer as a clear and concise numbered list between the tags <constraints> and </constraints>. There should be no subitems, only the list of refined constraints.\n- After, add 1 or 2 sentences to explain your choice of decomposition between the tags <explanation> and </explanation>.\n- Here is an example of how to format your answer:\n    <constraints>\n        1. [natural_language_constraint_1]\n        2. [natural_language_constraint_2]\n        ...\n    </constraints>\n    <explanation>\n        [consice_explanation]\n    </explanation>\n</instructions>\n\n<user_input>\nA person should never be debarked in a same city more than once\n</user_input>"
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Let me analyze this constraint in the context of the PDDL problem.\n\nThe user constraint is: \"A person should never be debarked in a same city more than once\"\n\nLooking at the PDDL domain, I can see there's a \"debark\" action that moves a person from an aircraft to a city, and there's a function `(n_debark ?p - person ?a - aircraft ?c - city)` that tracks the number of times a person has been debarked from an aircraft in a city.\n\nHowever, the constraint seems to be about a person being debarked in the same city more than once, regardless of which aircraft. So I need to think about this more carefully.\n\nThe constraint is saying that for any person and any city, that person should not be debarked in that city more than once across all aircraft.\n\nSince constraints must be state-based and follow Linear Temporal Logic, and I can't directly refer to actions, I need to think about this in terms of states.\n\nThe key insight is that I need to constrain the sum of debark operations for each person-city pair across all aircraft.\n\nLet me refine this:\n\n1. For each person, the total number of times they are debarked in any specific city (across all aircraft) should never exceed 1.\n\nActually, let me think about this more systematically. The constraint is about limiting debark operations. Since I can't refer to actions directly, I need to refer to the counter that tracks these operations.\n\nThe function `(n_debark ?p - person ?a - aircraft ?c - city)` tracks how many times person p has been debarked from aircraft a in city c.\n\nSo the constraint would be: for any person p and city c, the sum of `(n_debark p a c)` over all aircraft a should never exceed 1.\n\nBut I need to express this in natural language without PDDL syntax.\n\nLet me break this down:\n\n1. For each person and each city, the total count of that person being debarked in that city across all aircraft should never exceed 1.\n\n\nI can distill this to a simple, clear rule: each individual can only be debarked once in any specific city, regardless of the aircraft used. This ensures no repeated city landings for the same person, maintaining a unique travel pattern across different transportation methods."
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<constraints>\n1. For each person and each city, the total number of times that person has been debarked in that city across all aircraft should never exceed 1.\n</constraints>\n\n<explanation>\nThe constraint is refined to focus on the state-based counting of debark operations per person-city pair, ensuring that no person can be debarked multiple times in the same city regardless of which aircraft is used.\n</explanation>"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "time_total": 41.89179468154907,
+                    "time_input": 8.825805425643921,
+                    "time_initial_decomp": 14.602836847305298,
+                    "time_decomp_validation": 3.1137986183166504,
+                    "time_redecomp": 0,
+                    "time_initial_encoding": 15.326091766357422
+                },
+                "D12": {
+                    "py/id": 7
+                }
+            },
+            "raw_constraints": {
+                "R11": {
+                    "py/id": 5
+                }
+            },
+            "decomposed_constraints": {
+                "D12": {
+                    "py/id": 7
+                }
+            }
+        }
+    ]
+}

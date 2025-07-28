@@ -1,0 +1,143 @@
+{
+    "py/tuple": [
+        {
+            "problem_name": "zeno13_n",
+            "detailed_translation_times": {
+                "total_time": 54.01613998413086,
+                "input_time": 15.73698353767395,
+                "decomp_time": 23.912532806396484,
+                "decomp_validation_time": 4.820006847381592,
+                "redecomp_time": 0,
+                "initial_encoding_time": 9.523471355438232,
+                "encoding_time": 9.295864582061768,
+                "verifier_time": 0.22712111473083496,
+                "reencoding_time": 0,
+                "e2nl_time": 0,
+                "encoding_validation_time": 0,
+                "e2nl_reencoding_time": 0
+            },
+            "translation_time": 54.01613998413086,
+            "decomposition_time": 23.912532806396484,
+            "encoding_time": 9.750592470169067,
+            "input_time": 15.73698353767395,
+            "interaction_time": 4.820006847381592,
+            "planning_results": {},
+            "solving_time": 0
+        },
+        {
+            "py/object": "Constraints.ConstraintManager",
+            "problem_name": "zeno13_n",
+            "constraints": {
+                "R17": {
+                    "py/object": "Constraints.RawConstraint",
+                    "symbol": "R17",
+                    "nl_constraint": "Planes should never have less than half of their maximum fuel capacity",
+                    "children": [
+                        {
+                            "py/object": "Constraints.DecomposedConstraint",
+                            "symbol": "D18",
+                            "nl_constraint": "Every aircraft must always maintain fuel levels at or above 50% of its maximum fuel capacity throughout the entire plan execution.",
+                            "parent": {
+                                "py/id": 5
+                            },
+                            "encoding": "(always (forall (?a - aircraft) (>= (fuel ?a) (* 0.5 (capacity ?a)))))",
+                            "e2nl": "",
+                            "_activated": true,
+                            "encoding_conv": {
+                                "py/object": "LLM.ConversationHistory",
+                                "turns": [
+                                    {
+                                        "role": "user",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a natural language constraint that must be translated into PDDL3.0. The translation will be used by a PDDL planner.\n</information>\n\n<instructions> \n- Translate the input constraint into correct PDDL3.0.\n- The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.\n- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.\n- Be sure to include temporal logic like operators in your translation.\n- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <pddl> and </pddl>.\n</instructions>\n\n<user_input>\nEvery aircraft must always maintain fuel levels at or above 50% of its maximum fuel capacity throughout the entire plan execution.\n</user_input>"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "Let me analyze this constraint step by step:\n\n1. The constraint is: \"Every aircraft must always maintain fuel levels at or above 50% of its maximum fuel capacity throughout the entire plan execution.\"\n\n2. This is a temporal constraint that needs to hold throughout the entire execution - it's an \"always\" constraint.\n\n3. Looking at the domain, I can see:\n   - There are aircraft objects (plane1, plane2, plane3)\n   - Each aircraft has a fuel function: (fuel ?a - aircraft)\n   - Each aircraft has a capacity function: (capacity ?a - aircraft)\n\n4. The constraint means that for every aircraft ?a, the fuel level (fuel ?a) must always be >= 50% of (capacity ?a).\n\n5. In PDDL3.0, temporal logic operators include:\n   - (always <condition>) - condition must hold in all states\n   - (sometime <condition>) - condition must hold in at least one state\n   - (at-most-once <condition>) - condition holds in at most one state\n   - etc.\n\n6. Since this is an \"always\" constraint that must hold throughout the entire plan execution, I need to use the \"always\" temporal operator.\n\n7. The condition needs to be: for all aircraft, fuel >= 0.5 * capacity\n\n8. In PDDL, I need to express this as:\n   (always (forall (?a - aircraft) (>= (fuel ?a) (* 0.5 (capacity ?a)))))\n\nLet me double-check this:\n- \"always\" ensures it holds throughout execution\n- \"forall (?a - aircraft)\" applies to every aircraft\n- \">= (fuel ?a) (* 0.5 (capacity ?a))\" checks that fuel is at least 50% of capacity\n\nThis should capture the constraint correctly."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "role": "assistant",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "<pddl>\n(always (forall (?a - aircraft) (>= (fuel ?a) (* 0.5 (capacity ?a)))))\n</pddl>"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "nb_retries": 0,
+                            "nb_e2nl_retries": 0,
+                            "time_encoding": 9.295864582061768,
+                            "time_verifier": 0.22712111473083496,
+                            "time_reencoding": 0,
+                            "time_e2nl": 0,
+                            "time_e2nl_validation": 0,
+                            "time_e2nl_reencoding": 0
+                        }
+                    ],
+                    "decomp_conv": {
+                        "py/object": "LLM.ConversationHistory",
+                        "turns": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<documents>\n<pddl_domain>\n;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)\n(define (domain zenotravel)\n        ;(:requirements :typing :fluents)\n        (:types\n                locatable city - object\n                aircraft person - locatable\n        )\n        (:predicates\n                (located ?x - locatable ?c - city)\n                (in ?p - person ?a - aircraft)\n        )\n        (:functions\n                (fuel ?a - aircraft)\n                (distance ?c1 - city ?c2 - city)\n                (slow-burn ?a - aircraft)\n                (fast-burn ?a - aircraft)\n                (capacity ?a - aircraft)\n                (total-fuel-used)\n                (onboard ?a - aircraft)\n                (zoom-limit ?a - aircraft)\n\n                (n_board ?p - person ?a - aircraft ?c - city)\n                (n_debark ?p - person ?a - aircraft ?c - city)\n                (n_flyslow ?a - aircraft ?c1 ?c2 - city)\n                (n_flyfast ?a - aircraft ?c1 ?c2 - city)\n                (n_refuel ?a - aircraft)\n        )\n\n        (:action board\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (located ?p ?c)\n                        (located ?a ?c))\n                :effect (and (not (located ?p ?c))\n                        (in ?p ?a)\n                        (increase (onboard ?a) 1)\n                        (increase (n_board ?p ?a ?c) 1))\n        )\n\n        (:action debark\n                :parameters (?p - person ?a - aircraft ?c - city)\n                :precondition (and (in ?p ?a)\n                        (located ?a ?c))\n                :effect (and (not (in ?p ?a))\n                        (located ?p ?c)\n                        (decrease (onboard ?a) 1)\n                        (increase (n_debark ?p ?a ?c) 1))\n        )\n\n        (:action flyslow\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a))))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (slow-burn ?a)))\n                        (increase (n_flyslow ?a ?c1 ?c2) 1))\n        )\n\n        (:action flyfast\n                :parameters (?a - aircraft ?c1 ?c2 - city)\n                :precondition (and (located ?a ?c1)\n                        (>= (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (<= (onboard ?a) (zoom-limit ?a)))\n                :effect (and (not (located ?a ?c1))\n                        (located ?a ?c2)\n                        (increase\n                                (total-fuel-used)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (decrease\n                                (fuel ?a)\n                                (* (distance ?c1 ?c2) (fast-burn ?a)))\n                        (increase (n_flyfast ?a ?c1 ?c2) 1))\n        )\n\n        (:action refuel\n                :parameters (?a - aircraft)\n                :precondition (and (> (capacity ?a) (fuel ?a))\n\n                )\n                :effect (and (assign (fuel ?a) (capacity ?a))\n                        (increase (n_refuel ?a) 1))\n        )\n\n)\n</pddl_domain>\n<pddl_problem>\n(define (problem ZTRAVEL-3-10)\n(:domain zenotravel)\n(:objects\n\tplane1 - aircraft\n\tplane2 - aircraft\n\tplane3 - aircraft\n\tperson1 - person\n\tperson2 - person\n\tperson3 - person\n\tperson4 - person\n\tperson5 - person\n\tperson6 - person\n\tperson7 - person\n\tperson8 - person\n\tperson9 - person\n\tperson10 - person\n\tcity0 - city\n\tcity1 - city\n\tcity2 - city\n\tcity3 - city\n\tcity4 - city\n\tcity5 - city\n\t)\n(:init\n\t(located plane1 city4)\n\t(= (capacity plane1) 2326)\n\t(= (fuel plane1) 205)\n\t(= (slow-burn plane1) 1)\n\t(= (fast-burn plane1) 2)\n\t(= (onboard plane1) 0)\n\t(= (zoom-limit plane1) 10)\n\t(located plane2 city2)\n\t(= (capacity plane2) 12132)\n\t(= (fuel plane2) 1469)\n\t(= (slow-burn plane2) 4)\n\t(= (fast-burn plane2) 9)\n\t(= (onboard plane2) 0)\n\t(= (zoom-limit plane2) 9)\n\t(located plane3 city3)\n\t(= (capacity plane3) 5204)\n\t(= (fuel plane3) 1532)\n\t(= (slow-burn plane3) 2)\n\t(= (fast-burn plane3) 7)\n\t(= (onboard plane3) 0)\n\t(= (zoom-limit plane3) 8)\n\t(located person1 city1)\n\t(located person2 city2)\n\t(located person3 city1)\n\t(located person4 city4)\n\t(located person5 city5)\n\t(located person6 city1)\n\t(located person7 city0)\n\t(located person8 city2)\n\t(located person9 city1)\n\t(located person10 city5)\n\t(= (distance city0 city0) 0)\n\t(= (distance city0 city1) 619)\n\t(= (distance city0 city2) 565)\n\t(= (distance city0 city3) 886)\n\t(= (distance city0 city4) 596)\n\t(= (distance city0 city5) 766)\n\t(= (distance city1 city0) 619)\n\t(= (distance city1 city1) 0)\n\t(= (distance city1 city2) 561)\n\t(= (distance city1 city3) 756)\n\t(= (distance city1 city4) 760)\n\t(= (distance city1 city5) 980)\n\t(= (distance city2 city0) 565)\n\t(= (distance city2 city1) 561)\n\t(= (distance city2 city2) 0)\n\t(= (distance city2 city3) 657)\n\t(= (distance city2 city4) 702)\n\t(= (distance city2 city5) 639)\n\t(= (distance city3 city0) 886)\n\t(= (distance city3 city1) 756)\n\t(= (distance city3 city2) 657)\n\t(= (distance city3 city3) 0)\n\t(= (distance city3 city4) 546)\n\t(= (distance city3 city5) 510)\n\t(= (distance city4 city0) 596)\n\t(= (distance city4 city1) 760)\n\t(= (distance city4 city2) 702)\n\t(= (distance city4 city3) 546)\n\t(= (distance city4 city4) 0)\n\t(= (distance city4 city5) 850)\n\t(= (distance city5 city0) 766)\n\t(= (distance city5 city1) 980)\n\t(= (distance city5 city2) 639)\n\t(= (distance city5 city3) 510)\n\t(= (distance city5 city4) 850)\n\t(= (distance city5 city5) 0)\n\t(= (total-fuel-used) 0)\n)\n(:goal (and\n\t(located plane1 city4)\n\t(located person1 city4)\n\t(located person2 city5)\n\t(located person3 city4)\n\t(located person4 city0)\n\t(located person5 city2)\n\t(located person6 city3)\n\t(located person8 city0)\n\t(located person9 city3)\n\t(located person10 city4)\n\t))\n\n(:metric minimize (total-fuel-used))\n\n\n\n\n\n)\n</pddl_problem>\n</documents> \n\n<information>\nThe user will give as input a constraint in natural language. This constraint must be used as a transjectory hard constraint for the solution plan of the given the PDDL problem. \n</information>\n\n<instructions> \n- Refine the user constraint to make it applicable to the given PDDL problem.\n- You can rephrase and decompose the initial constraint into several other contraints.\n- These constraints should be complementary and they will be later combined with AND operators.\n- Constraints must be state-based and follow a Linear Temporal Logic. So constraints can't directly refer to actions.\n- Avoid explicit PDDL language in your answer, the user can't understand PDDL.\n- The set of all refined constraints must capture the meaning of the initial user constraint. \n- Format your answer as a clear and concise numbered list between the tags <constraints> and </constraints>. There should be no subitems, only the list of refined constraints.\n- After, add 1 or 2 sentences to explain your choice of decomposition between the tags <explanation> and </explanation>.\n- Here is an example of how to format your answer:\n    <constraints>\n        1. [natural_language_constraint_1]\n        2. [natural_language_constraint_2]\n        ...\n    </constraints>\n    <explanation>\n        [consice_explanation]\n    </explanation>\n</instructions>\n\n<user_input>\nPlanes should never have less than half of their maximum fuel capacity\n</user_input>"
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "The user wants me to refine the constraint \"Planes should never have less than half of their maximum fuel capacity\" to make it applicable to the given PDDL problem.\n\nLet me first understand the problem:\n- We have 3 aircraft: plane1, plane2, plane3\n- Each aircraft has a capacity and current fuel level\n- plane1: capacity 2326, current fuel 205\n- plane2: capacity 12132, current fuel 1469  \n- plane3: capacity 5204, current fuel 1532\n\nThe constraint is that planes should never have less than half of their maximum fuel capacity.\n\nSo for each plane:\n- plane1: should never have less than 2326/2 = 1163 fuel\n- plane2: should never have less than 12132/2 = 6066 fuel\n- plane3: should never have less than 5204/2 = 2602 fuel\n\nLooking at the initial state, all planes already violate this constraint:\n- plane1 has 205 fuel but needs at least 1163\n- plane2 has 1469 fuel but needs at least 6066\n- plane3 has 1532 fuel but needs at least 2602\n\nThis is a trajectory hard constraint, meaning it must hold throughout the entire execution of the plan, not just at the end.\n\nThe constraint should be state-based and follow Linear Temporal Logic. I need to avoid explicit PDDL language.\n\nI need to decompose this into constraints that can be understood without PDDL knowledge:\n\n1. Each plane must maintain fuel levels above half their maximum capacity throughout the execution\n2. I could break this down by individual planes, but that might be too specific\n3. The constraint is really about fuel management for all aircraft\n\nLet me think about how to phrase this in natural language:\n\nThe main constraint is about fuel levels for aircraft. Since this is a trajectory constraint, it needs to hold at every state during plan execution.\n\nI think the best way to decompose this is:\n\n\nMaintaining a consistent fuel management strategy across all aircraft is crucial. The core requirement ensures that no aircraft's fuel level drops below 50% of its maximum capacity during any point of the mission. This universal rule applies equally to each aircraft, creating a standardized safety protocol for fuel conservation and operational readiness.\n\nThe initial state presents a challenge, as current fuel levels do not meet the constraint. However, the available \"refuel\" action provides a potential solution by allowing planes to be brought to full capacity before mission execution. This mechanism offers a pathway to compliance with the stringent fuel management requirement.\n\nThe core constraint demands that each aircraft consistently maintain fuel levels at or above 50% of its maximum capacity throughout the entire mission plan. This universal rule applies to all planes without exception, ensuring a critical safety and operational margin during the entire mission trajectory."
+                                    }
+                                ]
+                            },
+                            {
+                                "role": "assistant",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "<constraints>\n1. Every aircraft must always maintain fuel levels at or above 50% of its maximum fuel capacity throughout the entire plan execution.\n</constraints>\n\n<explanation>\nThe constraint is straightforward and doesn't require decomposition since it has a single clear requirement. It establishes a minimum fuel threshold that must be maintained by all aircraft at every point during plan execution, ensuring fuel levels never drop below half of each plane's maximum capacity.\n</explanation>"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "time_total": 54.01613998413086,
+                    "time_input": 15.73698353767395,
+                    "time_initial_decomp": 23.912532806396484,
+                    "time_decomp_validation": 4.820006847381592,
+                    "time_redecomp": 0,
+                    "time_initial_encoding": 9.523471355438232
+                },
+                "D18": {
+                    "py/id": 7
+                }
+            },
+            "raw_constraints": {
+                "R17": {
+                    "py/id": 5
+                }
+            },
+            "decomposed_constraints": {
+                "D18": {
+                    "py/id": 7
+                }
+            }
+        }
+    ]
+}

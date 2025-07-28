@@ -1,0 +1,252 @@
+"(always (located person7 city0))
+(always (located plane2 city2))
+(always (located plane3 city3))
+(always (forall (?p - person) (not (in ?p plane2))))
+(always (forall (?p - person) (not (in ?p plane3))))",1,7.440991640090942,0,15.020256280899048,11.061891078948975,31.733505487442017,0,1,0,"missing refuel"
+"(always (located person7 city0))
+(always (located plane2 city2))
+(always (located plane3 city3))
+(always (and (not (in person7 plane1)) (not (in person7 plane2)) (not (in person7 plane3))))
+(always (forall (?p - person) (not (in ?p plane2))))
+(always (forall (?p - person) (not (in ?p plane3))))",1,6.822346448898315,0,16.832077264785767,21.51206636428833,43.71456289291382,0,0,-1,"Missing refuel"
+"(always (and (not (in person1 plane2))
+             (not (in person2 plane2))
+             (not (in person3 plane2))
+             (not (in person4 plane2))
+             (not (in person5 plane2))
+             (not (in person6 plane2))
+             (not (in person7 plane2))
+             (not (in person8 plane2))
+             (not (in person9 plane2))
+             (not (in person10 plane2))))
+(always (forall (?p - person) (not (in ?p plane3))))
+(always (located plane2 city2))
+(always (located plane3 city3))
+(always (= (fuel plane2) 1469))
+(always (= (fuel plane3) 1532))",1,3.11664080619812,0,17.305570363998413,15.75809645652771,34.904544830322266,1,1,0,""
+"(always (not (exists (?p - person) (in ?p plane2))))
+(always (and 
+    (not (in person1 plane3))
+    (not (in person2 plane3))
+    (not (in person3 plane3))
+    (not (in person4 plane3))
+    (not (in person5 plane3))
+    (not (in person6 plane3))
+    (not (in person7 plane3))
+    (not (in person8 plane3))
+    (not (in person9 plane3))
+    (not (in person10 plane3))
+))
+(always (located plane2 city2))
+(always (located plane3 city3))",1,3.516000986099243,0,13.215452194213867,39.345295429229736,54.720202684402466,0,-1,-2,"Missing refuel"
+"(always (forall (?c - city)
+  (<= (+ (n_flyslow plane1 city0 ?c)
+         (n_flyslow plane1 city1 ?c)
+         (n_flyslow plane1 city2 ?c)
+         (n_flyslow plane1 city3 ?c)
+         (n_flyslow plane1 city4 ?c)
+         (n_flyslow plane1 city5 ?c)
+         (n_flyfast plane1 city0 ?c)
+         (n_flyfast plane1 city1 ?c)
+         (n_flyfast plane1 city2 ?c)
+         (n_flyfast plane1 city3 ?c)
+         (n_flyfast plane1 city4 ?c)
+         (n_flyfast plane1 city5 ?c)) 3)))",1,7.32224702835083,0,23.203009128570557,39.149431467056274,69.46879935264587,1,1,0,""
+"(always (<= (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0) (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0)) 3))
+(always (<= (+ (n_flyslow plane1 city0 city1)
+               (n_flyslow plane1 city2 city1)
+               (n_flyslow plane1 city3 city1)
+               (n_flyslow plane1 city4 city1)
+               (n_flyslow plane1 city5 city1)
+               (n_flyfast plane1 city0 city1)
+               (n_flyfast plane1 city2 city1)
+               (n_flyfast plane1 city3 city1)
+               (n_flyfast plane1 city4 city1)
+               (n_flyfast plane1 city5 city1)) 3))
+(always (<= (+ (n_flyslow plane1 city0 city2) (n_flyslow plane1 city1 city2) (n_flyslow plane1 city3 city2) (n_flyslow plane1 city4 city2) (n_flyslow plane1 city5 city2) (n_flyfast plane1 city0 city2) (n_flyfast plane1 city1 city2) (n_flyfast plane1 city3 city2) (n_flyfast plane1 city4 city2) (n_flyfast plane1 city5 city2)) 3))
+(always 
+  (<= 
+    (+ 
+      (n_flyslow plane1 city0 city3)
+      (n_flyslow plane1 city1 city3)
+      (n_flyslow plane1 city2 city3)
+      (n_flyslow plane1 city3 city3)
+      (n_flyslow plane1 city4 city3)
+      (n_flyslow plane1 city5 city3)
+      (n_flyfast plane1 city0 city3)
+      (n_flyfast plane1 city1 city3)
+      (n_flyfast plane1 city2 city3)
+      (n_flyfast plane1 city3 city3)
+      (n_flyfast plane1 city4 city3)
+      (n_flyfast plane1 city5 city3)
+    )
+    3
+  )
+)
+(always (<= (+ (n_flyslow plane1 city0 city4) 
+               (n_flyslow plane1 city1 city4) 
+               (n_flyslow plane1 city2 city4) 
+               (n_flyslow plane1 city3 city4) 
+               (n_flyslow plane1 city5 city4)
+               (n_flyfast plane1 city0 city4) 
+               (n_flyfast plane1 city1 city4) 
+               (n_flyfast plane1 city2 city4) 
+               (n_flyfast plane1 city3 city4) 
+               (n_flyfast plane1 city5 city4)) 3))
+(always (<= (+ (n_flyslow plane1 city0 city5)
+               (n_flyslow plane1 city1 city5)
+               (n_flyslow plane1 city2 city5)
+               (n_flyslow plane1 city3 city5)
+               (n_flyslow plane1 city4 city5)
+               (n_flyfast plane1 city0 city5)
+               (n_flyfast plane1 city1 city5)
+               (n_flyfast plane1 city2 city5)
+               (n_flyfast plane1 city3 city5)
+               (n_flyfast plane1 city4 city5)) 3))",1,8.122777223587036,0,16.47591257095337,23.39646887779236,46.691099882125854,1,1,0,""
+"(always (not (exists (?a - aircraft) (and (in person1 ?a) (not (in person3 ?a))))))
+(always (forall (?a - aircraft) 
+    (imply (in person3 ?a) (in person1 ?a))))",1,5.324024200439453,0,25.523041486740112,41.560083866119385,71.69828605651855,0,-1,-2,"Missing same city and transition"
+"(always (forall (?a - aircraft) 
+    (imply (in person1 ?a) (in person3 ?a))))
+(always (forall (?a - aircraft) (imply (in person3 ?a) (in person1 ?a))))",1,6.919475793838501,0,14.07120156288147,9.422640085220337,29.93232488632202,0,1,0,"missing same city and transition"
+"(always (forall (?p - person ?c - city) 
+    (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))",1,14.539132356643677,0,16.286734580993652,9.93067479133606,40.55015802383423,1,1,0,""
+"(always (forall (?p - person ?c - city) 
+  (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))",1,11.429784774780273,0,26.073769569396973,21.113885164260864,58.36592125892639,1,1,0,""
+"(always (forall (?a - aircraft) (>= (fuel ?a) (/ (capacity ?a) 2))))",1,11.031399250030518,0,17.73282766342163,8.324639081954956,36.8316171169281,1,1,0,""
+"(always (forall (?a - aircraft) (>= (fuel ?a) (* 0.5 (capacity ?a)))))
+(always (forall (?a - aircraft) (>= (fuel ?a) (/ (capacity ?a) 2))))",1,10.229485034942627,0,14.89168906211853,10.485368013381958,35.122071743011475,1,1,0,""
+"(always (forall (?a - aircraft) 
+          (imply (located ?a city2) 
+                 (not (= (fuel ?a) (capacity ?a))))))",1,14.462618589401245,0,42.63343858718872,12.707579851150513,69.50792741775513,1,1,0,""
+"(always (forall (?a - aircraft) 
+  (imply (located ?a city2) 
+         (not (= (fuel ?a) (capacity ?a))))))",1,7.124779224395752,0,29.284237146377563,9.75619912147522,45.910884380340576,1,1,0,""
+"(always (forall (?a - aircraft) 
+  (imply (located ?a city0) 
+    (not (located ?a city3)))))
+(always (forall (?a - aircraft) 
+    (not (and (located ?a city3) 
+              (sometime-after (located ?a city3) (located ?a city0))))))",1,21.249882698059082,0,16.587676763534546,64.41648364067078,101.76721119880676,0,1,0,"> next is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+
+First constraint encoding is trivial and not helpful"
+"(always (forall (?a - aircraft)
+    (and (= (n_flyslow ?a city0 city3) 0)
+         (= (n_flyfast ?a city0 city3) 0))))
+(always (forall (?a - aircraft) 
+    (and (= (n_flyslow ?a city0 city3) 0) 
+         (= (n_flyfast ?a city0 city3) 0))))",1,20.847005128860474,0,18.329238891601562,87.4570472240448,126.2021222114563,1,1,0,"> next is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+> e is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+"
+"(always (in rover2 waypoint3))
+(always (= (energy rover2) 50))
+(always (empty rover2store))
+(always (and 
+    (forall (?w - waypoint) (not (have_soil_analysis rover2 ?w)))
+    (forall (?w - waypoint) (not (have_rock_analysis rover2 ?w)))
+    (forall (?o - objective ?m - mode) (not (have_image rover2 ?o ?m)))
+))",1,4.813450574874878,0,19.535001516342163,10.461583375930786,33.529889822006226,1,1,0,""
+"(always (in rover2 waypoint3))
+(always (forall (?w - waypoint) (not (have_rock_analysis rover2 ?w))))
+(always (forall (?o - objective ?m - mode) (not (have_image rover2 ?o ?m))))
+(always (empty rover2store))
+(always (not (calibrated camera4 rover2)))",1,6.420513153076172,0,14.490975618362427,11.72613525390625,31.12967801094055,1,1,0,""
+"(always (and 
+    (not (have_soil_analysis rover1 waypoint4))
+    (not (have_soil_analysis rover2 waypoint4))
+    (not (have_soil_analysis rover3 waypoint4))
+))
+(always (and
+    (not (have_rock_analysis rover1 waypoint4))
+    (not (have_rock_analysis rover2 waypoint4))
+    (not (have_rock_analysis rover3 waypoint4))
+))
+
+(always (or (not (communicated_rock_data waypoint4))
+            (and (have_rock_analysis rover0 waypoint4)
+                 (not (have_rock_analysis rover1 waypoint4))
+                 (not (have_rock_analysis rover2 waypoint4))
+                 (not (have_rock_analysis rover3 waypoint4)))))",1,10.227153301239014,0,15.780930519104004,78.71643137931824,103.70342254638672,1,-2,-3,"> implication is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+"
+"(sometime (have_soil_analysis rover0 waypoint4))
+(sometime (have_rock_analysis rover0 waypoint4))",1,11.032864093780518,0,13.546374320983887,16.11765718460083,40.03808307647705,1,1,0,""
+"(always (not (in rover0 waypoint2)))
+(always (not (in rover0 waypoint5)))
+(always (not (in rover1 waypoint2)))
+(always (not (in rover1 waypoint5)))
+(always (not (in rover2 waypoint2)))
+(always (not (in rover2 waypoint5)))
+(always (not (in rover3 waypoint2)))
+(always (not (in rover3 waypoint5)))",1,9.225170135498047,0,17.29292106628418,20.81510043144226,44.70585799217224,1,0,-1,""
+"(always (forall (?r - rover) (not (in ?r waypoint2))))
+(always (forall (?r - rover) (not (in ?r waypoint5))))",1,7.726083040237427,0,12.490094184875488,10.696000099182129,30.310140371322632,1,1,0,""
+"(always (and (not (have_image rover0 objective3 colour))
+             (not (have_image rover2 objective3 colour))
+             (not (have_image rover3 objective3 colour))))
+(sometime 
+    (and 
+        (have_image rover1 objective2 colour)
+        (not (have_image rover0 objective2 colour))
+        (not (have_image rover2 objective2 colour))
+        (not (have_image rover3 objective2 colour))
+    )
+)
+(and 
+  (sometime (have_image rover1 objective3 lowres))
+  (always (not (have_image rover0 objective3 lowres)))
+  (always (not (have_image rover2 objective3 lowres)))
+  (always (not (have_image rover3 objective3 lowres)))
+)",1,4.81287956237793,0,34.57946705818176,46.50557088851929,84.99716854095459,0,-1,-2,"for objective2 using sometime not have_image for other rovers, which is true in initial state and thus not preventing them to take another photo"
+"(always (not (or 
+  (have_image rover0 objective3 colour)
+  (have_image rover2 objective3 colour)
+  (have_image rover3 objective3 colour))))
+(always (and (not (have_image rover0 objective2 colour))
+             (not (have_image rover2 objective2 colour))
+             (not (have_image rover3 objective2 colour))))
+",1,5.714472055435181,0,29.579965353012085,58.5713746547699,92.65813851356506,0,-3,-4,"> There is a syntax error. Try again carefully to translate correctly.
+> implies is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+
+Failed encoding objective lowres obj3"
+"(always (at_rock_sample waypoint6))",1,8.225293159484863,0,15.111162662506104,7.0556886196136475,30.152739763259888,1,1,0,""
+"(always (at_rock_sample waypoint6))",1,9.824859142303467,0,14.679283380508423,7.9091198444366455,32.10193204879761,1,1,0,""
+"(always (imply (exists (?r1 - rover) (have_rock_analysis ?r1 waypoint0)) (exists (?r2 - rover) (have_rock_analysis ?r2 waypoint1))))
+(always (imply (exists (?r1 - rover) (have_rock_analysis ?r1 waypoint3))
+               (exists (?r2 - rover) (have_rock_analysis ?r2 waypoint1))))
+(always (imply 
+    (exists (?r - rover) (have_rock_analysis ?r waypoint4))
+    (exists (?r - rover) (have_rock_analysis ?r waypoint1))))
+(always (imply 
+  (exists (?r1 - rover) (have_rock_analysis ?r1 waypoint6))
+  (exists (?r2 - rover) (have_rock_analysis ?r2 waypoint1))))",1,10.334169149398804,0,23.016210556030273,53.903777837753296,85.04712343215942,0,-2,-3,"> :constraint is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+
+Not the goal perspective"
+"(always (imply (not (exists (?r - rover) (have_rock_analysis ?r waypoint1)))
+               (not (exists (?r - rover) (have_rock_analysis ?r waypoint0)))))
+(always (imply (exists (?r - rover) (have_rock_analysis ?r waypoint3))
+               (exists (?r - rover) (have_rock_analysis ?r waypoint1))))
+(sometime-before (exists (?r - rover) (have_rock_analysis ?r waypoint1))
+                 (exists (?r - rover) (have_rock_analysis ?r waypoint4)))
+(sometime-before (exists (?r - rover) (have_rock_analysis ?r waypoint1)) 
+                 (exists (?r - rover) (have_rock_analysis ?r waypoint6)))",1,11.94648289680481,0,15.132570505142212,35.29815602302551,61.01909899711609,0,-2,-3,"> until is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+
+No goal perspective and confused sometime-before"
+"(always (not (exists (?w - waypoint) (and (in rover0 ?w) (in rover1 ?w)))))
+(always (not (exists (?w - waypoint) (and (in rover0 ?w) (in rover2 ?w)))))
+(always (forall (?w - waypoint) 
+    (not (and (in rover0 ?w) (in rover3 ?w)))))
+(always (forall (?w - waypoint) (not (and (in rover1 ?w) (in rover2 ?w)))))
+(always (forall (?w - waypoint) 
+    (not (and (in rover1 ?w) (in rover3 ?w)))))
+(always (not (or 
+  (and (in rover2 waypoint0) (in rover3 waypoint0))
+  (and (in rover2 waypoint1) (in rover3 waypoint1))
+  (and (in rover2 waypoint2) (in rover3 waypoint2))
+  (and (in rover2 waypoint3) (in rover3 waypoint3))
+  (and (in rover2 waypoint4) (in rover3 waypoint4))
+  (and (in rover2 waypoint5) (in rover3 waypoint5))
+  (and (in rover2 waypoint6) (in rover3 waypoint6))
+)))",1,9.131579637527466,0,13.797017574310303,18.351763248443604,38.43941330909729,1,1,0,""
+"(always (forall (?w - waypoint ?r1 - rover ?r2 - rover)
+  (imply (and (not (= ?r1 ?r2)) (in ?r1 ?w))
+         (not (in ?r2 ?w)))))",1,11.538386106491089,0,14.024760723114014,19.2978937625885,44.59510946273804,1,1,0,""
