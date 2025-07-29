@@ -1,0 +1,128 @@
+"(always (and 
+    (located person7 city0)
+    (located plane2 city2)
+    (located plane3 city3)
+    (forall (?p - person) (not (in ?p plane2)))
+    (forall (?p - person) (not (in ?p plane3)))
+))",1,7.14,0,0,17.2,24.33,0,0,0,missing refuel
+(always (and (located person7 city0) (located plane2 city2) (located plane3 city3))),1,6.93,0,0,24.13,31.06,0,0,0,missing refuel + prevent boarding
+"(always 
+  (and 
+    (forall (?p - person ?c - city) (= (n_board ?p plane2 ?c) 0))
+    (forall (?p - person ?c - city) (= (n_debark ?p plane2 ?c) 0))
+    (forall (?c1 ?c2 - city) (= (n_flyslow plane2 ?c1 ?c2) 0))
+    (forall (?c1 ?c2 - city) (= (n_flyfast plane2 ?c1 ?c2) 0))
+    (= (n_refuel plane2) 0)
+    (forall (?p - person ?c - city) (= (n_board ?p plane3 ?c) 0))
+    (forall (?p - person ?c - city) (= (n_debark ?p plane3 ?c) 0))
+    (forall (?c1 ?c2 - city) (= (n_flyslow plane3 ?c1 ?c2) 0))
+    (forall (?c1 ?c2 - city) (= (n_flyfast plane3 ?c1 ?c2) 0))
+    (= (n_refuel plane3) 0)
+  )
+)",1,2.71,0,0,15.91,18.62,1,0,0,
+"(always (and 
+  (forall (?p - person ?c - city) (= (n_board ?p plane2 ?c) 0))
+  (forall (?p - person ?c - city) (= (n_debark ?p plane2 ?c) 0))
+  (forall (?c1 ?c2 - city) (= (n_flyslow plane2 ?c1 ?c2) 0))
+  (forall (?c1 ?c2 - city) (= (n_flyfast plane2 ?c1 ?c2) 0))
+  (= (n_refuel plane2) 0)
+  (forall (?p - person ?c - city) (= (n_board ?p plane3 ?c) 0))
+  (forall (?p - person ?c - city) (= (n_debark ?p plane3 ?c) 0))
+  (forall (?c1 ?c2 - city) (= (n_flyslow plane3 ?c1 ?c2) 0))
+  (forall (?c1 ?c2 - city) (= (n_flyfast plane3 ?c1 ?c2) 0))
+  (= (n_refuel plane3) 0)
+))",1,4.51,0,0,19.53,24.04,1,0,0,
+"(always (and
+  (<= (+ (n_flyslow plane1 city0 city0) (n_flyslow plane1 city1 city0) (n_flyslow plane1 city2 city0) (n_flyslow plane1 city3 city0) (n_flyslow plane1 city4 city0) (n_flyslow plane1 city5 city0) (n_flyfast plane1 city0 city0) (n_flyfast plane1 city1 city0) (n_flyfast plane1 city2 city0) (n_flyfast plane1 city3 city0) (n_flyfast plane1 city4 city0) (n_flyfast plane1 city5 city0)) 3)
+  (<= (+ (n_flyslow plane1 city0 city1) (n_flyslow plane1 city1 city1) (n_flyslow plane1 city2 city1) (n_flyslow plane1 city3 city1) (n_flyslow plane1 city4 city1) (n_flyslow plane1 city5 city1) (n_flyfast plane1 city0 city1) (n_flyfast plane1 city1 city1) (n_flyfast plane1 city2 city1) (n_flyfast plane1 city3 city1) (n_flyfast plane1 city4 city1) (n_flyfast plane1 city5 city1)) 3)
+  (<= (+ (n_flyslow plane1 city0 city2) (n_flyslow plane1 city1 city2) (n_flyslow plane1 city2 city2) (n_flyslow plane1 city3 city2) (n_flyslow plane1 city4 city2) (n_flyslow plane1 city5 city2) (n_flyfast plane1 city0 city2) (n_flyfast plane1 city1 city2) (n_flyfast plane1 city2 city2) (n_flyfast plane1 city3 city2) (n_flyfast plane1 city4 city2) (n_flyfast plane1 city5 city2)) 3)
+  (<= (+ (n_flyslow plane1 city0 city3) (n_flyslow plane1 city1 city3) (n_flyslow plane1 city2 city3) (n_flyslow plane1 city3 city3) (n_flyslow plane1 city4 city3) (n_flyslow plane1 city5 city3) (n_flyfast plane1 city0 city3) (n_flyfast plane1 city1 city3) (n_flyfast plane1 city2 city3) (n_flyfast plane1 city3 city3) (n_flyfast plane1 city4 city3) (n_flyfast plane1 city5 city3)) 3)
+  (<= (+ (n_flyslow plane1 city0 city4) (n_flyslow plane1 city1 city4) (n_flyslow plane1 city2 city4) (n_flyslow plane1 city3 city4) (n_flyslow plane1 city4 city4) (n_flyslow plane1 city5 city4) (n_flyfast plane1 city0 city4) (n_flyfast plane1 city1 city4) (n_flyfast plane1 city2 city4) (n_flyfast plane1 city3 city4) (n_flyfast plane1 city4 city4) (n_flyfast plane1 city5 city4)) 3)
+  (<= (+ (n_flyslow plane1 city0 city5) (n_flyslow plane1 city1 city5) (n_flyslow plane1 city2 city5) (n_flyslow plane1 city3 city5) (n_flyslow plane1 city4 city5) (n_flyslow plane1 city5 city5) (n_flyfast plane1 city0 city5) (n_flyfast plane1 city1 city5) (n_flyfast plane1 city2 city5) (n_flyfast plane1 city3 city5) (n_flyfast plane1 city4 city5) (n_flyfast plane1 city5 city5)) 3)
+))",1,8.94,0,0,28.42,37.35,1,0,0,
+"(always 
+  (forall (?c - city)
+    (<= (+ (n_flyslow plane1 city0 ?c) (n_flyslow plane1 city1 ?c) (n_flyslow plane1 city2 ?c) (n_flyslow plane1 city3 ?c) (n_flyslow plane1 city4 ?c) (n_flyslow plane1 city5 ?c)
+           (n_flyfast plane1 city0 ?c) (n_flyfast plane1 city1 ?c) (n_flyfast plane1 city2 ?c) (n_flyfast plane1 city3 ?c) (n_flyfast plane1 city4 ?c) (n_flyfast plane1 city5 ?c)) 3)))",1,8.64,0,0,35.95,44.59,1,0,0,
+"(always 
+  (forall (?a - aircraft)
+    (= (in person1 ?a) (in person3 ?a))))",0,6.56,0,0,15.93,22.49,0,0,0,Equals wrong
+"(always (forall (?a - aircraft) 
+  (and (imply (in person1 ?a) (in person3 ?a))
+       (imply (in person3 ?a) (in person1 ?a)))))",1,9.73,0,0,13.72,23.54,0,0,0,"imply used, and wrong interpretation of travel together"
+"(always (forall (?p - person ?c - city)
+  (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))",1,11.04,0,0,24.42,35.45,1,0,0,
+"(always (forall (?p - person ?c - city) 
+    (<= (+ (n_debark ?p plane1 ?c) (n_debark ?p plane2 ?c) (n_debark ?p plane3 ?c)) 1)))",1,9.83,0,0,15.23,25.06,1,0,0,
+(always (forall (?a - aircraft) (>= (fuel ?a) (/ (capacity ?a) 2)))),1,11.74,0,0,6.73,18.48,1,0,0,
+(always (forall (?a - aircraft) (>= (fuel ?a) (/ (capacity ?a) 2)))),1,10.63,0,0,7.8,18.43,1,0,0,
+(always (forall (?a - aircraft) (imply (located ?a city2) (< (fuel ?a) (capacity ?a))))),1,8.93,0,0,32.37,41.3,0,0,0,imply used + but wrong on constraint
+"(always (forall (?a - aircraft) 
+    (imply (located ?a city2) 
+        (= (fuel ?a) (capacity ?a)))))",1,9.63,0,0,22.06,31.69,0,0,0,imply used and wrong on constraint
+"(always (forall (?a - aircraft) (and
+    (= (n_flyslow ?a city0 city3) 0)
+    (= (n_flyfast ?a city0 city3) 0)
+)))",1,24.86,0,0,13.61,38.47,1,0,0,
+"(always (forall (?a - aircraft)
+    (not (and (located ?a city0) (next (located ?a city3))))))",0,14.24,0,0,62.97,77.2,0,0,0,Used a keyword 'next' which is not valid
+"(always (and
+  (forall (?y - waypoint ?z - waypoint) (= (n_navigate rover2 ?y ?z) 0))
+  (forall (?w - waypoint) (= (n_recharge rover2 ?w) 0))
+  (forall (?s - store ?p - waypoint) (= (n_samplesoil rover2 ?s ?p) 0))
+  (forall (?s - store ?p - waypoint) (= (n_samplerock rover2 ?s ?p) 0))
+  (forall (?y - store) (= (n_drop rover2 ?y) 0))
+  (forall (?i - camera ?t - objective ?w - waypoint) (= (n_calibrate rover2 ?i ?t ?w) 0))
+  (forall (?p - waypoint ?o - objective ?i - camera ?m - mode) (= (n_takeimage rover2 ?p ?o ?i ?m) 0))
+  (forall (?l - lander ?p - waypoint ?x - waypoint ?y - waypoint) (= (n_communicatesoildata rover2 ?l ?p ?x ?y) 0))
+  (forall (?l - lander ?p - waypoint ?x - waypoint ?y - waypoint) (= (n_communicaterockdata rover2 ?l ?p ?x ?y) 0))
+  (forall (?l - lander ?o - objective ?m - mode ?x - waypoint ?y - waypoint) (= (n_communicateimagedata rover2 ?l ?o ?m ?x ?y) 0))
+))",1,4.45,0,0,15.18,19.62,1,0,0,Limiting every possible action using n_action fluents
+(always (= (energy rover2) 50)),1,4.12,0,0,37.53,41.64,1,0,0,efficient translation based on energy
+"(eventually (and 
+  (have_soil_analysis rover0 waypoint4)
+  (have_rock_analysis rover0 waypoint4)
+  (communicated_soil_data waypoint4)
+  (communicated_rock_data waypoint4)
+))",0,9.87,0,0,19.9,29.78,0,0,0,used 'eventually'
+(eventually (and (have_soil_analysis rover0 waypoint4) (have_rock_analysis rover0 waypoint4))),0,10.27,0,0,15.18,25.46,0,0,0,used 'eventually'
+"(always 
+  (forall (?r - rover) 
+    (and 
+      (not (in ?r waypoint2))
+      (not (in ?r waypoint5))
+    )
+  )
+)",1,9.22,0,0,10.95,20.17,1,0,0,
+"(always (and 
+    (not (in rover0 waypoint2))
+    (not (in rover1 waypoint2))
+    (not (in rover2 waypoint2))
+    (not (in rover3 waypoint2))
+    (not (in rover0 waypoint5))
+    (not (in rover1 waypoint5))
+    (not (in rover2 waypoint5))
+    (not (in rover3 waypoint5))
+))",1,7.32,0,0,11.1,18.42,1,0,0,
+"(always (and 
+    (forall (?o - objective ?m - mode) (not (have_image rover2 ?o ?m)))
+    (forall (?o - objective ?m - mode) (not (have_image rover3 ?o ?m)))))",1,6.52,0,0,30.09,36.61,0,0,0,forgot rover0
+"(always (and 
+    (forall (?o - objective ?m - mode) (not (have_image rover0 ?o ?m)))
+    (forall (?o - objective ?m - mode) (not (have_image rover2 ?o ?m)))
+    (forall (?o - objective ?m - mode) (not (have_image rover3 ?o ?m)))))",1,4.31,0,0,29.97,34.29,1,0,0,
+(always (at_rock_sample waypoint6)),1,9.23,0,0,6.89,16.11,1,0,0,
+(always (at_rock_sample waypoint6)),1,8.03,0,0,10.5,18.52,1,0,0,
+"(always (forall (?r - rover ?w - waypoint) 
+  (imply (and (not (= ?w waypoint1)) (have_rock_analysis ?r ?w)) 
+         (have_rock_analysis ?r waypoint1))))",1,8.42,0,0,16.07,24.49,1,0,0,
+"(sometime-before (communicated_rock_data waypoint1) (communicated_rock_data waypoint0))
+(sometime-before (communicated_rock_data waypoint1) (communicated_rock_data waypoint3))
+(sometime-before (communicated_rock_data waypoint1) (communicated_rock_data waypoint4))",1,8.14,0,0,27.9,36.04,0,0,0,"used 'sometime-before' but mixed the the arguments before and after.
++ focused on rock analysis. Initial meaning is that it should be the first task/goal accomplished"
+"(always (forall (?w - waypoint ?r1 - rover ?r2 - rover)
+    (imply (not (= ?r1 ?r2))
+        (not (and (in ?r1 ?w) (in ?r2 ?w))))))",1,10.94,0,0,10.62,21.55,1,0,0,imply used but constraint ok
+"(always (forall (?w - waypoint ?r1 - rover ?r2 - rover)
+    (imply (not (= ?r1 ?r2))
+        (not (and (in ?r1 ?w) (in ?r2 ?w))))))",1,10.73,0,0,11.91,22.64,1,0,0,imply used but constraint ok

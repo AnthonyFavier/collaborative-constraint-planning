@@ -120,13 +120,15 @@ Missing same city and transition state"
   (have_image rover1 objective3 colour)
   (have_image rover1 objective2 colour)
   (have_image rover1 objective3 lowres)
-))",1,8.72705864906311,0,0,34.72486877441406,43.224968671798706,1,2,1,"> eventually is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+))",1,8.72705864906311,0,0,34.72486877441406,43.224968671798706,0,2,1,"> eventually is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+Doesn't prevent other rovers from taking the images.
 "
 "(and 
     (sometime (have_image rover1 objective3 colour))
     (sometime (have_image rover1 objective2 colour))
     (sometime (have_image rover1 objective3 lowres))
-)",1,7.225834369659424,0,0,38.07314920425415,44.955188274383545,1,2,1,"> eventually is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+)",1,7.225834369659424,0,0,38.07314920425415,44.955188274383545,0,2,1,"> eventually is not a supported PDDL keyword or part of problem description. Try again to translate correctly.
+Doesn't prevent other rovers from taking the images.
 "
 "(always (at_rock_sample waypoint6))",1,10.13099479675293,0,0,7.656973838806152,17.446678638458252,1,1,0,""
 "(always (at_rock_sample waypoint6))",1,9.529781579971313,0,0,9.997929096221924,19.285470485687256,1,1,0,""
