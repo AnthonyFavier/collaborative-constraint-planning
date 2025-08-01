@@ -1,0 +1,33 @@
+12 results - 10 files
+
+export results for ablation/5-DECOMP_CONFIRM/rover10_n_t_07-28-2025_15:02:32.json:
+  432:                                         "text": "Decompose again the constraint while considering the following: Be sure that other rovers do not take any image"
+  459:                                         "text": "Decompose again the constraint while considering the following: You forgot rover0"
+
+export results for ablation/5-DECOMP_CONFIRM/rover10_n_t_07-28-2025_15:07:29.json:
+  636:                                         "text": "Decompose again the constraint while considering the following: I actually want to refer to the whole goal, rock from waypoint1 should be the first goal accomplished"
+
+export results for ablation/5-DECOMP_CONFIRM/rover10_n_t_07-28-2025_15:10:03.json:
+  636:                                         "text": "Decompose again the constraint while considering the following: I actually mean regarding the whole task/goal. I want rock analysis from waypoint1 to be done before all other goals are reached"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:02:44.json:
+  429:                                         "text": "Decompose again the constraint while considering the following: Also prevent plane2 and plane3 from being refueled"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:03:48.json:
+  378:                                         "text": "Decompose again the constraint while considering the following: Also prevent the two planes from being refueled"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:06:14.json:
+  378:                                         "text": "Decompose again the constraint while considering the following: Also prevent the two planes from being refueled"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:13:35.json:
+  279:                                         "text": "Decompose again the constraint while considering the following: By traveling together I mean that they should be together in the same city, same plane, or boarding a same plan one after another"
+  306:                                         "text": "Decompose again the constraint while considering the following: Person1 and person3 can't board a plane at the same time. Thus, one must first board and the other should board the same plane in the next step. Account for this transition step"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:17:20.json:
+  438:                                         "text": "Decompose again the constraint while considering the following: By travel together I mean that they should be either in the same plane, or same city, or boarding a same plane "
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:27:22.json:
+  123:                                         "text": "Decompose again the constraint while considering the following: Just focus on the direction from city0 to city3, and on flying actions"
+
+export results for ablation/5-DECOMP_CONFIRM/zeno13_n_07-28-2025_14:31:41.json:
+  174:                                         "text": "Decompose again the constraint while considering the following: Only focus on the direction from city0 to city3"

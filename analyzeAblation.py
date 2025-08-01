@@ -86,7 +86,9 @@ testNormality('VERIFIER', 'parsable')
 testNormality('DECOMP', 'correctness')
 testNormality('DECOMP_CONFIRM', 'correctness')
 
-from scipy.stats import describe, ranksums
+from scipy.stats import describe, ranksums, fisher_exact
+from scipy.stats import hypergeom
+from statsmodels.stats.proportion import proportions_ztest
 
 print('  ')
 print(describe(data['DIRECT']['correctness']))
@@ -95,3 +97,31 @@ testHomogeneity('DIRECT', 'DECOMP_CONFIRM', 'correctness')
 testNormality('DIRECT', 'correctness')
 testNormality('DECOMP_CONFIRM', 'correctness')
 print(ranksums(data['DIRECT']['correctness'], data['DECOMP_CONFIRM']['correctness']))
+
+"""         success     failure
+DECOMP      20          10
+HUMAN       27          3
+"""
+
+
+table = np.array([[27, 3],[20, 10]])
+M = table.sum()
+n = table[0].sum()
+N = table[:, 0].sum()
+start, end = hypergeom.support(M, n, N)
+hypergeom.pmf(np.arange(start, end+1), M, n, N)
+
+res = fisher_exact(table, alternative='two-sided')
+print('two-sided')
+print(res)
+res = fisher_exact(table, alternative='less')
+print('less')
+print(res)
+res = fisher_exact(table, alternative='greater')
+print('greater')
+print(res)
+
+
+# count = [27, 20]
+# nobs = [30, 30]
+# print(proportions_ztest(count, nobs, alternative='larger'))
