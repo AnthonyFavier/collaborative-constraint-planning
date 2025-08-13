@@ -2,3 +2,4 @@ __pycache__/
 
 env_cai/
 .env
+*.png
