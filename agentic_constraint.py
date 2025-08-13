@@ -48,20 +48,140 @@ tools.set_all_objects(objects)
 tools.set_typed_objects(typed_objects)
 
 
+###################
+#### SETUP RAG ####
+###################
+
+## LOAD ##
+print('Loading documents ... ', end='', flush=True)
+from langchain_community.document_loaders import TextLoader, PyPDFLoader    
+from langchain_community.document_loaders import UnstructuredMarkdownLoader
+DOCUMENT_PATH = "documents/"
+files = [
+    # PDDL
+    # DOMAIN_PATH,
+    # PROBLEM_PATH,
+    # PLAN_PATH,
+    
+    # Fake reports
+    {
+        "name": "fake_aircraft_plane1.md", 
+        "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane1",
+    },
+    {
+        "name": "fake_aircraft_plane2.md", 
+        "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane2",
+    },
+    {
+        "name": "fake_doc_airport_atlanta.md", 
+        "description": "INTERNAL REPORT: ATLANTA INTERNATIONAL AIRPORT (ATL)",
+    },
+    {
+        "name": "fake_doc_airport_newyork.md", 
+        "description": "INTERNAL REPORT: JOHN F. KENNEDY INTERNATIONAL AIRPORT (JFK)",
+    },
+    {
+        "name": "fake_report1.md", 
+        "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
+    },
+]
+
+def DocLoader(filename):
+    _,ext = filename.split('.')[1]
+    if ext in ['pdf']:
+        doc = PyPDFLoader(filename).load()
+    else:
+        doc = TextLoader(filename).load()
+    return doc
+
+docs = []
+for f in files:
+    doc = DocLoader(DOCUMENT_PATH+f['name'])
+    doc[0].metadata['description'] = f['description']
+    docs.append(doc)
+    
+docs_list = [item for sublist in docs for item in sublist]
+print('OK')
+
+## SPLITTING
+print('Splitting documents ... ', end='', flush=True)
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+    chunk_size=512, chunk_overlap=20
+)
+doc_splits = text_splitter.split_documents(docs_list)
+print('OK')
+
+## INDEXING and RETREIVER
+print('Indexing documents ... ', end='', flush=True)
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_openai import OpenAIEmbeddings
+vectorstore = InMemoryVectorStore.from_documents(
+    documents=doc_splits, embedding=OpenAIEmbeddings()
+)
+retriever = vectorstore.as_retriever()
+print('OK')
+
+
 ######################################
 #### STRUCTURED OUTPUTS AND STATE ####
 ######################################
-
-## TYPES
 from typing import Annotated, List
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
+from typing_extensions import TypedDict
+from langgraph.graph.message import add_messages
+import operator
 
+## TYPES ##
+# Encoding
+class Encoding(BaseModel):
+    encoding: str = Field(
+        "", description="PDDL3.0 translation of a given natural language constraint."
+    )
+class E2NL(BaseModel):
+    e2nl: str = Field(
+        "", description="Natural language translation of a given PDDL3.0 constraint."
+    )
+class EncodingE2NL(BaseModel):
+    constraint: str = Field(
+        description="constraint to translate in PDDL3.0"
+    )
+    encoding: Encoding = Field(
+        Encoding(), description="PDDL3.0 translation of the constraint"
+    )
+    e2nl: E2NL = Field(
+        E2NL(), description="Back-translation of the PDDL3.0 to natural language"
+    )
+class EncodingValidation(BaseModel):
+    encoding_ok: bool = Field(
+        False, description="Result of check of encoding with verifier."
+    )
+    encoding_feedback: str = Field(
+        "", description="Feedback of detected issues in encoding from verifier"
+    )
+    encoding_nb_retry: int = Field(
+        0, description="Number of retries when encoding the constraint."
+    )
+class E2NLValidation(BaseModel):
+    e2nl_ok: bool = Field(
+        description="Result of automated check if e2nl matches the NL decomposed constraints."
+    )
+    e2nl_feedback: str = Field(
+        "", description="Feedback of detected issues about e2nl."
+    )
+class E2NLUserValidation(BaseModel):
+    e2nl_user_ok: bool = Field(
+        description="True if user validates the current e2nl after review."
+    )
+    e2nl_user_feedback: str = Field(
+        description="If not validated, stores the user feedback about what's wrong about the e2nl."
+    )
+# Decomposition
 class UserType(BaseModel):
-    user_type: Literal["general_question", "constraint", "risk_analysis"] = Field(
+    user_type: Literal["general_question", "translation", "risk_analysis"] = Field(
         description="Classify the type of user input, used in the routing process."
     )
-
 class Decomposition(BaseModel):
     decomposition: List[str] = Field(
         description="List of decomposed constraints."
@@ -69,7 +189,6 @@ class Decomposition(BaseModel):
     explanation: str = Field(
         description="Explanation of the current decomposition."
     )
-    
 class DecompositionValidation(BaseModel):
     pddl_constraints: bool = Field(
         False, description="True if some constraints include explicit PDDL parts."
@@ -101,7 +220,6 @@ class DecompositionValidation(BaseModel):
     mismatching_user_intent_feedback: str = Field(
         "", description="Feedback indicating what is mismatching with the user intent."
     )
-    
 class DecompositionUserValidation(BaseModel):
     decomp_user_ok: bool = Field(
         description="True if user is satisfied with the current decomposition after review."
@@ -109,69 +227,14 @@ class DecompositionUserValidation(BaseModel):
     decomp_user_feedback: str = Field(
         "", description="If not satisfied with the decomposition, stores the user feedback about what's wrong about the decomposition."
     )
-
-class Encoding(BaseModel):
-    encoding: str = Field(
-        "", description="PDDL3.0 translation of a given natural language constraint."
-    )
-    
-class E2NL(BaseModel):
-    e2nl: str = Field(
-        "", description="Natural language translation of a given PDDL3.0 constraint."
-    )
-    
-class EncodingE2NL(BaseModel):
-    constraint: str = Field(
-        description="constraint to translate in PDDL3.0"
-    )
-    encoding: Encoding = Field(
-        Encoding(), description="PDDL3.0 translation of the constraint"
-    )
-    e2nl: E2NL = Field(
-        E2NL(), description="Back-translation of the PDDL3.0 to natural language"
-    )
-    
-class EncodingValidation(BaseModel):
-    encoding_ok: bool = Field(
-        False, description="Result of check of encoding with verifier."
-    )
-    encoding_feedback: str = Field(
-        "", description="Feedback of detected issues in encoding from verifier"
-    )
-    encoding_nb_retry: int = Field(
-        0, description="Number of retries when encoding the constraint."
+# Failure Detection
+class RAGQuery(BaseModel):
+    query: str = Field(
+        '', description="RAG query to be used by a RAG retriver to find context data relevant to the query."
     )
 
-class E2NLValidation(BaseModel):
-    e2nl_ok: bool = Field(
-        description="Result of automated check if e2nl matches the NL decomposed constraints."
-    )
-    e2nl_feedback: str = Field(
-        "", description="Feedback of detected issues about e2nl."
-    )
-    
-class E2NLUserValidation(BaseModel):
-    e2nl_user_ok: bool = Field(
-        description="True if user validates the current e2nl after review."
-    )
-    e2nl_user_feedback: str = Field(
-        description="If not validated, stores the user feedback about what's wrong about the e2nl."
-    )
-    
-## STATES
-from typing_extensions import TypedDict
-from langgraph.graph.message import add_messages
-import operator
-class DecompositionState(TypedDict):
-    messages: Annotated[list, add_messages]
-    user_input: str # User input
-    user_type: UserType # Type of user input: question, constraint, risk
-    refined_user_intent: str # Refined user intent, removing ambiguities from initial input
-    decomposition: Decomposition # Decomposition of user input
-    decomposition_validation: DecompositionValidation # Automated validation of decomposition
-    decomposition_user_validation: DecompositionUserValidation # User validation of decomposition
-    encodingsE2NL: Annotated[list[EncodingE2NL], operator.add] # List of EncodingE2NL, populated by encoding workers
-    
+## STATES ##
+# Encoding
 class EncodingState(TypedDict):
     e_messages: Annotated[list, add_messages]
     
@@ -187,17 +250,44 @@ class EncodingState(TypedDict):
     e2nl_validation: E2NLValidation # Automated validation of back translation
     e2nl_user_validation: E2NLUserValidation # User validation of back translation
     encodingsE2NL: Annotated[list[EncodingE2NL], operator.add] # List of EncodingE2NL, populated by encoding workers, includes constraint, PDDL3 encoding, and E2NL
+# Decomposition
+class DecompositionState(TypedDict):
+    messages: Annotated[list, add_messages]
+    user_input: str # User input
+    user_type: UserType # Type of user input: question, constraint, risk
+    refined_user_intent: str # Refined user intent, removing ambiguities from initial input
+    decomposition: Decomposition # Decomposition of user input
+    decomposition_validation: DecompositionValidation # Automated validation of decomposition
+    decomposition_user_validation: DecompositionUserValidation # User validation of decomposition
+    encodingsE2NL: Annotated[list[EncodingE2NL], operator.add] # List of EncodingE2NL, populated by encoding workers
+# Failure Detection
+class FailureDetectionState(TypedDict):
+    messages: Annotated[list, add_messages]
+    rag_query: RAGQuery # RAG query to find relevant context in documents for failure detection
+    rag_result: str # Resul of the RAG query
+    answer: str # Answer for the failure detection request
+    suggestions: str # Concrete suggestions to account the identifies potential risks
+# Main
+class MainState(TypedDict):
+    messages: Annotated[list, add_messages]
+    user_input: str # User input
+    user_type: UserType # Type of user input: question, constraint, risk
 
+    # outputs
+    encodingsE2NL: Annotated[list[EncodingE2NL], operator.add] # List of EncodingE2NL, populated by encoding workers
+    answer: str # Answer for the failure detection request
+    suggestions: str # Concrete suggestions to account the identifies potential risks
+    
 
 ###############
 #### TOOLS ####
 ###############
-
 import requests
 from langchain_tavily import TavilySearch
 from langgraph.types import Send
 from langchain_core.tools import tool
 import json 
+from langchain.tools.retriever import create_retriever_tool
 
 @tool
 def ask_clarifying_question(question: str) -> str:
@@ -286,6 +376,36 @@ Current weather at {city}:
         
     return weather_text
 
+# Built-in RETRIEVAL TOOL
+retriever_tool = create_retriever_tool(
+    retriever,
+    "retriever",
+    "Retriever tool able to extract content from available documents that is relevant to the given query.",
+)
+# OWN RETRIEVAL TOOL WITH METADATA
+@tool
+def retrieve_with_metadata(query: str) -> str:
+    """Use this tool to retrieve relevant documents with context and metadata for a given question."""
+    # results = retriever.get_relevant_documents(query)
+    results = retriever.invoke(query)
+    formatted_chunks = []
+
+    for i, doc in enumerate(results):
+        formatted_chunks.append(
+            f"<chunk_{i+1}>\n"
+            f"Source: {doc.metadata.get('source', 'Unknown')}\n"
+            f"Description: {doc.metadata.get('description', '')}\n"
+            f"Content: {doc.page_content}\n"
+            f"</chunk_{i+1}>\n"
+        )
+    return "\n".join(formatted_chunks)
+
+from manual_plan_generation import simulatePlan
+@tool
+def simulatePlanTool(plan: str, metric: str) -> str:
+    """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
+    feedback = simulatePlan(DOMAIN_PATH, PROBLEM_PATH, plan, metric, separator_plan=' ', is_numered=False)
+    return feedback
 
 ################
 #### MODELS ####
@@ -299,14 +419,124 @@ g_llm = ChatAnthropic(model="claude-3-5-haiku-latest", max_tokens=4000, temperat
 # llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000, thinking={"type": "enabled", "budget_tokens": 2000})
 
 
-###########################
-#### ENCODING SUBGRAPH ####
-###########################
+##########################
+#### GRAPH COMPONENTS ####
+##########################
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import interrupt, Command
+from langgraph.checkpoint.memory import InMemorySaver
 PRINT_NODES = True
 
+####################################
+#### FAILURE DETECTION SUBGRAPH ####
+####################################
+#NODE
+def GenerateRAGQuery(state: FailureDetectionState):
+
+    if 'PRINT_NODES'in globals():
+        print('Node: GenerateRAGQuery')
+        
+    RAG_QUERY_GENREATION_PROMPT = (
+        "You are a helpful PDDL planning expert and assistant. "
+        "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
+        "<pddl_domain>\n"
+        "{pddl_domain}\n"
+        "</pddl_domain>\n"
+        "<pddl_problem>\n"
+        "{pddl_problem}\n"
+        "</pddl_problem>\n"
+        "<current_solution_plan>\n"
+        "{pddl_plan}\n"
+        "</current_solution_plan>\n"
+        
+        "Generate a RAG query to look for potential risk of failure of the given PDDL plan. "
+        "It should includes keywords such as 'restriction', 'failure', 'risk', 'danger', 'limitation'. "
+        "The query should also include any relevant keyword regarding the current problem being solve. "
+    )
+    state['messages'] += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))]
+    
+    llm = g_llm.with_structured_output(RAGQuery)
+    
+    query = llm.invoke(state["messages"])
+    
+    return {'rag_query': query}
+
+#NODE
+def Retrieval(state: FailureDetectionState):
+
+    if 'PRINT_NODES'in globals():
+        print('Node: Retrieval')
+        
+    # For now directly call retriever tool
+    # Future: bind tool to LLM and do an LLM call?
+    # Can allow to adjust query? Ask clarifying question?
+    
+    # TODO: check if includes the source and description?
+    # result = retriever_tool.invoke({'query': state['rag_query'].query})
+    
+    result = retrieve_with_metadata.invoke({'query': state['rag_query'].query})
+    
+    
+    txt = 'RAG Query:\n' + state["rag_query"].query + '\n\nRAG Result:\n' + result
+    ai_msg = AIMessage(content=txt)
+    
+    return {'messages': [ai_msg], 'rag_result': result}
+
+#NODE
+def GenerateAnswer(state: FailureDetectionState):
+    if 'PRINT_NODES'in globals():
+        print('Node: GenerateAnswer')
+        
+    GENERATE_ANSWER_PROMPT = (
+        "Use the previous pieces of retrieved context to identify possible risk of failure of the plan. "
+        "The context is splitted in different chunks, each encapsulated in <chunk_i> tags. "
+        "If you don't know the answer, just say that you don't know. "
+        "Focus on practical risks that may directly change or affect the given plan. "
+        "Your answer should only be three sentences maximum, so focus on the most relevant risks to the plan. "
+    )
+    
+    state['messages'] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
+    
+    msg = g_llm.invoke(state['messages'])
+    
+    return {'messages': [msg], 'answer': msg.content}
+
+#NODE
+def MakeSuggestions(state: FailureDetectionState):
+    if 'PRINT_NODES'in globals():
+        print('Node: MakeSuggestions')
+        
+    SUGGESTIONS_PROMPT = (
+        "Based on your last answer about the risks of failure, give me concrete suggestions of modification to the current plan. "
+        "Give me for instance a temporal logic constraint to ensure these modification during the planning proces. "
+    )
+    state['messages'] += [HumanMessage(content= SUGGESTIONS_PROMPT.format())]
+    
+    msg = g_llm.invoke(state['messages'])
+    
+    return {'messages': [msg], 'suggestions': msg.content}
+
+#### BUILD ####    
+failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
+# Add nodes
+failure_detection_subgraph_builder.add_node("GenerateRAGQuery", GenerateRAGQuery)
+failure_detection_subgraph_builder.add_node("Retrieval", Retrieval)
+failure_detection_subgraph_builder.add_node("GenerateAnswer", GenerateAnswer)
+failure_detection_subgraph_builder.add_node("MakeSuggestions", MakeSuggestions)
+# Add edge
+failure_detection_subgraph_builder.add_edge(START, "GenerateRAGQuery")
+failure_detection_subgraph_builder.add_edge("GenerateRAGQuery", "Retrieval")
+failure_detection_subgraph_builder.add_edge("Retrieval", "GenerateAnswer")
+failure_detection_subgraph_builder.add_edge("GenerateAnswer", "MakeSuggestions")
+failure_detection_subgraph_builder.add_edge("MakeSuggestions", END)
+# Compile
+failure_detection_subgraph = failure_detection_subgraph_builder.compile()
+
+
+###########################
+#### ENCODING SUBGRAPH ####
+###########################
 #NODE
 def Encode(state: EncodingState):
     """Translate the given constraint into PDDL3.0"""
@@ -315,7 +545,7 @@ def Encode(state: EncodingState):
         print('Node: Encode')
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -391,7 +621,7 @@ def BackTranslation(state: EncodingState):
         print('Node: BackTranslation')
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -444,7 +674,7 @@ def UserReviewE2NL(state: EncodingState):
     llm = g_llm.with_structured_output(E2NLUserValidation)
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -517,14 +747,12 @@ encoding_subgraph_builder.add_conditional_edges(
 )
 encoding_subgraph_builder.add_edge("SaveEncoding", END)
 # Compile
-encoding_subgraph = encoding_subgraph_builder.compile(checkpointer=True)
+encoding_subgraph = encoding_subgraph_builder.compile()
 
 
-####################
-#### MAIN GRAPH ####
-####################
-from langgraph.checkpoint.memory import InMemorySaver
-
+##############################
+#### TRANSLATION SUBGRAPH ####
+##############################
 #NODE
 def RefineUserIntent(state: DecompositionState):
     """Refines user input to remove ambiguity and properly capture the user intent. Can ask clarifying questions."""
@@ -533,7 +761,7 @@ def RefineUserIntent(state: DecompositionState):
         print("Node: RefineUserIntent")
         
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -571,7 +799,7 @@ def Decompose(state: DecompositionState):
         print("Node: Decompose")
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -644,7 +872,7 @@ def VerifyDecomposition(state: DecompositionState):
     return {'decomposition_validation': DecompositionValidation()}
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -752,7 +980,7 @@ def UserReviewDecomposition(state: DecompositionState):
     llm = g_llm.with_structured_output(DecompositionUserValidation)
     
     SYSTEM_PROMPT = (
-        "You are a PDDL planning expert. "
+        "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
         "{pddl_domain}\n"
@@ -811,20 +1039,20 @@ def Merge(state: DecompositionState):
     return {}
 
 #### BUILD ####
-agent_builder = StateGraph(DecompositionState)
+translation_subgraph_builder = StateGraph(DecompositionState)
 # Add nodes
-agent_builder.add_node("RefineUserIntent", RefineUserIntent)
-agent_builder.add_node("ask_clarifying_question", ToolNode(tools=[ask_clarifying_question]))
-agent_builder.add_node("SaveUserIntentClearMessages", SaveUserIntentClearMessages)
-agent_builder.add_node("Decompose", Decompose)
-agent_builder.add_node("VerifyDecomposition", VerifyDecomposition)
-agent_builder.add_node("UserReviewDecomposition", UserReviewDecomposition)
-agent_builder.add_node("Orchestrator", Orchestrator)
-agent_builder.add_node("EncodingSubgraph", encoding_subgraph)
-agent_builder.add_node("Merge", Merge)
+translation_subgraph_builder.add_node("RefineUserIntent", RefineUserIntent)
+translation_subgraph_builder.add_node("ask_clarifying_question", ToolNode(tools=[ask_clarifying_question]))
+translation_subgraph_builder.add_node("SaveUserIntentClearMessages", SaveUserIntentClearMessages)
+translation_subgraph_builder.add_node("Decompose", Decompose)
+translation_subgraph_builder.add_node("VerifyDecomposition", VerifyDecomposition)
+translation_subgraph_builder.add_node("UserReviewDecomposition", UserReviewDecomposition)
+translation_subgraph_builder.add_node("Orchestrator", Orchestrator)
+translation_subgraph_builder.add_node("EncodingSubgraph", encoding_subgraph)
+translation_subgraph_builder.add_node("Merge", Merge)
 # Add edges
-agent_builder.add_edge(START, "RefineUserIntent")
-agent_builder.add_conditional_edges(
+translation_subgraph_builder.add_edge(START, "RefineUserIntent")
+translation_subgraph_builder.add_conditional_edges(
     "RefineUserIntent",
     tools_condition,
     {
@@ -832,10 +1060,10 @@ agent_builder.add_conditional_edges(
         END: 'SaveUserIntentClearMessages'
     }
 )
-agent_builder.add_edge("ask_clarifying_question", "RefineUserIntent")
-agent_builder.add_edge("SaveUserIntentClearMessages", "Decompose")
-agent_builder.add_edge("Decompose", "VerifyDecomposition")
-agent_builder.add_conditional_edges(
+translation_subgraph_builder.add_edge("ask_clarifying_question", "RefineUserIntent")
+translation_subgraph_builder.add_edge("SaveUserIntentClearMessages", "Decompose")
+translation_subgraph_builder.add_edge("Decompose", "VerifyDecomposition")
+translation_subgraph_builder.add_conditional_edges(
     "VerifyDecomposition",
     RoutingVerifyDecomposition,
     {
@@ -843,7 +1071,7 @@ agent_builder.add_conditional_edges(
         "Retry": 'Decompose'
     }
 )
-agent_builder.add_conditional_edges(
+translation_subgraph_builder.add_conditional_edges(
     "UserReviewDecomposition",
     RoutingUserReviewDecomposition,
     {
@@ -851,26 +1079,63 @@ agent_builder.add_conditional_edges(
         "Retry": 'Decompose'
     }
 )
-agent_builder.add_conditional_edges(
+translation_subgraph_builder.add_conditional_edges(
     "Orchestrator",
     assign_encoding_workers,
     ['EncodingSubgraph']
 )
-agent_builder.add_edge("EncodingSubgraph", "Merge")
-agent_builder.add_edge("Merge", END)
+translation_subgraph_builder.add_edge("EncodingSubgraph", "Merge")
+translation_subgraph_builder.add_edge("Merge", END)
 # Compile
-graph = agent_builder.compile()
+translation_subgraph = translation_subgraph_builder.compile()
 
+
+####################
+#### MAIN GRAPH ####
+####################
+#NODE
+def TopNode(state: MainState):
+    return {}
+
+#CondEdge
+def RoutingMain(state: MainState):
+    return state['user_type'].user_type
+
+#### BUILD ####
+main_graph_builder = StateGraph(MainState)
+# Add nodes
+main_graph_builder.add_node("TopNode", TopNode)
+main_graph_builder.add_node("Translation", translation_subgraph)
+main_graph_builder.add_node("FailureDetection", failure_detection_subgraph)
+# Add edges
+main_graph_builder.add_edge(START, "TopNode")
+main_graph_builder.add_conditional_edges(
+    "TopNode",
+    RoutingMain,
+    {
+        "general_question": END,
+        "translation": "Translation",
+        "risk_analysis": "FailureDetection",
+    }
+)
+main_graph_builder.add_edge("Translation", END)
+main_graph_builder.add_edge("FailureDetection", END)
+# Compile
+main_graph = main_graph_builder.compile()
 
 ####################
 #### DRAW GRAPH ####
 ####################
 DRAW_GRAPH = True
 if 'DRAW_GRAPH'in globals():
-    with open('graph.png', 'wb') as png:
-        png.write(graph.get_graph().draw_mermaid_png())
-    with open('subgraph.png', 'wb') as png:
+    with open('translation_subgraph.png', 'wb') as png:
+        png.write(translation_subgraph.get_graph().draw_mermaid_png())
+    with open('encoding_subgraph.png', 'wb') as png:
         png.write(encoding_subgraph.get_graph().draw_mermaid_png())
+    with open('failure_detection_subgraph.png', 'wb') as png:
+        png.write(failure_detection_subgraph.get_graph().draw_mermaid_png())
+    with open('main_graph.png', 'wb') as png:
+        png.write(main_graph.get_graph().draw_mermaid_png())
 
 
 #############
@@ -878,19 +1143,86 @@ if 'DRAW_GRAPH'in globals():
 #############
 def TranslateUserInput(user_input):
     input_state = DecompositionState({"messages": [HumanMessage(content=user_input)], "user_input": user_input})
-    final_state = graph.invoke(input_state)
-    return final_state['encodingsE2NL']
-
-if __name__=='__main__':
-    # user_input = "Only plane1 should be used."
-    user_input = "Person7 should always be located at boston and plane2 should always be located at washington."
-    # user_input = "Person7 should never move."
-    # user_input = "Person7 should always be located in their initial city."
-    encodings = TranslateUserInput(user_input) # type: list[EncodingE2NL]
-    
+    final_state = translation_subgraph.invoke(input_state)
+    encodings = final_state['encodingsE2NL']
     print("\nUser input:\n", user_input)
     for e in encodings:
         print(f'• {e.constraint}')
         print(f'  → {e.encoding.encoding}')
         print(f'    → {e.e2nl.e2nl}')
+def testTranslation():
+    # user_input = "Only plane1 should be used."
+    user_input = "Person7 should always be located at boston and plane2 should always be located at washington."
+    # user_input = "Person7 should never move."
+    # user_input = "Person7 should always be located in their initial city."
+    TranslateUserInput(user_input) # type: list[EncodingE2NL]
+
+def testRAG():
+    messages = []
+    
+    RAG_QUERY_GENREATION_PROMPT = (
+        "You are a helpful PDDL planning expert and assistant. "
+        "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
+        "<pddl_domain>\n"
+        "{pddl_domain}\n"
+        "</pddl_domain>\n"
+        "<pddl_problem>\n"
+        "{pddl_problem}\n"
+        "</pddl_problem>\n"
+        "<current_solution_plan>\n"
+        "{pddl_plan}\n"
+        "</current_solution_plan>\n"
         
+        "Generate a RAG query to look for potential risk of failure of the given PDDL plan. "
+        "It should includes keywords such as 'restriction', 'failure', 'risk', 'danger', 'limitation'. "
+        "The query should also include any relevant keyword regarding the current problem being solve. "
+    )
+    messages += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))]
+    
+    RAG_query = 'ZenoTravel domain plan risk analysis fuel limitations aircraft capacity restrictions potential failure points in multi-aircraft passenger transportation plan with distance and fuel consumption constraints'    
+    result = retrieve_with_metadata.invoke({'query': RAG_query})
+    
+    txt = 'RAG Query:\n' + RAG_query + '\n\nRAG Result:\n' + result
+    print(txt)
+
+def testFailure():
+    final_state = failure_detection_subgraph.invoke(FailureDetectionState())
+    print('ANSWER:\n' + final_state['answer'])
+    print('\nSUGGESTIONS:\n' + final_state['suggestions'])
+
+def testTopNode():
+    
+    ## TRANSLATION ##
+    user_type = UserType(user_type="translation")
+    # user_input = "Only plane1 should be used."
+    user_input = "Person7 should always be located at boston and plane2 should always be located at washington."
+    # user_input = "Person7 should never move."
+    # user_input = "Person7 should always be located in their initial city."
+    
+    ## FAILURE DETECTION ##
+    # user_type = UserType(user_type="risk_analysis")
+    
+    ## GENERAL QUESTION ##
+    # user_type = UserType(user_type="general_question")
+    
+    final_state = main_graph.invoke(MainState(messages=[HumanMessage(content=user_input)], user_input=user_input, user_type=user_type))
+    encodings = final_state['encodingsE2NL']
+    print("\nUser input:\n", user_input)
+    for e in encodings:
+        print(f'• {e.constraint}')
+        print(f'  → {e.encoding.encoding}')
+        print(f'    → {e.e2nl.e2nl}')
+
+    user_type = UserType(user_type="risk_analysis")
+    final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
+    print('ANSWER:\n' + final_state['answer'])
+    print('\nSUGGESTIONS:\n' + final_state['suggestions'])
+
+if __name__=='__main__':
+    # testTranslation()
+    
+    # testFailure()
+    
+    # testRAG()
+    
+    testTopNode()
