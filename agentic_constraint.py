@@ -726,6 +726,10 @@ def RoutingVerifyDecomposition(state: DecompositionState):
 #NODE
 def UserReviewDecomposition(state: DecompositionState):
     """Ask user for review of the decomposition"""
+    # TODO: Find a way to add the clarifying question tool here. Currently conflicting with the structured output. 
+    # Use two calls/nodes? 
+    # A first one gathering user feedback and asking questions about it if needed?
+    # A second one formatting the user feedback into the current structured output?
     
     if 'PRINT_NODES'in globals():
         print("Node: UserReviewDecomposition")
