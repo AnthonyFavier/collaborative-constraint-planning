@@ -280,13 +280,13 @@ def decompose(constraint, conv):
 </documents> 
 
 <information>
-The user will give as input a constraint in natural language. This constraint must be used as a transjectory hard constraint for the solution plan of the given the PDDL problem. 
+The user will give as input a constraint in natural language. This constraint must be used as a trajectory hard constraint for the solution plan of the given PDDL problem. 
 </information>
 
 <instructions> 
 - Refine the user constraint to make it applicable to the given PDDL problem.
-- You can rephrase and decompose the initial constraint into several other contraints.
-- These constraints should be complementary and they will be later combined with AND operators.
+- You can rephrase and decompose the initial constraint into several other constraints.
+- These constraints should be complementary, and they will be later combined with AND operators.
 - Constraints must be state-based and follow a Linear Temporal Logic. So constraints can't directly refer to actions.
 - Avoid explicit PDDL language in your answer, the user can't understand PDDL.
 - The set of all refined constraints must capture the meaning of the initial user constraint. 
@@ -299,7 +299,7 @@ The user will give as input a constraint in natural language. This constraint mu
         ...
     </{tag1}>
     <{tag2}>
-        [consice_explanation]
+        [concise_explanation]
     </{tag2}>
 </instructions>
 
@@ -382,9 +382,9 @@ The user will give as input a natural language constraint that must be translate
 <instructions> 
 - Translate the input constraint into correct PDDL3.0.
 - The resulting PDDL3.0 constraint must capture the same meaning as the initial input constraint.
-- Remember that PDDL3.0 constraints are state-based. They can only refer to existing precates and fluents, thus, not to actions.
+- Remember that PDDL3.0 constraints are state-based. They can only refer to existing predicates and fluents, thus, not to actions.
 - Be sure to include temporal logic like operators in your translation.
-- Format your answer such as there is no preambule and such that the PDDL translation is between the tags <{tag}> and </{tag}>.
+- Format your answer such that there is no preamble and such that the PDDL translation is between the tags <{tag}> and </{tag}>.
 </instructions>
 
 <user_input>
@@ -438,7 +438,7 @@ def E2NL(constraint):
 </documents> 
 
 <information>
-The user will give as input PDDL3.0 constraints.
+The user will give as input PDDL3.0 constraints that must be translated in natural language.
 </information>
 
 <instructions> 
@@ -446,7 +446,7 @@ The user will give as input PDDL3.0 constraints.
 - Your translation should closely match the PDDL3.0 input, without additional deductions or reasoning. 
 - Your answer should be concise and not exceed 3 sentences.
 - Your translation should not contain any explicit PDDL element, the user can't understand PDDL.
-- Format your answer such as your translation is between the tags <{tag}> and </{tag}>.
+- Format your answer such that your translation is between the tags <{tag}> and </{tag}>.
 </instructions>
 
 <user_input>
