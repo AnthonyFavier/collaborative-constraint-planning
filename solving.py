@@ -461,19 +461,19 @@ problems = {
         initializeHumanConstraintsWoodworking1,
     ],
     'ZenoTravel13': [    
-        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraintdomain_with_n.pddl',
         '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel13,
     ],
     'ZenoTravel7': [    
-        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraintdomain_with_n.pddl',
         '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile7.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel7,
     ],
     'ZenoTravel10': [    
-        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl',
+        '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraintdomain_with_n.pddl',
         '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl',
         ['distance', 'slow-burn', 'fast-burn', 'capacity', 'zoom-limit'],
         initializeHumanConstraintsZenotravel10,

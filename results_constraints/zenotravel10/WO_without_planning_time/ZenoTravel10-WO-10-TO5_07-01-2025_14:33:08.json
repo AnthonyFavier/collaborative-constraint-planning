@@ -1,6 +1,6 @@
 {
     "timeout": 5,
-    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-n/domain_with_n.pddl",
+    "domain": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraintdomain_with_n.pddl",
     "problem": "/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile10.pddl",
     "tests": [
         {
