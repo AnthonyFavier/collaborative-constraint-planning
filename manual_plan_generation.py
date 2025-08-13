@@ -1,14 +1,65 @@
 from unified_planning.io import PDDLReader, PDDLWriter
-
-reader = PDDLReader()
-problem = reader.parse_problem("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl", "NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl")
-
-
 from unified_planning.shortcuts import *
-
 from unified_planning.plans import ActionInstance, SequentialPlan
 
-lines = """
+    
+def simulatePlan(domain_path, problem_path, txt_plan, metric_name, separator_plan=' ', is_numered=False):
+    txt = ''
+    reader = PDDLReader()
+    problem = reader.parse_problem(domain_path, problem_path)
+    
+    # Convert plan
+    plan = []
+    for line in txt_plan.splitlines():
+        if line.find(';')!=-1:
+            line,_ = line.split(';')
+        if line.strip()=='':
+            continue
+        if is_numered:
+            _, action_str = line.split(": ")
+        else:
+            action_str = line
+        name, *params = action_str.strip("()").split(separator_plan)
+        action = problem.action(name)
+        up_objects = [problem.object(p.lower()) for p in params]
+        plan.append(ActionInstance(action, up_objects))
+    plan = SequentialPlan(plan)
+
+    # Check if plan valid
+    # with PlanValidator(name="tamer") as validator:
+    #     result = validator.validate(problem, plan)
+    #     txt += result
+    
+    # Simulate
+    with SequentialSimulator(problem) as simulator:
+        metric = FluentExp(problem.fluent(metric_name))
+        state = simulator.get_initial_state()
+        for ai in plan.actions:
+            new_state = simulator.apply(state, ai)
+            if new_state==None:
+                break
+            state = new_state
+            
+        if new_state==None:
+            txt += 'Plan is invalid.\n'
+            txt += f"Action {ai} isn't applicable.\n"
+        elif not simulator.is_goal(state):
+            txt += 'Plan is invalid.\n'
+            txt += "The final state doesn't satisfy the goal.\n"
+        else:
+            txt += 'Plan is valid.\n'
+        txt += f"Initial value {metric_name} = {simulator.get_initial_state().get_value(metric)}\n"
+        txt += f"Final value {metric_name} = {state.get_value(metric)}\n"
+        
+    return txt
+        
+        
+if __name__=='__main__':
+    
+    reader = PDDLReader()
+    problem = reader.parse_problem("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl", "NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl")
+
+    lines = """
 .0: (samplerock_rover0_rover0store_waypoint4)
 .0: (drop_rover0_rover0store)
 .0: (communicaterockdata_rover0_general_waypoint4_waypoint4_waypoint1)
@@ -56,51 +107,48 @@ lines = """
 .0: (calibrate_rover1_camera1_objective3_waypoint0)
 .0: (takeimage_rover1_waypoint0_objective2_camera1_colour)
 .0: (communicateimagedata_rover1_general_objective2_colour_waypoint0_waypoint1)
-
 """[1:-1]
-# total energy 139
+    # total energy 139
 
-# Constraints:
-#   - ROVER0 SHOULD HANDLE SOIL AND ROCK DATA FROM WAYPOINT4
-#   - ROVER2 SHOULD NEVER BE USED
-#   - NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
-#   - ROVER1 SHOULD TAKE ALL IMAGE
-#   - WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
+    # Constraints:
+    #   - ROVER0 SHOULD HANDLE SOIL AND ROCK DATA FROM WAYPOINT4
+    #   - ROVER2 SHOULD NEVER BE USED
+    #   - NO ROVER SHOULD EVER BE IN WAYPOINT2 OR WAYPOINT5
+    #   - ROVER1 SHOULD TAKE ALL IMAGE
+    #   - WAYPOINT6 SHOULD ALWAYS HAVE SAME ROCK SAMPLE
 
-plan = []
-for line in lines.splitlines():
-    if line.strip()=='':
-        continue
-    _, action_str = line.split(": ")
-    name, *params = action_str.strip("()").split('_')
-    action = problem.action(name)
-    up_objects = [problem.object(p) for p in params]
-    plan.append(ActionInstance(action, up_objects))
-plan = SequentialPlan(plan)
+    plan = []
+    for line in lines.splitlines():
+        if line.strip()=='':
+            continue
+        _, action_str = line.split(": ")
+        name, *params = action_str.strip("()").split('_')
+        action = problem.action(name)
+        up_objects = [problem.object(p) for p in params]
+        plan.append(ActionInstance(action, up_objects))
+    plan = SequentialPlan(plan)
 
-print(plan)
+    print(plan)
 
-# with PlanValidator(name="tamer") as validator:
-#     result = validator.validate(problem, plan)
-#     print(result)
-        
-with SequentialSimulator(problem) as simulator:
-    fluent = FluentExp(problem.fluent("total-energy-used"))
-    r0e = FluentExp(problem.fluent('energy'), problem.object('rover0'))
-    r1e = FluentExp(problem.fluent('energy'), problem.object('rover1'))
-    r2e = FluentExp(problem.fluent('energy'), problem.object('rover2'))
-    r3e = FluentExp(problem.fluent('energy'), problem.object('rover3'))
-    state = simulator.get_initial_state()
-    print(f"Initial fluent value = {state.get_value(fluent)}")
-    print(f"Initial r0e = {state.get_value(r0e)}")
-    print(f"Initial r1e = {state.get_value(r1e)}")
-    print(f"Initial r2e = {state.get_value(r2e)}")
-    print(f"Initial r3e = {state.get_value(r3e)}")
-    for ai in plan.actions:
-        state = simulator.apply(state, ai)
-        print(f"Applied action: {ai}. ", end="")
-        print(f"Fluent value: {state.get_value(fluent)} r0e: {state.get_value(r0e)} r1e: {state.get_value(r1e)} r2e: {state.get_value(r2e)} r3e: {state.get_value(r3e)}")
-    if simulator.is_goal(state):
-        print("Goal reached!")
-        
-         
+    # with PlanValidator(name="tamer") as validator:
+    #     result = validator.validate(problem, plan)
+    #     print(result)
+            
+    with SequentialSimulator(problem) as simulator:
+        fluent = FluentExp(problem.fluent("total-energy-used"))
+        r0e = FluentExp(problem.fluent('energy'), problem.object('rover0'))
+        r1e = FluentExp(problem.fluent('energy'), problem.object('rover1'))
+        r2e = FluentExp(problem.fluent('energy'), problem.object('rover2'))
+        r3e = FluentExp(problem.fluent('energy'), problem.object('rover3'))
+        state = simulator.get_initial_state()
+        print(f"Initial fluent value = {state.get_value(fluent)}")
+        print(f"Initial r0e = {state.get_value(r0e)}")
+        print(f"Initial r1e = {state.get_value(r1e)}")
+        print(f"Initial r2e = {state.get_value(r2e)}")
+        print(f"Initial r3e = {state.get_value(r3e)}")
+        for ai in plan.actions:
+            state = simulator.apply(state, ai)
+            print(f"Applied action: {ai}. ", end="")
+            print(f"Fluent value: {state.get_value(fluent)} r0e: {state.get_value(r0e)} r1e: {state.get_value(r1e)} r2e: {state.get_value(r2e)} r3e: {state.get_value(r3e)}")
+        if simulator.is_goal(state):
+            print("Goal reached!")
