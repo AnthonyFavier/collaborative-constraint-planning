@@ -911,16 +911,51 @@ class PlanFrame(customtkinter.CTkFrame):
             mprint('Plan length = ' + '{}'.format(data['planning_results']['planlength']))
             mprint('Plan metric = ' + '{:.2f}'.format(data['planning_results']['metric']))
         
-        data_CM = (data, CAI.CM)
-        json_string= jsonpickle.encode(data_CM, indent=4)
+
         
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
         filename = f'export_results/{CAI.g_problem_name}_{date}.json' 
         
+        result, encodingsStr, err = CAI.checkIfUpdatedProblemIsParsable()
+        pyperclip.copy(encodingsStr)
+        if result:
+            mprint('Parsable problem')
+        else:
+            mprint("Can't parse new problem (Syntax error)")
+            mprint(str(err))
+        can_parse = 1 if result else 0
+        nb_h_interventions = -1
+        comments = ""
+        for k, d in CAI.CM.decomposed_constraints.items(): 
+            for t in d.encoding_conv.turns:
+                if t['role']=='user':
+                    nb_h_interventions+=1
+                    # if nb_h_interventions!=0:
+                    #     comments += '> ' + t['content'][0]['text'] + '\n'
+        nb_h_interventions -= CAI.nb_encoding_retry
+        nb_h_reviews = nb_h_interventions+1
+        input_t, inter_t, decomp_t, enco_t, trans_t = data['input_time'],data['interaction_time'],data['decomposition_time'],data['encoding_time'],data['translation_time']
+        
+        c = minput(txt="\nIs it correct?")
+        mprint("\n> " + c )
+        if c in ['y', 'Y', 'yes', '']:
+            correct = 1
+        else:
+            correct = 0
+            if comments =='':
+                comments = c
+            else:
+                comments += '\n'+c
+        
+        txtCSV = f'"{encodingsStr}",{can_parse},{input_t},{inter_t},{decomp_t},{enco_t},{trans_t},{correct},{nb_h_reviews},{nb_h_interventions},"{comments}"\n'
+        with open('test.csv', 'a') as f:
+            f.write(txtCSV)
+            
+        data_CM = (data, CAI.CM)
+        json_string= jsonpickle.encode(data_CM, indent=4)
         with open(filename, 'w') as f:
             f.write(json_string)
-        
-                
+            
     def printMain(self, txt):
         self.write_main_lock.acquire()
         self.textbox.configure(state="normal")
