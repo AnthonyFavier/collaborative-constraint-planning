@@ -404,6 +404,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         self.activateE2NLButton()
         
+        startTimer()
+        
         mprint("\n=== ADDING CONSTRAINT ===")
         time_total = time.time()
         
@@ -421,7 +423,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 CAI.decompose(constraint)
                 self.deactivateE2NLButton()
                 CAI.encode(constraint)
-                constraint.time_total = time.time() - time_total
+                constraint.time_total += time.time() - time_total
                 CAI.CM.dump(CAI.g_problem_name)
                 
             except Exception as err:
@@ -437,13 +439,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
             
             # For ablation
             self.master.plan_frame.export()
-            result, encodingsStr, err = CAI.checkIfUpdatedProblemIsParsable()
-            if result:
-                mprint('Parsable problem')
-            else:
-                mprint("Can't parse new problem (Syntax error)")
-                mprint(str(err))
-            pyperclip.copy(encodingsStr)
+            
+            
+        stopTimer()
+        
             
         
     def delete(self):
