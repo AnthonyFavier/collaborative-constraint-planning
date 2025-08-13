@@ -1,0 +1,201 @@
+;; Enrico Scala (enricos83@gmail.com) and Miquel Ramirez (miquel.ramirez@gmail.com)
+(define (domain rover)
+       (:requirements :typing :fluents)
+       (:types
+              rover -object
+              waypoint -object
+              store -object
+              camera -object
+              mode -object
+              lander -object
+              objective -object
+       )
+       (:predicates
+              (in ?x - rover ?y - waypoint)
+              (at_lander ?x - lander ?y - waypoint)
+              (can_traverse ?r - rover ?x - waypoint ?y - waypoint)
+              (equipped_for_soil_analysis ?r - rover)
+              (equipped_for_rock_analysis ?r - rover)
+              (equipped_for_imaging ?r - rover)
+              (empty ?s - store)
+              (have_rock_analysis ?r - rover ?w - waypoint)
+              (have_soil_analysis ?r - rover ?w - waypoint)
+              (full ?s - store)
+              (calibrated ?c - camera ?r - rover)
+              (supports ?c - camera ?m - mode)
+              (available ?r - rover)
+              (visible ?w - waypoint ?p - waypoint)
+              (have_image ?r - rover ?o - objective ?m - mode)
+              (communicated_soil_data ?w - waypoint)
+              (communicated_rock_data ?w - waypoint)
+              (communicated_image_data ?o - objective ?m - mode)
+              (at_soil_sample ?w - waypoint)
+              (at_rock_sample ?w - waypoint)
+              (visible_from ?o - objective ?w - waypoint)
+              (store_of ?s - store ?r - rover)
+              (calibration_target ?i - camera ?o - objective)
+              (on_board ?i - camera ?r - rover)
+              (channel_free ?l - lander)
+              (in_sun ?w - waypoint)
+       )
+
+       (:functions
+              (energy ?r - rover)
+              (recharges)
+              (total-energy-used)
+              (n_navigate ?x - rover ?y - waypoint ?z - waypoint)
+              (n_recharge ?x - rover ?w - waypoint)
+              (n_samplesoil ?x - rover ?s - store ?p - waypoint)
+              (n_samplerock ?x - rover ?s - store ?p - waypoint)
+              (n_drop ?x - rover ?y - store)
+              (n_calibrate ?r - rover ?i - camera ?t - objective ?w - waypoint)
+              (n_takeimage ?r - rover ?p - waypoint ?o - objective ?i - camera ?m - mode)
+              (n_communicatesoildata ?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
+              (n_communicaterockdata ?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
+              (n_communicateimagedata ?r - rover ?l - lander ?o - objective ?m - mode ?x - waypoint ?y - waypoint)
+       )
+
+       (:action navigate
+              :parameters (?x - rover ?y - waypoint ?z - waypoint)
+              :precondition (and (can_traverse ?x ?y ?z) (available ?x) (in ?x ?y)
+                     (visible ?y ?z) (>= (energy ?x) 8)
+              )
+              :effect (and
+                     (decrease (energy ?x) 8)
+                     (increase (total-energy-used) 8)
+                     (not (in ?x ?y))
+                     (in ?x ?z)
+                     (increase (n_navigate ?x ?y ?z) 1)
+              )
+       )
+
+       (:action recharge
+              :parameters (?x - rover ?w - waypoint)
+              :precondition (and (in ?x ?w) (in_sun ?w) (<= (energy ?x) 80))
+              :effect (and (increase (energy ?x) 20) (increase (recharges) 1)
+                     (increase (n_recharge ?x ?w) 1)
+              )
+       )
+
+       (:action samplesoil
+              :parameters (?x - rover ?s - store ?p - waypoint)
+              :precondition (and (in ?x ?p)
+                     (>= (energy ?x) 3) (at_soil_sample ?p) (equipped_for_soil_analysis ?x) (store_of ?s ?x) (empty ?s)
+              )
+              :effect (and
+                     (not (empty ?s))
+                     (full ?s)
+                     (decrease (energy ?x) 3)
+                     (increase (total-energy-used) 3)
+                     (have_soil_analysis ?x ?p)
+                     (not (at_soil_sample ?p))
+                     (increase (n_samplesoil ?x ?s ?p) 1)
+              )
+       )
+
+       (:action samplerock
+              :parameters (?x - rover ?s - store ?p - waypoint)
+              :precondition (and (in ?x ?p) (>= (energy ?x) 5)
+                     (at_rock_sample ?p) (equipped_for_rock_analysis ?x) (store_of ?s ?x)(empty ?s)
+              )
+              :effect (and
+                     (not (empty ?s))
+                     (full ?s)
+                     (decrease (energy ?x) 5)
+                     (increase (total-energy-used) 5)
+                     (have_rock_analysis ?x ?p)
+                     (not (at_rock_sample ?p))
+                     (increase (n_samplerock ?x ?s ?p) 1)
+              )
+       )
+
+       (:action drop
+              :parameters (?x - rover ?y - store)
+              :precondition (and (store_of ?y ?x) (full ?y) (>= (energy ?x) 1)
+              )
+              :effect (and (not (full ?y)) (empty ?y)
+                     (increase (n_drop ?x ?y) 1)
+                     (decrease (energy ?x) 1)
+                     (increase (total-energy-used) 1)
+              )
+       )
+
+       (:action calibrate
+              :parameters (?r - rover ?i - camera ?t - objective ?w - waypoint)
+              :precondition (and (equipped_for_imaging ?r) (>= (energy ?r) 2)(calibration_target ?i ?t) (in ?r ?w) (visible_from ?t ?w)(on_board ?i ?r)
+              )
+              :effect (and
+                     (decrease (energy ?r) 2)
+                     (increase (total-energy-used) 2)
+                     (calibrated ?i ?r)
+                     (increase (n_calibrate ?r ?i ?t ?w) 1)
+              )
+       )
+
+       (:action takeimage
+              :parameters (?r - rover ?p - waypoint ?o - objective ?i - camera ?m - mode)
+              :precondition (and (calibrated ?i ?r)
+                     (on_board ?i ?r)
+                     (equipped_for_imaging ?r)
+                     (supports ?i ?m)
+                     (visible_from ?o ?p)
+                     (in ?r ?p)
+                     (>= (energy ?r) 1)
+              )
+              :effect (and (have_image ?r ?o ?m)
+                     (not (calibrated ?i ?r))
+                     (decrease (energy ?r) 1)
+                     (increase (total-energy-used) 1)
+                     (increase (n_takeimage ?r ?p ?o ?i ?m) 1)
+              )
+       )
+
+       (:action communicatesoildata
+              :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
+              :precondition (and (in ?r ?x)
+                     (at_lander ?l ?y)(have_soil_analysis ?r ?p)
+                     (visible ?x ?y)(available ?r)(channel_free ?l)
+                     (>= (energy ?r) 4)
+              )
+              :effect (and (communicated_soil_data ?p)(available ?r)
+                     (decrease (energy ?r) 4)
+                     (increase (total-energy-used) 4)
+                     (increase
+                            (n_communicatesoildata ?r ?l ?p ?x ?y)
+                            1)
+              )
+       )
+
+       (:action communicaterockdata
+              :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
+              :precondition (and (in ?r ?x)
+                     (at_lander ?l ?y)(have_rock_analysis ?r ?p)
+                     (>= (energy ?r) 4)
+                     (visible ?x ?y)(available ?r)(channel_free ?l)
+              )
+              :effect (and
+                     (communicated_rock_data ?p)(available ?r)
+                     (decrease (energy ?r) 4)
+                     (increase (total-energy-used) 4)
+                     (increase
+                            (n_communicaterockdata ?r ?l ?p ?x ?y)
+                            1)
+              )
+       )
+
+       (:action communicateimagedata
+              :parameters (?r - rover ?l - lander ?o - objective ?m - mode ?x - waypoint ?y - waypoint)
+              :precondition (and (in ?r ?x)
+                     (at_lander ?l ?y)(have_image ?r ?o ?m)(visible ?x ?y)(available ?r)(channel_free ?l)
+                     (>= (energy ?r) 6)
+              )
+              :effect (and
+                     (communicated_image_data ?o ?m)(available ?r)
+                     (decrease (energy ?r) 6)
+                     (increase (total-energy-used) 6)
+                     (increase
+                            (n_communicateimagedata ?r ?l ?o ?m ?x ?y)
+                            1)
+              )
+       )
+)
