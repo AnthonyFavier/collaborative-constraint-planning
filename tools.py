@@ -112,7 +112,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         '*',
         '/',
         'forall',
-        'exists']
+        'exists',
+    ]
     TEMPORAL_keywords =[
         'always',
         'sometime',
@@ -124,6 +125,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
         'holding-during',
         'hold-after',
         'at-end',
+        # 'imply',
+        # 'implies',
     ]
     authorized_keywords = PDDL_keywords + TEMPORAL_keywords + g_fluent_names + g_all_objects + [object_type for object_type in g_typed_objects] + ['(', ')']
 
@@ -141,23 +144,12 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     L = L.split()
     
     # Check if imply present
-    if ('imply' in L) or ('implies' in L):
-        print('[VERIFIER]')
-        print('imply detected')
-        # print('\t'+filteredEncoding)
-        return f"imply is not supported. Try again without it."
+    # if ('imply' in L) or ('implies' in L):
+    #     print('[VERIFIER]')
+    #     print('imply detected')
+    #     # print('\t'+filteredEncoding)
+    #     return f"imply is not supported. Try again without it."
     
-    # Check if temporal keyword present
-    temporal_present = False
-    for keyword in TEMPORAL_keywords:
-        if keyword in L:
-            temporal_present = True
-            break
-    if not temporal_present:
-        print('[VERIFIER]')
-        print("No temporal keywords")
-        # print('\t'+filteredEncoding)
-        return "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint. Try again."
 
     # Unknown keyword test #
     for x in L:
@@ -169,13 +161,25 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
                     print('[VERIFIER]')
                     print(f"{x} is not supported")
                     # print('\t'+filteredEncoding)
-                    return f"{x} is not a supported PDDL keyword or part of problem description. Try again to translate correctly."
+                    return f"{x} is not a supported PDDL keyword or part of problem description."
+                
+    # Check if temporal keyword present
+    temporal_present = False
+    for keyword in TEMPORAL_keywords:
+        if keyword in L:
+            temporal_present = True
+            break
+    if not temporal_present:
+        print('[VERIFIER]')
+        print("No temporal keywords")
+        # print('\t'+filteredEncoding)
+        return "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint."
             
     # Parsing test #
     try:
         parse_pddl3_str(domain, updatedProblem)
     except Exception as err:
-        return "There is a syntax error. Try again carefully to translate correctly."
+        return "There is a syntax error."
     
     # encodingOk, error_description
     return 'OK'
