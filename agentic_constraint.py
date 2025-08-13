@@ -10,11 +10,14 @@ load_dotenv(find_dotenv())
 #### PDDL FILES ####
 ####################
 import tools
+from pathlib import Path
+import os
 
-BASE_PATH = 'PDDL/'
-DOMAIN_PATH = BASE_PATH+'zeno_dom.pddl'
-PROBLEM_PATH = BASE_PATH+'zeno13.pddl'
-PLAN_PATH = BASE_PATH+'zeno13_plan.txt'
+
+BASE_PATH = str(Path(os.getcwd())/'PDDL')
+DOMAIN_PATH = BASE_PATH+'/zeno_dom.pddl'
+PROBLEM_PATH = BASE_PATH+'/zeno13.pddl'
+PLAN_PATH = BASE_PATH+'/zeno13_plan.txt'
 
 with open(DOMAIN_PATH, 'r') as f:
     g_domain = f.read()
@@ -28,7 +31,7 @@ try:
     parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
 except Exception as e:
     print("ERROR", e)
-    raise Exception(f"Unable to parse the initial problem.")
+    raise Exception(f"Unable to parse the initial problem. {DOMAIN_PATH} \n {PROBLEM_PATH}")
 
 # Check if no initial constraints
 if parsed.problem.trajectory_constraints!=[]:
@@ -283,7 +286,7 @@ class MainState(TypedDict):
 #### TOOLS ####
 ###############
 import requests
-from langchain_tavily import TavilySearch
+#from langchain_tavily import TavilySearch
 from langgraph.types import Send
 from langchain_core.tools import tool
 import json 
@@ -294,7 +297,7 @@ def ask_clarifying_question(question: str) -> str:
     """Ask the user the clarifying question given as input and returns the user answer."""
     return input(question+'\n> ')
 
-search_tool = TavilySearch(max_results=2)
+#search_tool = TavilySearch(max_results=2)
 
 @tool
 def basic_plan_analysis(plan: str) -> str:
@@ -500,10 +503,10 @@ def GenerateAnswer(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
-    if isinstance(msg.content, list):
-        answer = msg.content[-1]['text']
-    else:
-        answer = msg.content
+    #if isinstance(msg.content, list):
+     #   answer = msg.content[-1]['text']
+    #else:
+    answer = msg
     
     return {'messages': [msg], 'answer': answer}
 
@@ -519,12 +522,12 @@ def MakeSuggestions(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= SUGGESTIONS_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
-    if isinstance(msg.content, list):
-        answer = msg.content[-1]['text']
-    else:
-        answer = msg.content
+    #if isinstance(msg.content, list):
+     #   answer = msg.content[-1]['text']
+    #else:
+    answer = msg
     
-    return {'messages': [msg], 'suggestions': answer}
+    return {'messages': [msg], 'suggestions': msg.content}
 
 #### BUILD ####    
 failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
@@ -584,10 +587,10 @@ def Encode(state: EncodingState):
         state['e_messages'] += [HumanMessage(content=state['encodingE2NL'].constraint)]
     
     msg = llm.invoke(state['e_messages'])
-    if isinstance(msg.content, list):
-        answer = msg.content[-1]['text']
-    else:
-        answer = msg.content
+    #if isinstance(msg.content, list):
+     #   answer = msg.content[-1]['text']
+    #else:
+    answer = msg
     
     encodingE2NL = state["encodingE2NL"]
     encodingE2NL.encoding = answer
@@ -1200,8 +1203,8 @@ def testRAG():
 
 def testFailure():
     final_state = failure_detection_subgraph.invoke(FailureDetectionState())
-    print('ANSWER:\n' + final_state['answer'])
-    print('\nSUGGESTIONS:\n' + final_state['suggestions'])
+    print('ANSWER:\n', final_state['answer'])
+    print('\nSUGGESTIONS:\n', final_state['suggestions'])
 
 def testTopNode():
     
@@ -1218,18 +1221,18 @@ def testTopNode():
     ## GENERAL QUESTION ##
     # user_type = UserType(user_type="general_question")
     
-    final_state = main_graph.invoke(MainState(messages=[HumanMessage(content=user_input)], user_input=user_input, user_type=user_type))
-    encodings = final_state['encodingsE2NL']
-    print("\nUser input:\n", user_input)
-    for e in encodings:
-        print(f'• {e.constraint}')
-        print(f'  → {e.encoding.encoding}')
-        print(f'    → {e.e2nl.e2nl}')
+    # final_state = main_graph.invoke(MainState(messages=[HumanMessage(content=user_input)], user_input=user_input, user_type=user_type))
+    # encodings = final_state['encodingsE2NL']
+    # print("\nUser input:\n", user_input)
+    # for e in encodings:
+    #     print(f'• {e.constraint}')
+    #     print(f'  → {e.encoding.encoding}')
+    #     print(f'    → {e.e2nl.e2nl}')
 
-    # user_type = UserType(user_type="risk_analysis")
-    # final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
-    # print('ANSWER:\n' + final_state['answer'])
-    # print('\nSUGGESTIONS:\n' + final_state['suggestions'])
+    user_type = UserType(user_type="risk_analysis")
+    final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
+    print('ANSWER:\n', final_state['answer'])
+    print('\nSUGGESTIONS:\n', final_state['suggestions'])
 
 if __name__=='__main__':
     # testTranslation()
