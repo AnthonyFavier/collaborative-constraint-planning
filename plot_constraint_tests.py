@@ -560,7 +560,44 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
                 durations['human']['Planning']['mean'].append(d['planning']['mean'])
                 durations['human']['Planning']['std'].append(d['planning']['std'])
                 break
-
+            
+    print(json.dumps(durations, indent=4))
+    
+    
+    from scipy.stats import mannwhitneyu
+    data_p = {}
+    for to in timeout_values:
+        
+        for d in data_original:
+            if d['timeout']==to:
+                original_d = d
+                break
+        for d in data_random:
+            if d['timeout']==to:
+                random_d = d
+                break
+        for d in data_h:
+            if d['timeout']==to:
+                human_d = d
+                break
+        
+        # ori_list = original_d['metrics']['all'].tolist()
+        # data_p[to] = {'original': ori_list,
+        #         'random': random_d['metrics']['all'],
+        #         'human': human_d['metrics']['all']}
+        
+        _data_original = original_d['metrics']['all'].tolist()
+        _data_random = random_d['metrics']['all']
+        _data_human = human_d['metrics']['all']
+        
+        random_original = mannwhitneyu(_data_random, _data_original, alternative='less')[1]
+        human_original = mannwhitneyu(_data_human, _data_original, alternative='less')[1]
+        human_random = mannwhitneyu(_data_human, _data_random, alternative='less')[1]
+        print(f'TO=', to)
+        print(f'\tR better than O: {random_original<0.05} ({random_original})')
+        print(f'\tH better than O: {human_original<0.05} ({human_original})')
+        print(f'\tH better than R: {human_random<0.05} ({human_random})')
+    
 #############################################################
     ###################### FIGURE PLOTS #####################
     #########################################################
@@ -714,20 +751,20 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     # ############# Compilation + Planning Times ###############
     # ##########################################################
 
-    durations_styles = {
-        'original':{
-            'Planning': {'color': original_problem_color, 'hatch': '', 'label_color':"#000000FF"},
-        },
-        'random':{
-            'Compilation': {'color': random_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
-            'Planning': {'color': random_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
-        },
-        'human':{
-            'Translation': {'color': human_constraints_trans_color, 'hatch': '', 'label_color':"#000000FF"},
-            'Compilation': {'color': human_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
-            'Planning': {'color': human_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
-        },
-    }
+    # durations_styles = {
+    #     'original':{
+    #         'Planning': {'color': original_problem_color, 'hatch': '', 'label_color':"#000000FF"},
+    #     },
+    #     'random':{
+    #         'Compilation': {'color': random_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
+    #         'Planning': {'color': random_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
+    #     },
+    #     'human':{
+    #         'Translation': {'color': human_constraints_trans_color, 'hatch': '', 'label_color':"#000000FF"},
+    #         'Compilation': {'color': human_constraints_dark_color, 'hatch': '', 'label_color':"#000000FF"},
+    #         'Planning': {'color': human_constraints_color, 'hatch': '', 'label_color':"#000000FF"},
+    #     },
+    # }
 
     # width = 0.25
     # multiplier = -1.0 if WITH_RANDOM else -0.5
