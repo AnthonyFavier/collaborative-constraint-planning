@@ -415,9 +415,10 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain_core.messages.modifier import RemoveMessage
 e2nl_llm = ChatOpenAI(model="gpt-4.1-mini-2025-04-14", temperature=0)
-g_llm = ChatAnthropic(model="claude-3-5-haiku-latest", max_tokens=4000, temperature=0)
-# llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000, thinking={"type": "enabled", "budget_tokens": 2000})
+light_llm = ChatAnthropic(model="claude-3-5-haiku-latest", max_tokens=4000, temperature=0)
+reasonning_llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000, thinking={"type": "enabled", "budget_tokens": 2000})
 
+g_llm = light_llm
 
 ##########################
 #### GRAPH COMPONENTS ####
@@ -456,7 +457,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
     )
     state['messages'] += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))]
     
-    llm = g_llm.with_structured_output(RAGQuery)
+    llm = light_llm.with_structured_output(RAGQuery)
     
     query = llm.invoke(state["messages"])
     
@@ -499,8 +500,12 @@ def GenerateAnswer(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
+    if isinstance(msg.content, list):
+        answer = msg.content[-1]['text']
+    else:
+        answer = msg.content
     
-    return {'messages': [msg], 'answer': msg.content}
+    return {'messages': [msg], 'answer': answer}
 
 #NODE
 def MakeSuggestions(state: FailureDetectionState):
@@ -514,8 +519,12 @@ def MakeSuggestions(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= SUGGESTIONS_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
+    if isinstance(msg.content, list):
+        answer = msg.content[-1]['text']
+    else:
+        answer = msg.content
     
-    return {'messages': [msg], 'suggestions': msg.content}
+    return {'messages': [msg], 'suggestions': answer}
 
 #### BUILD ####    
 failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
@@ -575,9 +584,13 @@ def Encode(state: EncodingState):
         state['e_messages'] += [HumanMessage(content=state['encodingE2NL'].constraint)]
     
     msg = llm.invoke(state['e_messages'])
+    if isinstance(msg.content, list):
+        answer = msg.content[-1]['text']
+    else:
+        answer = msg.content
     
     encodingE2NL = state["encodingE2NL"]
-    encodingE2NL.encoding = msg
+    encodingE2NL.encoding = answer
     
     ai_msg = AIMessage(content=encodingE2NL.encoding.encoding)
     
@@ -671,7 +684,7 @@ def UserReviewE2NL(state: EncodingState):
         return {"e2nl_user_validation": E2NLUserValidation(e2nl_user_ok=True, e2nl_user_feedback="")}
     
     # Evaluate user input: ok or not (structued output)
-    llm = g_llm.with_structured_output(E2NLUserValidation)
+    llm = light_llm.with_structured_output(E2NLUserValidation)
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -897,7 +910,7 @@ def VerifyDecomposition(state: DecompositionState):
         "- Is there a mismatch between the overal decomposition and the user intent? All combined decomposed constraints should properly capture the user intent, and not omit any part of it."
     )
     
-    llm = g_llm.with_structured_output(DecompositionValidation)
+    llm = light_llm.with_structured_output(DecompositionValidation)
     
     
     decomposition_str = ""
@@ -977,7 +990,7 @@ def UserReviewDecomposition(state: DecompositionState):
         return {'decomposition_user_validation': DecompositionUserValidation(decomp_user_ok=True, decomp_user_feedback='')}
     
     # Evaluate user input: ok or not (structued output)
-    llm = g_llm.with_structured_output(DecompositionUserValidation)
+    llm = light_llm.with_structured_output(DecompositionUserValidation)
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -1213,10 +1226,10 @@ def testTopNode():
         print(f'  → {e.encoding.encoding}')
         print(f'    → {e.e2nl.e2nl}')
 
-    user_type = UserType(user_type="risk_analysis")
-    final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
-    print('ANSWER:\n' + final_state['answer'])
-    print('\nSUGGESTIONS:\n' + final_state['suggestions'])
+    # user_type = UserType(user_type="risk_analysis")
+    # final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
+    # print('ANSWER:\n' + final_state['answer'])
+    # print('\nSUGGESTIONS:\n' + final_state['suggestions'])
 
 if __name__=='__main__':
     # testTranslation()
