@@ -12,119 +12,144 @@ load_dotenv(find_dotenv())
 import tools
 from pathlib import Path
 import os
+from defs import mprint, minput
+import time
 
+LOCK = False
 
-BASE_PATH = str(Path(os.getcwd())/'PDDL')
-DOMAIN_PATH = BASE_PATH+'/zeno_dom.pddl'
-PROBLEM_PATH = BASE_PATH+'/zeno13.pddl'
-PLAN_PATH = BASE_PATH+'/zeno13_plan.txt'
-
-with open(DOMAIN_PATH, 'r') as f:
-    g_domain = f.read()
-with open(PROBLEM_PATH, 'r') as f:
-    g_problem = f.read()
-with open(PLAN_PATH, 'r') as f:
-    g_plan = f.read()
-
-# Try parsing the initial problem
-try:
-    parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
-except Exception as e:
-    print("ERROR", e)
-    raise Exception(f"Unable to parse the initial problem. {DOMAIN_PATH} \n {PROBLEM_PATH}")
-
-# Check if no initial constraints
-if parsed.problem.trajectory_constraints!=[]:
-    raise Exception(f"There are already constraints in the initial problem.\n{parsed.problem.trajectory_constraints}")
-
-# Set extracted fluent names (used during verification)
-tools.set_fluent_names([f.name for f in parsed.problem.fluents])
-typed_objects = {}
-objects = []
-for o in parsed.problem.all_objects:
-    objects.append(o.name)
-    if o.type.name in objects:
-        typed_objects[o.type.name].append(o.name)
+def agentic_constraint_init(domain_path = None, problem_path = None, plan_path=None):
+    global g_domain, g_problem, g_plan
+    global DOMAIN_PATH, PROBLEM_PATH, PLAN_PATH
+    BASE_PATH = str(Path(os.getcwd())/'PDDL')
+    if domain_path is None:
+        DOMAIN_PATH = BASE_PATH+'/zeno_dom.pddl'
     else:
-        typed_objects[o.type.name] = [o.name]
-tools.set_all_objects(objects)
-tools.set_typed_objects(typed_objects)
+        DOMAIN_PATH = domain_path
+    if problem_path is None:
+        PROBLEM_PATH = BASE_PATH+'/zeno13.pddl'
+    else:
+        PROBLEM_PATH = problem_path
+    if plan_path is None:
+        PLAN_PATH = BASE_PATH+'/zeno13_plan.txt'
+    else:
+        PLAN_PATH = plan_path
+
+    with open(DOMAIN_PATH, 'r') as f:
+        g_domain = f.read()
+    with open(PROBLEM_PATH, 'r') as f:
+        g_problem = f.read()
+    with open(PLAN_PATH, 'r') as f:
+        g_plan = f.read()
+
+    # Try parsing the initial problem
+    try:
+        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+    except Exception as e:
+        print("ERROR", e)
+        raise Exception(f"Unable to parse the initial problem. {DOMAIN_PATH} \n {PROBLEM_PATH}")
+
+    # Check if no initial constraints
+    if parsed.problem.trajectory_constraints!=[]:
+        raise Exception(f"There are already constraints in the initial problem.\n{parsed.problem.trajectory_constraints}")
+
+    # Set extracted fluent names (used during verification)
+    tools.set_fluent_names([f.name for f in parsed.problem.fluents])
+    typed_objects = {}
+    objects = []
+    for o in parsed.problem.all_objects:
+        objects.append(o.name)
+        if o.type.name in objects:
+            typed_objects[o.type.name].append(o.name)
+        else:
+            typed_objects[o.type.name] = [o.name]
+    tools.set_all_objects(objects)
+    tools.set_typed_objects(typed_objects)
 
 
 ###################
 #### SETUP RAG ####
 ###################
-
-## LOAD ##
-print('Loading documents ... ', end='', flush=True)
 from langchain_community.document_loaders import TextLoader, PyPDFLoader    
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
-DOCUMENT_PATH = "documents/"
-files = [
-    # PDDL
-    # DOMAIN_PATH,
-    # PROBLEM_PATH,
-    # PLAN_PATH,
-    
-    # Fake reports
-    {
-        "name": "fake_aircraft_plane1.md", 
-        "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane1",
-    },
-    {
-        "name": "fake_aircraft_plane2.md", 
-        "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane2",
-    },
-    {
-        "name": "fake_doc_airport_atlanta.md", 
-        "description": "INTERNAL REPORT: ATLANTA INTERNATIONAL AIRPORT (ATL)",
-    },
-    {
-        "name": "fake_doc_airport_newyork.md", 
-        "description": "INTERNAL REPORT: JOHN F. KENNEDY INTERNATIONAL AIRPORT (JFK)",
-    },
-    {
-        "name": "fake_report1.md", 
-        "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
-    },
-]
-
 def DocLoader(filename):
-    _,ext = filename.split('.')[1]
-    if ext in ['pdf']:
-        doc = PyPDFLoader(filename).load()
-    else:
-        doc = TextLoader(filename).load()
-    return doc
+        _,ext = filename.split('.')[1]
+        if ext in ['pdf']:
+            doc = PyPDFLoader(filename).load()
+        else:
+            doc = TextLoader(filename).load()
+        return doc
 
-docs = []
-for f in files:
-    doc = DocLoader(DOCUMENT_PATH+f['name'])
-    doc[0].metadata['description'] = f['description']
-    docs.append(doc)
+def set_up_rag():
+    """Set up the RAG retriever and vectorstore."""
     
-docs_list = [item for sublist in docs for item in sublist]
-print('OK')
+    ## LOAD ##
+    print('Loading documents ... ', end='', flush=True)
+    mprint('Loading documents ... ')
 
-## SPLITTING
-print('Splitting documents ... ', end='', flush=True)
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=512, chunk_overlap=20
-)
-doc_splits = text_splitter.split_documents(docs_list)
-print('OK')
+    DOCUMENT_PATH = "documents/"
+    files = [
+        # PDDL
+        # DOMAIN_PATH,
+        # PROBLEM_PATH,
+        # PLAN_PATH,
+        
+        # Fake reports
+        {
+            "name": "fake_aircraft_plane1.md", 
+            "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane1",
+        },
+        {
+            "name": "fake_aircraft_plane2.md", 
+            "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane2",
+        },
+        {
+            "name": "fake_doc_airport_atlanta.md", 
+            "description": "INTERNAL REPORT: ATLANTA INTERNATIONAL AIRPORT (ATL)",
+        },
+        {
+            "name": "fake_doc_airport_newyork.md", 
+            "description": "INTERNAL REPORT: JOHN F. KENNEDY INTERNATIONAL AIRPORT (JFK)",
+        },
+        {
+            "name": "fake_report1.md", 
+            "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
+        },
+    ]
 
-## INDEXING and RETREIVER
-print('Indexing documents ... ', end='', flush=True)
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_openai import OpenAIEmbeddings
-vectorstore = InMemoryVectorStore.from_documents(
-    documents=doc_splits, embedding=OpenAIEmbeddings()
-)
-retriever = vectorstore.as_retriever()
-print('OK')
+    
 
+    docs = []
+    for f in files:
+        doc = DocLoader(DOCUMENT_PATH+f['name'])
+        doc[0].metadata['description'] = f['description']
+        docs.append(doc)
+        
+    docs_list = [item for sublist in docs for item in sublist]
+    mprint('OK')
+
+    ## SPLITTING
+    print('Splitting documents ... ', end='', flush=True)
+    mprint('Splitting documents ... ')
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        chunk_size=512, chunk_overlap=20
+    )
+    doc_splits = text_splitter.split_documents(docs_list)
+    mprint('OK')
+
+    ## INDEXING and RETREIVER
+    print('Indexing documents ... ', end='', flush=True)
+    mprint('Indexing documents ... ', end='')
+    from langchain_core.vectorstores import InMemoryVectorStore
+    from langchain_openai import OpenAIEmbeddings
+    vectorstore = InMemoryVectorStore.from_documents(
+        documents=doc_splits, embedding=OpenAIEmbeddings()
+    )
+    retriever = vectorstore.as_retriever()
+    mprint('OK')
+    return retriever
+
+retriever = set_up_rag()
 
 ######################################
 #### STRUCTURED OUTPUTS AND STATE ####
@@ -295,7 +320,9 @@ from langchain.tools.retriever import create_retriever_tool
 @tool
 def ask_clarifying_question(question: str) -> str:
     """Ask the user the clarifying question given as input and returns the user answer."""
-    return input(question+'\n> ')
+    q = minput(question+'\n> ')
+    mprint("> " + q)
+    return q
 
 #search_tool = TavilySearch(max_results=2)
 
@@ -349,12 +376,12 @@ def get_current_weather_city(city: str):
     api_url = buildURL(category, params)
     response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
     if response.status_code == requests.codes.ok:
-        print("API City Info: "+response.text)
+        mprint("API City Info: "+response.text)
         response = json.loads(response.text)
         if not response:
             return "Unknown city name."
     else:
-        print("Error:", response.status_code, response.text)
+        mprint("Error:", response.status_code, response.text)
         
     # get weather at loc
     category = 'weather'
@@ -365,7 +392,7 @@ def get_current_weather_city(city: str):
     api_url = buildURL(category, params)
     response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
     if response.status_code == requests.codes.ok:
-        print("API loc weather: " + response.text)
+        mprint("API loc weather: " + response.text)
         weather = json.loads(response.text)
         weather_text = f"""
 Current weather at {city}:
@@ -375,16 +402,19 @@ Current weather at {city}:
 - Wind direction: {weather['wind_degrees']}°
 """[1:-1]
     else:
-        print("Error:", response.status_code, response.text)
+        mprint("Error:", response.status_code, response.text)
         
     return weather_text
 
 # Built-in RETRIEVAL TOOL
-retriever_tool = create_retriever_tool(
-    retriever,
-    "retriever",
-    "Retriever tool able to extract content from available documents that is relevant to the given query.",
-)
+def build_retriever_tool(retriever):
+    retriever_tool = create_retriever_tool(
+        retriever,
+        "retriever",
+        "Retriever tool able to extract content from available documents that is relevant to the given query.",
+    )
+    return retriever_tool
+retriever_tool = build_retriever_tool(retriever)
 # OWN RETRIEVAL TOOL WITH METADATA
 @tool
 def retrieve_with_metadata(query: str) -> str:
@@ -439,7 +469,7 @@ PRINT_NODES = True
 def GenerateRAGQuery(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
-        print('Node: GenerateRAGQuery')
+        mprint('Node: GenerateRAGQuery')
         
     RAG_QUERY_GENREATION_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -470,7 +500,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
 def Retrieval(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
-        print('Node: Retrieval')
+        mprint('Node: Retrieval')
         
     # For now directly call retriever tool
     # Future: bind tool to LLM and do an LLM call?
@@ -490,7 +520,7 @@ def Retrieval(state: FailureDetectionState):
 #NODE
 def GenerateAnswer(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
-        print('Node: GenerateAnswer')
+        mprint('Node: GenerateAnswer')
         
     GENERATE_ANSWER_PROMPT = (
         "Use the previous pieces of retrieved context to identify possible risk of failure of the plan. "
@@ -513,7 +543,7 @@ def GenerateAnswer(state: FailureDetectionState):
 #NODE
 def MakeSuggestions(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
-        print('Node: MakeSuggestions')
+        mprint('Node: MakeSuggestions')
         
     SUGGESTIONS_PROMPT = (
         "Based on your last answer about the risks of failure, give me concrete suggestions of modification to the current plan. "
@@ -530,20 +560,23 @@ def MakeSuggestions(state: FailureDetectionState):
     return {'messages': [msg], 'suggestions': msg.content}
 
 #### BUILD ####    
-failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
-# Add nodes
-failure_detection_subgraph_builder.add_node("GenerateRAGQuery", GenerateRAGQuery)
-failure_detection_subgraph_builder.add_node("Retrieval", Retrieval)
-failure_detection_subgraph_builder.add_node("GenerateAnswer", GenerateAnswer)
-failure_detection_subgraph_builder.add_node("MakeSuggestions", MakeSuggestions)
-# Add edge
-failure_detection_subgraph_builder.add_edge(START, "GenerateRAGQuery")
-failure_detection_subgraph_builder.add_edge("GenerateRAGQuery", "Retrieval")
-failure_detection_subgraph_builder.add_edge("Retrieval", "GenerateAnswer")
-failure_detection_subgraph_builder.add_edge("GenerateAnswer", "MakeSuggestions")
-failure_detection_subgraph_builder.add_edge("MakeSuggestions", END)
-# Compile
-failure_detection_subgraph = failure_detection_subgraph_builder.compile()
+def build_failure_detection_subgraph():
+    
+    failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
+    # Add nodes
+    failure_detection_subgraph_builder.add_node("GenerateRAGQuery", GenerateRAGQuery)
+    failure_detection_subgraph_builder.add_node("Retrieval", Retrieval)
+    failure_detection_subgraph_builder.add_node("GenerateAnswer", GenerateAnswer)
+    failure_detection_subgraph_builder.add_node("MakeSuggestions", MakeSuggestions)
+    # Add edge
+    failure_detection_subgraph_builder.add_edge(START, "GenerateRAGQuery")
+    failure_detection_subgraph_builder.add_edge("GenerateRAGQuery", "Retrieval")
+    failure_detection_subgraph_builder.add_edge("Retrieval", "GenerateAnswer")
+    failure_detection_subgraph_builder.add_edge("GenerateAnswer", "MakeSuggestions")
+    failure_detection_subgraph_builder.add_edge("MakeSuggestions", END)
+    # Compile
+    failure_detection_subgraph = failure_detection_subgraph_builder.compile()
+    return failure_detection_subgraph
 
 
 ###########################
@@ -554,7 +587,7 @@ def Encode(state: EncodingState):
     """Translate the given constraint into PDDL3.0"""
 
     if 'PRINT_NODES'in globals():
-        print('Node: Encode')
+        mprint('Node: Encode')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -602,7 +635,7 @@ def Encode(state: EncodingState):
 #NODE
 def Verifier(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        print('Node: Verifier')
+        mprint('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
     updatedProblem = tools.updateProblem(g_problem, [encoding])
@@ -614,7 +647,7 @@ def Verifier(state: EncodingState):
         encodingValidation = state['encoding_validation']
         encodingValidation.encoding_nb_retry += 1
         if encodingValidation.encoding_nb_retry > 5:
-            print("WARNING: Exceeding 5 encoding attempts")
+            mprint("WARNING: Exceeding 5 encoding attempts")
     else:
         encodingValidation = EncodingValidation()
 
@@ -634,7 +667,7 @@ def RoutingVerifier(state: EncodingState):
 #NODE
 def BackTranslation(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        print('Node: BackTranslation')
+        mprint('Node: BackTranslation')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -670,16 +703,23 @@ def BackTranslation(state: EncodingState):
     return {'e_messages': [ai_msg], "encodingE2NL": encodingE2NL}
 
 #NODE
+
 def UserReviewE2NL(state: EncodingState):
+    global LOCK
     if 'PRINT_NODES'in globals():
-        print('Node: UserReviewE2NL')
+        mprint('Node: UserReviewE2NL')
   
     
     # Show Data: constraint and back-translation
     txt = 'Constraint: ' + state['encodingE2NL'].constraint + '\n\t⇓\nE2NL: ' + state['encodingE2NL'].e2nl.e2nl
     
     # Ask user for review
-    user_review = input(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
+    while LOCK:
+        time.sleep(2)
+    LOCK = True
+    user_review = minput(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
+    mprint("> " + user_review)
+    LOCK = False
     # user_review = interrupt(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
     
     # If trivial positive answer move skip LLM call
@@ -729,41 +769,43 @@ def RoutingUserReviewBackTranslation(state: EncodingState):
 #NODE
 def SaveEncoding(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        print('Node: SaveEncoding')
+        mprint('Node: SaveEncoding')
     
     return {'encodingsE2NL': [state["encodingE2NL"]]}
     
-#### BUILD ####    
-encoding_subgraph_builder = StateGraph(EncodingState)
-# Add nodes
-encoding_subgraph_builder.add_node("Encode", Encode)
-encoding_subgraph_builder.add_node("Verifier", Verifier)
-encoding_subgraph_builder.add_node("BackTranslation", BackTranslation)
-encoding_subgraph_builder.add_node("UserReviewE2NL", UserReviewE2NL)
-encoding_subgraph_builder.add_node("SaveEncoding", SaveEncoding)
-# Add edges
-encoding_subgraph_builder.add_edge(START, "Encode")
-encoding_subgraph_builder.add_edge("Encode", "Verifier")
-encoding_subgraph_builder.add_conditional_edges(
-    "Verifier",
-    RoutingVerifier,
-    {
-        "OK": "BackTranslation",
-        "Retry": 'Encode'
-    }
-)
-encoding_subgraph_builder.add_edge("BackTranslation", "UserReviewE2NL")
-encoding_subgraph_builder.add_conditional_edges(
-    "UserReviewE2NL",
-    RoutingUserReviewBackTranslation,
-    {
-        "OK": "SaveEncoding",
-        "Retry": 'Encode'
-    }
-)
-encoding_subgraph_builder.add_edge("SaveEncoding", END)
-# Compile
-encoding_subgraph = encoding_subgraph_builder.compile()
+#### BUILD ####  
+def build_encoding_subgraph():  
+    encoding_subgraph_builder = StateGraph(EncodingState)
+    # Add nodes
+    encoding_subgraph_builder.add_node("Encode", Encode)
+    encoding_subgraph_builder.add_node("Verifier", Verifier)
+    encoding_subgraph_builder.add_node("BackTranslation", BackTranslation)
+    encoding_subgraph_builder.add_node("UserReviewE2NL", UserReviewE2NL)
+    encoding_subgraph_builder.add_node("SaveEncoding", SaveEncoding)
+    # Add edges
+    encoding_subgraph_builder.add_edge(START, "Encode")
+    encoding_subgraph_builder.add_edge("Encode", "Verifier")
+    encoding_subgraph_builder.add_conditional_edges(
+        "Verifier",
+        RoutingVerifier,
+        {
+            "OK": "BackTranslation",
+            "Retry": 'Encode'
+        }
+    )
+    encoding_subgraph_builder.add_edge("BackTranslation", "UserReviewE2NL")
+    encoding_subgraph_builder.add_conditional_edges(
+        "UserReviewE2NL",
+        RoutingUserReviewBackTranslation,
+        {
+            "OK": "SaveEncoding",
+            "Retry": 'Encode'
+        }
+    )
+    encoding_subgraph_builder.add_edge("SaveEncoding", END)
+    # Compile
+    encoding_subgraph = encoding_subgraph_builder.compile()
+    return encoding_subgraph
 
 
 ##############################
@@ -774,7 +816,7 @@ def RefineUserIntent(state: DecompositionState):
     """Refines user input to remove ambiguity and properly capture the user intent. Can ask clarifying questions."""
     
     if 'PRINT_NODES'in globals():
-        print("Node: RefineUserIntent")
+        mprint("Node: RefineUserIntent")
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -802,7 +844,7 @@ def RefineUserIntent(state: DecompositionState):
 #NODE
 def SaveUserIntentClearMessages(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        print("Node: SaveUserIntentClearMessages")
+        mprint("Node: SaveUserIntentClearMessages")
     messages_to_remove = state["messages"]
     remove_instructions = [RemoveMessage(id=m.id) for m in messages_to_remove]
     return {'refined_user_intent': state['messages'][-1].content, "messages": remove_instructions} # Return as part of a state update
@@ -812,7 +854,7 @@ def Decompose(state: DecompositionState):
     """Decompose the user input into a proper set of constraints"""
     
     if 'PRINT_NODES'in globals():
-        print("Node: Decompose")
+        mprint("Node: Decompose")
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -880,11 +922,11 @@ def VerifyDecomposition(state: DecompositionState):
     """Ask a series of question to evaluate if decomposition looks good"""
     
     if 'PRINT_NODES'in globals():
-        print("Node: VerifyDecomposition")
+        mprint("Node: VerifyDecomposition")
     
     # MOCK no verification
     if 'PRINT_NODES'in globals():
-        print('MOCKED')
+        mprint('MOCKED')
     return {'decomposition_validation': DecompositionValidation()}
     
     SYSTEM_PROMPT = (
@@ -932,22 +974,22 @@ def VerifyDecomposition(state: DecompositionState):
     
     feedback = ''
     if msg.pddl_constraints:
-        print('\tDetected: pddl_constraints')
+        mprint('\tDetected: pddl_constraints')
         feedback += msg.pddl_constraints_feedback + '\n'
     if msg.ambiguous_constraints:
-        print('\tDetected: ambiguous_constraints')
+        mprint('\tDetected: ambiguous_constraints')
         feedback += msg.ambiguous_constraints_feedback + '\n'
     if msg.redundant_constraints:
-        print('\tDetected: redundant_constraints')
+        mprint('\tDetected: redundant_constraints')
         feedback += msg.redundant_constraints_feedback + '\n'
     if msg.conflicting_constraints:
-        print('\tDetected: conflicting_constraints')
+        mprint('\tDetected: conflicting_constraints')
         feedback += msg.conflicting_constraints_feedback + '\n'
     if msg.mismatching_user_intent:
-        print('\tDetected: mismatching_user_intent')
+        mprint('\tDetected: mismatching_user_intent')
         feedback += msg.mismatching_user_intent_feedback + '\n'
     if feedback:
-        print(feedback)
+        mprint(feedback)
         
     return {'decomposition_validation': msg}
 
@@ -976,7 +1018,7 @@ def UserReviewDecomposition(state: DecompositionState):
     # A second one formatting the user feedback into the current structured output?
     
     if 'PRINT_NODES'in globals():
-        print("Node: UserReviewDecomposition")
+        mprint("Node: UserReviewDecomposition")
     
     # Format and Show decomposition
     decomposition_str = "Decomposition:\n"
@@ -985,7 +1027,13 @@ def UserReviewDecomposition(state: DecompositionState):
     decomposition_str += 'Explanation:\n' + state['decomposition'].explanation
     
     # Ask user for review
-    user_review = input(decomposition_str+'\n\nAre you satisfied with the current decomposition? If not, provide any desired feedback for me to consider.\n> ')
+    global LOCK
+    while LOCK:
+        time.sleep(2)
+    LOCK = True
+    user_review = minput(decomposition_str+'\n\nAre you satisfied with the current decomposition? If not, provide any desired feedback for me to consider.\n> ')
+    mprint(f"> {user_review}")
+    LOCK = False
     # user_review = interrupt(decomposition_str+'\n\nAre you satisfied with the current decomposition? If not, provide any desired feedback for me to consider.\n> ')
     
     # If trivial positive answer move skip LLM call
@@ -1032,7 +1080,7 @@ def RoutingUserReviewDecomposition(state: DecompositionState):
 #NODE
 def Orchestrator(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        print("Node: Orchestrator")
+        mprint("Node: Orchestrator")
     return {}
     
 #CondEdge
@@ -1051,59 +1099,63 @@ def assign_encoding_workers(state: DecompositionState):
 #NODE
 def Merge(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        print("Node: Merge")
+        mprint("Node: Merge")
     return {}
 
 #### BUILD ####
-translation_subgraph_builder = StateGraph(DecompositionState)
-# Add nodes
-translation_subgraph_builder.add_node("RefineUserIntent", RefineUserIntent)
-translation_subgraph_builder.add_node("ask_clarifying_question", ToolNode(tools=[ask_clarifying_question]))
-translation_subgraph_builder.add_node("SaveUserIntentClearMessages", SaveUserIntentClearMessages)
-translation_subgraph_builder.add_node("Decompose", Decompose)
-translation_subgraph_builder.add_node("VerifyDecomposition", VerifyDecomposition)
-translation_subgraph_builder.add_node("UserReviewDecomposition", UserReviewDecomposition)
-translation_subgraph_builder.add_node("Orchestrator", Orchestrator)
-translation_subgraph_builder.add_node("EncodingSubgraph", encoding_subgraph)
-translation_subgraph_builder.add_node("Merge", Merge)
-# Add edges
-translation_subgraph_builder.add_edge(START, "RefineUserIntent")
-translation_subgraph_builder.add_conditional_edges(
-    "RefineUserIntent",
-    tools_condition,
-    {
-        "tools": "ask_clarifying_question",
-        END: 'SaveUserIntentClearMessages'
-    }
-)
-translation_subgraph_builder.add_edge("ask_clarifying_question", "RefineUserIntent")
-translation_subgraph_builder.add_edge("SaveUserIntentClearMessages", "Decompose")
-translation_subgraph_builder.add_edge("Decompose", "VerifyDecomposition")
-translation_subgraph_builder.add_conditional_edges(
-    "VerifyDecomposition",
-    RoutingVerifyDecomposition,
-    {
-        "OK": 'UserReviewDecomposition',
-        "Retry": 'Decompose'
-    }
-)
-translation_subgraph_builder.add_conditional_edges(
-    "UserReviewDecomposition",
-    RoutingUserReviewDecomposition,
-    {
-        "OK": "Orchestrator",
-        "Retry": 'Decompose'
-    }
-)
-translation_subgraph_builder.add_conditional_edges(
-    "Orchestrator",
-    assign_encoding_workers,
-    ['EncodingSubgraph']
-)
-translation_subgraph_builder.add_edge("EncodingSubgraph", "Merge")
-translation_subgraph_builder.add_edge("Merge", END)
-# Compile
-translation_subgraph = translation_subgraph_builder.compile()
+def build_translation_subgraph():
+    encoding_subgraph = build_encoding_subgraph()
+
+    translation_subgraph_builder = StateGraph(DecompositionState)
+    # Add nodes
+    translation_subgraph_builder.add_node("RefineUserIntent", RefineUserIntent)
+    translation_subgraph_builder.add_node("ask_clarifying_question", ToolNode(tools=[ask_clarifying_question]))
+    translation_subgraph_builder.add_node("SaveUserIntentClearMessages", SaveUserIntentClearMessages)
+    translation_subgraph_builder.add_node("Decompose", Decompose)
+    translation_subgraph_builder.add_node("VerifyDecomposition", VerifyDecomposition)
+    translation_subgraph_builder.add_node("UserReviewDecomposition", UserReviewDecomposition)
+    translation_subgraph_builder.add_node("Orchestrator", Orchestrator)
+    translation_subgraph_builder.add_node("EncodingSubgraph", encoding_subgraph)
+    translation_subgraph_builder.add_node("Merge", Merge)
+    # Add edges
+    translation_subgraph_builder.add_edge(START, "RefineUserIntent")
+    translation_subgraph_builder.add_conditional_edges(
+        "RefineUserIntent",
+        tools_condition,
+        {
+            "tools": "ask_clarifying_question",
+            END: 'SaveUserIntentClearMessages'
+        }
+    )
+    translation_subgraph_builder.add_edge("ask_clarifying_question", "RefineUserIntent")
+    translation_subgraph_builder.add_edge("SaveUserIntentClearMessages", "Decompose")
+    translation_subgraph_builder.add_edge("Decompose", "VerifyDecomposition")
+    translation_subgraph_builder.add_conditional_edges(
+        "VerifyDecomposition",
+        RoutingVerifyDecomposition,
+        {
+            "OK": 'UserReviewDecomposition',
+            "Retry": 'Decompose'
+        }
+    )
+    translation_subgraph_builder.add_conditional_edges(
+        "UserReviewDecomposition",
+        RoutingUserReviewDecomposition,
+        {
+            "OK": "Orchestrator",
+            "Retry": 'Decompose'
+        }
+    )
+    translation_subgraph_builder.add_conditional_edges(
+        "Orchestrator",
+        assign_encoding_workers,
+        ['EncodingSubgraph']
+    )
+    translation_subgraph_builder.add_edge("EncodingSubgraph", "Merge")
+    translation_subgraph_builder.add_edge("Merge", END)
+    # Compile
+    translation_subgraph = translation_subgraph_builder.compile()
+    return translation_subgraph
 
 
 ####################
@@ -1118,32 +1170,37 @@ def RoutingMain(state: MainState):
     return state['user_type'].user_type
 
 #### BUILD ####
-main_graph_builder = StateGraph(MainState)
-# Add nodes
-main_graph_builder.add_node("TopNode", TopNode)
-main_graph_builder.add_node("Translation", translation_subgraph)
-main_graph_builder.add_node("FailureDetection", failure_detection_subgraph)
-# Add edges
-main_graph_builder.add_edge(START, "TopNode")
-main_graph_builder.add_conditional_edges(
-    "TopNode",
-    RoutingMain,
-    {
-        "general_question": END,
-        "translation": "Translation",
-        "risk_analysis": "FailureDetection",
-    }
-)
-main_graph_builder.add_edge("Translation", END)
-main_graph_builder.add_edge("FailureDetection", END)
-# Compile
-main_graph = main_graph_builder.compile()
+def build_main_graph():
+    translation_subgraph = build_translation_subgraph()
+    failure_detection_subgraph = build_failure_detection_subgraph()
+    
+    main_graph_builder = StateGraph(MainState)
+    # Add nodes
+    main_graph_builder.add_node("TopNode", TopNode)
+    main_graph_builder.add_node("Translation", translation_subgraph)
+    main_graph_builder.add_node("FailureDetection", failure_detection_subgraph)
+    # Add edges
+    main_graph_builder.add_edge(START, "TopNode")
+    main_graph_builder.add_conditional_edges(
+        "TopNode",
+        RoutingMain,
+        {
+            "general_question": END,
+            "translation": "Translation",
+            "risk_analysis": "FailureDetection",
+        }
+    )
+    main_graph_builder.add_edge("Translation", END)
+    main_graph_builder.add_edge("FailureDetection", END)
+    # Compile
+    main_graph = main_graph_builder.compile()
+    return main_graph
 
 ####################
 #### DRAW GRAPH ####
 ####################
 DRAW_GRAPH = True
-if 'DRAW_GRAPH'in globals():
+def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph):
     with open('translation_subgraph.png', 'wb') as png:
         png.write(translation_subgraph.get_graph().draw_mermaid_png())
     with open('encoding_subgraph.png', 'wb') as png:
@@ -1157,15 +1214,30 @@ if 'DRAW_GRAPH'in globals():
 #############
 #### RUN ####
 #############
+def setup_agentic_constraint(domain_path=None, problem_path=None, plan_path=None):
+    """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
+    global retriever, retriever_tool, translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph
+    agentic_constraint_init(domain_path=domain_path, problem_path=problem_path, plan_path=plan_path)
+    retriever = set_up_rag()
+    retriever_tool = build_retriever_tool(retriever)
+    translation_subgraph = build_translation_subgraph()
+    encoding_subgraph = build_encoding_subgraph()
+    failure_detection_subgraph = build_failure_detection_subgraph()
+    main_graph = build_main_graph()
+    
+
 def TranslateUserInput(user_input):
     input_state = DecompositionState({"messages": [HumanMessage(content=user_input)], "user_input": user_input})
     final_state = translation_subgraph.invoke(input_state)
     encodings = final_state['encodingsE2NL']
-    print("\nUser input:\n", user_input)
+    mprint(f"\nUser input:\n {user_input}")
     for e in encodings:
-        print(f'• {e.constraint}')
-        print(f'  → {e.encoding.encoding}')
-        print(f'    → {e.e2nl.e2nl}')
+        mprint(f'• {e.constraint}')
+        mprint(f'  → {e.encoding.encoding}')
+        mprint(f'    → {e.e2nl.e2nl}')
+
+    return encodings
+
 def testTranslation():
     # user_input = "Only plane1 should be used."
     user_input = "Person7 should always be located at boston and plane2 should always be located at washington."
@@ -1206,7 +1278,7 @@ def testFailure():
     print('ANSWER:\n', final_state['answer'])
     print('\nSUGGESTIONS:\n', final_state['suggestions'])
 
-def testTopNode():
+def testTopNode(mode="general_question"):
     
     ## TRANSLATION ##
     user_type = UserType(user_type="translation")
@@ -1215,30 +1287,42 @@ def testTopNode():
     # user_input = "Person7 should never move."
     # user_input = "Person7 should always be located in their initial city."
     
-    ## FAILURE DETECTION ##
-    # user_type = UserType(user_type="risk_analysis")
     
     ## GENERAL QUESTION ##
-    # user_type = UserType(user_type="general_question")
+    if mode == "general_question":
+        # user_type = UserType(user_type="general_question")
     
-    # final_state = main_graph.invoke(MainState(messages=[HumanMessage(content=user_input)], user_input=user_input, user_type=user_type))
-    # encodings = final_state['encodingsE2NL']
-    # print("\nUser input:\n", user_input)
-    # for e in encodings:
-    #     print(f'• {e.constraint}')
-    #     print(f'  → {e.encoding.encoding}')
-    #     print(f'    → {e.e2nl.e2nl}')
+        final_state = main_graph.invoke(MainState(messages=[HumanMessage(content=user_input)], user_input=user_input, user_type=user_type))
+        encodings = final_state['encodingsE2NL']
+        print("\nUser input:\n", user_input)
+        for e in encodings:
+            print(f'• {e.constraint}')
+            print(f'  → {e.encoding.encoding}')
+            print(f'    → {e.e2nl.e2nl}')
 
-    user_type = UserType(user_type="risk_analysis")
-    final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
-    print('ANSWER:\n', final_state['answer'])
-    print('\nSUGGESTIONS:\n', final_state['suggestions'])
+    ## FAILURE DETECTION ##
+    elif mode == "risk_analysis":
+        user_type = UserType(user_type="risk_analysis")
+        final_state = main_graph.invoke(MainState(user_input=user_input, user_type=user_type))
+    
+        print('ANSWER:\n', final_state['answer'])
+        print('\nSUGGESTIONS:\n', final_state['suggestions'])
 
 if __name__=='__main__':
-    # testTranslation()
-    
-    # testFailure()
-    
-    # testRAG()
-    
-    testTopNode()
+    SHELL_PRINTS = True
+    GUI_PROMPT = False
+    setup_agentic_constraint()
+    # agentic_constraint_init()
+    # retriever = set_up_rag()
+    # retriever_tool = build_retriever_tool(retriever)
+    # translation_subgraph = build_translation_subgraph()
+    # encoding_subgraph = build_encoding_subgraph()
+    # failure_detection_subgraph = build_failure_detection_subgraph()
+    # main_graph = build_main_graph()
+    if DRAW_GRAPH:
+        draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph)
+    # testTranslation(translation_subgraph)
+    # testFailure(failure_detection_subgraph)
+    # testRAG()    
+    # testTopNode(main_graph,mode="translation")    
+    testTopNode(mode="general_question")
