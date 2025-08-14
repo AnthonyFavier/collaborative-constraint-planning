@@ -9,6 +9,7 @@ import Constraints
 from helpers.UserOption import UserOption
 import time
 import threading
+import agentic_constraint
         
 # OTHER FEATURE FLAGS #
 WITH_CHECK_DOMAIN_MODIFICATION = False
@@ -384,6 +385,9 @@ def init(problem_name, planning_mode, timeout):
         
     # Init LLM system message with domain and problem
     LLM.setSystemMessage(g_domain, g_problem)
+
+    # Set up agentic constraint:
+    agentic_constraint.setup_agentic_constraint(domain_path=DOMAIN_PATH, problem_path=PROBLEM_PATH)
 
 ########################
 ### HELPERS ENCODING ###
