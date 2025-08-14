@@ -121,6 +121,14 @@ class ConstraintManager:
         self.constraints[c.symbol] = c
         self.decomposed_constraints[c.symbol] = c
         return c
+    
+    def createDecomposedAndE2NL(self, parent, nl_constraint, e2nl):
+        c = DecomposedConstraint(parent, nl_constraint)
+        c.e2nl = e2nl
+        parent.children.append(c)
+        self.constraints[c.symbol] = c
+        self.decomposed_constraints[c.symbol] = c
+        return c
         
     def show(self):
         print("\nConstraint List:")
