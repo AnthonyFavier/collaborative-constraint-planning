@@ -1,5 +1,5 @@
 import CAI
-import GUI
+import GUI_agentic
 from defs import *
 import click
 import sys
@@ -52,7 +52,7 @@ def main(problem_name, planning_mode, timeout):
     # CAI.CM.load('validated.json)
     
     # Create main GUI app
-    app = GUI.App()
+    app = GUI_agentic.App()
     
     # Show settings
     CAI.showSettings()
