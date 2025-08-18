@@ -84,7 +84,7 @@ def set_up_rag():
     
     ## LOAD ##
     print('Loading documents ... ', end='', flush=True)
-    mprint('Loading documents ... ')
+    # mprint('Loading documents ... ')
 
     DOCUMENT_PATH = "documents/"
     files = [
@@ -125,28 +125,28 @@ def set_up_rag():
         docs.append(doc)
         
     docs_list = [item for sublist in docs for item in sublist]
-    mprint('OK')
+    print('OK')
 
     ## SPLITTING
     print('Splitting documents ... ', end='', flush=True)
-    mprint('Splitting documents ... ')
+    # mprint('Splitting documents ... ')
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=512, chunk_overlap=20
     )
     doc_splits = text_splitter.split_documents(docs_list)
-    mprint('OK')
+    print('OK')
 
     ## INDEXING and RETREIVER
     print('Indexing documents ... ', end='', flush=True)
-    mprint('Indexing documents ... ', end='')
+    # mprint('Indexing documents ... ', end='')
     from langchain_core.vectorstores import InMemoryVectorStore
     from langchain_openai import OpenAIEmbeddings
     vectorstore = InMemoryVectorStore.from_documents(
         documents=doc_splits, embedding=OpenAIEmbeddings()
     )
     retriever = vectorstore.as_retriever()
-    mprint('OK')
+    print('OK')
     return retriever
 
 retriever = set_up_rag()
@@ -469,7 +469,7 @@ PRINT_NODES = True
 def GenerateRAGQuery(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
-        mprint('Node: GenerateRAGQuery')
+        print('Node: GenerateRAGQuery')
         
     RAG_QUERY_GENREATION_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -500,7 +500,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
 def Retrieval(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
-        mprint('Node: Retrieval')
+        print('Node: Retrieval')
         
     # For now directly call retriever tool
     # Future: bind tool to LLM and do an LLM call?
@@ -520,7 +520,7 @@ def Retrieval(state: FailureDetectionState):
 #NODE
 def GenerateAnswer(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
-        mprint('Node: GenerateAnswer')
+        print('Node: GenerateAnswer')
         
     GENERATE_ANSWER_PROMPT = (
         "Use the previous pieces of retrieved context to identify possible risk of failure of the plan. "
@@ -543,7 +543,7 @@ def GenerateAnswer(state: FailureDetectionState):
 #NODE
 def MakeSuggestions(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
-        mprint('Node: MakeSuggestions')
+        print('Node: MakeSuggestions')
         
     SUGGESTIONS_PROMPT = (
         "Based on your last answer about the risks of failure, give me concrete suggestions of modification to the current plan. "
@@ -587,7 +587,7 @@ def Encode(state: EncodingState):
     """Translate the given constraint into PDDL3.0"""
 
     if 'PRINT_NODES'in globals():
-        mprint('Node: Encode')
+        print('Node: Encode')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -635,7 +635,7 @@ def Encode(state: EncodingState):
 #NODE
 def Verifier(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        mprint('Node: Verifier')
+        print('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
     updatedProblem = tools.updateProblem(g_problem, [encoding])
@@ -647,7 +647,7 @@ def Verifier(state: EncodingState):
         encodingValidation = state['encoding_validation']
         encodingValidation.encoding_nb_retry += 1
         if encodingValidation.encoding_nb_retry > 5:
-            mprint("WARNING: Exceeding 5 encoding attempts")
+            print("WARNING: Exceeding 5 encoding attempts")
     else:
         encodingValidation = EncodingValidation()
 
@@ -667,7 +667,7 @@ def RoutingVerifier(state: EncodingState):
 #NODE
 def BackTranslation(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        mprint('Node: BackTranslation')
+        print('Node: BackTranslation')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -707,7 +707,7 @@ def BackTranslation(state: EncodingState):
 def UserReviewE2NL(state: EncodingState):
     global LOCK
     if 'PRINT_NODES'in globals():
-        mprint('Node: UserReviewE2NL')
+        print('Node: UserReviewE2NL')
   
     
     # Show Data: constraint and back-translation
@@ -769,7 +769,7 @@ def RoutingUserReviewBackTranslation(state: EncodingState):
 #NODE
 def SaveEncoding(state: EncodingState):
     if 'PRINT_NODES'in globals():
-        mprint('Node: SaveEncoding')
+        print('Node: SaveEncoding')
     
     return {'encodingsE2NL': [state["encodingE2NL"]]}
     
@@ -816,7 +816,7 @@ def RefineUserIntent(state: DecompositionState):
     """Refines user input to remove ambiguity and properly capture the user intent. Can ask clarifying questions."""
     
     if 'PRINT_NODES'in globals():
-        mprint("Node: RefineUserIntent")
+        print("Node: RefineUserIntent")
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -844,7 +844,7 @@ def RefineUserIntent(state: DecompositionState):
 #NODE
 def SaveUserIntentClearMessages(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        mprint("Node: SaveUserIntentClearMessages")
+        print("Node: SaveUserIntentClearMessages")
     messages_to_remove = state["messages"]
     remove_instructions = [RemoveMessage(id=m.id) for m in messages_to_remove]
     return {'refined_user_intent': state['messages'][-1].content, "messages": remove_instructions} # Return as part of a state update
@@ -854,7 +854,7 @@ def Decompose(state: DecompositionState):
     """Decompose the user input into a proper set of constraints"""
     
     if 'PRINT_NODES'in globals():
-        mprint("Node: Decompose")
+        print("Node: Decompose")
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -922,11 +922,11 @@ def VerifyDecomposition(state: DecompositionState):
     """Ask a series of question to evaluate if decomposition looks good"""
     
     if 'PRINT_NODES'in globals():
-        mprint("Node: VerifyDecomposition")
+        print("Node: VerifyDecomposition")
     
     # MOCK no verification
     if 'PRINT_NODES'in globals():
-        mprint('MOCKED')
+        print('MOCKED')
     return {'decomposition_validation': DecompositionValidation()}
     
     SYSTEM_PROMPT = (
@@ -1018,7 +1018,7 @@ def UserReviewDecomposition(state: DecompositionState):
     # A second one formatting the user feedback into the current structured output?
     
     if 'PRINT_NODES'in globals():
-        mprint("Node: UserReviewDecomposition")
+        print("Node: UserReviewDecomposition")
     
     # Format and Show decomposition
     decomposition_str = "Decomposition:\n"
@@ -1080,7 +1080,7 @@ def RoutingUserReviewDecomposition(state: DecompositionState):
 #NODE
 def Orchestrator(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        mprint("Node: Orchestrator")
+        print("Node: Orchestrator")
     return {}
     
 #CondEdge
@@ -1099,7 +1099,7 @@ def assign_encoding_workers(state: DecompositionState):
 #NODE
 def Merge(state: DecompositionState):
     if 'PRINT_NODES'in globals():
-        mprint("Node: Merge")
+        print("Node: Merge")
     return {}
 
 #### BUILD ####
