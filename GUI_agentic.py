@@ -428,11 +428,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
             #     CAI.CM.dump(CAI.g_problem_name)
 
             try: # Agentic:
-                encoddings = agentic_constraint.TranslateUserInput(c)
+                encodings = agentic_constraint.TranslateUserInput(c)
                 constraint = CAI.createConstraint(c, t_input)
                 constraint.time_total += time.time() - time_total
-                for e in encoddings:
-                    CAI.CM.createDecomposedAndE2NL(constraint, e.constraint, e.encoding.encoding)
+                activated_encodings = []
+                for e in encodings:
+                    child_constraint = CAI.CM.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
+                    child_constraint.encoding = e.encoding.encoding
+                    activated_encodings.append(e.encoding.encoding)
+
+                # double check activated encodings:
+                print(f"\nActivated encodings: {activated_encodings}")
+
+
                 CAI.CM.dump(CAI.g_problem_name)
                 
             except Exception as err:
