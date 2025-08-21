@@ -302,6 +302,9 @@ class FailureDetectionState(TypedDict):
     rag_result: str # Resul of the RAG query
     answer: str # Answer for the failure detection request
     suggestions: str # Concrete suggestions to account the identifies potential risks
+# Open Dialog
+class ChatState(TypedDict):
+    messages: Annotated[list, add_messages]
 # Main
 class MainState(TypedDict):
     messages: Annotated[list, add_messages]
@@ -1159,6 +1162,92 @@ def build_translation_subgraph():
     return translation_subgraph
 
 
+##############################
+#### OPEN DIALOG SUBGRAPH ####
+##############################
+#NODE
+chat_separator = "-----------------------------"
+def ChatGetUserInput(state: ChatState):
+    if 'PRINT_NODES'in globals():
+        print("Node: ChatGetUserInput")
+        
+    question = minput()
+    mprint(chat_separator)
+    mprint("User: " + question)
+    return {"messages": [HumanMessage(content=question)]}
+
+#CondEdge
+def ChatCondEnd(state: ChatState):
+    if state['messages'][-1].content.lower() in ['exit', 'q']:
+        return END
+    return 'OK'
+
+#NODE
+def ChatAnswer(state: ChatState):
+    if 'PRINT_NODES'in globals():
+        print("Node: Chat")
+        
+    SYSTEM_PROMPT = (
+        "You are a helpful PDDL planning expert and assistant. "
+        "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
+        "<pddl_domain>\n"
+        "{pddl_domain}\n"
+        "</pddl_domain>\n"
+        "<pddl_problem>\n"
+        "{pddl_problem}\n"
+        "</pddl_problem>\n"
+        "The user will ask you various questions related to the problem. "
+        "Your goal is to answer the user's questions with helpful responses. "
+        "Some relevant information may be present in external documents.  "
+    )
+    
+    llm = g_llm.bind_tools(chat_tools)
+    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))] + state['messages']
+    msg = llm.invoke(messages)
+    
+    if msg.tool_calls:
+        mprint(chat_separator)
+        mprint("AI: " + msg.content[0]['text'])
+    else:
+        mprint(chat_separator)
+        mprint("AI: " + msg.content)
+    
+    return {"messages": [msg]}
+
+#### BUILD ####
+def build_chat_subgraph():
+    global chat_tools
+    chat_tools = [ask_clarifying_question, retrieve_with_metadata]
+    
+    chat_subgraph_builder = StateGraph(ChatState)
+    
+    # Add nodes
+    chat_subgraph_builder.add_node("ChatGetUserInput", ChatGetUserInput)
+    chat_subgraph_builder.add_node("ChatAnswer", ChatAnswer)
+    chat_subgraph_builder.add_node('ChatTools', ToolNode(chat_tools))
+    # Add edges
+    chat_subgraph_builder.add_edge(START, "ChatGetUserInput")
+    chat_subgraph_builder.add_conditional_edges(
+        "ChatGetUserInput", 
+        ChatCondEnd,
+        {
+            END: END,
+            'OK': "ChatAnswer",
+        }
+    )
+    chat_subgraph_builder.add_conditional_edges(
+        "ChatAnswer", 
+        tools_condition,
+        {
+            'tools': 'ChatTools',
+            END: 'ChatGetUserInput',
+        }
+    )
+    chat_subgraph_builder.add_edge('ChatTools', 'ChatAnswer')
+    # Compile
+    chat_subgraph = chat_subgraph_builder.compile()
+    return chat_subgraph
+
 ####################
 #### MAIN GRAPH ####
 ####################
@@ -1217,12 +1306,13 @@ def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgra
 def setup_agentic_constraint(domain_path=None, problem_path=None, plan_path=None):
     """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
     global retriever
-    global translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph
+    global translation_subgraph, encoding_subgraph, failure_detection_subgraph, chat_subgraph, main_graph
     agentic_constraint_init(domain_path=domain_path, problem_path=problem_path, plan_path=plan_path)
     retriever = set_up_rag()
     translation_subgraph = build_translation_subgraph()
     encoding_subgraph = build_encoding_subgraph()
     failure_detection_subgraph = build_failure_detection_subgraph()
+    chat_subgraph = build_chat_subgraph()
     main_graph = build_main_graph()
     
 
@@ -1275,8 +1365,9 @@ def testRAG():
 
 def testFailure():
     final_state = failure_detection_subgraph.invoke(FailureDetectionState())
-    print('ANSWER:\n', final_state['answer'])
-    print('\nSUGGESTIONS:\n', final_state['suggestions'])
+
+def Chat():
+    chat_subgraph.invoke(ChatState())
 
 def testTopNode(mode="general_question"):
     
