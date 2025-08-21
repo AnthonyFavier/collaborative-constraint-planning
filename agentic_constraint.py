@@ -307,6 +307,9 @@ class FailureDetectionState(TypedDict):
     rag_result: str # Resul of the RAG query
     answer: str # Answer for the failure detection request
     suggestions: str # Concrete suggestions to account the identifies potential risks
+    first_loop: bool
+    deeper_analysis: bool
+    user_question: str
 # Open Dialog
 class ChatState(TypedDict):
     messages: Annotated[list, add_messages]
@@ -608,6 +611,196 @@ def build_failure_detection_subgraph():
     failure_detection_subgraph = failure_detection_subgraph_builder.compile()
     return failure_detection_subgraph
 
+
+##################
+#### NEW RISK ####
+##################
+
+#NODE
+def RiskRetrieval(state: FailureDetectionState):
+    
+    if 'PRINT_NODES'in globals():
+        print('Node: RiskRetrieval')
+        
+    SYSTEM_PROMPT = (
+        "You are a helpful PDDL planning expert and assistant. "
+        "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
+        "<pddl_domain>\n"
+        "{pddl_domain}\n"
+        "</pddl_domain>\n"
+        "<pddl_problem>\n"
+        "{pddl_problem}\n"
+        "</pddl_problem>\n"
+        "<current_solution_plan>\n"
+        "{pddl_plan}\n"
+        "</current_solution_plan>\n"
+    )
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))
+    
+    ADD_RETRIEVAL_PROMPT = (
+        "What are the most important constraint/risks to the current problem and plan based on external data? "
+        "Focus on facts that directly imply modifications in the plan. "
+    )
+    h_msg = HumanMessage(content=ADD_RETRIEVAL_PROMPT.format())
+    
+    if state['first_loop']:
+        state['messages'] += [sys_msg, h_msg]
+    
+    llm = g_llm.bind_tools(new_risk_tools)
+    msg = llm.invoke(state['messages'])
+    
+    answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
+    
+    return {'messages': [msg], 'first_loop': False}
+
+#NODE
+def RiskAskDeeper(state: FailureDetectionState):
+    global USER_INTERACTION_LOCK
+    
+    if 'PRINT_NODES'in globals():
+        print('Node: RiskAskDeeper')
+    
+    USER_INTERACTION_LOCK.acquire()
+    
+    mprint("\nDo you want to proceed with a deeper risk analysis? (Y/N)\n You can also ask me any question.")
+    deeper_analysis = None
+    user_question = None
+    while True:
+        user_answer = minput()
+        if user_answer=='':
+            mprint('User: no')
+            deeper_analysis = False
+            break
+        else:
+            mprint(f"User: {user_answer}")
+            if user_answer.lower() in ['y', 'yes']:
+                deeper_analysis = True
+                break   
+            elif user_answer.lower() in ['n', 'no']:
+                deeper_analysis = False
+                break
+            else:
+                deeper_analysis = False
+                user_question = user_answer
+                break
+        # mprint("Sorry I didn't understand your answer. Proceed with a deeper analysis? (Y/N)\n")
+    USER_INTERACTION_LOCK.release()
+    
+    return {'deeper_analysis': deeper_analysis, 'user_question':user_question, 'first_loop': True}
+
+#CondEdge
+def RiskCondEdgeDeeper(state: FailureDetectionState):
+    if state['deeper_analysis']:
+        return "DEEPER"
+    elif state['user_question']!=None:
+        return "QUESTION"
+    else:
+        return END
+
+#NODE
+def RiskQuestion(state: FailureDetectionState):
+    global USER_INTERACTION_LOCK
+    
+    if 'PRINT_NODES'in globals():
+        print('Node: RiskQuestion')
+    
+    h_msg = HumanMessage(content=state['user_question'])
+    if state['first_loop']:
+        state['messages'] += [h_msg]
+    
+    llm = g_llm.bind_tools(new_risk_tools)
+    msg = llm.invoke(state['messages'])
+    
+    answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
+    
+    return {'messages': [msg], 'first_loop': False}
+    
+#NODE
+def RiskDeeperAnalysis(state: FailureDetectionState):
+    
+    if 'PRINT_NODES'in globals():
+        print('Node: RiskDeeperAnalysis')
+        
+    ADD_RETRIEVAL_PROMPT = (
+        "Conduct a deeper and wider risk analysis based on the external data available. "
+    )
+    h_msg = HumanMessage(content=ADD_RETRIEVAL_PROMPT.format())
+    
+    if state['first_loop']:
+        state['messages'] += [h_msg]
+    
+    llm = g_llm.bind_tools(new_risk_tools)
+    msg = llm.invoke(state['messages'])
+    
+    answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
+    
+    return {'messages': [msg], 'first_loop': False}
+
+#### BUILD ####  
+def build_new_risk_subgraph():
+    global new_risk_tools
+    new_risk_tools = [retrieve_with_metadata, get_current_weather_city]
+    
+    new_risk_subgraph_builder = StateGraph(FailureDetectionState)
+    # Add nodes
+    new_risk_subgraph_builder.add_node("RiskRetrieval", RiskRetrieval)
+    new_risk_subgraph_builder.add_node("RiskRetrievalTools", ToolNode(new_risk_tools))
+    new_risk_subgraph_builder.add_node("RiskAskDeeper", RiskAskDeeper)
+    new_risk_subgraph_builder.add_node("RiskAskDeeperTools", ToolNode(new_risk_tools))
+    new_risk_subgraph_builder.add_node("RiskDeeperAnalysis", RiskDeeperAnalysis)
+    new_risk_subgraph_builder.add_node("RiskQuestion", RiskQuestion)
+    new_risk_subgraph_builder.add_node("RiskQuestionTools", ToolNode(new_risk_tools))
+    # Add edges
+    new_risk_subgraph_builder.add_edge(START, "RiskRetrieval")
+    new_risk_subgraph_builder.add_conditional_edges(
+        "RiskRetrieval",
+        tools_condition,
+        {
+            "tools": "RiskRetrievalTools",
+            END: "RiskAskDeeper",
+        }
+    )
+    new_risk_subgraph_builder.add_edge("RiskRetrievalTools", "RiskRetrieval")
+    new_risk_subgraph_builder.add_conditional_edges(
+        "RiskAskDeeper",
+        RiskCondEdgeDeeper,
+        {
+            "CONTINUE": "RiskDeeperAnalysis",
+            "QUESTION": "RiskQuestion",
+            END: END,
+        }
+    )
+    new_risk_subgraph_builder.add_conditional_edges(
+        "RiskDeeperAnalysis",
+        tools_condition,
+        {
+            "tools": "RiskAskDeeperTools",
+            END: END,
+        }
+    )
+    new_risk_subgraph_builder.add_edge("RiskAskDeeperTools", "RiskDeeperAnalysis")
+    new_risk_subgraph_builder.add_conditional_edges(
+        "RiskQuestion",
+        tools_condition,
+        {
+            "tools": "RiskQuestionTools",
+            END: "RiskAskDeeper",
+        }
+    )
+    new_risk_subgraph_builder.add_edge("RiskQuestionTools", "RiskQuestion")
+    # Compile
+    new_risk_subgraph = new_risk_subgraph_builder.compile()
+    return new_risk_subgraph
+    
 
 ###########################
 #### ENCODING SUBGRAPH ####
@@ -1336,14 +1529,16 @@ def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgra
 def setup_agentic_constraint(domain_path=None, problem_path=None, plan_path=None):
     """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
     global retriever
-    global translation_subgraph, encoding_subgraph, failure_detection_subgraph, chat_subgraph, main_graph
+    global translation_subgraph, encoding_subgraph, failure_detection_subgraph, chat_subgraph, new_risk_subgraph, main_graph
     agentic_constraint_init(domain_path=domain_path, problem_path=problem_path, plan_path=plan_path)
     retriever = set_up_rag()
     translation_subgraph = build_translation_subgraph()
     encoding_subgraph = build_encoding_subgraph()
     failure_detection_subgraph = build_failure_detection_subgraph()
     chat_subgraph = build_chat_subgraph()
+    new_risk_subgraph = build_new_risk_subgraph()
     main_graph = build_main_graph()
+    # draw_graph()
     
 
 def TranslateUserInput(user_input):
@@ -1398,6 +1593,9 @@ def RiskAnalysis():
     answer = final_state['answer']
     suggestions = final_state['suggestions']
     return answer, suggestions
+
+def NewRisk():
+    new_risk_subgraph.invoke(FailureDetectionState(first_loop=True, deeper_analysis=False), {'recursion_limit': 100})
 
 def Chat():
     chat_subgraph.invoke(ChatState())

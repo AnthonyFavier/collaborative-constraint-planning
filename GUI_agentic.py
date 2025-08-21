@@ -722,7 +722,8 @@ class DisplayFrame(customtkinter.CTkFrame):
     def riskAnalysis(self):
         self.master.disableAllButtons()
         mprint("\n=== RISK ANALYSIS ===")
-        answer, suggestions = agentic_constraint.RiskAnalysis()
+        # answer, suggestions = agentic_constraint.RiskAnalysis()
+        agentic_constraint.NewRisk()
         # mprint(agentic_constraint.chat_separator)
         # mprint('AI: final answer\n')
         # mprint('RISKS IDENTIFIED:\n'+answer)
