@@ -394,7 +394,7 @@ def get_current_weather_city(city: str):
     api_url = buildURL(category, params)
     response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
     if response.status_code == requests.codes.ok:
-        mprint("API City Info: "+response.text)
+        # mprint("API City Info: "+response.text)
         response = json.loads(response.text)
         if not response:
             return "Unknown city name."
@@ -410,7 +410,7 @@ def get_current_weather_city(city: str):
     api_url = buildURL(category, params)
     response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
     if response.status_code == requests.codes.ok:
-        mprint("API loc weather: " + response.text)
+        # mprint("API loc weather: " + response.text)
         weather = json.loads(response.text)
         weather_text = f"""
 Current weather at {city}:
