@@ -1,4 +1,4 @@
-; Describe the plan obtained to the solve the ZenoTravel problem
+; Describe a plan, series of actions, obtained to the solve the ZenoTravel problem
 (refuel plane1)
 (flyslow plane1 Boston Washington)
 (refuel plane1)
