@@ -412,13 +412,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
         time_total = time.time()
         
         t_input = time.time()
-        c = minput(txt="\nEnter your constraint: ")
+        mprint(agentic_constraint.chat_separator)
+        c = minput(txt="Enter your constraint: ")
         
         if c in ['', 'abort']:
             self.master.enableAllButtons()
             mprint("Aborted\n")
         else:
-            mprint("\n> " + c )
+            mprint("\nUser: " + c )
             t_input = time.time() - t_input
             # try:
             #     constraint = CAI.createConstraint(c, t_input)
@@ -704,10 +705,10 @@ class DisplayFrame(customtkinter.CTkFrame):
     def chatT(self):
         threading.Thread(target=self.chat).start()
     def chat(self):
-        mprint("\nStart AI Chat ... ")
-        mprint("\nPlease what is your question?")
+        mprint("\n=== CHAT ===")
+        
+        mprint("\nAI: Please what is your question?")
         agentic_constraint.Chat()
-        mprint("\nEnd of AI Chat")
         
     
     def riskAnalysisT(self):

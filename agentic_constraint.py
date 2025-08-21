@@ -15,7 +15,8 @@ import os
 from defs import mprint, minput
 import time
 
-LOCK = False
+import threading
+USER_INTERACTION_LOCK = threading.Lock()
 
 def agentic_constraint_init(domain_path = None, problem_path = None, plan_path=None):
     global g_domain, g_problem, g_plan
@@ -329,8 +330,12 @@ import json
 @tool
 def ask_clarifying_question(question: str) -> str:
     """Ask the user the clarifying question given as input and returns the user answer."""
-    q = minput(question+'\n> ')
-    mprint("> " + q)
+    mprint(chat_separator)
+    q = minput("AI: "+question+'\n')
+    if q.lower() == '':
+        q='yes'
+    mprint(chat_separator)
+    mprint("User: " + q)
     return q
 
 #search_tool = TavilySearch(max_results=2)
@@ -461,6 +466,30 @@ reasonning_llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000
 
 g_llm = light_llm
 
+def extractAITextAnswer(msg):
+    """
+    LLM call can return various format of answer. The three main ones are: 
+        - 'str' -> for direct answer
+        - list[{text_message}, {'type':'tool_use'}] -> Tool use
+        - list[{'type':'thinking'}, {text_message}] -> Thinkin/Reasoning activated
+    This function account for these various formats and returns the text_message included.
+    """
+    
+    text_answer = None
+    if isinstance(msg.content, str):
+        text_answer = msg.content
+    elif isinstance(msg.content, list):
+        for m in msg.content:
+            if m['type']=='text':
+                text_answer = m['text']
+                break
+    else:
+        raise Exception("extractAITextAnswer: Type of msg.content unsupported")
+    if text_answer==None:
+        raise Exception("extractAITextAnswer: failed to extract AI text answer")
+
+    return text_answer
+
 ##########################
 #### GRAPH COMPONENTS ####
 ##########################
@@ -537,10 +566,7 @@ def GenerateAnswer(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
-    #if isinstance(msg.content, list):
-     #   answer = msg.content[-1]['text']
-    #else:
-    answer = msg
+    answer = extractAITextAnswer(msg)
     
     return {'messages': [msg], 'answer': answer}
 
@@ -556,12 +582,9 @@ def MakeSuggestions(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= SUGGESTIONS_PROMPT.format())]
     
     msg = g_llm.invoke(state['messages'])
-    #if isinstance(msg.content, list):
-     #   answer = msg.content[-1]['text']
-    #else:
-    answer = msg
+    answer = extractAITextAnswer(msg)
     
-    return {'messages': [msg], 'suggestions': msg.content}
+    return {'messages': [msg], 'suggestions': answer}
 
 #### BUILD ####    
 def build_failure_detection_subgraph():
@@ -609,7 +632,6 @@ def Encode(state: EncodingState):
     )
     sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))
     
-    llm = g_llm.with_structured_output(Encoding)
     
     if state.get('e2nl_user_validation') and not state['e2nl_user_validation'].e2nl_user_ok:
         state['e_messages'] += [HumanMessage(content="The user is not satisfied with the generated PDDL3.0 translation, translate again considering the following user feedback: " + state["encoding_validation"].encoding_feedback)]
@@ -623,14 +645,11 @@ def Encode(state: EncodingState):
         state['e_messages'] = [sys_msg]
         state['e_messages'] += [HumanMessage(content=state['encodingE2NL'].constraint)]
     
+    llm = g_llm.with_structured_output(Encoding)
     msg = llm.invoke(state['e_messages'])
-    #if isinstance(msg.content, list):
-     #   answer = msg.content[-1]['text']
-    #else:
-    answer = msg
     
     encodingE2NL = state["encodingE2NL"]
-    encodingE2NL.encoding = answer
+    encodingE2NL.encoding = msg
     
     ai_msg = AIMessage(content=encodingE2NL.encoding.encoding)
     
@@ -709,7 +728,7 @@ def BackTranslation(state: EncodingState):
 #NODE
 
 def UserReviewE2NL(state: EncodingState):
-    global LOCK
+    global USER_INTERACTION_LOCK
     if 'PRINT_NODES'in globals():
         print('Node: UserReviewE2NL')
   
@@ -718,12 +737,13 @@ def UserReviewE2NL(state: EncodingState):
     txt = 'Constraint: ' + state['encodingE2NL'].constraint + '\n\t⇓\nE2NL: ' + state['encodingE2NL'].e2nl.e2nl
     
     # Ask user for review
-    while LOCK:
-        time.sleep(2)
-    LOCK = True
-    user_review = minput(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
-    mprint("> " + user_review)
-    LOCK = False
+    USER_INTERACTION_LOCK.acquire()
+    user_review = minput(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n')
+    if user_review.lower()=='':
+        mprint("User: yes")
+    else:
+        mprint("User: " + user_review)
+    USER_INTERACTION_LOCK.release()
     # user_review = interrupt(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
     
     # If trivial positive answer move skip LLM call
@@ -885,7 +905,6 @@ def Decompose(state: DecompositionState):
     )
     sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))
     
-    llm = g_llm.with_structured_output(Decomposition)
     
     
     # REDECOMPOSE WITH USER FEEDBACK
@@ -909,6 +928,7 @@ def Decompose(state: DecompositionState):
         state['messages'] += [sys_msg]
         state['messages'] += [HumanMessage(content=INPUT_PROMPT.format(user_input=state['user_input'], user_intent=state['refined_user_intent']))]
         
+    llm = g_llm.with_structured_output(Decomposition)
     msg = llm.invoke(state['messages'])
     
     txt = ''
@@ -1016,6 +1036,8 @@ def RoutingVerifyDecomposition(state: DecompositionState):
 #NODE
 def UserReviewDecomposition(state: DecompositionState):
     """Ask user for review of the decomposition"""
+    global USER_INTERACTION_LOCK
+    
     # TODO: Find a way to add the clarifying question tool here. Currently conflicting with the structured output. 
     # Use two calls/nodes? 
     # A first one gathering user feedback and asking questions about it if needed?
@@ -1025,19 +1047,27 @@ def UserReviewDecomposition(state: DecompositionState):
         print("Node: UserReviewDecomposition")
     
     # Format and Show decomposition
-    decomposition_str = "Decomposition:\n"
+    decomposition_str = "\nDecomposition:\n"
     for d in state['decomposition'].decomposition:
         decomposition_str += '- ' + d + '\n'
-    decomposition_str += 'Explanation:\n' + state['decomposition'].explanation
     
     # Ask user for review
-    global LOCK
-    while LOCK:
-        time.sleep(2)
-    LOCK = True
-    user_review = minput(decomposition_str+'\n\nAre you satisfied with the current decomposition? If not, provide any desired feedback for me to consider.\n> ')
-    mprint(f"> {user_review}")
-    LOCK = False
+    USER_INTERACTION_LOCK.acquire()
+    user_review = minput(decomposition_str+"\n\nAre you satisfied with the decomposition? If not, provide any desired feedback or type 'explain'.\n")
+    if user_review.lower()=='':
+        mprint(f"User: yes")
+    else:
+        mprint(f"User: {user_review}")
+    
+    if user_review.lower() == 'explain':
+        mprint('\nExplanation of decomposition:\n' + state['decomposition'].explanation)
+        user_review = minput("\nAre you satisfied with the decomposition? If not, provide any desired feedback.\n")
+        if user_review.lower()=='':
+            mprint(f"User: yes")
+        else:
+            mprint(f"User: {user_review}")
+        
+    USER_INTERACTION_LOCK.release()
     # user_review = interrupt(decomposition_str+'\n\nAre you satisfied with the current decomposition? If not, provide any desired feedback for me to consider.\n> ')
     
     # If trivial positive answer move skip LLM call
@@ -1203,14 +1233,12 @@ def ChatAnswer(state: ChatState):
     
     llm = g_llm.bind_tools(chat_tools)
     messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))] + state['messages']
-    msg = llm.invoke(messages)
     
-    if msg.tool_calls:
-        mprint(chat_separator)
-        mprint("AI: " + msg.content[0]['text'])
-    else:
-        mprint(chat_separator)
-        mprint("AI: " + msg.content)
+    msg = llm.invoke(messages)
+    answer = extractAITextAnswer(msg)
+    
+    mprint(chat_separator)
+    mprint("AI: " + answer)
     
     return {"messages": [msg]}
 
