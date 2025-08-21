@@ -1199,13 +1199,12 @@ def build_main_graph():
 ####################
 #### DRAW GRAPH ####
 ####################
-DRAW_GRAPH = True
 def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph):
-    with open('translation_subgraph.png', 'wb') as png:
+    with open('subgraph_translation.png', 'wb') as png:
         png.write(translation_subgraph.get_graph().draw_mermaid_png())
-    with open('encoding_subgraph.png', 'wb') as png:
+    with open('subgraph_encoding.png', 'wb') as png:
         png.write(encoding_subgraph.get_graph().draw_mermaid_png())
-    with open('failure_detection_subgraph.png', 'wb') as png:
+    with open('subgraph_failure_detection.png', 'wb') as png:
         png.write(failure_detection_subgraph.get_graph().draw_mermaid_png())
     with open('main_graph.png', 'wb') as png:
         png.write(main_graph.get_graph().draw_mermaid_png())
@@ -1311,6 +1310,7 @@ def testTopNode(mode="general_question"):
 if __name__=='__main__':
     SHELL_PRINTS = True
     GUI_PROMPT = False
+    DRAW_GRAPH = True
     setup_agentic_constraint()
     # agentic_constraint_init()
     # retriever = set_up_rag()
