@@ -110,6 +110,10 @@ def set_up_rag():
             "path": DOCUMENT_PATH+"fake_report1.md", 
             "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
         },
+        {
+          "path": DOCUMENT_PATH+"radio2.md",
+          "description": "Transcripts of radio transmissions.",
+        },
     ]
     
     # PDDL Files
