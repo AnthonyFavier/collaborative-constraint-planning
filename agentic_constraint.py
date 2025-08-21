@@ -114,6 +114,10 @@ def set_up_rag():
           "path": DOCUMENT_PATH+"radio2.md",
           "description": "Transcripts of radio transmissions.",
         },
+        # {
+        #   "path": DOCUMENT_PATH+"Current Operations Plan Advisory.pdf",
+        #   "description": "Current Operations Plan Advisory.",
+        # },
     ]
     
     # PDDL Files
@@ -126,10 +130,10 @@ def set_up_rag():
             "path": PROBLEM_PATH,
             "description": "PDDL problem. Describe the object instances present in this specific problem, the initial state and goal state.",
         },
-        {
-            "path": PLAN_PATH,
-            "description": "Current plan, series of grounded actions, achieving the goal. But may be sub-optimal.",
-        },
+        # {
+        #     "path": PLAN_PATH,
+        #     "description": "Current plan, series of grounded actions, achieving the goal. But may be sub-optimal.",
+        # },
     ]
 
     docs = []
