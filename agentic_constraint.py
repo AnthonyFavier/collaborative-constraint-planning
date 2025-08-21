@@ -1444,7 +1444,7 @@ def ChatAnswer(state: ChatState):
 #### BUILD ####
 def build_chat_subgraph():
     global chat_tools
-    chat_tools = [ask_clarifying_question, retrieve_with_metadata]
+    chat_tools = [ask_clarifying_question, retrieve_with_metadata, get_current_weather_city]
     
     chat_subgraph_builder = StateGraph(ChatState)
     
