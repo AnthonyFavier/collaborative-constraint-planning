@@ -457,7 +457,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             # mprint("\nConstraints added")
             
             # For ablation
-            self.master.plan_frame.export()
+            # self.master.plan_frame.export()
             
             
         stopTimer()
