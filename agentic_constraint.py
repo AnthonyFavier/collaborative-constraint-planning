@@ -730,7 +730,6 @@ def BackTranslation(state: EncodingState):
     return {'e_messages': [ai_msg], "encodingE2NL": encodingE2NL}
 
 #NODE
-
 def UserReviewE2NL(state: EncodingState):
     global USER_INTERACTION_LOCK
     if 'PRINT_NODES'in globals():
@@ -738,7 +737,7 @@ def UserReviewE2NL(state: EncodingState):
   
     
     # Show Data: constraint and back-translation
-    txt = 'Constraint: ' + state['encodingE2NL'].constraint + '\n\t⇓\nE2NL: ' + state['encodingE2NL'].e2nl.e2nl
+    txt = '\nConstraint: ' + state['encodingE2NL'].constraint + '\n\t⇓\nE2NL: ' + state['encodingE2NL'].e2nl.e2nl
     
     # Ask user for review
     USER_INTERACTION_LOCK.acquire()
@@ -1240,9 +1239,9 @@ def ChatAnswer(state: ChatState):
     
     msg = llm.invoke(messages)
     answer = extractAITextAnswer(msg)
-    
-    mprint(chat_separator)
-    mprint("AI: " + answer)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
     
     return {"messages": [msg]}
 
