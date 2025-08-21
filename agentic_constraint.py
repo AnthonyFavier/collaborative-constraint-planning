@@ -72,7 +72,7 @@ def agentic_constraint_init(domain_path = None, problem_path = None, plan_path=N
 from langchain_community.document_loaders import TextLoader, PyPDFLoader    
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 def DocLoader(filename):
-        _,ext = filename.split('.')[1]
+        _,ext = filename.split('.')
         if ext in ['pdf']:
             doc = PyPDFLoader(filename).load()
         else:
@@ -88,39 +88,48 @@ def set_up_rag():
 
     DOCUMENT_PATH = "documents/"
     files = [
-        # PDDL
-        # DOMAIN_PATH,
-        # PROBLEM_PATH,
-        # PLAN_PATH,
-        
         # Fake reports
         {
-            "name": "fake_aircraft_plane1.md", 
+            "path": DOCUMENT_PATH+"fake_aircraft_plane1.md", 
             "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane1",
         },
         {
-            "name": "fake_aircraft_plane2.md", 
+            "path": DOCUMENT_PATH+"fake_aircraft_plane2.md", 
             "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane2",
         },
         {
-            "name": "fake_doc_airport_atlanta.md", 
+            "path": DOCUMENT_PATH+"fake_doc_airport_atlanta.md", 
             "description": "INTERNAL REPORT: ATLANTA INTERNATIONAL AIRPORT (ATL)",
         },
         {
-            "name": "fake_doc_airport_newyork.md", 
+            "path": DOCUMENT_PATH+"fake_doc_airport_newyork.md", 
             "description": "INTERNAL REPORT: JOHN F. KENNEDY INTERNATIONAL AIRPORT (JFK)",
         },
         {
-            "name": "fake_report1.md", 
+            "path": DOCUMENT_PATH+"fake_report1.md", 
             "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
         },
     ]
-
     
+    # PDDL Files
+    files += [
+        {
+            "path": DOMAIN_PATH,
+            "description": "PDDL domain of the addressed problem. Describe the objects types, state description, and actions.",
+        },
+        {
+            "path": PROBLEM_PATH,
+            "description": "PDDL problem. Describe the object instances present in this specific problem, the initial state and goal state.",
+        },
+        {
+            "path": PLAN_PATH,
+            "description": "Current plan, series of grounded actions, achieving the goal. But may be sub-optimal.",
+        },
+    ]
 
     docs = []
     for f in files:
-        doc = DocLoader(DOCUMENT_PATH+f['name'])
+        doc = DocLoader(f['path'])
         doc[0].metadata['description'] = f['description']
         docs.append(doc)
         
