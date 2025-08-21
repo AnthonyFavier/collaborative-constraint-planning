@@ -467,8 +467,9 @@ from langchain_core.messages.modifier import RemoveMessage
 e2nl_llm = ChatOpenAI(model="gpt-4.1-mini-2025-04-14", temperature=0)
 light_llm = ChatAnthropic(model="claude-3-5-haiku-latest", max_tokens=4000, temperature=0)
 reasonning_llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000, thinking={"type": "enabled", "budget_tokens": 2000})
+bigger_llm = ChatAnthropic(model='claude-sonnet-4-20250514', max_tokens=4000)
 
-g_llm = light_llm
+g_llm = bigger_llm
 
 def extractAITextAnswer(msg):
     """
@@ -479,7 +480,7 @@ def extractAITextAnswer(msg):
     This function account for these various formats and returns the text_message included.
     """
     
-    text_answer = None
+    text_answer = ""
     if isinstance(msg.content, str):
         text_answer = msg.content
     elif isinstance(msg.content, list):
@@ -489,8 +490,6 @@ def extractAITextAnswer(msg):
                 break
     else:
         raise Exception("extractAITextAnswer: Type of msg.content unsupported")
-    if text_answer==None:
-        raise Exception("extractAITextAnswer: failed to extract AI text answer")
 
     return text_answer
 
