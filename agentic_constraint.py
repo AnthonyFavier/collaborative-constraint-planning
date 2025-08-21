@@ -1516,13 +1516,17 @@ def build_main_graph():
 ####################
 #### DRAW GRAPH ####
 ####################
-def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph):
+def draw_graph():
     with open('subgraph_translation.png', 'wb') as png:
         png.write(translation_subgraph.get_graph().draw_mermaid_png())
     with open('subgraph_encoding.png', 'wb') as png:
         png.write(encoding_subgraph.get_graph().draw_mermaid_png())
     with open('subgraph_failure_detection.png', 'wb') as png:
         png.write(failure_detection_subgraph.get_graph().draw_mermaid_png())
+    with open('subgraph_new_risk.png', 'wb') as png:
+        png.write(new_risk_subgraph.get_graph().draw_mermaid_png())
+    with open('subgraph_chat.png', 'wb') as png:
+        png.write(chat_subgraph.get_graph().draw_mermaid_png())
     with open('main_graph.png', 'wb') as png:
         png.write(main_graph.get_graph().draw_mermaid_png())
 
