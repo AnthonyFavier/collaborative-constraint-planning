@@ -153,6 +153,7 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
 
     # Unknown keyword test #
     for x in L:
+        x = x.lower()
         if x not in authorized_keywords:
             try: float(x)
             except:
