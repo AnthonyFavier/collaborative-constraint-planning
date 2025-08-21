@@ -1,6 +1,7 @@
 from datetime import datetime
 import customtkinter
 from customtkinter import filedialog
+from tkinter import Menu
 from defs import *
 import CAI
 from PIL import Image, ImageTk
@@ -492,9 +493,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.constraints_frame.selectActivatedCheckboxes()
         self.master.constraints_frame.showCheckboxes()
         self.master.disableAllButtons()
-        self.showSelectAllButtons()
-        self.showConfirmButton()
-        self.confirm_function = self.activateConfirm
+        self.master.display_frame.activateConfirm(self.activateConfirm)
     def activateConfirm(self):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
@@ -502,12 +501,10 @@ class ButtonsFrame(customtkinter.CTkFrame):
             else:
                 CAI.CM.constraints[k].deactivate()
                 
-        self.hideConfirmButton()
-        self.hideSelectAllButtons()
+        self.master.display_frame.deactivateConfirm()
         self.master.enableAllButtons()
         self.master.constraints_frame.hideCheckboxes()
         self.master.constraints_frame.updateLabels()
-        self.confirm_function = None
         
     def planT(self):
         threading.Thread(target=self.plan).start()
@@ -654,28 +651,49 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.frame_bottom = customtkinter.CTkFrame(self)
         self.frame_bottom.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky="ewsn")
         self.frame_bottom.grid_columnconfigure(0, weight=1)
-        # self.frame_bottom.grid_columnconfigure(1, weight=1)
+        self.frame_bottom.grid_columnconfigure(1, weight=1)
         # self.frame_bottom.grid_columnconfigure(2, weight=1)
-        self.frame_bottom.grid_columnconfigure(3, weight=1)
+        # self.frame_bottom.grid_columnconfigure(3, weight=1)
+        i_column = 0
         
         self.timer_label = customtkinter.CTkLabel(self.frame_bottom, text="Elapsed Time: 0.0 s", font = App.font)
         self.timer_label.grid(row=0, column=0, padx=10, pady=0, sticky="ew")
+        i_column += 1
         self.start_time = None
         self._timer_running = False
         
-        self.suggestions = "< No suggestions >"
-        self.buttons['suggestions_generate'] = customtkinter.CTkButton(self.frame_bottom, text='Generate\nSuggestions', font=DisplayFrame.font, command=self.generateSuggestionsT)
-        self.buttons['suggestions_generate'].grid(row=0, column=1, padx=5, pady=5)
         
-        self.buttons['suggestions_print'] = customtkinter.CTkButton(self.frame_bottom, text='Print\nSuggestions', font=DisplayFrame.font, command=self.printSuggestions)
-        self.buttons['suggestions_print'].grid(row=0, column=2, padx=5, pady=5)
+        self.confirm_function = None
+        self.confirm_button = customtkinter.CTkButton(self.frame_bottom, text="Confirm", command=self.confirm, width=80)
+        self.confirm_button.grid(row=0, column=i_column, padx=10, pady=10)
+        i_column += 1
         
-        self.buttons['dump_CM'] = customtkinter.CTkButton(self.frame_bottom, text="Dump\nConstraints", font=DisplayFrame.font, command= lambda: CAI.CM.dump(CAI.g_problem_name))
-        self.buttons['dump_CM'].grid(row=0, column=4, padx=10, pady=10)
+        # Main buttons : New constraint, Risk Analysis, Dialog
+        font_main_buttons = ("Arial", 18, "bold")
+        width_main_buttons = 90
+        height_main_buttons = 40
+        color_main_buttons='OrangeRed3'
         
-        self.buttons['load_CM'] = customtkinter.CTkButton(self.frame_bottom, text='Load\nConstraints', font=DisplayFrame.font, command=self.loadConstraints)
-        self.buttons['load_CM'].grid(row=0, column=5, padx=5, pady=5)
-    
+        self.buttons['translate'] = customtkinter.CTkButton(self.frame_bottom, text="Translate", command=self.master.buttons_frame.addT, width=width_main_buttons, height=height_main_buttons, font=font_main_buttons, fg_color=color_main_buttons)
+        self.buttons['translate'] .grid(row=0, column=i_column, padx=10, pady=10)
+        i_column += 1
+        self.buttons['risk'] = customtkinter.CTkButton(self.frame_bottom, text="Risk Analysis", command=self.riskAnalysisT, width=width_main_buttons, height=height_main_buttons, font=font_main_buttons, fg_color=color_main_buttons)
+        self.buttons['risk'] .grid(row=0, column=i_column, padx=10, pady=10)
+        i_column += 1
+        self.buttons['dialog'] = customtkinter.CTkButton(self.frame_bottom, text="Chat", command=self.chatT, width=width_main_buttons, height=height_main_buttons, font=font_main_buttons, fg_color=color_main_buttons)
+        self.buttons['dialog'] .grid(row=0, column=i_column, padx=10, pady=10)
+        i_column += 1
+        
+        
+    def activateConfirm(self, f):
+        self.confirm_button.configure(state='normal')
+        self.confirm_function = f        
+    def deactivateConfirm(self):
+        self.confirm_button.configure(state='disabled')
+        self.confirm_function = None
+    def confirm(self):
+        self.confirm_function()
+        
     def disableButtons(self):
         for k,x in self.buttons.items():
             x.configure(state='disabled')
@@ -683,24 +701,22 @@ class DisplayFrame(customtkinter.CTkFrame):
         for k,x in self.buttons.items():
             x.configure(state='normal')
     
-    def generateSuggestionsT(self):
-        threading.Thread(target=self.generateSuggestions).start()
-    def generateSuggestions(self):
-        self.master.disableAllButtons()
-        CAI.suggestions()
-        self.master.enableAllButtons()
+    def chatT(self):
+        threading.Thread(target=self.chat).start()
+    def chat(self):
+        mprint("\nStart AI Chat ... ")
+        mprint("\nPlease what is your question?")
+        agentic_constraint.Chat()
+        mprint("\nEnd of AI Chat")
         
-    def printSuggestions(self):
-        mprint("\nSuggestions:")
-        mprint(CAI.g_suggestions)
     
-    def loadConstraints(self):
-        self.master.disableAllButtons()
-        filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
-        if isinstance(filename, str) and filename!='':
-            CAI.CM.load(filename)
-            self.master.constraints_frame.updateFrame()
-        self.master.enableAllButtons()
+    def riskAnalysisT(self):
+        threading.Thread(target=self.riskAnalysis).start()
+    def riskAnalysis(self):
+        mprint("\nRisk Analysis ... ")
+        answer, suggestions = agentic_constraint.testFailure()
+        mprint('Answer:\n'+answer)
+        mprint('Suggestions:\n'+suggestions)
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
@@ -824,14 +840,14 @@ class PlanFrame(customtkinter.CTkFrame):
         self.buttons_frame.grid_columnconfigure(0, weight=1)
         self.buttons_frame.grid_columnconfigure(1, weight=1)
         
-        self.buttons['update_sim'] = customtkinter.CTkButton(self.buttons_frame, text="Update Sim", command=self.updateSimButton, width=80)
-        self.buttons['update_sim'] .grid(row=0, column=0, padx=10, pady=10)
         
-        self.buttons['copy'] = customtkinter.CTkButton(self.buttons_frame, text="Copy", command=self.copy, width=80)
-        self.buttons['copy'].grid(row=0, column=1, padx=10, pady=10)
+        self.buttons['plan'] = customtkinter.CTkButton(self.buttons_frame, text="Plan", command=self.master.buttons_frame.planT, width=80)
+        self.buttons['plan'].grid(row=0, column=0, padx=10, pady=10)
         
         self.buttons['export'] = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
-        self.buttons['export'].grid(row=0, column=2, padx=10, pady=10)
+        self.buttons['export'].grid(row=0, column=1, padx=10, pady=10)
+        
+
     
     def disableButtons(self):
         for k,x in self.buttons.items():
@@ -839,6 +855,25 @@ class PlanFrame(customtkinter.CTkFrame):
     def enableButtons(self):
         for k,x in self.buttons.items():
             x.configure(state='normal')
+            
+    def generateSuggestionsT(self):
+        threading.Thread(target=self.generateSuggestions).start()
+    def generateSuggestions(self):
+        self.master.disableAllButtons()
+        CAI.suggestions()
+        self.master.enableAllButtons()
+        
+    def printSuggestions(self):
+        mprint("\nSuggestions:")
+        mprint(CAI.g_suggestions)
+    
+    def loadConstraints(self):
+        self.master.disableAllButtons()
+        filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
+        if isinstance(filename, str) and filename!='':
+            CAI.CM.load(filename)
+            self.master.constraints_frame.updateFrame()
+        self.master.enableAllButtons()
     
     def updateSimButton(self):
         txt = self.textbox.get("0.0", "end")
@@ -1006,20 +1041,60 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(0, weight=20)
         self.grid_columnconfigure(1, weight=0)
         self.grid_columnconfigure(2, weight=0)
-        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(0, weight=2)
         self.grid_rowconfigure(1, weight=1)
         
         self.constraints_frame = ConstraintsFrame(self)
         self.constraints_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         
         self.buttons_frame = ButtonsFrame(self)
-        self.buttons_frame.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        # self.buttons_frame.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         
         self.display_frame = DisplayFrame(self)
         self.display_frame.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
         
         self.plan_frame = PlanFrame(self)
         self.plan_frame.grid(row=0, column=2, rowspan=2, padx=5, pady=5, sticky='nsew')
+        
+        # Top Menus
+        menubar = Menu(self)
+        
+        constraintsmenu = Menu(menubar, tearoff=0)
+        constraintsmenu.add_command(label="Load Constraints", command=self.plan_frame.loadConstraints)
+        constraintsmenu.add_command(label="Dump Constraints", command=lambda: CAI.CM.dump(CAI.g_problem_name))
+        constraintsmenu.add_separator()
+        constraintsmenu.add_command(label="Delete", command=self.buttons_frame.delete)
+        constraintsmenu.add_command(label="Activate/Deactivate", command=self.buttons_frame.activate)
+        menubar.add_cascade(label="Constraints", menu=constraintsmenu)
+        
+        optionsmenu = Menu(menubar, tearoff=0)
+        optionsmenu.add_command(label="Toggle E2NL", command=self.buttons_frame.toggleE2NL)
+        menubar.add_cascade(label="Options", menu=optionsmenu)
+        
+        suggestionsmenu = Menu(menubar, tearoff=0)
+        suggestionsmenu.add_command(label="Generate suggestions", command=self.plan_frame.generateSuggestionsT)
+        suggestionsmenu.add_command(label="Print suggestions", command=self.plan_frame.printSuggestions)
+        menubar.add_cascade(label="Suggestions", menu=suggestionsmenu)
+        
+        viewmenu = Menu(menubar, tearoff=0)
+        def toggleAll():
+            self.buttons_frame.toggleDecomps()
+            self.buttons_frame.toggleEncodings()
+        viewmenu.add_command(label="Toggle all", command=toggleAll)
+        viewmenu.add_separator()
+        viewmenu.add_command(label="Toggle decomps", command=self.buttons_frame.toggleDecomps)
+        viewmenu.add_command(label="Toggle encodings", command=self.buttons_frame.toggleEncodings)
+        menubar.add_cascade(label="View", menu=viewmenu)
+        
+        planmenu = Menu(menubar, tearoff=0)
+        planmenu.add_command(label="Copy current plan", command=self.plan_frame.copy)
+        planmenu.add_command(label="Update Sim", command=self.plan_frame.updateSimButton)
+        planmenu.add_separator()
+        planmenu.add_command(label="Change plan mode", command=self.buttons_frame.changePlanModeT)
+        planmenu.add_command(label="Change plan timeout", command=self.buttons_frame.changeTimeout)
+        menubar.add_cascade(label="Planning", menu=planmenu)
+        
+        self.config(menu=menubar)
         
         # TODO: Escape also kills child threads
         self.bind("<Escape>", lambda x: exit())
