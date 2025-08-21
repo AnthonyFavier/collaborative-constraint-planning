@@ -322,7 +322,6 @@ import requests
 from langgraph.types import Send
 from langchain_core.tools import tool
 import json 
-from langchain.tools.retriever import create_retriever_tool
 
 @tool
 def ask_clarifying_question(question: str) -> str:
@@ -414,6 +413,7 @@ Current weather at {city}:
     return weather_text
 
 # Built-in RETRIEVAL TOOL
+from langchain.tools.retriever import create_retriever_tool
 def build_retriever_tool(retriever):
     retriever_tool = create_retriever_tool(
         retriever,
@@ -424,8 +424,7 @@ def build_retriever_tool(retriever):
 # OWN RETRIEVAL TOOL WITH METADATA
 @tool
 def retrieve_with_metadata(query: str) -> str:
-    """Use this tool to retrieve relevant documents with context and metadata for a given question."""
-    # results = retriever.get_relevant_documents(query)
+    """Retriever tool able to extract content from available documents that is relevant to the given query."""
     results = retriever.invoke(query)
     formatted_chunks = []
 
@@ -512,11 +511,7 @@ def Retrieval(state: FailureDetectionState):
     # Future: bind tool to LLM and do an LLM call?
     # Can allow to adjust query? Ask clarifying question?
     
-    # TODO: check if includes the source and description?
-    # result = retriever_tool.invoke({'query': state['rag_query'].query})
-    
     result = retrieve_with_metadata.invoke({'query': state['rag_query'].query})
-    
     
     txt = 'RAG Query:\n' + state["rag_query"].query + '\n\nRAG Result:\n' + result
     ai_msg = AIMessage(content=txt)
@@ -1221,10 +1216,10 @@ def draw_graph(translation_subgraph, encoding_subgraph, failure_detection_subgra
 #############
 def setup_agentic_constraint(domain_path=None, problem_path=None, plan_path=None):
     """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
-    global retriever, retriever_tool, translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph
+    global retriever
+    global translation_subgraph, encoding_subgraph, failure_detection_subgraph, main_graph
     agentic_constraint_init(domain_path=domain_path, problem_path=problem_path, plan_path=plan_path)
     retriever = set_up_rag()
-    retriever_tool = build_retriever_tool(retriever)
     translation_subgraph = build_translation_subgraph()
     encoding_subgraph = build_encoding_subgraph()
     failure_detection_subgraph = build_failure_detection_subgraph()
@@ -1320,7 +1315,6 @@ if __name__=='__main__':
     setup_agentic_constraint()
     # agentic_constraint_init()
     # retriever = set_up_rag()
-    # retriever_tool = build_retriever_tool(retriever)
     # translation_subgraph = build_translation_subgraph()
     # encoding_subgraph = build_encoding_subgraph()
     # failure_detection_subgraph = build_failure_detection_subgraph()
