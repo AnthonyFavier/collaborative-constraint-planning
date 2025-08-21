@@ -30,7 +30,7 @@ def agentic_constraint_init(domain_path = None, problem_path = None, plan_path=N
     else:
         PROBLEM_PATH = problem_path
     if plan_path is None:
-        PLAN_PATH = BASE_PATH+'/zeno13_plan.txt'
+        PLAN_PATH = BASE_PATH+'/zenoreal_plan.txt'
     else:
         PLAN_PATH = plan_path
 
