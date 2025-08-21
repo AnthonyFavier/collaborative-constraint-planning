@@ -149,8 +149,6 @@ def set_up_rag():
     print('OK')
     return retriever
 
-retriever = set_up_rag()
-
 ######################################
 #### STRUCTURED OUTPUTS AND STATE ####
 ######################################
@@ -414,7 +412,6 @@ def build_retriever_tool(retriever):
         "Retriever tool able to extract content from available documents that is relevant to the given query.",
     )
     return retriever_tool
-retriever_tool = build_retriever_tool(retriever)
 # OWN RETRIEVAL TOOL WITH METADATA
 @tool
 def retrieve_with_metadata(query: str) -> str:
