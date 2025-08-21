@@ -1395,8 +1395,11 @@ def testRAG():
     txt = 'RAG Query:\n' + RAG_query + '\n\nRAG Result:\n' + result
     print(txt)
 
-def testFailure():
-    final_state = failure_detection_subgraph.invoke(FailureDetectionState())
+def RiskAnalysis():
+    final_state = failure_detection_subgraph.invoke(FailureDetectionState(), {'recursion_limit': 100})
+    answer = final_state['answer']
+    suggestions = final_state['suggestions']
+    return answer, suggestions
 
 def Chat():
     chat_subgraph.invoke(ChatState())

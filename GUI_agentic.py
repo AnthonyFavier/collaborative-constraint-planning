@@ -404,7 +404,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.add).start()
     def add(self):
         self.master.disableAllButtons()
-        self.activateE2NLButton()
+        # self.activateE2NLButton()
         
         startTimer()
         
@@ -468,10 +468,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.constraints_frame.unselectAll()
         self.master.constraints_frame.showCheckboxes()
         self.master.disableAllButtons()
-        self.showConfirmButton(txt="Delete")
-        self.showSelectAllButtons()
+        self.master.display_frame.activateConfirm(self.deleteConfirm)
+        # self.showConfirmButton(txt="Delete")
+        # self.showSelectAllButtons()
         # TODO: Select/Deselect ALL
-        self.confirm_function = self.deleteConfirm
+        # self.confirm_function = self.deleteConfirm
     def deleteConfirm(self):
         # Get selection
         selection = []
@@ -484,11 +485,12 @@ class ButtonsFrame(customtkinter.CTkFrame):
             CAI.CM.deleteConstraints(selection)
             self.master.constraints_frame.updateFrame()
         
-        self.hideConfirmButton()
-        self.hideSelectAllButtons()
+        # self.hideConfirmButton()
+        # self.hideSelectAllButtons()
+        self.master.display_frame.deactivateConfirm()
         self.master.enableAllButtons()
         self.master.constraints_frame.hideCheckboxes()
-        self.confirm_function = None
+        # self.confirm_function = None
         
     def activate(self):
         self.master.constraints_frame.selectActivatedCheckboxes()
@@ -706,19 +708,28 @@ class DisplayFrame(customtkinter.CTkFrame):
     def chatT(self):
         threading.Thread(target=self.chat).start()
     def chat(self):
-        mprint("\n=== CHAT ===")
+        self.master.disableAllButtons()
         
+        mprint("\n=== CHAT ===")
         mprint("\nAI: Please what is your question?")
         agentic_constraint.Chat()
+        
+        self.master.enableAllButtons()
         
     
     def riskAnalysisT(self):
         threading.Thread(target=self.riskAnalysis).start()
     def riskAnalysis(self):
-        mprint("\nRisk Analysis ... ")
-        answer, suggestions = agentic_constraint.testFailure()
-        mprint('Answer:\n'+answer)
-        mprint('Suggestions:\n'+suggestions)
+        self.master.disableAllButtons()
+        mprint("\n=== RISK ANALYSIS ===")
+        answer, suggestions = agentic_constraint.RiskAnalysis()
+        # mprint(agentic_constraint.chat_separator)
+        # mprint('AI: final answer\n')
+        # mprint('RISKS IDENTIFIED:\n'+answer)
+        # mprint(agentic_constraint.chat_separator)
+        # mprint('SUGGESTIONS:\n'+answer)
+        
+        self.master.enableAllButtons()
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
@@ -1043,7 +1054,7 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(0, weight=20)
         self.grid_columnconfigure(1, weight=0)
         self.grid_columnconfigure(2, weight=0)
-        self.grid_rowconfigure(0, weight=2)
+        self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         
         self.constraints_frame = ConstraintsFrame(self)
