@@ -666,6 +666,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         
         self.confirm_function = None
         self.confirm_button = customtkinter.CTkButton(self.frame_bottom, text="Confirm", command=self.confirm, width=80)
+        self.confirm_button.configure(state='disabled')
         self.confirm_button.grid(row=0, column=i_column, padx=10, pady=10)
         i_column += 1
         
