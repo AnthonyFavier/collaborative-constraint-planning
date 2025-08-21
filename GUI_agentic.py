@@ -553,6 +553,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             txt += 'Found Plan:\n' + self.master.plan_frame.last_results['plan']
             self.master.plan_frame.printMain(txt)
         
+        agentic_constraint.g_plan = txt
         self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):
