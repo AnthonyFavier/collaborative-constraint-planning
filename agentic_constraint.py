@@ -409,7 +409,7 @@ def buildURL(category, params):
 @tool
 def get_current_weather_city(city: str):
     """Get the accurate real time weather of a given city. The weather includes the following: temperature, humidity, wind speed, and wind direction."""
-    print('    Tool call: get_current_weather_city')
+    print('    Tool call: get_current_weather_city - city: ' + city)
     
     # get city loc
     category = 'city'
@@ -460,7 +460,7 @@ def build_retriever_tool(retriever):
 @tool
 def retrieve_with_metadata(query: str) -> str:
     """Retriever tool able to extract content from available documents that is relevant to the given query."""
-    print('    Tool call: RAG')
+    print('    Tool call: RAG - query: ' + query)
     results = retriever.invoke(query)
     formatted_chunks = []
 
