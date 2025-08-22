@@ -788,7 +788,7 @@ def RiskAskDeeper(state: FailureDetectionState):
 #CondEdge
 def RiskCondEdgeDeeper(state: FailureDetectionState):
     if state['deeper_analysis']:
-        return "DEEPER"
+        return "CONTINUE"
     elif state['user_question']!=None:
         return "QUESTION"
     else:
