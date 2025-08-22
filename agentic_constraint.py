@@ -30,17 +30,21 @@ def agentic_constraint_init(domain_path = None, problem_path = None, plan_path=N
         PROBLEM_PATH = BASE_PATH+'/zeno13.pddl'
     else:
         PROBLEM_PATH = problem_path
-    if plan_path is None:
-        PLAN_PATH = BASE_PATH+'/zenoreal_plan.txt'
-    else:
-        PLAN_PATH = plan_path
+    # if plan_path is None:
+    #     PLAN_PATH = BASE_PATH+'/zenoreal_plan.txt'
+    # else:
+    #     PLAN_PATH = plan_path
+    PLAN_PATH = plan_path
 
     with open(DOMAIN_PATH, 'r') as f:
         g_domain = f.read()
     with open(PROBLEM_PATH, 'r') as f:
         g_problem = f.read()
-    with open(PLAN_PATH, 'r') as f:
-        g_plan = f.read()
+    if PLAN_PATH:
+        with open(PLAN_PATH, 'r') as f:
+            g_plan = f.read()
+    else:
+        g_plan = "No plan"
 
     # Try parsing the initial problem
     try:
