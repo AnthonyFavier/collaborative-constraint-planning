@@ -345,6 +345,7 @@ import json
 @tool
 def ask_clarifying_question(question: str) -> str:
     """Ask the user the clarifying question given as input and returns the user answer."""
+    print('    Tool call: ask_clarifying_question')
     mprint(chat_separator)
     q = minput("AI: "+question+'\n')
     if q.lower() == '':
@@ -358,6 +359,7 @@ def ask_clarifying_question(question: str) -> str:
 @tool
 def basic_plan_analysis(plan: str) -> str:
     """Receives a plan and computes a few basic caracterics such as number of steps and each action occurence."""
+    print('    Tool call: basic_plan_analysis')
     nb_step = len(plan.splitlines())
     nb_step_text = f"Number of steps = {nb_step}"
     
@@ -377,11 +379,13 @@ def basic_plan_analysis(plan: str) -> str:
 @tool
 def count_number_step_in_plan(plan: str) -> int:
     """Count the number of steps or actions in a given plan."""
+    print('    Tool call: count_number_step_in_plan')
     return len(plan.splitlines())
 
 @tool
 def count_action_occurrence(plan: str, action:str) -> int:
     """Count the occurence of a specific action based on its exact name and parameters formatted as '<action_name> <param1> <param2>...'. If only '<action_name>' is provided, all occurrences will be counted, regarless of the different action parameters."""
+    print('    Tool call: count_action_occurrence')
     n = 0
     for l in plan.splitlines():
         if action in l:
@@ -398,6 +402,7 @@ def buildURL(category, params):
 @tool
 def get_current_weather_city(city: str):
     """Get the accurate real time weather of a given city. The weather includes the following: temperature, humidity, wind speed, and wind direction."""
+    print('    Tool call: get_current_weather_city')
     
     # get city loc
     category = 'city'
@@ -448,6 +453,7 @@ def build_retriever_tool(retriever):
 @tool
 def retrieve_with_metadata(query: str) -> str:
     """Retriever tool able to extract content from available documents that is relevant to the given query."""
+    print('    Tool call: RAG')
     results = retriever.invoke(query)
     formatted_chunks = []
 
@@ -465,6 +471,7 @@ from manual_plan_generation import simulatePlan
 @tool
 def simulatePlanTool(plan: str, metric: str) -> str:
     """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
+    print('    Tool call: simulatePlanTool')
     feedback = simulatePlan(DOMAIN_PATH, PROBLEM_PATH, plan, metric, separator_plan=' ', is_numered=False)
     return feedback
 
