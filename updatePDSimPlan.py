@@ -4,7 +4,8 @@
 # PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/ZenoTravel12/Data/PdSimInstance.asset"
 # PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset"
 # PDSIM_INSTANCE_PATH = "/home/afavier/my_pdsim/PDSim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset"
-PDSIM_INSTANCE_PATH = '/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset'
+# PDSIM_INSTANCE_PATH = '/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset'
+PDSIM_INSTANCE_PATH = '/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/ZenoR/Data/PdSimInstance.asset'
 # PDSIM_INSTANCE_PATH = "/home/afavier/my_pdsim/PDSim/Assets/Scenes/Rover3/Data/PdSimInstance.asset"
 
 def createActionStr(name, *parameters):
