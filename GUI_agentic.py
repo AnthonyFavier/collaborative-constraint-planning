@@ -656,24 +656,22 @@ class DisplayFrame(customtkinter.CTkFrame):
         # self.frame_bottom.grid_columnconfigure(3, weight=1)
         i_column = 0
         
+        font_main_buttons = ("Arial", 18, "bold")
+        width_main_buttons = 90
+        height_main_buttons = 40
+        color_main_buttons='OrangeRed3'
+        
         self.timer_label = customtkinter.CTkLabel(self.frame_bottom, text="Elapsed Time: 0.0 s", font = App.font)
         self.timer_label.grid(row=0, column=0, padx=10, pady=0, sticky="ew")
         i_column += 1
         self.start_time = None
         self._timer_running = False
         
-        
         self.confirm_function = None
-        self.confirm_button = customtkinter.CTkButton(self.frame_bottom, text="Confirm", command=self.confirm, width=80)
+        self.confirm_button = customtkinter.CTkButton(self.frame_bottom, text="Confirm", command=self.confirm, width=80, font=font_main_buttons)
         self.confirm_button.configure(state='disabled')
         self.confirm_button.grid(row=0, column=i_column, padx=10, pady=10)
         i_column += 1
-        
-        # Main buttons : New constraint, Risk Analysis, Dialog
-        font_main_buttons = ("Arial", 18, "bold")
-        width_main_buttons = 90
-        height_main_buttons = 40
-        color_main_buttons='OrangeRed3'
         
         self.buttons['translate'] = customtkinter.CTkButton(self.frame_bottom, text="Translate", command=self.master.buttons_frame.addT, width=width_main_buttons, height=height_main_buttons, font=font_main_buttons, fg_color=color_main_buttons)
         self.buttons['translate'] .grid(row=0, column=i_column, padx=10, pady=10)
@@ -851,8 +849,8 @@ class PlanFrame(customtkinter.CTkFrame):
         self.buttons_frame.grid_columnconfigure(0, weight=1)
         self.buttons_frame.grid_columnconfigure(1, weight=1)
         
-        
-        self.buttons['plan'] = customtkinter.CTkButton(self.buttons_frame, text="Plan", command=self.master.buttons_frame.planT, width=80)
+        font_main_buttons = ("Arial", 18, "bold")
+        self.buttons['plan'] = customtkinter.CTkButton(self.buttons_frame, text="Plan", font=font_main_buttons, command=self.master.buttons_frame.planT, width=80)
         self.buttons['plan'].grid(row=0, column=0, padx=10, pady=10)
         
         self.buttons['export'] = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
