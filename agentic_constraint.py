@@ -1162,6 +1162,11 @@ def RefineUserIntent(state: DecompositionState):
 def SaveUserIntentClearMessages(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: SaveUserIntentClearMessages")
+    
+    mprint(chat_separator)
+    mprint('AI: Refined user intent Below\n')
+    mprint(state['refined_user_intent'])
+    
     messages_to_remove = state["messages"]
     remove_instructions = [RemoveMessage(id=m.id) for m in messages_to_remove]
     return {'refined_user_intent': state['messages'][-1].content, "messages": remove_instructions} # Return as part of a state update
@@ -1169,6 +1174,9 @@ def SaveUserIntentClearMessages(state: DecompositionState):
 #NODE
 def Decompose(state: DecompositionState):
     """Decompose the user input into a proper set of constraints"""
+    
+    mprint(chat_separator)
+    mprint("Decomposing ... \n")
     
     if 'PRINT_NODES'in globals():
         print("Node: Decompose")
@@ -1350,7 +1358,8 @@ def UserReviewDecomposition(state: DecompositionState):
         mprint(f"User: {user_review}")
     
     if user_review.lower() == 'explain':
-        mprint('\nExplanation of decomposition:\n' + state['decomposition'].explanation)
+        # mprint('\nExplanation of decomposition:\n' + state['decomposition'].explanation)
+        mprint('\n' + state['decomposition'].explanation)
         user_review = minput("\nAre you satisfied with the decomposition? If not, provide any desired feedback.\n")
         if user_review.lower()=='':
             mprint(f"User: yes")
@@ -1405,6 +1414,8 @@ def RoutingUserReviewDecomposition(state: DecompositionState):
 def Orchestrator(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: Orchestrator")
+    mprint(chat_separator)
+    mprint("Encoding ... \n")
     return {}
     
 #CondEdge
@@ -1647,8 +1658,8 @@ def TranslateUserInput(user_input):
     mprint(f"\nUser input:\n {user_input}")
     for e in encodings:
         mprint(f'• {e.constraint}')
-        mprint(f'  → {e.encoding.encoding}')
-        mprint(f'    → {e.e2nl.e2nl}')
+        mprint(f'  → {e.e2nl.e2nl}')
+        mprint(f'    → {e.encoding.encoding}')
 
     return encodings
 
