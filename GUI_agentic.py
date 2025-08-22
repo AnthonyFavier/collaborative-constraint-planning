@@ -899,6 +899,9 @@ class PlanFrame(customtkinter.CTkFrame):
         
     def export(self):
         
+        print('Export deprecated with agentic version. To check before use. Aborted.')        
+        return None
+        
         data = {}
         
         data['problem_name'] = CAI.g_problem_name
