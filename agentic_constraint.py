@@ -1526,13 +1526,17 @@ def ChatAnswer(state: ChatState):
         "<pddl_problem>\n"
         "{pddl_problem}\n"
         "</pddl_problem>\n"
+        "<current_solution_plan>\n"
+        "{pddl_plan}\n"
+        "</current_solution_plan>\n"
+        
         "The user will ask you various questions related to the problem. "
         "Your goal is to answer the user's questions with helpful responses. "
         "Some relevant information may be present in external documents.  "
     )
     
     llm = g_llm.bind_tools(chat_tools)
-    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))] + state['messages']
+    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))] + state['messages']
     
     msg = call(llm, messages)
     answer = extractAITextAnswer(msg)
@@ -1545,7 +1549,15 @@ def ChatAnswer(state: ChatState):
 #### BUILD ####
 def build_chat_subgraph():
     global chat_tools
-    chat_tools = [ask_clarifying_question, retrieve_with_metadata, get_current_weather_city]
+    chat_tools = [
+        ask_clarifying_question, 
+        retrieve_with_metadata, 
+        get_current_weather_city,
+        basic_plan_analysis,
+        count_number_step_in_plan,
+        count_action_occurrence,
+        simulatePlanTool,
+    ]
     
     chat_subgraph_builder = StateGraph(ChatState)
     
