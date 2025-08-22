@@ -101,6 +101,7 @@ def set_up_rag():
         {
             "path": DOCUMENT_PATH+"fake_aircraft_plane2.md", 
             "description": "AIRCRAFT TECHNICAL & OPERATIONAL REPORT - Plane2",
+            # Suggests that plane2 can't operate at full speed
         },
         {
             "path": DOCUMENT_PATH+"fake_doc_airport_atlanta.md", 
@@ -115,12 +116,18 @@ def set_up_rag():
             "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
         },
         {
-          "path": DOCUMENT_PATH+"radio2.md",
-          "description": "Transcripts of radio transmissions.",
+            "path": DOCUMENT_PATH+"radioA.md",
+            "description": "Transcript of radio transmissions.",
+            # Suggests that plane3 shouldn't operate at full speed
+        },
+        {
+            "path": DOCUMENT_PATH+"radioB.md",
+            "description": "Transcript of radio transmissions.",
+            # Suggests that Los Angeles airport can't refuel planes
         },
         # {
-        #   "path": DOCUMENT_PATH+"Current Operations Plan Advisory.pdf",
-        #   "description": "Current Operations Plan Advisory.",
+        #     "path": DOCUMENT_PATH+"Current Operations Plan Advisory.pdf",
+        #     "description": "Current Operations Plan Advisory.",
         # },
     ]
     
