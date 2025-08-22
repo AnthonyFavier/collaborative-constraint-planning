@@ -541,7 +541,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
         print('Node: GenerateRAGQuery')
         
-    RAG_QUERY_GENREATION_PROMPT = (
+    SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
         "<pddl_domain>\n"
@@ -553,12 +553,17 @@ def GenerateRAGQuery(state: FailureDetectionState):
         "<current_solution_plan>\n"
         "{pddl_plan}\n"
         "</current_solution_plan>\n"
+    )
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))
         
+    RAG_QUERY_GENERATION_PROMPT = (
         "Generate a RAG query to look for potential risk of failure of the given PDDL plan. "
         "It should includes keywords such as 'restriction', 'failure', 'risk', 'danger', 'limitation'. "
         "The query should also include any relevant keyword regarding the current problem being solve. "
     )
-    state['messages'] += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))]
+    h_msg = HumanMessage(content= RAG_QUERY_GENERATION_PROMPT.format())
+    
+    state['messages'] += [sys_msg, h_msg]
     
     llm = light_llm.with_structured_output(RAGQuery)
     query = call(llm, [sys_msg] + state["messages"])
@@ -580,8 +585,52 @@ def Retrieval(state: FailureDetectionState):
     txt = 'RAG Query:\n' + state["rag_query"].query + '\n\nRAG Result:\n' + result
     ai_msg = AIMessage(content=txt)
     
-    return {'messages': [ai_msg], 'rag_result': result}
+    return {'messages': [ai_msg], 'rag_result': result, 'first_loop': True}
 
+#NODE
+def AdditionalRetrieval(state: FailureDetectionState):
+
+    if 'PRINT_NODES'in globals():
+        print('Node: AdditionalRetrieval')
+        
+    SYSTEM_PROMPT = (
+        "You are a helpful PDDL planning expert and assistant. "
+        "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
+        "<pddl_domain>\n"
+        "{pddl_domain}\n"
+        "</pddl_domain>\n"
+        "<pddl_problem>\n"
+        "{pddl_problem}\n"
+        "</pddl_problem>\n"
+        "<current_solution_plan>\n"
+        "{pddl_plan}\n"
+        "</current_solution_plan>\n"
+    )
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))
+    
+    ADD_RETRIEVAL_PROMPT = (
+        "You are conducting an analysis of risk of failure for the addressed problem. "
+        # "Some potentially relevant information regarding possible failure has already been retrieved. "
+        "Your goal is to retrieve additional context and information to better prepare the analysis of risk of failure of the plan. "
+        "Use the avalaible tools to conduct such information retrieval relevant to 'restriction', 'failure', 'risk', 'danger', 'limitation'. "
+        "The actual analysis of risk will be conducted in the following steps, focus on retrieving relevant context for it. "
+        "Your answer should focus on risks that can be accounted with the current PDDL formalism. "
+    )
+    h_msg = HumanMessage(content=ADD_RETRIEVAL_PROMPT.format())
+    
+    if state['first_loop']:
+        state['messages'] += [sys_msg, h_msg]
+    
+    llm = g_llm.bind_tools(failure_detection_tools)
+    msg = call(llm, state['messages'])
+    
+    answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
+    
+    return {'messages': [msg], 'first_loop': False}
+  
 #NODE
 def GenerateAnswer(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
@@ -626,17 +675,30 @@ def MakeSuggestions(state: FailureDetectionState):
 
 #### BUILD ####    
 def build_failure_detection_subgraph():
+    global failure_detection_tools
+    failure_detection_tools = [retrieve_with_metadata, get_current_weather_city]
     
     failure_detection_subgraph_builder = StateGraph(FailureDetectionState)
     # Add nodes
     failure_detection_subgraph_builder.add_node("GenerateRAGQuery", GenerateRAGQuery)
     failure_detection_subgraph_builder.add_node("Retrieval", Retrieval)
+    failure_detection_subgraph_builder.add_node("AdditionalRetrieval", AdditionalRetrieval)
     failure_detection_subgraph_builder.add_node("GenerateAnswer", GenerateAnswer)
+    failure_detection_subgraph_builder.add_node("FailureDetectionTools", ToolNode(failure_detection_tools))
     failure_detection_subgraph_builder.add_node("MakeSuggestions", MakeSuggestions)
     # Add edge
-    failure_detection_subgraph_builder.add_edge(START, "GenerateRAGQuery")
-    failure_detection_subgraph_builder.add_edge("GenerateRAGQuery", "Retrieval")
-    failure_detection_subgraph_builder.add_edge("Retrieval", "GenerateAnswer")
+    failure_detection_subgraph_builder.add_edge(START, "AdditionalRetrieval")
+    # failure_detection_subgraph_builder.add_edge("GenerateRAGQuery", "AdditionalRetrieval")
+    # failure_detection_subgraph_builder.add_edge("Retrieval", "AdditionalRetrieval")
+    failure_detection_subgraph_builder.add_conditional_edges(
+        "AdditionalRetrieval",
+        tools_condition, 
+        {
+            "tools": "FailureDetectionTools",
+            END: "GenerateAnswer",
+        }
+    )
+    failure_detection_subgraph_builder.add_edge("FailureDetectionTools", "AdditionalRetrieval")
     failure_detection_subgraph_builder.add_edge("GenerateAnswer", "MakeSuggestions")
     failure_detection_subgraph_builder.add_edge("MakeSuggestions", END)
     # Compile
@@ -1626,7 +1688,7 @@ def testRAG():
     print(txt)
 
 def RiskAnalysis():
-    final_state = failure_detection_subgraph.invoke(FailureDetectionState(), {'recursion_limit': 100})
+    final_state = failure_detection_subgraph.invoke(FailureDetectionState(first_loop=True), {'recursion_limit': 100})
     answer = final_state['answer']
     suggestions = final_state['suggestions']
     return answer, suggestions
