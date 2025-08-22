@@ -439,10 +439,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
                     child_constraint.encoding = e.encoding.encoding
                     activated_encodings.append(e.encoding.encoding)
 
-                # double check activated encodings:
-                print(f"\nActivated encodings: {activated_encodings}")
-
-
                 CAI.CM.dump(CAI.g_problem_name)
                 
             except Exception as err:
