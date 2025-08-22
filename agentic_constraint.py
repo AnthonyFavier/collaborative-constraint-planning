@@ -1249,11 +1249,6 @@ def VerifyDecomposition(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: VerifyDecomposition")
     
-    # MOCK no verification
-    if 'PRINT_NODES'in globals():
-        print('MOCKED')
-    return {'decomposition_validation': DecompositionValidation()}
-    
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
         "The problem currently being solved is described with a PDDL domain and problem, given below.\n"
@@ -1464,15 +1459,19 @@ def build_translation_subgraph():
     )
     translation_subgraph_builder.add_edge("ask_clarifying_question", "RefineUserIntent")
     translation_subgraph_builder.add_edge("SaveUserIntentClearMessages", "Decompose")
-    translation_subgraph_builder.add_edge("Decompose", "VerifyDecomposition")
-    translation_subgraph_builder.add_conditional_edges(
-        "VerifyDecomposition",
-        RoutingVerifyDecomposition,
-        {
-            "OK": 'UserReviewDecomposition',
-            "Retry": 'Decompose'
-        }
-    )
+    ## Without verification node
+    translation_subgraph_builder.add_edge("Decompose", "UserReviewDecomposition")
+    ## With verification node
+    # translation_subgraph_builder.add_edge("Decompose", "VerifyDecomposition")
+    # translation_subgraph_builder.add_conditional_edges(
+    #     "VerifyDecomposition",
+    #     RoutingVerifyDecomposition,
+    #     {
+    #         "OK": 'UserReviewDecomposition',
+    #         "Retry": 'Decompose'
+    #     }
+    # )
+    ## End
     translation_subgraph_builder.add_conditional_edges(
         "UserReviewDecomposition",
         RoutingUserReviewDecomposition,
