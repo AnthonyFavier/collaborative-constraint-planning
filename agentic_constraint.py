@@ -828,7 +828,7 @@ def Encode(state: EncodingState):
         
         "Your goal is to translate natural language constraints into PDDL3.0. "
         "Remember that PDDL3.0 constraints are state-based. They can only refer to existing predicates, fluents or objects; not to actions. "
-        "Be sure to include temporal logic like operators in your translation. "
+        "Your PDDL3.0 answer must be given between the tags <pddl> and </pddl>. "
     )
     sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))
     
@@ -845,11 +845,15 @@ def Encode(state: EncodingState):
         state['e_messages'] = [sys_msg]
         state['e_messages'] += [HumanMessage(content=state['encodingE2NL'].constraint)]
     
-    llm = g_llm.with_structured_output(Encoding)
+    # llm = reasonning_llm.with_structured_output(Encoding)
+    llm = reasonning_llm
     msg = llm.invoke(state['e_messages'])
+    answer = extractAITextAnswer(msg)
+    encoding = tools.extractTag('pddl', answer)
+    encoding = tools.initialFixes(encoding)
     
     encodingE2NL = state["encodingE2NL"]
-    encodingE2NL.encoding = msg
+    encodingE2NL.encoding = Encoding(encoding=encoding)
     
     ai_msg = AIMessage(content=encodingE2NL.encoding.encoding)
     

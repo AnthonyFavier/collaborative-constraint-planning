@@ -32,10 +32,62 @@ def filterEncoding(encodedPref):
     return filteredEncoding
 
 def initialFixes(filteredEncoding):
-    i = filteredEncoding.find('at end')
-    if i!=-1:
+    
+    # at end
+    if (i := filteredEncoding.find('at end')) != -1:
         filteredEncoding = filteredEncoding[:i] + 'at-end' + filteredEncoding[i+len('at-end'):]
-        print('Fixed at end -> at-end')
+        print('initialFixes: Fixed at end -> at-end')
+        
+    # remove :constraints
+    if (i := filteredEncoding.find('(:constraints'))!=-1:
+        i2 = filteredEncoding.rfind(')')
+        filteredEncoding = filteredEncoding[i+len('(:constraints'):i2].strip()
+        print('initialFixes: :constraints removed')
+        
+    # remove :constraint
+    if (i := filteredEncoding.find('(:constraint'))!=-1:
+        i2 = filteredEncoding.rfind(')')
+        filteredEncoding = filteredEncoding[i+len('(:constraint'):i2].strip()
+        print('initialFixes: :constraint removed')
+    
+    # add always
+    TEMPORAL_keywords =[
+        'always',
+        'sometime',
+        'within',
+        'at-most-once',
+        'sometime-after',
+        'sometime-before',
+        'always-within',
+        'holding-during',
+        'hold-after',
+        'at-end',
+        # 'imply',
+        # 'implies',
+    ]
+    
+    L = filteredEncoding
+    # remove comments
+    while True:
+        i1 = L.find(';')
+        if i1==-1:
+            break
+        i2 = L.find('\n', i1)
+        L = L[:i1] + L[i2:]
+    L = " ( ".join(L.split('('))
+    L = " ) ".join(L.split(')'))
+    L = " ".join(L.split())
+    L = L.split()
+    
+    temporal_present = False
+    for keyword in TEMPORAL_keywords:
+        if keyword in L:
+            temporal_present = True
+            break
+    if not temporal_present:
+        print("initialFixes: No temporal keywords -> 'always' to add")
+        filteredEncoding = "(always "+ filteredEncoding +")"
+        
     return filteredEncoding
 
 def updateProblem(problem, encodings):
@@ -165,16 +217,17 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
                     return f"{x} is not a supported PDDL keyword or part of problem description."
                 
     # Check if temporal keyword present
-    temporal_present = False
-    for keyword in TEMPORAL_keywords:
-        if keyword in L:
-            temporal_present = True
-            break
-    if not temporal_present:
-        print('[VERIFIER]')
-        print("No temporal keywords")
-        # print('\t'+filteredEncoding)
-        return "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint."
+    # temporal_present = False
+    # for keyword in TEMPORAL_keywords:
+    #     if keyword in L:
+    #         temporal_present = True
+    #         break
+    # if not temporal_present:
+    #     print('[VERIFIER]')
+    #     print("No temporal keywords: Always to add")
+    #     return "No temporal keywords: Always to add"
+    #     # return "There is no temporal logic keyword, this is mandatory for a correct PDDL3.0 constraint."
+        
             
     # Parsing test #
     try:
