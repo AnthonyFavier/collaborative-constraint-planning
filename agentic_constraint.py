@@ -500,6 +500,25 @@ def extractAITextAnswer(msg):
 
     return text_answer
 
+import anthropic
+import openai
+def call(model, input):
+    MAX_NB_TRY = 5
+    RETRY_DELAY = 5
+    n=0
+    while n<MAX_NB_TRY:
+        try:
+            return model.invoke(input)
+        except anthropic._exceptions.OverloadedError as err:
+            mprint(f'Server down or overloaded, retrying in {RETRY_DELAY} seconds...')
+            time.sleep(RETRY_DELAY)
+        except openai._exceptions.InternalServerError as err:
+            mprint(f'Server down or overloaded, retrying in {RETRY_DELAY} seconds...')
+            time.sleep(RETRY_DELAY)
+        except Exception as err:
+            raise err
+    raise err
+        
 ##########################
 #### GRAPH COMPONENTS ####
 ##########################
@@ -538,8 +557,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
     state['messages'] += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))]
     
     llm = light_llm.with_structured_output(RAGQuery)
-    
-    query = llm.invoke(state["messages"])
+    query = call(llm, [sys_msg] + state["messages"])
     
     return {'rag_query': query}
 
@@ -567,16 +585,18 @@ def GenerateAnswer(state: FailureDetectionState):
         
     GENERATE_ANSWER_PROMPT = (
         "Use the previous pieces of retrieved context to identify possible risk of failure of the plan. "
-        "The context is splitted in different chunks, each encapsulated in <chunk_i> tags. "
+        # "The context is splitted in different chunks, each encapsulated in <chunk_i> tags. "
         "If you don't know the answer, just say that you don't know. "
         "Focus on practical risks that may directly change or affect the given plan. "
-        "Your answer should only be three sentences maximum, so focus on the most relevant risks to the plan. "
+        "Your answer should only be concise buttlet list, focused on the most relevant risks to the plan. "
     )
+    state["messages"] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
     
-    state['messages'] += [HumanMessage(content= GENERATE_ANSWER_PROMPT.format())]
-    
-    msg = g_llm.invoke(state['messages'])
+    msg = call(g_llm, state['messages'])
     answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
     
     return {'messages': [msg], 'answer': answer}
 
@@ -585,14 +605,18 @@ def MakeSuggestions(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
         print('Node: MakeSuggestions')
         
-    SUGGESTIONS_PROMPT = (
-        "Based on your last answer about the risks of failure, give me concrete suggestions of modification to the current plan. "
-        "Give me for instance a temporal logic constraint to ensure these modification during the planning proces. "
+    SUGGESTION_PROMPT = (
+        "Based on your last answer about the risks of failure, reason and give me concrete temporal constraints applicable to the PDDL problem. "
+        "Your answer should focus on risks that can be accounted with the current PDDL formalism. "
+        "Don't consider the ones concerning elements not represented in the PDDL domain and problem. "
     )
-    state['messages'] += [HumanMessage(content= SUGGESTIONS_PROMPT.format())]
+    state['messages'] += [HumanMessage(content= SUGGESTION_PROMPT.format())]
     
-    msg = g_llm.invoke(state['messages'])
+    msg = call(g_llm, state['messages'])
     answer = extractAITextAnswer(msg)
+    if answer:
+        mprint(chat_separator)
+        mprint("AI: " + answer) 
     
     return {'messages': [msg], 'suggestions': answer}
 
@@ -651,7 +675,7 @@ def RiskRetrieval(state: FailureDetectionState):
         state['messages'] += [sys_msg, h_msg]
     
     llm = g_llm.bind_tools(new_risk_tools)
-    msg = llm.invoke(state['messages'])
+    msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
     if answer:
@@ -716,7 +740,7 @@ def RiskQuestion(state: FailureDetectionState):
         state['messages'] += [h_msg]
     
     llm = g_llm.bind_tools(new_risk_tools)
-    msg = llm.invoke(state['messages'])
+    msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
     if answer:
@@ -740,7 +764,7 @@ def RiskDeeperAnalysis(state: FailureDetectionState):
         state['messages'] += [h_msg]
     
     llm = g_llm.bind_tools(new_risk_tools)
-    msg = llm.invoke(state['messages'])
+    msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
     if answer:
@@ -847,7 +871,7 @@ def Encode(state: EncodingState):
     
     # llm = reasonning_llm.with_structured_output(Encoding)
     llm = reasonning_llm
-    msg = llm.invoke(state['e_messages'])
+    msg = call(llm, state['e_messages'])
     answer = extractAITextAnswer(msg)
     encoding = tools.extractTag('pddl', answer)
     encoding = tools.initialFixes(encoding)
@@ -920,7 +944,7 @@ def BackTranslation(state: EncodingState):
         HumanMessage(content=state["encodingE2NL"].encoding.encoding),
     ]
         
-    msg = llm.invoke(messages)
+    msg = call(llm, messages)
 
     encodingE2NL = state['encodingE2NL']
     encodingE2NL.e2nl = msg
@@ -982,7 +1006,7 @@ def UserReviewE2NL(state: EncodingState):
         HumanMessage(content=user_review),
     ]
         
-    msg = llm.invoke(messages)
+    msg = call(llm, messages)
     return {"e2nl_user_validation": msg}
 
 #CondEdge
@@ -1065,7 +1089,7 @@ def RefineUserIntent(state: DecompositionState):
     # structured_llm = llm.with_structured_output(UserIntent)
     llm = g_llm.bind_tools([ask_clarifying_question])
     messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))] + state['messages']
-    msg = llm.invoke(messages)
+    msg = call(llm, messages)
     return {"messages": [msg]}
     
 #NODE
@@ -1132,7 +1156,7 @@ def Decompose(state: DecompositionState):
         state['messages'] += [HumanMessage(content=INPUT_PROMPT.format(user_input=state['user_input'], user_intent=state['refined_user_intent']))]
         
     llm = g_llm.with_structured_output(Decomposition)
-    msg = llm.invoke(state['messages'])
+    msg = call(llm, state['messages'])
     
     txt = ''
     txt+='Decomposition:\n'
@@ -1194,10 +1218,7 @@ def VerifyDecomposition(state: DecompositionState):
         SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem)),
         HumanMessage(content=USER_PROMPT.format(user_input=state['user_input'], user_intent=state['refined_user_intent'], decomposition=decomposition_str)),
     ]
-    # FAKE CALL
-    msg = llm.invoke(messages)
-    # msg = DecompositionValidation()
-    
+    msg = call(llm, messages)
     
     feedback = ''
     if msg.pddl_constraints:
@@ -1303,7 +1324,7 @@ def UserReviewDecomposition(state: DecompositionState):
         SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem)),
         HumanMessage(content=user_review)
     ]
-    msg = llm.invoke(messages)
+    msg = call(llm, messages)
     return {'decomposition_user_validation': msg}
 
 #CondEdge
@@ -1437,7 +1458,7 @@ def ChatAnswer(state: ChatState):
     llm = g_llm.bind_tools(chat_tools)
     messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem))] + state['messages']
     
-    msg = llm.invoke(messages)
+    msg = call(llm, messages)
     answer = extractAITextAnswer(msg)
     if answer:
         mprint(chat_separator)
