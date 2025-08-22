@@ -818,7 +818,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         i_self_row = 0
         
-        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", width=400, corner_radius=6,font=App.font)
+        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", width=500, corner_radius=6,font=App.font)
         self.title.grid(row=i_self_row, column=0, padx=10, pady=(10, 0), sticky="ew")
         i_self_row+=1
         
