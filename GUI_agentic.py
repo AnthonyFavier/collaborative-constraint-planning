@@ -658,7 +658,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         
         font_main_buttons = ("Arial", 18, "bold")
         width_main_buttons = 90
-        height_main_buttons = 40
+        height_main_buttons = 30
         color_main_buttons='OrangeRed3'
         
         self.timer_label = customtkinter.CTkLabel(self.frame_bottom, text="Elapsed Time: 0.0 s", font = App.font)
@@ -816,7 +816,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         i_self_row = 0
         
-        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", width=500, corner_radius=6,font=App.font)
+        self.title = customtkinter.CTkLabel(self, text="Plans", fg_color="gray30", corner_radius=6,font=App.font)
         self.title.grid(row=i_self_row, column=0, padx=10, pady=(10, 0), sticky="ew")
         i_self_row+=1
         
@@ -1050,11 +1050,15 @@ class App(customtkinter.CTk):
         photo = ImageTk.PhotoImage(im)
         self.wm_iconphoto(True, photo)
         
-        self.grid_columnconfigure(0, weight=20)
+        self.constraints_frame_weight_width = 1
+        self.constraints_frame_weight_height = 1
+        self.display_frame_weight_height = 1
+        
+        self.grid_columnconfigure(0, weight=self.constraints_frame_weight_height)
         self.grid_columnconfigure(1, weight=0)
-        self.grid_columnconfigure(2, weight=0)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_rowconfigure(0, weight=self.constraints_frame_weight_height)
+        self.grid_rowconfigure(1, weight=self.display_frame_weight_height)
         
         self.constraints_frame = ConstraintsFrame(self)
         self.constraints_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
@@ -1096,6 +1100,10 @@ class App(customtkinter.CTk):
         viewmenu.add_separator()
         viewmenu.add_command(label="Toggle decomps", command=self.buttons_frame.toggleDecomps)
         viewmenu.add_command(label="Toggle encodings", command=self.buttons_frame.toggleEncodings)
+        viewmenu.add_separator()
+        viewmenu.add_command(label="Change constraints width weight", command=self.askChangeConstraintsWidth)
+        viewmenu.add_command(label="Change constraints height weight", command=self.askChangeConstraintsHeight)
+        viewmenu.add_command(label="Change display height weight", command=self.askChangeDisplayHeight)
         menubar.add_cascade(label="View", menu=viewmenu)
         
         planmenu = Menu(menubar, tearoff=0)
@@ -1121,7 +1129,34 @@ class App(customtkinter.CTk):
         setReplacePrintFunction(self.display_frame.replace_last_line)
         setStartTimer(self.display_frame.startTimer)
         setStopTimer(self.display_frame.stopTimer)
-        
+    
+    def askChangeConstraintsWidth(self):
+        dialog = customtkinter.CTkInputDialog(text=f"Enter constrains_frame width weight:\n(Current weight: {self.constraints_frame_weight_width}):")
+        x = dialog.get_input()
+        try:
+            self.constraints_frame_weight_width = int(x)
+            self.grid_columnconfigure(0, weight=self.constraints_frame_weight_width)
+        except:
+            print('Invalid input')
+    
+    def askChangeConstraintsHeight(self):
+        dialog = customtkinter.CTkInputDialog(text=f"Enter constrains_frame height weight:\n(Current weight: {self.constraints_frame_weight_height}):")
+        x = dialog.get_input()
+        try:
+            self.constraints_frame_weight_height = int(x)
+            self.grid_rowconfigure(0, weight=self.constraints_frame_weight_height)
+        except:
+            print('Invalid input')
+    
+    def askChangeDisplayHeight(self):
+        dialog = customtkinter.CTkInputDialog(text=f"Enter display_frame height weight:\n(Current weight: {self.display_frame_weight_height}):")
+        x = dialog.get_input()
+        try:
+            self.display_frame_weight_height = int(x)
+            self.grid_rowconfigure(1, weight=self.display_frame_weight_height)
+        except:
+            print('Invalid input')
+    
     def handleEventCopy(self):
         try:
             pyperclip.copy(self.display_frame.textbox.selection_get())
