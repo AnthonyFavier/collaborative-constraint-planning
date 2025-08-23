@@ -1176,14 +1176,16 @@ def RefineUserIntent(state: DecompositionState):
 def SaveUserIntentClearMessages(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: SaveUserIntentClearMessages")
+        
+    refined_user_intent = state['messages'][-1].content
     
     mprint(chat_separator)
     mprint('AI: Refined user intent Below\n')
-    mprint(state['refined_user_intent'])
+    mprint(refined_user_intent)
     
     messages_to_remove = state["messages"]
     remove_instructions = [RemoveMessage(id=m.id) for m in messages_to_remove]
-    return {'refined_user_intent': state['messages'][-1].content, "messages": remove_instructions} # Return as part of a state update
+    return {'refined_user_intent': refined_user_intent, "messages": remove_instructions} # Return as part of a state update
 
 #NODE
 def Decompose(state: DecompositionState):
