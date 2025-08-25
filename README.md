@@ -24,7 +24,7 @@ source env_cai/bin/activate
 
 ```
 pip install --upgrade pip -r requirements.txt --no-cache-dir
-sudo apt-get install openjdk-17-jdk python3.10-tk
+sudo apt-get install openjdk-17-jdk python3.10-tk unifont
 ```
 
 Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
