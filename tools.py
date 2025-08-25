@@ -148,6 +148,10 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     return encodingOk: Bool, error_description: str
     """
     
+    msg = "Can't find tag <"
+    if filteredEncoding[:len(msg)]==msg:
+        return filteredEncoding
+    
     # Keyword
     PDDL_keywords =[
         ':constraints',

@@ -953,8 +953,11 @@ def Encode(state: EncodingState):
     llm = reasonning_llm
     msg = call(llm, state['e_messages'])
     answer = extractAITextAnswer(msg)
-    encoding = tools.extractTag('pddl', answer)
-    encoding = tools.initialFixes(encoding)
+    try:
+        encoding = tools.extractTag('pddl', answer)
+        encoding = tools.initialFixes(encoding)
+    except Exception as err:
+        encoding = err.args[0]
     
     encodingE2NL = state["encodingE2NL"]
     encodingE2NL.encoding = Encoding(encoding=encoding)
