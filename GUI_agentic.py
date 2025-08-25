@@ -1089,6 +1089,7 @@ class App(customtkinter.CTk):
         
         optionsmenu = Menu(menubar, tearoff=0)
         optionsmenu.add_command(label="Toggle E2NL", command=self.buttons_frame.toggleE2NL)
+        optionsmenu.add_command(label="Toggle Review E2NL", command=self.buttons_frame.toggleReviewE2NL)
         menubar.add_cascade(label="Options", menu=optionsmenu)
         
         suggestionsmenu = Menu(menubar, tearoff=0)
