@@ -1037,6 +1037,7 @@ def BackTranslation(state: EncodingState):
     return {'e_messages': [ai_msg], "encodingE2NL": encodingE2NL}
 
 #NODE
+REVIEW_E2NL = True
 def UserReviewE2NL(state: EncodingState):
     global USER_INTERACTION_LOCK
     if 'PRINT_NODES'in globals():
@@ -1048,11 +1049,13 @@ def UserReviewE2NL(state: EncodingState):
     
     # Ask user for review
     USER_INTERACTION_LOCK.acquire()
-    user_review = minput(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n')
-    if user_review.lower()=='':
-        mprint("User: yes")
-    else:
-        mprint("User: " + user_review)
+    user_review = ''
+    if REVIEW_E2NL:
+        user_review = minput(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n')
+        if user_review.lower()=='':
+            mprint("User: yes")
+        else:
+            mprint("User: " + user_review)
     USER_INTERACTION_LOCK.release()
     # user_review = interrupt(txt+'\n\nAre you satisfied with the back translation? If not, provide any desired feedback for me to consider.\n> ')
     

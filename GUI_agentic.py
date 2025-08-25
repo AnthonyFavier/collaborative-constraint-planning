@@ -611,7 +611,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
     def toggleE2NL(self):
         CAI.WITH_E2NL = not CAI.WITH_E2NL
-        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+    def toggleReviewE2NL(self):
+        agentic_constraint.REVIEW_E2NL = not agentic_constraint.REVIEW_E2NL
         
     def toggleDecomps(self):
         self.master.constraints_frame.toggleDecomps()
