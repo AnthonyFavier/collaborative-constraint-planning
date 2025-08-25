@@ -406,7 +406,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         # self.activateE2NLButton()
         
-        startTimer()
+        # startTimer()
         
         mprint("\n=== ADDING CONSTRAINT ===")
         time_total = time.time()
@@ -456,7 +456,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             # self.master.plan_frame.export()
             
             
-        stopTimer()
+        # stopTimer()
         
             
         
@@ -710,6 +710,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         agentic_constraint.Chat()
         
         self.master.enableAllButtons()
+        mprint("\n=== END CHAT ===")
         
     
     def riskAnalysisT(self):
@@ -726,6 +727,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         # mprint('SUGGESTIONS:\n'+answer)
         
         self.master.enableAllButtons()
+        mprint("\n=== END RISK ANALYSIS ===")
         
     def _wrapperTimer(self, function, *args, **kwargs):
         r = function(*args, **kwargs)
