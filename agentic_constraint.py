@@ -479,7 +479,7 @@ from manual_plan_generation import simulatePlan
 def simulatePlanTool(plan: str, metric: str) -> str:
     """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
     print('    Tool call: simulatePlanTool')
-    feedback = simulatePlan(DOMAIN_PATH, PROBLEM_PATH, plan, metric, separator_plan=' ', is_numered=False)
+    feedback = simulatePlan(DOMAIN_PATH, PROBLEM_PATH, plan, metric)
     return feedback
 
 ################

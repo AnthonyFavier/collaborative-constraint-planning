@@ -3,38 +3,36 @@ from unified_planning.shortcuts import *
 from unified_planning.plans import ActionInstance, SequentialPlan
 
     
-def simulatePlan(domain_path, problem_path, txt_plan, metric_name, separator_plan=' ', is_numered=False):
+def simulatePlan(domain_path, problem_path, txt_plan, metric_name):
     txt = ''
     reader = PDDLReader()
     problem = reader.parse_problem(domain_path, problem_path)
     
-    # Convert plan
-    plan = []
-    for line in txt_plan.splitlines():
-        if line.find(';')!=-1:
-            line,_ = line.split(';')
-        if line.strip()=='':
+    # convert plan
+    txt_plan = txt_plan.split('\n')
+    actions = []
+    for l in txt_plan:
+        if ''.join(l.split())=='':
             continue
-        if is_numered:
-            _, action_str = line.split(": ")
-        else:
-            action_str = line
-        name, *params = action_str.strip("()").split(separator_plan)
-        action = problem.action(name)
-        up_objects = [problem.object(p.lower()) for p in params]
-        plan.append(ActionInstance(action, up_objects))
-    plan = SequentialPlan(plan)
-
-    # Check if plan valid
-    # with PlanValidator(name="tamer") as validator:
-    #     result = validator.validate(problem, plan)
-    #     txt += result
+        l = l[l.find("(")+1 : l.find(")") ]
+        l = ' '.join(l.split('_'))
+        l = l.split(' ')
+        name = l[0]
+        params = l[1:]
+        actions.append( (name, *params) )
+    up_plan = []
+    for a in actions:
+        name, *params = a
+        up_action = problem.action(name)
+        up_params = [problem.object(p.lower()) for p in params]
+        up_plan.append(ActionInstance(up_action, up_params))
+    up_plan = SequentialPlan(up_plan)
     
     # Simulate
     with SequentialSimulator(problem) as simulator:
         metric = FluentExp(problem.fluent(metric_name))
         state = simulator.get_initial_state()
-        for ai in plan.actions:
+        for ai in up_plan.actions:
             new_state = simulator.apply(state, ai)
             if new_state==None:
                 break
