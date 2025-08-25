@@ -1686,7 +1686,7 @@ def setup_agentic_constraint(domain_path=None, problem_path=None, plan_path=None
 
 def TranslateUserInput(user_input):
     input_state = DecompositionState({"messages": [HumanMessage(content=user_input)], "user_input": user_input})
-    final_state = translation_subgraph.invoke(input_state)
+    final_state = translation_subgraph.invoke(input_state, {'recursion_limit': 100})
     encodings = final_state['encodingsE2NL']
     if PRINT_RESULTS := False:
         mprint(f"\nUser input:\n {user_input}")
@@ -1742,7 +1742,7 @@ def NewRisk():
     new_risk_subgraph.invoke(FailureDetectionState(first_loop=True, deeper_analysis=False), {'recursion_limit': 100})
 
 def Chat():
-    chat_subgraph.invoke(ChatState())
+    chat_subgraph.invoke(ChatState(),  {'recursion_limit': 100})
 
 def testTopNode(mode="general_question"):
     
