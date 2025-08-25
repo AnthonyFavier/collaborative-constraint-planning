@@ -16,9 +16,9 @@ def createActionStr(name, *parameters):
     paramstr = paramstr[:-1]
     
     action_str = f"""  - id:
-    name: {name}
+    name: {name.lower()}
     parameters:
-""" + paramstr + """
+""" + paramstr.lower() + """
     startTime: -1
     endTime: -1
 """
