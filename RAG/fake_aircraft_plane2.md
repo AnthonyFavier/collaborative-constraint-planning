@@ -130,7 +130,7 @@
 ### 9. Restrictions from Last Technical Check
 
 * Unusual minor degradation on right wing.
-* This plane should never operate at full speed.
+* This plane should not operate at full speed until further notice.
 
 ---
 

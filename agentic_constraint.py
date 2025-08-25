@@ -91,7 +91,7 @@ def set_up_rag():
     print('Loading documents ... ', end='', flush=True)
     # mprint('Loading documents ... ')
 
-    DOCUMENT_PATH = "documents/"
+    DOCUMENT_PATH = "RAG/"
     files = [
         # Fake reports
         {
@@ -112,7 +112,7 @@ def set_up_rag():
             "description": "INTERNAL REPORT: JOHN F. KENNEDY INTERNATIONAL AIRPORT (JFK)",
         },
         {
-            "path": DOCUMENT_PATH+"fake_report1.md", 
+            "path": DOCUMENT_PATH+"fake_urban_tree_health.md", 
             "description": "FIELD REPORT - Urban Tree Health Monitoring - Spring Assessment 2025",
         },
         {
@@ -1682,11 +1682,12 @@ def TranslateUserInput(user_input):
     input_state = DecompositionState({"messages": [HumanMessage(content=user_input)], "user_input": user_input})
     final_state = translation_subgraph.invoke(input_state)
     encodings = final_state['encodingsE2NL']
-    mprint(f"\nUser input:\n {user_input}")
-    for e in encodings:
-        mprint(f'• {e.constraint}')
-        mprint(f'  → {e.e2nl.e2nl}')
-        mprint(f'    → {e.encoding.encoding}')
+    if PRINT_RESULTS := False:
+        mprint(f"\nUser input:\n {user_input}")
+        for e in encodings:
+            mprint(f'• {e.constraint}')
+            mprint(f'  → {e.e2nl.e2nl}')
+            mprint(f'    → {e.encoding.encoding}')
 
     return encodings
 
