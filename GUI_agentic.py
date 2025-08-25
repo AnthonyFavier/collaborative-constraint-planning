@@ -54,7 +54,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         self.bind('<Enter>', self._bound_to_mousewheel)
         self.bind('<Leave>', self._unbound_to_mousewheel)
         
-        self.show_decomps = False
+        self.show_decomps = True
         self.show_encodings = False
         self.show_checkboxes = False
         
@@ -1131,6 +1131,8 @@ class App(customtkinter.CTk):
         setReplacePrintFunction(self.display_frame.replace_last_line)
         setStartTimer(self.display_frame.startTimer)
         setStopTimer(self.display_frame.stopTimer)
+        
+        # agentic_constraint.draw_graph()
     
     def askChangeConstraintsWidth(self):
         dialog = customtkinter.CTkInputDialog(text=f"Enter constrains_frame width weight:\n(Current weight: {self.constraints_frame_weight_width}):")
