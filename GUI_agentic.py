@@ -1054,11 +1054,11 @@ class App(customtkinter.CTk):
         photo = ImageTk.PhotoImage(im)
         self.wm_iconphoto(True, photo)
         
-        self.constraints_frame_weight_width = 1
+        self.constraints_frame_weight_width = 2
         self.constraints_frame_weight_height = 1
-        self.display_frame_weight_height = 1
+        self.display_frame_weight_height = 20
         
-        self.grid_columnconfigure(0, weight=self.constraints_frame_weight_height)
+        self.grid_columnconfigure(0, weight=self.constraints_frame_weight_width)
         self.grid_columnconfigure(1, weight=0)
         self.grid_columnconfigure(2, weight=1)
         self.grid_rowconfigure(0, weight=self.constraints_frame_weight_height)
