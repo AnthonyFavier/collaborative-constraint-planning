@@ -534,7 +534,7 @@ def retrieve_with_metadata(query: str) -> str:
             f"</chunk_{i+1}>\n"
         )
     output = "\n".join(formatted_chunks)
-    logger.info('output: ' + formatted_chunks)
+    logger.info('output: ' + output)
     return output
 
 from manual_plan_generation import simulatePlan
