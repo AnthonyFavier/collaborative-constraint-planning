@@ -858,15 +858,16 @@ class PlanFrame(customtkinter.CTkFrame):
         self.grid_rowconfigure(4, weight=1)
         i_self_row+=1
         
-        self.buttons_frame = customtkinter.CTkFrame(self)
-        self.buttons_frame.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
-        i_self_row+=1
-        self.buttons_frame.grid_columnconfigure(0, weight=1)
+        # self.buttons_frame = customtkinter.CTkFrame(self)
+        # self.buttons_frame.grid(row=i_self_row, column=0, padx=10, pady=10, sticky="nsew")
+        # i_self_row+=1
+        # self.buttons_frame.grid_columnconfigure(0, weight=1)
         # self.buttons_frame.grid_columnconfigure(1, weight=1)
         
         font_main_buttons = ("Arial", 18, "bold")
-        self.buttons['plan'] = customtkinter.CTkButton(self.buttons_frame, text="Plan", font=font_main_buttons, command=self.master.buttons_frame.planT, width=80)
-        self.buttons['plan'].grid(row=0, column=0, padx=10, pady=10)
+        self.buttons['plan'] = customtkinter.CTkButton(self, text="Plan", font=font_main_buttons, command=self.master.buttons_frame.planT, width=80)
+        self.buttons['plan'].grid(row=i_self_row, column=0, padx=10, pady=10)
+        i_self_row+=1
         
         # self.buttons['export'] = customtkinter.CTkButton(self.buttons_frame, text="Export", command=self.export, width=80)
         # self.buttons['export'].grid(row=0, column=1, padx=10, pady=10)
