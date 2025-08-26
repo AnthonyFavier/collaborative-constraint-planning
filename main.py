@@ -22,6 +22,9 @@ def main(problem_name, planning_mode, timeout):
     # FOR ABLATION 
     # AblationSetting.apply(AblationSetting.DIRECT)
     
+    # Logging
+    setupLogger()
+    
     # Init CAI 
     CAI.init(problem_name, planning_mode, timeout)
     # CAI.CM.load('validated.json)
