@@ -612,8 +612,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def toggleE2NL(self):
         CAI.WITH_E2NL = not CAI.WITH_E2NL
         self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+    def activateE2NL(self):
+        CAI.WITH_E2NL = True
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+    def deactivateE2NL(self):
+        CAI.WITH_E2NL = False
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+        
     def toggleReviewE2NL(self):
         agentic_constraint.REVIEW_E2NL = not agentic_constraint.REVIEW_E2NL
+    def activateReviewE2NL(self):
+        agentic_constraint.REVIEW_E2NL = True
+    def deactivateReviewE2NL(self):
+        agentic_constraint.REVIEW_E2NL = False
         
     def toggleDecomps(self):
         self.master.constraints_frame.toggleDecomps()
@@ -1087,10 +1098,13 @@ class App(customtkinter.CTk):
         constraintsmenu.add_command(label="Activate/Deactivate", command=self.buttons_frame.activate)
         menubar.add_cascade(label="Constraints", menu=constraintsmenu)
         
-        optionsmenu = Menu(menubar, tearoff=0)
-        optionsmenu.add_command(label="Toggle E2NL", command=self.buttons_frame.toggleE2NL)
-        optionsmenu.add_command(label="Toggle Review E2NL", command=self.buttons_frame.toggleReviewE2NL)
-        menubar.add_cascade(label="Options", menu=optionsmenu)
+        e2nlmenu = Menu(menubar, tearoff=0)
+        e2nlmenu.add_command(label="Activate E2NL", command=self.buttons_frame.activateE2NL)
+        e2nlmenu.add_command(label="Deactivate E2NL", command=self.buttons_frame.deactivateE2NL)
+        e2nlmenu.add_separator()
+        e2nlmenu.add_command(label="Activate Review E2NL", command=self.buttons_frame.activateReviewE2NL)
+        e2nlmenu.add_command(label="Deactivate Review E2NL", command=self.buttons_frame.deactivateReviewE2NL)
+        menubar.add_cascade(label="E2NL", menu=e2nlmenu)
         
         suggestionsmenu = Menu(menubar, tearoff=0)
         suggestionsmenu.add_command(label="Generate suggestions", command=self.plan_frame.generateSuggestionsT)
@@ -1098,13 +1112,11 @@ class App(customtkinter.CTk):
         menubar.add_cascade(label="Suggestions", menu=suggestionsmenu)
         
         viewmenu = Menu(menubar, tearoff=0)
-        def toggleAll():
-            self.buttons_frame.toggleDecomps()
-            self.buttons_frame.toggleEncodings()
-        viewmenu.add_command(label="Toggle all", command=toggleAll)
+        viewmenu.add_command(label="Show decomps", command=self.constraints_frame.showDecomps)
+        viewmenu.add_command(label="Hide decomps", command=self.constraints_frame.hideDecomps)
         viewmenu.add_separator()
-        viewmenu.add_command(label="Toggle decomps", command=self.buttons_frame.toggleDecomps)
-        viewmenu.add_command(label="Toggle encodings", command=self.buttons_frame.toggleEncodings)
+        viewmenu.add_command(label="Show encodings", command=self.constraints_frame.showEncodings)
+        viewmenu.add_command(label="Hide encodings", command=self.constraints_frame.hideEncodings)
         viewmenu.add_separator()
         viewmenu.add_command(label="Change constraints width weight", command=self.askChangeConstraintsWidth)
         viewmenu.add_command(label="Change constraints height weight", command=self.askChangeConstraintsHeight)
