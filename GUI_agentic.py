@@ -842,7 +842,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.write_previous_lock = threading.Lock()
         self.previous_textbox = customtkinter.CTkTextbox(self, wrap='char', font=PlanFrame.plan_font)
         self.printPrevious("None")
-        self.previous_textbox.configure(height=98)
+        self.previous_textbox.configure(height=65)
         self.previous_textbox.grid(row=i_self_row, column=0, padx=10, pady=2, sticky="nsew")
         # self.grid_rowconfigure(2, weight=1)
         i_self_row+=1
