@@ -1,4 +1,7 @@
 import numeric_tcore.parsing_extensions as ntcore_parsing_ext
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 def filterEncoding(encodedPref):
     
@@ -150,6 +153,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
     
     msg = "Can't find tag <"
     if filteredEncoding[:len(msg)]==msg:
+        print(f"[VERIFIER]'\n{filteredEncoding}")
+        logger.info(f"[VERIFIER]'\n{filteredEncoding}")
         return filteredEncoding
     
     # Keyword
@@ -215,8 +220,8 @@ def verifyEncoding(updatedProblem, domain, filteredEncoding):
             except:
                 try: assert x[0]=='?'
                 except:
-                    print('[VERIFIER]')
-                    print(f"{x} is not supported")
+                    print(f"[VERIFIER]\n{x} is not supported")
+                    logger.info(f"[VERIFIER]'\n{x} is not supported")
                     # print('\t'+filteredEncoding)
                     return f"{x} is not a supported PDDL keyword or part of problem description."
                 

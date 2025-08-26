@@ -1,3 +1,8 @@
+import logging
+from datetime import datetime
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 PROBLEMS = {
     "zeno0":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile0.pddl"),
     "zeno1":        ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile1.pddl"),
@@ -88,6 +93,7 @@ def mprint(txt, end="\n"):
     if SHELL_PRINTS:
         print(txt, end=end)
     if GUI_PROMPT:
+        logger.info(txt)
         myprint(txt, end=end)
 def setPrintFunction(print_function):
     global myprint
@@ -106,6 +112,7 @@ def setReplacePrintFunction(replace_print_function):
 myinput = lambda x: None
 def minput(txt=""):
     if GUI_PROMPT:
+        logger.info(txt)
         return myinput(txt=txt)
     elif SHELL_PRINTS:
         return input(txt)
@@ -126,3 +133,28 @@ def setStopTimer(f):
     mstopTimer = f
 def stopTimer():
     mstopTimer()
+
+class ModuleFilter(logging.Filter):
+    def __init__(self, allowed_modules):
+        super().__init__()
+        self.allowed = allowed_modules
+
+    def filter(self, record):
+        return record.name in self.allowed
+    
+def setupLogger():
+    # log filename
+    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
+    filename = f'logs/log__{date}.log' 
+    
+    # Only log agentic_constraint, tools and defs modules
+    allowed_modules = ["agentic_constraint", "tools", "defs"]
+    handler = logging.FileHandler(filename, encoding='utf-8')
+    handler.setLevel(logging.INFO)
+    handler.addFilter(ModuleFilter(allowed_modules))
+
+    # Remove other handlers if present
+    root_logger = logging.getLogger()
+    root_logger.handlers = []
+    root_logger.addHandler(handler)
+    root_logger.setLevel(logging.INFO)

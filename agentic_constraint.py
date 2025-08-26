@@ -1,3 +1,7 @@
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 #######################
 #### LOAD API KEYS ####
 #######################
@@ -353,12 +357,15 @@ import json
 def ask_clarifying_question(question: str) -> str:
     """Ask the user the clarifying question given as input and returns the user answer."""
     print('    Tool call: ask_clarifying_question')
+    logger.info('    Tool call: ask_clarifying_question')
+    logger.info('inputs:\n-question: ' + str(question))
     mprint(chat_separator)
     q = minput("AI: "+question+'\n')
     if q.lower() == '':
         q='yes'
     mprint(chat_separator)
     mprint("User: " + q)
+    logger.info('output: ' + q)
     return q
 
 #search_tool = TavilySearch(max_results=2)
@@ -367,6 +374,9 @@ def ask_clarifying_question(question: str) -> str:
 def basic_plan_analysis(plan: str) -> str:
     """Receives a plan and computes a few basic caracterics such as number of steps and each action occurence."""
     print('    Tool call: basic_plan_analysis')
+    logger.info('    Tool call: basic_plan_analysis')
+    logger.info('inputs:\n-plan: ' + str(plan))
+    
     nb_step = len(plan.splitlines())
     nb_step_text = f"Number of steps = {nb_step}"
     
@@ -380,23 +390,33 @@ def basic_plan_analysis(plan: str) -> str:
     for a in actions:
         actions_text += f'- {a}: {plan.count(a)}\n'
     actions_text = actions_text[:-1]
+    
+    output = nb_step_text + "\n" + actions_text
+    logger.info('output: ' + output)
         
-    return nb_step_text + "\n" + actions_text
+    return output
     
 @tool
 def count_number_step_in_plan(plan: str) -> int:
     """Count the number of steps or actions in a given plan."""
     print('    Tool call: count_number_step_in_plan')
-    return len(plan.splitlines())
+    logger.info('    Tool call: count_number_step_in_plan')
+    logger.info('inputs:\n-plan: ' + str(plan))
+    output =  len(plan.splitlines())
+    logger.info('output: ' + output)
+    return output
 
 @tool
 def count_action_occurrence(plan: str, action:str) -> int:
     """Count the occurence of a specific action based on its exact name and parameters formatted as '<action_name> <param1> <param2>...'. If only '<action_name>' is provided, all occurrences will be counted, regarless of the different action parameters."""
     print('    Tool call: count_action_occurrence')
+    logger.info('    Tool call: count_action_occurrence')
+    logger.info('inputs:\n-plan: ' + str(plan) + '\n-action: ' + str(action))
     n = 0
     for l in plan.splitlines():
         if action in l:
             n+=1
+    logger.info('output: ' + n)
     return n
 
 BASE_URL = 'https://api.api-ninjas.com/v1/'
@@ -410,6 +430,8 @@ def buildURL(category, params):
 def get_current_weather_city(city: str):
     """Get the accurate real time weather of a given city. The weather includes the following: temperature, humidity, wind speed, and wind direction."""
     print('    Tool call: get_current_weather_city - city: ' + city)
+    logger.info('    Tool call: get_current_weather_city - city: ' + city)
+    logger.info('inputs:\n-city: ' + str(city))
     
     # get city loc
     category = 'city'
@@ -445,6 +467,7 @@ Current weather at {city}:
     else:
         mprint("Error:", response.status_code, response.text)
         
+    logger.info('output: ' + weather_text)
     return weather_text
 
 # Built-in RETRIEVAL TOOL
@@ -461,6 +484,9 @@ def build_retriever_tool(retriever):
 def retrieve_with_metadata(query: str) -> str:
     """Retriever tool able to extract content from available documents that is relevant to the given query."""
     print('    Tool call: RAG - query: ' + query)
+    logger.info('    Tool call: RAG')
+    logger.info('inputs:\n-query: ' + str(query))
+    
     results = retriever.invoke(query)
     formatted_chunks = []
 
@@ -472,14 +498,19 @@ def retrieve_with_metadata(query: str) -> str:
             f"Content: {doc.page_content}\n"
             f"</chunk_{i+1}>\n"
         )
-    return "\n".join(formatted_chunks)
+    output = "\n".join(formatted_chunks)
+    logger.info('output: ' + formatted_chunks)
+    return output
 
 from manual_plan_generation import simulatePlan
 @tool
 def simulatePlanTool(plan: str, metric: str) -> str:
     """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
     print('    Tool call: simulatePlanTool')
+    logger.info('    Tool call: simulatePlanTool')
+    logger.info('inputs:\n-plan: ' + str(plan) + '\n-metric: ' + str(metric))
     feedback = simulatePlan(DOMAIN_PATH, PROBLEM_PATH, plan, metric)
+    logger.info('output: ' + feedback)
     return feedback
 
 ################
@@ -554,6 +585,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
         print('Node: GenerateRAGQuery')
+        logger.info('Node: GenerateRAGQuery')
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -589,6 +621,8 @@ def Retrieval(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
         print('Node: Retrieval')
+        logger.info('Node: Retrieval')
+        
         
     # For now directly call retriever tool
     # Future: bind tool to LLM and do an LLM call?
@@ -606,6 +640,7 @@ def AdditionalRetrieval(state: FailureDetectionState):
 
     if 'PRINT_NODES'in globals():
         print('Node: AdditionalRetrieval')
+        logger.info('Node: AdditionalRetrieval')
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -649,6 +684,7 @@ def AdditionalRetrieval(state: FailureDetectionState):
 def GenerateAnswer(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
         print('Node: GenerateAnswer')
+        logger.info('Node: GenerateAnswer')
         
     GENERATE_ANSWER_PROMPT = (
         "Use the previous pieces of retrieved context to identify possible risk of failure of the plan. "
@@ -671,6 +707,7 @@ def GenerateAnswer(state: FailureDetectionState):
 def MakeSuggestions(state: FailureDetectionState):
     if 'PRINT_NODES'in globals():
         print('Node: MakeSuggestions')
+        logger.info('Node: MakeSuggestions')
         
     SUGGESTION_PROMPT = (
         "Based on your last answer about the risks of failure, reason and give me concrete temporal constraints applicable to the PDDL problem. "
@@ -729,6 +766,7 @@ def RiskRetrieval(state: FailureDetectionState):
     
     if 'PRINT_NODES'in globals():
         print('Node: RiskRetrieval')
+        logger.info('Node: RiskRetrieval')
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -770,6 +808,7 @@ def RiskAskDeeper(state: FailureDetectionState):
     
     if 'PRINT_NODES'in globals():
         print('Node: RiskAskDeeper')
+        logger.info('Node: RiskAskDeeper')
     
     USER_INTERACTION_LOCK.acquire()
     
@@ -814,6 +853,7 @@ def RiskQuestion(state: FailureDetectionState):
     
     if 'PRINT_NODES'in globals():
         print('Node: RiskQuestion')
+        logger.info('Node: RiskQuestion')
     
     h_msg = HumanMessage(content=state['user_question'])
     if state['first_loop']:
@@ -834,6 +874,7 @@ def RiskDeeperAnalysis(state: FailureDetectionState):
     
     if 'PRINT_NODES'in globals():
         print('Node: RiskDeeperAnalysis')
+        logger.info('Node: RiskDeeperAnalysis')
         
     ADD_RETRIEVAL_PROMPT = (
         "Conduct a deeper and wider risk analysis based on the external data available. "
@@ -919,6 +960,7 @@ def Encode(state: EncodingState):
 
     if 'PRINT_NODES'in globals():
         print('Node: Encode')
+        logger.info('Node: Encode')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -970,6 +1012,7 @@ def Encode(state: EncodingState):
 def Verifier(state: EncodingState):
     if 'PRINT_NODES'in globals():
         print('Node: Verifier')
+        logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
     updatedProblem = tools.updateProblem(g_problem, [encoding])
@@ -1002,6 +1045,7 @@ def RoutingVerifier(state: EncodingState):
 def BackTranslation(state: EncodingState):
     if 'PRINT_NODES'in globals():
         print('Node: BackTranslation')
+        logger.info('Node: BackTranslation')
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -1042,6 +1086,7 @@ def UserReviewE2NL(state: EncodingState):
     global USER_INTERACTION_LOCK
     if 'PRINT_NODES'in globals():
         print('Node: UserReviewE2NL')
+        logger.info('Node: UserReviewE2NL')
   
     
     # Show Data: constraint and back-translation
@@ -1107,6 +1152,7 @@ def RoutingUserReviewBackTranslation(state: EncodingState):
 def SaveEncoding(state: EncodingState):
     if 'PRINT_NODES'in globals():
         print('Node: SaveEncoding')
+        logger.info('Node: SaveEncoding')
     
     return {'encodingsE2NL': [state["encodingE2NL"]]}
     
@@ -1154,6 +1200,7 @@ def RefineUserIntent(state: DecompositionState):
     
     if 'PRINT_NODES'in globals():
         print("Node: RefineUserIntent")
+        logger.info("Node: RefineUserIntent")
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -1182,6 +1229,7 @@ def RefineUserIntent(state: DecompositionState):
 def SaveUserIntentClearMessages(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: SaveUserIntentClearMessages")
+        logger.info("Node: SaveUserIntentClearMessages")
         
     refined_user_intent = state['messages'][-1].content
     
@@ -1202,6 +1250,7 @@ def Decompose(state: DecompositionState):
     
     if 'PRINT_NODES'in globals():
         print("Node: Decompose")
+        logger.info("Node: Decompose")
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -1270,6 +1319,7 @@ def VerifyDecomposition(state: DecompositionState):
     
     if 'PRINT_NODES'in globals():
         print("Node: VerifyDecomposition")
+        logger.info("Node: VerifyDecomposition")
     
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
@@ -1360,6 +1410,7 @@ def UserReviewDecomposition(state: DecompositionState):
     
     if 'PRINT_NODES'in globals():
         print("Node: UserReviewDecomposition")
+        logger.info("Node: UserReviewDecomposition")
     
     # Format and Show decomposition
     decomposition_str = "\nDecomposition:\n"
@@ -1431,6 +1482,7 @@ def RoutingUserReviewDecomposition(state: DecompositionState):
 def Orchestrator(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: Orchestrator")
+        logger.info("Node: Orchestrator")
     mprint(chat_separator)
     mprint("Encoding ... \n")
     return {}
@@ -1452,6 +1504,7 @@ def assign_encoding_workers(state: DecompositionState):
 def Merge(state: DecompositionState):
     if 'PRINT_NODES'in globals():
         print("Node: Merge")
+        logger.info("Node: Merge")
     return {}
 
 #### BUILD ####
@@ -1522,6 +1575,7 @@ chat_separator = "-----------------------------"
 def ChatGetUserInput(state: ChatState):
     if 'PRINT_NODES'in globals():
         print("Node: ChatGetUserInput")
+        logger.info("Node: ChatGetUserInput")
         
     question = minput()
     mprint(chat_separator)
@@ -1538,6 +1592,7 @@ def ChatCondEnd(state: ChatState):
 def ChatAnswer(state: ChatState):
     if 'PRINT_NODES'in globals():
         print("Node: Chat")
+        logger.info("Node: Chat")
         
     SYSTEM_PROMPT = (
         "You are a helpful PDDL planning expert and assistant. "
