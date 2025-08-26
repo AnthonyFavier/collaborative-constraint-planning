@@ -1119,6 +1119,11 @@ class App(customtkinter.CTk):
         planmenu.add_command(label="Change plan timeout", command=self.buttons_frame.changeTimeout)
         menubar.add_cascade(label="Planning", menu=planmenu)
         
+        weathermenu = Menu(menubar, tearoff=0)
+        weathermenu.add_command(label="Activate fake weather", command=agentic_constraint.activateFakeWeather)
+        weathermenu.add_command(label="Deactivate fake weather", command=agentic_constraint.deactivateFakeWeather)
+        menubar.add_cascade(label="Weather", menu=weathermenu)
+        
         self.config(menu=menubar)
         
         # TODO: Escape also kills child threads
