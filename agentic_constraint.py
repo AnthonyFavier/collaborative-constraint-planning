@@ -968,7 +968,7 @@ def build_new_risk_subgraph():
         tools_condition,
         {
             "tools": "RiskAskDeeperTools",
-            END: END,
+            END: "RiskAskDeeper",
         }
     )
     new_risk_subgraph_builder.add_edge("RiskAskDeeperTools", "RiskDeeperAnalysis")
