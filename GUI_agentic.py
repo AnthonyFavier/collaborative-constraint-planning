@@ -1213,8 +1213,8 @@ class App(customtkinter.CTk):
         menubar.add_cascade(label="Planning", menu=planmenu)
         
         weathermenu = Menu(menubar, tearoff=0)
-        weathermenu.add_command(label="Activate fake weather", command=agentic_constraint.activateFakeWeather)
-        weathermenu.add_command(label="Deactivate fake weather", command=agentic_constraint.deactivateFakeWeather)
+        weathermenu.add_command(label="Activate fake Boston weather", command=agentic_constraint.activateFakeWeather)
+        weathermenu.add_command(label="Deactivate fake Boston weather", command=agentic_constraint.deactivateFakeWeather)
         menubar.add_cascade(label="Weather", menu=weathermenu)
         
         helpmenu = Menu(menubar, tearoff=0)
