@@ -567,6 +567,7 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     from scipy.stats import mannwhitneyu
     data_p = {}
     for to in timeout_values:
+        print(f'TO=', to)
         
         for d in data_original:
             if d['timeout']==to:
@@ -590,10 +591,16 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         _data_random = random_d['metrics']['all']
         _data_human = human_d['metrics']['all']
         
+        print('Normality (O,R,H): ', end=' ')
+        print(testNormality(_data_original), end=' ')
+        print(testNormality(_data_random), end=' ')
+        print(testNormality(_data_human), end=' ')
+        print(' ')
+        
         random_original = mannwhitneyu(_data_random, _data_original, alternative='less')[1]
         human_original = mannwhitneyu(_data_human, _data_original, alternative='less')[1]
         human_random = mannwhitneyu(_data_human, _data_random, alternative='less')[1]
-        print(f'TO=', to)
+        print('Comparison tests: ')
         print(f'\tR better than O: {random_original<0.05} ({random_original})')
         print(f'\tH better than O: {human_original<0.05} ({human_original})')
         print(f'\tH better than R: {human_random<0.05} ({human_random})')
@@ -798,6 +805,18 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
     plt.tight_layout()
     plt.show()
     exit()
+
+# Normality
+from scipy.stats import normaltest
+def testNormality(data):
+    r = normaltest(data)
+    # if r[1] < 0.05:
+    #     print('Reject the null hypothesis of normal distribution. (No normal distribution)')
+    #     print(f'P-value is {r[1]}.')
+    # else:
+    #     print('Fail to reject the null hypothesis of normal distribution. (suggest normal distribution)')
+    #     print(f'P-value is {r[1]}.')
+    return r[1]
 
 ##################
 ### MAIN + CLI ###
