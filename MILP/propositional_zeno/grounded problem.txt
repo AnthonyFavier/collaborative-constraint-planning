@@ -1,0 +1,86 @@
+grounded problem
+
+## fluents (grounded/instantiated predicates)
+
+
+(located ?x - locatable  ?c - city)
+(in ?p - person ?a - aircraft)
+
+plane1 - aircraft
+person1 - person
+city1 - city
+city2 - city
+
+=>
+(located_person1_city2)
+(in_person1_plane1)
+(located_person1_city1)
+(located_plane1_city1)
+(located_plane1_city2)
+
+
+######################################
+
+
+""" ACTIONS len=8
+actions = [
+  action board_person1_plane1_city1 { # a1
+    preconditions = [
+      located_person1_city1
+      located_plane1_city1
+    ]
+    effects = [
+      located_person1_city1 := false
+      in_person1_plane1 := true
+    ]
+  }
+  action board_person1_plane1_city2 {
+    preconditions = [
+      located_person1_city2
+      located_plane1_city2
+    ]
+    effects = [
+      located_person1_city2 := false
+      in_person1_plane1 := true
+    ]
+  }
+  action debark_person1_plane1_city1 {
+    preconditions = [
+      in_person1_plane1
+      located_plane1_city1
+    ]
+    effects = [
+      in_person1_plane1 := false
+      located_person1_city1 := true
+    ]
+  }
+  action debark_person1_plane1_city2 { # a3
+    preconditions = [
+      in_person1_plane1
+      located_plane1_city2
+    ]
+    effects = [
+      in_person1_plane1 := false
+      located_person1_city2 := true
+    ]
+  }
+  action flyslow_plane1_city1_city2 { # a2
+    preconditions = [
+      located_plane1_city1
+    ]
+    effects = [
+      located_plane1_city1 := false
+      located_plane1_city2 := true
+    ]
+  }
+  action flyslow_plane1_city2_city1 {
+    preconditions = [
+      located_plane1_city2
+    ]
+    effects = [
+      located_plane1_city2 := false
+      located_plane1_city1 := true
+    ]
+  }
+]
+"""
