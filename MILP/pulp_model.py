@@ -4,7 +4,6 @@ from pb_zeno import *
 # from pb_blocks import *
 # from pb_log import *
 
-   
 ############
 ## NO-OPS ##
 ############
@@ -14,31 +13,6 @@ for f in Vp:
     del_p[f'noop_{f}'] = set()
     add_p[f'noop_{f}'] = {f}
 
-def generatePND(actions, Vp):
-    pnd = {}
-    for p in Vp:
-        pnd[p] = []
-        for a in actions:
-            if p in pre_p[a] and p not in del_p[a]:
-                pnd[p].append(a)
-    return pnd
-def generateANP(actions, Vp):
-    anp = {}
-    for p in Vp:
-        anp[p] = []
-        for a in actions:
-            if p not in pre_p[a] and p in add_p[a]:
-                anp[p].append(a)
-    return anp
-def generatePD(actions, Vp):
-    pd = {}
-    for p in Vp:
-        pd[p] = []
-        for a in actions:
-            if p in pre_p[a] and p in del_p[a] and p not in add_p[a]:
-                pd[p].append(a)
-    return pd
-# 
 def generatePreF(actions, Vp):
     pref = {}
     for f in Vp:
@@ -64,10 +38,6 @@ def generateDelF(actions, Vp):
                 delf[f] = delf[f].union({a})
     return delf
 
-pnd = generatePND(actions, Vp) # require and don't delete p
-anp = generateANP(actions, Vp) # add and don't require p
-pd = generatePD(actions, Vp) # require and delete p
-# 
 pref = generatePreF(actions, Vp) # actions with p in preconditions
 addf = generateAddF(actions, Vp) # actions with p in add effects
 delf = generateDelF(actions, Vp) # actions with p in del effects
@@ -85,8 +55,8 @@ def export_constraints(constraints):
             file.write(f'{c}: {constraints[c]}\n')
 
 # Working with all problems! But wrong parallel actions for zeno
-def vossen_fluent(T):
-    global x
+def vossen2011_fluent(T):
+    global y
 
     ###########
     ## MODEL ##
@@ -97,17 +67,17 @@ def vossen_fluent(T):
     ###############
     ## VARIABLES ##
     ###############
-    x = {}
-    for a in actions:
-        x[a] = {}
-        for i in range(1, T+1):
-            x[a][i] = LpVariable(f'x_{a}_{i}', cat='Binary')
-            
     y = {}
+    for a in actions:
+        y[a] = {}
+        for i in range(1, T+1):
+            y[a][i] = LpVariable(f'x_{a}_{i}', cat='Binary')
+            
+    x = {}
     for f in Vp:
-        y[f] = {}
+        x[f] = {}
         for i in range(1, T+2):
-            y[f][i] = LpVariable(f'y_{f}_{i}', cat='Binary')
+            x[f][i] = LpVariable(f'y_{f}_{i}', cat='Binary')
     
             
     ###############
@@ -118,7 +88,7 @@ def vossen_fluent(T):
         for a in actions:
             if 'noop' not in a:
                 for t in range(1, T+1):
-                    L.append(x[a][t])
+                    L.append(y[a][t])
         m += lpSum(L)
     
     obj_nb_actions_wo_noop(m)
@@ -131,24 +101,24 @@ def vossen_fluent(T):
     # Initial/Goal State
     for f in Vp:
         if f in I:
-            m += y[f][1] == 1
+            m += x[f][1] == 1
         else:
-            m += y[f][1] == 0
+            m += x[f][1] == 0
         
         if f in Gp:
-            m += y[f][T+1] == 1
+            m += x[f][T+1] == 1
     
     
     # Precondition
     for f in Vp:
         for a in pref[f]:
             for i in range(1, T+1):
-                m += x[a][i] <= y[f][i]
+                m += y[a][i] <= x[f][i]
                 
     # Explanatory Frame Conditions Backward chaining 
     for i in range(1, T+1):
         for f in Vp:
-            m += y[f][i+1] <= lpSum(x[a][i] for a in addf[f])
+            m += x[f][i+1] <= lpSum(y[a][i] for a in addf[f])
             
     # Conflict Exclusion Constraints
     for a1 in actions:
@@ -156,7 +126,7 @@ def vossen_fluent(T):
             for f in Vp:
                 if a1 != a2 and a1 in delf[f] and a2 in pref[f].union(addf[f]):
                     for i in range(1, T+1):
-                        m += x[a1][i] + x[a2][i] <= 1
+                        m += y[a1][i] + y[a2][i] <= 1
     
     #############
     ## SOLVING ##
@@ -177,17 +147,17 @@ def vossen_fluent(T):
                     
             file.write(f"\n-- FLUENTS --\n")
             for f in Vp:
-                file.write(f'{y[f][t]} = {y[f][t].value()}\n')
+                file.write(f'{x[f][t]} = {x[f][t].value()}\n')
             
             if t!=T+1:
                 file.write(f"\n-- ACTIONS --\n")
                 for a in actions:
-                    file.write(f'{x[a][t]} = {x[a][t].value()}\n')
+                    file.write(f'{y[a][t]} = {y[a][t].value()}\n')
     return m
 
 import sys
 time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 2
-m = vossen_fluent(time_horizon)
+m = vossen2011_fluent(time_horizon)
 
 ######################
 ## EXTRACT SOLUTION ##
@@ -205,14 +175,14 @@ else:
     for t in range(1, time_horizon+1):
         time_stamp_txt = f'{t}: '
         print(time_stamp_txt, end='')
-        for a in x:
+        for a in y:
             if t not in plan:
                 plan[t] = []
                 
-            if x[a][t].value():
+            if y[a][t].value():
                 spaces = '' if len(plan[t])==0 else ' '*(len(time_stamp_txt))
                 
-                action_name = str(x[a][t])
+                action_name = str(y[a][t])
                 action_name = action_name[action_name.find('_')+1:action_name.rfind('_')]
                 if 'noop' in action_name:
                     action_name = "<"+action_name+">"
