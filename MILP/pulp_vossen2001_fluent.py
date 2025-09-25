@@ -71,13 +71,13 @@ def vossen2011_fluent(T):
     for a in actions:
         y[a] = {}
         for i in range(1, T+1):
-            y[a][i] = LpVariable(f'x_{a}_{i}', cat='Binary')
+            y[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary')
             
     x = {}
     for f in Vp:
         x[f] = {}
         for i in range(1, T+2):
-            x[f][i] = LpVariable(f'y_{f}_{i}', cat='Binary')
+            x[f][i] = LpVariable(f'x_{f}_{i}', cat='Binary')
     
             
     ###############
@@ -147,28 +147,32 @@ def vossen2011_fluent(T):
                     
             file.write(f"\n-- FLUENTS --\n")
             for f in Vp:
-                file.write(f'{x[f][t]} = {x[f][t].value()}\n')
+                file.write(f'{x[f][t]} = {round(x[f][t].value())}\n')
             
             if t!=T+1:
                 file.write(f"\n-- ACTIONS --\n")
                 for a in actions:
-                    file.write(f'{y[a][t]} = {y[a][t].value()}\n')
+                    file.write(f'{y[a][t]} = {round(y[a][t].value())}\n')
     return m
 
 import sys
-time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 2
+time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 3
 m = vossen2011_fluent(time_horizon)
 
 ######################
 ## EXTRACT SOLUTION ##
 ######################
 
+from boxprint import boxprint
+
+boxprint(f'Problem name: {problem_name}')
+
+boxprint(f'Time horizon: {time_horizon}')
+
 if m.status!=1:
-    print("[ERROR]")
-    print('Problem: ', LpStatus[m.status])
-    print('Solution: ', LpSolution[m.sol_status])
+    boxprint(f'Problem: {LpStatus[m.status]}', mode='d')
 else:
-    print(f'[{LpSolution[m.sol_status]}]')
+    boxprint(LpSolution[m.sol_status])
     
     plan = {}
     print("plan:")

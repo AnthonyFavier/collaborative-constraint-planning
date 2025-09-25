@@ -1,6 +1,13 @@
 #################
-## PROBLEM INFO ##
-##################
+## DOMAIN INFO ##
+#################
+
+problem_name = 'Simple logistics'
+
+
+#############
+## FLUENTS ##
+#############
 
 Vp = [
     "at_p1_loc1",
@@ -10,14 +17,9 @@ Vp = [
     "in_p1_t1",
 ]
 
-I = [
-    "at_p1_loc1",
-    "at_t1_loc1",
-]
-
-Gp = [
-	"at_p1_loc2"
-]
+#############
+## ACTIONS ##
+#############
 
 actions = []
 pre_p = {}
@@ -39,3 +41,16 @@ pre_p["drive_t1_loc1_loc2"] = {"at_t1_loc1"}
 del_p["drive_t1_loc1_loc2"] = {"at_t1_loc1"}
 add_p["drive_t1_loc1_loc2"] = {"at_t1_loc2"}
 
+
+#############
+## PROBLEM ##
+#############
+
+I = [
+    "at_p1_loc1",
+    "at_t1_loc1",
+]
+
+Gp = [
+	"at_p1_loc2"
+]

@@ -2,6 +2,8 @@
 ## DOMAIN INFO ##
 #################
 
+problem_name = 'Simple blocks'
+
 #############
 ## FLUENTS ##
 #############

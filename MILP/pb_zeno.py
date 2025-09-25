@@ -2,6 +2,8 @@
 ## DOMAIN INFO ##
 #################
 
+problem_name = 'Simple zeno'
+
 #############
 ## FLUENTS ##
 #############
@@ -13,6 +15,10 @@ Vp = [
     "located_plane1_city1",
     "located_plane1_city2",
 ]
+
+#############
+## ACTIONS ##
+#############
 
 actions = []
 pre_p = {}
