@@ -7,11 +7,11 @@ from pb_zeno import *
 ############
 ## NO-OPS ##
 ############
-for f in Vp:
-    actions.append(f'noop_{f}')
-    pre_p[f'noop_{f}'] = {f}
-    del_p[f'noop_{f}'] = set()
-    add_p[f'noop_{f}'] = {f}
+# for f in Vp:
+#     actions.append(f'noop_{f}')
+#     pre_p[f'noop_{f}'] = {f}
+#     del_p[f'noop_{f}'] = set()
+#     add_p[f'noop_{f}'] = {f}
 
 def generatePreF(actions, Vp):
     pref = {}
@@ -91,15 +91,14 @@ def vossen2011_state_change(T):
     ###############
     ## OBJECTIVE ##
     ###############
-    def obj_nb_actions_wo_noop(m):
+    def obj_nb_actions(m):
         L = []
         for a in actions:
-            if 'noop' not in a:
-                for t in range(1, T+1):
-                    L.append(y[a][t])
+            for t in range(1, T+1):
+                L.append(y[a][t])
         m += lpSum(L)
     
-    obj_nb_actions_wo_noop(m)
+    obj_nb_actions(m)
         
         
     #################
@@ -220,10 +219,11 @@ else:
                 
                 action_name = str(y[a][t])
                 action_name = action_name[action_name.find('_')+1:action_name.rfind('_')]
-                if 'noop' in action_name:
-                    action_name = "<"+action_name+">"
                     
                 plan[t].append( action_name )
                 
                 print(f'{spaces}{action_name}')
+                
+        if plan[t] == []:
+            print('<noop>')
                 
