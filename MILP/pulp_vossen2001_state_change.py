@@ -1,17 +1,20 @@
 from pulp import *
+from boxprint import boxprint
 
-from pb_zeno import *
+# from pb_zeno import *
 # from pb_blocks import *
 # from pb_log import *
 
-############
-## NO-OPS ##
-############
-# for f in Vp:
-#     actions.append(f'noop_{f}')
-#     pre_p[f'noop_{f}'] = {f}
-#     del_p[f'noop_{f}'] = set()
-#     add_p[f'noop_{f}'] = {f}
+domain_filename = "classical-domains/classical/blocks/domain.pddl"
+problem_filename = "classical-domains/classical/blocks/probBLOCKS-7-0.pddl"
+
+# domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
+# problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
+
+from convert_pddl import load_pddl
+loaded_problem = load_pddl(domain_filename, problem_filename, show = False)
+Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
+
 
 def generatePreF(actions, Vp):
     pref = {}
