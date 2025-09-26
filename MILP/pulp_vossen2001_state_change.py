@@ -178,15 +178,15 @@ def vossen2011_state_change(T):
             file.write(f"\n-- FLUENTS --\n")
             for f in Vp:
                 if f!=Vp[0]: file.write('\n')
-                file.write(f'{x_m[f][t]} = {round(x_m[f][t].value())}\n')
-                file.write(f'{x_pa[f][t]} = {round(x_pa[f][t].value())}\n')
-                file.write(f'{x_pd[f][t]} = {round(x_pd[f][t].value())}\n')
-                file.write(f'{x_a[f][t]} = {round(x_a[f][t].value())}\n')
+                file.write(f'{x_m[f][t]} = {round(x_m[f][t].value()) if x_m[f][t].value()!=None else None}\n')
+                file.write(f'{x_pa[f][t]} = {round(x_pa[f][t].value()) if x_pa[f][t].value()!=None else None}\n')
+                file.write(f'{x_pd[f][t]} = {round(x_pd[f][t].value()) if x_pd[f][t].value()!=None else None}\n')
+                file.write(f'{x_a[f][t]} = {round(x_a[f][t].value()) if x_a[f][t].value()!=None else None}\n')
             
             if t!=0:
                 file.write(f"\n-- ACTIONS --\n")
                 for a in actions:
-                    file.write(f'{y[a][t]} = {round(y[a][t].value())}\n')
+                    file.write(f'{y[a][t]} = {round(y[a][t].value())  if y[a][t].value()!=None else None}\n')
     return m
 
 import sys
