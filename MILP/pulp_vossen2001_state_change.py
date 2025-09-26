@@ -157,9 +157,12 @@ def build_model(T):
 #############
 ## SOLVING ##
 #############
-def solve(m, solver_name="PULP_CBC_CMD"):
+def solve(m, sol_gap, solver_name="PULP_CBC_CMD"):
+    if sol_gap!=None:
+        sol_gap = float(sol_gap)
+    
     print(f'[{datetime.now()}] Start solving ... ')
-    solver = getSolver(solver_name)
+    solver = getSolver(solver_name, gapRel=sol_gap)
     t1 = time.time()
     m.solve(solver=solver)
     print(f'elapsed: {time.time()-t1:.2f}s')
@@ -252,7 +255,8 @@ def extract_solution(m, time_horizon):
 @click.option('--tmin', 'T_min', default=1)
 @click.option('--tmax', 'T_max', default=200)
 @click.option('-t', '--timehorizon', 'T_user', default=None)
-def main(T_min, T_max, T_user):
+@click.option('--gap', 'sol_gap', default=None)
+def main(T_min, T_max, T_user, sol_gap):
     t1 = time.time()
     load_problem()
     print(f"[Loading Problem: {time.time()-t1:.2f}s]")
@@ -269,7 +273,7 @@ def main(T_min, T_max, T_user):
         m = build_model(T)
         print(f"[Building Model: {time.time()-t1:.2f}s]")
         
-        solve(m, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
+        solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
         if m.status==1:
             solved=True
