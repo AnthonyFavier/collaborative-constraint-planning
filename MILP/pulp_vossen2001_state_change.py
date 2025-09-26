@@ -107,7 +107,7 @@ def vossen2011_state_change(T):
     
     # Initial/Goal State
     for f in Vp:
-        if f in I:
+        if f in Ip:
             # (10)
             x_a[f][0] = 1
         else:

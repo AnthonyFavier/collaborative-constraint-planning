@@ -45,7 +45,7 @@ add_p["stack_A_B"] = {"clear_A", "handempty", "on_A_B"}
 ## PROBLEM ##
 #############
 
-I = [
+Ip = [
     "clear_A",
     "clear_B",
     "ontable_A",

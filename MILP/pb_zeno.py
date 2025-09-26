@@ -48,7 +48,7 @@ add_p["debark_person1_plane1_city2"] = {"located_person1_city2"}
 ## PROBLEM ##
 #############
 
-I = [
+Ip = [
     "located_person1_city1",
     "located_plane1_city1",
 ]

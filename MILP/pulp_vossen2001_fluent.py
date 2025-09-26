@@ -100,7 +100,7 @@ def vossen2011_fluent(T):
     
     # Initial/Goal State
     for f in Vp:
-        if f in I:
+        if f in Ip:
             m += x[f][1] == 1
         else:
             m += x[f][1] == 0
