@@ -66,7 +66,7 @@ def load_problem():
 #################
 ## BUILD MODEL ##
 #################
-def build_model(T, sequential):
+def build_model_vossen2001_state_change_prop(T, sequential):
     global y, x_m, x_pa, x_pd, x_a
     
     t1 = time.time()
@@ -165,6 +165,100 @@ def build_model(T, sequential):
     print(f"[Building Model: {time.time()-t1:.2f}s]")
     return m      
 
+def build_model_piacentini2018_state_change_prop(T, sequential):
+    
+    t1 = time.time()
+    print('Building model...')
+
+    ###########
+    ## MODEL ##
+    ###########
+    m = LpProblem(sense=LpMinimize)
+ 
+
+    ###############
+    ## VARIABLES ##
+    ###############
+    u = {}
+    for a in actions:
+        u[a] = {}
+        for i in range(0, T):
+            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            
+    u_m = {} 
+    u_pa = {}
+    u_pd = {}
+    u_a = {}
+    for f in Vp:
+        u_m[f] = {}
+        u_pa[f] = {}
+        u_pd[f] = {}
+        u_a[f] = {}
+        for i in range(0, T+1):
+            u_m[f][i] = LpVariable(f'u_m_{f}_{i}', cat='Binary') # True if fluent is propagated (noop)
+            u_pa[f][i] = LpVariable(f'u_pa_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and doesn't delete it (maintainted/propagated)
+            u_pd[f][i] = LpVariable(f'u_pd_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and delete effect
+            u_a[f][i] = LpVariable(f'u_a_{f}_{i}', cat='Binary') # True if an action is executed at i and has f in add effect but not in precondition
+    
+            
+    ###############
+    ## OBJECTIVE ##
+    ###############
+    def obj_nb_actions(m):
+        L = []
+        for a in actions:
+            for t in range(0, T):
+                L.append(u[a][t])
+        m += lpSum(L)
+    obj_nb_actions(m)
+        
+        
+    #################
+    ## CONSTRAINTS ##
+    #################
+    
+    # Initial/Goal State
+    for f in Vp:
+        if f in Ip:
+            # (10)
+            m += u_a[f][0] == 1
+        else:
+            # (10)
+            m += u_a[f][0] == 0
+        m += u_m[f][0] == 0
+        m += u_pa[f][0] == 0
+        m += u_pd[f][0] == 0
+        
+    for f in Gp:
+        # (9)
+        m += u_a[f][T] + u_pa[f][T] + u_m[f][T] >= 1
+    
+    for f in Vp:
+        for i in range(0, T):
+            m += lpSum(u[a][i] for a in pref[f].difference(delf[f])) >= u_pa[f][i+1]
+            for a in pref[f].difference(delf[f]):
+                m += u[a][i] <= u_pa[f][i+1]
+            m += lpSum(u[a][i] for a in addf[f].difference(pref[f])) >= u_a[f][i+1]
+            for a in addf[f].difference(pref[f]):
+                m += u[a][i] <= u_a[f][i+1]
+            m += lpSum(u[a][i] for a in pref[f].intersection(delf[f])) == u_pd[f][i+1]
+            
+            m += u_pa[f][i+1] + u_m[f][i+1] + u_pd[f][i+1] <= u_a[f][i] + u_pa[f][i] + u_m[f][i]
+            
+            # (own)
+            if sequential:
+                m += lpSum(u[a][i] for a in actions) <= 1
+        
+        for i in range(0, T+1):
+            m += u_a[f][i] + u_m[f][i] + u_pd[f][i] <= 1
+            m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
+      
+    print(f"[Building Model: {time.time()-t1:.2f}s]")
+    
+    global y 
+    y = u
+    return m      
+
 
 #############
 ## SOLVING ##
@@ -239,7 +333,8 @@ def extract_solution(m, time_horizon):
         
         plan = {}
         print("plan:")
-        for t in range(1, time_horizon+1): # for vossen
+        for t in range(0, time_horizon): # for piacentini
+        # for t in range(1, time_horizon+1): # for vossen
             time_stamp_txt = f'{t}: '
             print(time_stamp_txt, end='')
             for a in y:
@@ -281,7 +376,8 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
     while not solved and T<=T_max:
         boxprint(f"Solving with T={T}")
         
-        m = build_model_vossen2001_state_change_prop(T, sequential)
+        # m = build_model_vossen2001_state_change_prop(T, sequential)
+        m = build_model_piacentini2018_state_change_prop(T, sequential)
         
         solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
