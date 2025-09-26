@@ -6,6 +6,7 @@ import itertools
 from boxprint import boxprint
 
 def load_pddl(domain_filename, problem_filename, show=False, solve=False):
+    up.shortcuts.get_environment().credits_stream = None
     
     #############
     ## PARSING ##
