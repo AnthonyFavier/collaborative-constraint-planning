@@ -13,6 +13,9 @@ def load_problem():
     global Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp
     global pref, addf, delf
     
+    t1 = time.time()
+    print('Loading problem...')
+    
     # from pb_zeno import *
     # from pb_blocks import *
     # from pb_log import *
@@ -58,12 +61,16 @@ def load_problem():
     addf = generateAddF(actions, Vp) # actions with p in add effects
     delf = generateDelF(actions, Vp) # actions with p in del effects
  
+    print(f"[Loading Problem: {time.time()-t1:.2f}s]")
  
 #################
 ## BUILD MODEL ##
 #################
-def build_model(T):
+def build_model(T, sequential):
     global y, x_m, x_pa, x_pd, x_a
+    
+    t1 = time.time()
+    print('Building model...')
 
     ###########
     ## MODEL ##
@@ -150,7 +157,12 @@ def build_model(T):
             
             # (8)
             m += x_pa[f][i] + x_m[f][i] + x_pd[f][i] <= x_a[f][i-1] + x_pa[f][i-1] + x_m[f][i-1]
+            
+            # (own)
+            if sequential:
+                m += lpSum(y[a][i] for a in actions) <= 1
       
+    print(f"[Building Model: {time.time()-t1:.2f}s]")
     return m      
 
 
@@ -227,7 +239,7 @@ def extract_solution(m, time_horizon):
         
         plan = {}
         print("plan:")
-        for t in range(1, time_horizon+1):
+        for t in range(1, time_horizon+1): # for vossen
             time_stamp_txt = f'{t}: '
             print(time_stamp_txt, end='')
             for a in y:
@@ -256,10 +268,10 @@ def extract_solution(m, time_horizon):
 @click.option('--tmax', 'T_max', default=200)
 @click.option('-t', '--timehorizon', 'T_user', default=None)
 @click.option('--gap', 'sol_gap', default=None)
-def main(T_min, T_max, T_user, sol_gap):
-    t1 = time.time()
+@click.option('--seq', 'sequential', is_flag=True, default=False)
+@click.option('--export', 'export', is_flag=True, default=False)
+def main(T_min, T_max, T_user, sol_gap, sequential, export):
     load_problem()
-    print(f"[Loading Problem: {time.time()-t1:.2f}s]")
     
     if T_user!=None:
         T_min = T_max = int(T_user)
@@ -269,9 +281,7 @@ def main(T_min, T_max, T_user, sol_gap):
     while not solved and T<=T_max:
         boxprint(f"Solving with T={T}")
         
-        t1 = time.time()
-        m = build_model(T)
-        print(f"[Building Model: {time.time()-t1:.2f}s]")
+        m = build_model_vossen2001_state_change_prop(T, sequential)
         
         solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
@@ -281,8 +291,10 @@ def main(T_min, T_max, T_user, sol_gap):
             raise Exception(f"Max time horizon ({T_max}) reached.")
         else: 
             T+=1
-
-    export_internal(m, T)
+            
+    if export:
+        export_internal(m, T)
+        
     extract_solution(m, T)
 if __name__=='__main__':
     main()
