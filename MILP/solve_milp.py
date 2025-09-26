@@ -20,14 +20,14 @@ def load_problem():
     # from pb_blocks import *
     # from pb_log import *
 
-    domain_filename = "classical-domains/classical/blocks/domain.pddl"
-    problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
+    # domain_filename = "classical-domains/classical/blocks/domain.pddl"
+    # problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
 
     # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
     # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
 
     domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
-    problem_filename = 'classical-domains/classical/zenotravel/pfile5.pddl'
+    problem_filename = 'classical-domains/classical/zenotravel/pfile3.pddl'
 
     loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
     Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
