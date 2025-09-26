@@ -158,13 +158,13 @@ def build_model(T):
 ## SOLVING ##
 #############
 def solve(m, solver_name="PULP_CBC_CMD"):
-    boxprint(f'[{datetime.now()}] Start solving ... ')
+    print(f'[{datetime.now()}] Start solving ... ')
     solver = getSolver(solver_name)
     t1 = time.time()
     m.solve(solver=solver)
     print(f'elapsed: {time.time()-t1:.2f}s')
     
-    
+
 ############
 ## EXPORT ##
 ############
@@ -213,7 +213,7 @@ def export_internal(m, time_horizon):
 ######################
 def extract_solution(m, time_horizon):
 
-    boxprint(f'Problem name: {problem_name}')
+    boxprint(f'Problem name: {problem_name}\nNb Constraints: {m.numConstraints()}\nNb Variables: {m.numVariables()}')
 
     boxprint(f'Time horizon: {time_horizon}')
 
@@ -243,18 +243,42 @@ def extract_solution(m, time_horizon):
                     
             if plan[t] == []:
                 print('<noop>')
-        
+                
 
 ##########
 ## MAIN ##
 ##########
 @click.command()
-@click.argument('time_horizon', default=3)
-def main(time_horizon):
+@click.option('--tmin', 'T_min', default=1)
+@click.option('--tmax', 'T_max', default=200)
+@click.option('-t', '--timehorizon', 'T_user', default=None)
+def main(T_min, T_max, T_user):
+    t1 = time.time()
     load_problem()
-    m = build_model(time_horizon)
-    solve(m, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
-    export_internal(m, time_horizon)
-    extract_solution(m, time_horizon)
+    print(f"[Loading Problem: {time.time()-t1:.2f}s]")
+    
+    if T_user!=None:
+        T_min = T_max = int(T_user)
+        
+    solved = False
+    T = T_min
+    while not solved and T<=T_max:
+        boxprint(f"Solving with T={T}")
+        
+        t1 = time.time()
+        m = build_model(T)
+        print(f"[Building Model: {time.time()-t1:.2f}s]")
+        
+        solve(m, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
+        
+        if m.status==1:
+            solved=True
+        elif T==T_max:
+            raise Exception(f"Max time horizon ({T_max}) reached.")
+        else: 
+            T+=1
+
+    export_internal(m, T)
+    extract_solution(m, T)
 if __name__=='__main__':
     main()
