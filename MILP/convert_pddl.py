@@ -5,7 +5,7 @@ from unified_planning.engines import PlanGenerationResultStatus
 import itertools
 from boxprint import boxprint
 
-def load_pddl(domain_filename, problem_filename, show=False):
+def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     
     #############
     ## PARSING ##
@@ -42,14 +42,16 @@ def load_pddl(domain_filename, problem_filename, show=False):
     # print(problem)
 
     # with OneshotPlanner(problem_kind=problem.kind) as planner:
-    import time
-    t1=time.time()
-    with OneshotPlanner(problem_kind=problem.kind, 
-            optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
-    ) as planner:
-        result = planner.solve(problem)
-        print("%s returned: %s" % (planner.name, result.plan))
-    print(f"elapsed: {time.time()-t1:.2f}s")
+    if solve:
+        import time
+        t1=time.time()
+        with OneshotPlanner(problem_kind=problem.kind, 
+                optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
+        ) as planner:
+            result = planner.solve(problem)
+            print("%s returned: %s" % (planner.name, result.plan))
+            print('plan length= ', len(result.plan.actions))
+        print(f"elapsed: {time.time()-t1:.2f}s")
 
     #############
     ## FLUENTS ##

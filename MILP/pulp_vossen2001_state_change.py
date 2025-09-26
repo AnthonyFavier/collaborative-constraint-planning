@@ -12,7 +12,7 @@ problem_filename = "classical-domains/classical/blocks/probBLOCKS-7-0.pddl"
 # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
 
 from convert_pddl import load_pddl
-loaded_problem = load_pddl(domain_filename, problem_filename, show = False)
+loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
 Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
 
 
@@ -197,7 +197,7 @@ def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
 
 import sys
 time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 3
-m = vossen2011_state_change(time_horizon, solver_name='CPLEX_PY') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
+m = vossen2011_state_change(time_horizon, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
 
 ######################
 ## EXTRACT SOLUTION ##
