@@ -57,7 +57,7 @@ def export_constraints(constraints):
         for c in constraints:
             file.write(f'{c}: {constraints[c]}\n')
 
-def vossen2011_state_change(T):
+def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
     global y
 
     ###########
@@ -150,7 +150,13 @@ def vossen2011_state_change(T):
     #############
     ## SOLVING ##
     #############
-    m.solve()
+    from datetime import datetime
+    boxprint(f'[{datetime.now()}] Start solving ... ')
+    import time
+    solver = getSolver(solver_name)
+    t1 = time.time()
+    m.solve(solver=solver)
+    print(f'elapsed: {time.time()-t1:.2f}s')
     
     
     ############
@@ -191,13 +197,12 @@ def vossen2011_state_change(T):
 
 import sys
 time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 2
-m = vossen2011_state_change(time_horizon)
+m = vossen2011_state_change(time_horizon, solver_name='CPLEX_PY') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
 
 ######################
 ## EXTRACT SOLUTION ##
 ######################
 
-from boxprint import boxprint
 
 boxprint(f'Problem name: {problem_name}')
 
