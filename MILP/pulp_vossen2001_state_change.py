@@ -1,64 +1,69 @@
 from pulp import *
 from boxprint import boxprint
-
-# from pb_zeno import *
-# from pb_blocks import *
-# from pb_log import *
-
-domain_filename = "classical-domains/classical/blocks/domain.pddl"
-problem_filename = "classical-domains/classical/blocks/probBLOCKS-7-0.pddl"
-
-# domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
-# problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
-
 from convert_pddl import load_pddl
-loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
-Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
+from datetime import datetime
+import time
+import click
 
 
-def generatePreF(actions, Vp):
-    pref = {}
-    for f in Vp:
-        pref[f] = set()
-        for a in actions:
-            if f in pre_p[a]:
-                pref[f] = pref[f].union({a})
-    return pref
-def generateAddF(actions, Vp):
-    addf = {}
-    for f in Vp:
-        addf[f] = set()
-        for a in actions:
-            if f in add_p[a]:
-                addf[f] = addf[f].union({a})
-    return addf
-def generateDelF(actions, Vp):
-    delf = {}
-    for f in Vp:
-        delf[f] = set()
-        for a in actions:
-            if f in del_p[a]:
-                delf[f] = delf[f].union({a})
-    return delf
+##################
+## LOAD PROBLEM ##
+##################
+def load_problem():
+    global Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp
+    global pref, addf, delf
+    
+    # from pb_zeno import *
+    # from pb_blocks import *
+    # from pb_log import *
 
-pref = generatePreF(actions, Vp) # actions with p in preconditions
-addf = generateAddF(actions, Vp) # actions with p in add effects
-delf = generateDelF(actions, Vp) # actions with p in del effects
+    domain_filename = "classical-domains/classical/blocks/domain.pddl"
+    problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
+
+    # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
+    # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
+
+    domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
+    problem_filename = 'classical-domains/classical/zenotravel/pfile5.pddl'
+
+    loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
+    Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
+
+    def generatePreF(actions, Vp):
+        pref = {}
+        for f in Vp:
+            pref[f] = set()
+            for a in actions:
+                if f in pre_p[a]:
+                    pref[f] = pref[f].union({a})
+        return pref
+    def generateAddF(actions, Vp):
+        addf = {}
+        for f in Vp:
+            addf[f] = set()
+            for a in actions:
+                if f in add_p[a]:
+                    addf[f] = addf[f].union({a})
+        return addf
+    def generateDelF(actions, Vp):
+        delf = {}
+        for f in Vp:
+            delf[f] = set()
+            for a in actions:
+                if f in del_p[a]:
+                    delf[f] = delf[f].union({a})
+        return delf
+
+    pref = generatePreF(actions, Vp) # actions with p in preconditions
+    addf = generateAddF(actions, Vp) # actions with p in add effects
+    delf = generateDelF(actions, Vp) # actions with p in del effects
+ 
  
 #################
 ## BUILD MODEL ##
 #################
-
-def export_constraints(constraints):
-    with open('constraints.txt', 'w') as file:
-        file.write(f"-----------------------\n")
-        file.write(f"----- CONSTRAINTS -----\n")
-        file.write(f"-----------------------\n")
-        for c in constraints:
-            file.write(f'{c}: {constraints[c]}\n')
-
-def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
-    global y
+def build_model(T):
+    global y, x_m, x_pa, x_pd, x_a
 
     ###########
     ## MODEL ##
@@ -145,24 +150,31 @@ def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
             
             # (8)
             m += x_pa[f][i] + x_m[f][i] + x_pd[f][i] <= x_a[f][i-1] + x_pa[f][i-1] + x_m[f][i-1]
-            
-    
-    #############
-    ## SOLVING ##
-    #############
-    from datetime import datetime
+      
+    return m      
+
+
+#############
+## SOLVING ##
+#############
+def solve(m, solver_name="PULP_CBC_CMD"):
     boxprint(f'[{datetime.now()}] Start solving ... ')
-    import time
     solver = getSolver(solver_name)
     t1 = time.time()
     m.solve(solver=solver)
     print(f'elapsed: {time.time()-t1:.2f}s')
     
     
-    ############
-    ## EXPORT ##
-    ############
-    export_constraints(m.constraints)
+############
+## EXPORT ##
+############
+def export_internal(m, time_horizon):
+    with open('constraints.txt', 'w') as file:
+        file.write(f"-----------------------\n")
+        file.write(f"----- CONSTRAINTS -----\n")
+        file.write(f"-----------------------\n")
+        for c in m.constraints:
+            file.write(f'{c}: {m.constraints[c]}\n')
 
     with open('variables.txt', 'w') as file:
         file.write(f"\n-----------------\n")
@@ -176,7 +188,7 @@ def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
             file.write(f'x_pd_{f}_0 = {x_pd[f][0]}\n')
             file.write(f'x_a_{f}_0 = {x_a[f][0]}\n')
         
-        for t in range(1, T+1):
+        for t in range(1, time_horizon+1):
             file.write(f"\n-----------------\n")
             file.write(f"----- t = {t} -----\n")
             file.write(f"-----------------\n")
@@ -195,43 +207,54 @@ def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
                     file.write(f'{y[a][t]} = {round(y[a][t].value())  if y[a][t].value()!=None else None}\n')
     return m
 
-import sys
-time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 3
-m = vossen2011_state_change(time_horizon, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
 
 ######################
 ## EXTRACT SOLUTION ##
 ######################
+def extract_solution(m, time_horizon):
 
+    boxprint(f'Problem name: {problem_name}')
 
-boxprint(f'Problem name: {problem_name}')
+    boxprint(f'Time horizon: {time_horizon}')
 
-boxprint(f'Time horizon: {time_horizon}')
-
-if m.status!=1:
-    boxprint(f'Problem: {LpStatus[m.status]}', mode='d')
-else:
-    boxprint(LpSolution[m.sol_status])
-    
-    plan = {}
-    print("plan:")
-    for t in range(1, time_horizon+1):
-        time_stamp_txt = f'{t}: '
-        print(time_stamp_txt, end='')
-        for a in y:
-            if t not in plan:
-                plan[t] = []
-                
-            if y[a][t].value():
-                spaces = '' if len(plan[t])==0 else ' '*(len(time_stamp_txt))
-                
-                action_name = str(y[a][t])
-                action_name = action_name[action_name.find('_')+1:action_name.rfind('_')]
+    if m.status!=1:
+        boxprint(f'Problem: {LpStatus[m.status]}', mode='d')
+    else:
+        boxprint(LpSolution[m.sol_status])
+        
+        plan = {}
+        print("plan:")
+        for t in range(1, time_horizon+1):
+            time_stamp_txt = f'{t}: '
+            print(time_stamp_txt, end='')
+            for a in y:
+                if t not in plan:
+                    plan[t] = []
                     
-                plan[t].append( action_name )
-                
-                print(f'{spaces}{action_name}')
-                
-        if plan[t] == []:
-            print('<noop>')
-                
+                if y[a][t].value():
+                    spaces = '' if len(plan[t])==0 else ' '*(len(time_stamp_txt))
+                    
+                    action_name = str(y[a][t])
+                    action_name = action_name[action_name.find('_')+1:action_name.rfind('_')]
+                        
+                    plan[t].append( action_name )
+                    
+                    print(f'{spaces}{action_name}')
+                    
+            if plan[t] == []:
+                print('<noop>')
+        
+
+##########
+## MAIN ##
+##########
+@click.command()
+@click.argument('time_horizon', default=3)
+def main(time_horizon):
+    load_problem()
+    m = build_model(time_horizon)
+    solve(m, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
+    export_internal(m, time_horizon)
+    extract_solution(m, time_horizon)
+if __name__=='__main__':
+    main()
