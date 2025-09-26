@@ -78,7 +78,7 @@ def build_model(T):
     for a in actions:
         y[a] = {}
         for i in range(1, T+1):
-            y[a][i] = LpVariable(f'x_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            y[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
             
     x_m = {} 
     x_pa = {}
