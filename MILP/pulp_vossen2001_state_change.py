@@ -196,7 +196,7 @@ def vossen2011_state_change(T, solver_name="PULP_CBC_CMD"):
     return m
 
 import sys
-time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 2
+time_horizon = int(sys.argv[1]) if len(sys.argv)>=2 else 3
 m = vossen2011_state_change(time_horizon, solver_name='CPLEX_PY') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
 
 ######################
