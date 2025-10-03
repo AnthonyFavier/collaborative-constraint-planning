@@ -121,7 +121,7 @@ traitlets
 typing_extensions        
 typing-inspect           
 typing-inspection        
-unified-planning         
+# unified-planning         
 unstructured             
 unstructured-client      
 urllib3                  
@@ -130,4 +130,7 @@ webencodings
 wrapt                    
 xxhash                   
 yarl                     
-zstandard                
+zstandard             
+pulp
+gurobipy
+unified-planning[engines]

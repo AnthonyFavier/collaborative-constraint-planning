@@ -117,3 +117,9 @@ Problems and options can be listed using `python planner.py --help`
 You can either use the original files corresponding to the given problem name or plan using the last compiled files using `-c`.
 
 The planning mode used (i.e. optimal, satisficing, default) can be used using the respective options `-o`, `-s`, `-d`.
+
+## Notes for Mixed-Integer Liner Programming version
+
+need a preprocessing of the PDDL problem. 
+- Can't have '-' in fluent names, can be replaced with '_'.
+- Action effects must be linear expressiongs over Vn (numeric fluents). This implies to be careful with constant numeric fluents. For instance: `fly(?a, ?c1, ?c2)` with an effect `(decrease (fuel ?a) (* (distance ?c1 ?c2) (slow_burn ?a)))` is **FORBIDDEN**! Even if `(distance ?c1 ?c2)` and `(slow_burn ?a)` are constants they are numeric fluents leading to potential non-linear effects. Must be replaced with numeric values after grounding.

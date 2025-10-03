@@ -5,6 +5,38 @@ from unified_planning.engines import PlanGenerationResultStatus
 import itertools
 from boxprint import boxprint
 
+from sympy import expand, simplify
+from sympy.parsing.sympy_parser import parse_expr
+
+def normalize_equation(expr_str):
+    rel_ops = ['<=', '>=', '<', '>', '==', '!=']
+
+    expr_str = str(simplify(expr_str))
+    
+    for op in rel_ops:
+        if op in expr_str:
+            lhs_str, rhs_str = expr_str.split(op, 1)
+            lhs = parse_expr(lhs_str, evaluate=False)
+            rhs = parse_expr(rhs_str, evaluate=False)
+            
+            expr = expand(lhs - rhs)
+            
+            # Convert <, <= into >, >= by flipping sign
+            if op == '<':
+                expr = -expr
+                op = '>'
+            elif op == '<=':
+                expr = -expr
+                op = '>='
+            
+            # Expand and simplify
+            expr = simplify(expand(expr)).evalf()
+            
+            return f"{expr} {op} 0"
+    
+    # If no relational operator, just expand
+    return str(simplify(expand(parse_expr(expr_str, evaluate=False))))
+
 def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     up.shortcuts.get_environment().credits_stream = None
     
@@ -17,11 +49,9 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     #############
     ## COMPILE ##
     #############
-    with Compiler(
-        problem_kind=problem.kind,
-        compilation_kind=CompilationKind.GROUNDING,
-    ) as compiler:
-        compilation_result = compiler.compile(problem)
+    # with Compiler(name="fast-downward-grounder") as compiler:
+    with Compiler(name="up_grounder") as compiler:
+        compilation_result = compiler.compile(problem, CompilationKind.GROUNDING)
         problem = compilation_result.problem
 
     with Compiler(
@@ -30,7 +60,6 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     ) as compiler:
         compilation_result = compiler.compile(problem)
         problem = compilation_result.problem
-        
 
     with Compiler(
         problem_kind=problem.kind,
@@ -59,53 +88,126 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     #############
 
     Vp = []
+    Vn = []
     for f in problem.fluents:
         object_sets = []
         for s in f.signature:
             objects = [str(o) for o in problem.objects(s.type)]
             object_sets.append(objects)
-        
         combinations = list(itertools.product(*object_sets))
         for comb in combinations:
-            Vp.append( "_".join( [f.name]+list(comb) )  )
+            if f.type.is_bool_type(): # Propositional
+                Vp.append( "_".join( [f.name]+list(comb) )  )
+            if f.type.is_real_type(): # Numeric
+                Vn.append( "_".join( [f.name]+list(comb) )  )
 
 
     #############
     ## ACTIONS ##
     #############
 
-    actions = []
-    pre_p = {}
-    del_p = {}
-    add_p = {}
+    def contains_fluent(x):
+        for f in Vn:
+            if f in x:
+                return True
+        return False
+    
+    # k parameters from effects
+    k = {}
+    k_w = {}
+    for f in Vn:
+        k[f] = {}
+        k_w[f] = {}
+        for a in problem.actions:
+            k[f][a.name] = 0
+            k_w[f][a.name] = {}
+            for w in Vn:
+                k_w[f][a.name][w] = 0
+
+    # w parameters from goal and preconditions
+    w = {}
+    w_0 = {}
+
+    actions = {}
     for a in problem.actions:
-        
-        pre = []
+        actions[a.name] = {
+            'pre_p':set(),
+            'pre_n':set(),
+            'del':set(),
+            'add':set(),
+            'num':set(),
+        }
+
+
+        ## PRECONDITIONS ##
         for p in a.preconditions:
-            if p.is_fluent_exp() and p.type.is_bool_type():
-                p = str(p).replace('(','_').replace(', ','_').replace(')','')
-                pre.append(p)
+            if p.is_fluent_exp():
+                if p.type.is_bool_type():
+                    p = str(p).replace('(','_').replace(', ','_').replace(')','')
+                    actions[a.name]['pre_p'].add(p)
             else:
-                raise Exception("fluent type not supported")
+                c = normalize_equation(str(p))
+                c = str(c).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
+                actions[a.name]['pre_n'].add(c)
+                
+                w[c] = {}
+                for f in Vn:
+                    w[c][f] = 0
+
+                for x in c.replace(' ', '').split('+'):
+                    if contains_fluent(x):
+                        if '*' in x:
+                            w_value = float(x.split('*')[0])
+                            v = x.split('*')[1]
+                        else:
+                            w_value = 1
+                            v = x
+                        w[c][v] = w_value
+
+                    else:
+                        w_value = float(x)
+                        w_0[c] = w_value
+
         
-        add_eff = []
-        del_eff = []
+        ## EFFECTS ##
         for e in a.effects:
-            if e.is_assignment():
-                f = str(e.fluent).replace('(','_').replace(', ','_').replace(')','')
-                if e.value.is_true(): # Forced by NEGATIVE_CONDITIONS_REMOVING
-                    add_eff.append(f)
+            f = str(e.fluent).replace('(','_').replace(', ','_').replace(')','')
+
+            # Propositional effect
+            if e.fluent.type.is_bool_type():
+                assert e.is_assignment()
+                if e.value.is_true():
+                    actions[a.name]['add'].add(f)
                 else:
-                    del_eff.append(f)
+                    actions[a.name]['del'].add(f)
                     
-            elif e.is_increase() or e.is_decrease():
-                raise Exception("Effect type not supported...")
+            # Numeric effect
+            elif e.fluent.type.is_real_type():
+                value = str(e.value)
+                if e.is_increase():
+                    value = str(e.fluent) + ' + ' + value
+                elif e.is_decrease():
+                    value = str(e.fluent) + ' - ' + value
             
-        actions.append(a.name)
-        pre_p[a.name] = set(pre)
-        del_p[a.name] = set(del_eff)
-        add_p[a.name] = set(add_eff)
-        
+                exp = normalize_equation(str(value))
+                exp = str(exp).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
+                actions[a.name]['num'].add(f + ' := ' + exp)
+
+                for x in exp.replace(' ', '').split('+'):
+                    if contains_fluent(x):
+                        if '*' in x:
+                            k_value = float(x.split('*')[0])
+                            v = x.split('*')[1]
+                        else:
+                            k_value = 1
+                            v = x
+                        
+                        k_w[f][a.name][v] = k_value
+
+                    else:
+                        k_value = float(x)
+                        k[f][a.name] = k_value
+
 
     #############
     ## PROBLEM ##
@@ -146,6 +248,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         if f.is_fluent_exp() and f.type.is_bool_type():
             Gp.append(str(f).replace('(','_').replace(', ','_').replace(')',''))
         else:
+            c = normalize_equation(str(f))
             raise Exception("fluent type not supported")
         
     ############
@@ -155,9 +258,15 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     if show:
         boxprint(f'Problem name: {problem_name}')
         boxprint( boxprint('FLUENTS', show=False, mode='d') + '\n' + '\n'.join([f'- {gf}' for gf in Vp]))
-        boxprint( boxprint('ACTIONS', show=False, mode='d') + '\n' + '\n'.join( [f'- {a}\n\tpre: {list(pre_p[a])}\n\tdel: {list(del_p[a])}\n\tadd: {list(add_p[a])}' for a in actions] ) )
+        list_prep_p = list(actions[a]['prep_p'])
+        list_del_p = list(actions[a]['del_p'])
+        list_add_p = list(actions[a]['add_p'])
+        boxprint( 
+            boxprint('ACTIONS', show=False, mode='d') + 
+            '\n' + '\n'.join( [f'- {a}\n\tpre: {list_prep_p}\n\tdel: {list_del_p}\n\tadd: {list_add_p}' for a in actions] ) 
+        )
         boxprint( boxprint('INIT', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Ip] ) )
         boxprint( boxprint('GOAL', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Gp] ) )
         
-    return (Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp)
+    return (Vp, actions, problem_name, Ip, Gp)
     

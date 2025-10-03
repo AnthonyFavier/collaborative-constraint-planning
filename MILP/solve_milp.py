@@ -26,11 +26,17 @@ def load_problem():
     # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
     # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
 
-    domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
-    problem_filename = 'classical-domains/classical/zenotravel/pfile3.pddl'
+    # domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
+    # problem_filename = 'classical-domains/classical/zenotravel/pfile5.pddl'
 
-    loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
+    domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
+    problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
+
+    loaded_problem = load_pddl(domain_filename, problem_filename, show=True, solve=False)
     Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
+    Vp, actions, problem_name, Ip, Gp = loaded_problem
+
+    exit()
 
     def generatePreF(actions, Vp):
         pref = {}
