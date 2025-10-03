@@ -1,0 +1,60 @@
+\section{Simplified}
+
+Only simplified equations progressively, didn't use the known values. Used the initial values and propagated. Simplified the $x \ge 1$ to $x = 1$ and $x \le 0$ to $x = 0$. And replaced any equality, while keep the $u_{a,t}$ variables.
+
+\begin{align}
+& u_{a_1,2} + u^{m}_{p_1,3} = 1 \tag{2.1}\\
+% 
+& u^{m}_{p_0,0} + u^{pd}_{p_0,0} \le 1 \tag{8.1}\\
+& u_{a_3,0} + u^{m}_{p_0,1} \le 1 \tag{8.2}\\
+& u_{a_3,1} + u^{m}_{p_0,2} \le 1 \tag{8.3}\\
+& u^{m}_{p_1,0} + u^{pd}_{p_1,0} \le 1 \tag{8.5}\\
+& u_{a_1,0} + u^{m}_{p_1,1} + u_{a_3,0} \le 1 \tag{8.6}\\
+& u_{a_1,1} + u^{m}_{p_1,2} + u_{a_3,1} \le 1 \tag{8.7}\\
+& u^{m}_{p_2,1} + u_{a_1,0} \le 1 \tag{8.10}\\
+& u^{m}_{p_2,2} + u_{a_1,1} \le 1 \tag{8.11}\\
+& u^{m}_{p_2,3} + u_{a_1,2} \le 1 \tag{8.12}\\
+& u^{m}_{p_3,1} + u_{a_2,0} \le 1 \tag{8.14}\\
+& u^{m}_{p_3,2} + u_{a_2,1} \le 1 \tag{8.15}\\
+& u^{m}_{p_3,3} + u_{a_2,2} \le 1 \tag{8.16}\\
+& u^{m}_{p_4,0} + u^{pd}_{p_4,0} \le 1 \tag{8.17}\\
+& u_{a_2,0} + u^{m}_{p_4,1} \le 1 \tag{8.18}\\
+& u_{a_2,1} + u^{m}_{p_4,2} \le 1 \tag{8.19}\\
+& u_{a_2,2} + u^{m}_{p_4,3} \le 1 \tag{8.20}
+% 
+\end{align}
+\begin{align}
+% 
+& u^{pa}_{p_0,0} + u^{m}_{p_0,0} + u^{pd}_{p_0,0} \le 1 \tag{9.1}\\
+& u^{pa}_{p_1,0} + u^{m}_{p_1,0} + u^{pd}_{p_1,0} \le 1 \tag{9.5}\\
+& u^{m}_{p_1,1} + u_{a_3,0} \le 1 \tag{9.6}\\
+& u^{m}_{p_1,2} + u_{a_3,1} \le 1 \tag{9.7}\\
+& u^{m}_{p_2,1} + u_{a_1,0} \le 1 \tag{9.10}\\
+& u^{m}_{p_2,2} + u_{a_1,1} \le 1 \tag{9.11}\\
+& u^{m}_{p_2,3} + u_{a_1,2} \le 1 \tag{9.12}\\
+& u_{a_1,0} + u^{m}_{p_3,1} + u_{a_2,0} \le 1 \tag{9.14}\\
+& u_{a_1,1} + u^{m}_{p_3,2} + u_{a_2,1} \le 1 \tag{9.15}\\
+& u_{a_1,2} + u^{m}_{p_3,3} + u_{a_2,2} \le 1 \tag{9.16}\\
+& u^{pa}_{p_4,0} + u^{m}_{p_4,0} + u^{pd}_{p_4,0} \le 1 \tag{9.17}\\
+& u_{a_3,0} + u^{m}_{p_4,1} \le 1 \tag{9.18}\\
+& u_{a_3,1} + u^{m}_{p_4,2} \le 1 \tag{9.19}
+% 
+\end{align}
+\begin{align}
+% 
+& u^{m}_{p_0,1} \le u^{pa}_{p_0,0} + u^{m}_{p_0,0} \tag{11.1}\\
+& u^{m}_{p_0,2} \le u_{a_3,0} + u^{m}_{p_0,1} \tag{11.2}\\
+& u^{m}_{p_0,3} \le u_{a_3,1} + u^{m}_{p_0,2} \tag{11.3}\\
+& u^{m}_{p_1,1} + u_{a_3,0} \le u^{pa}_{p_1,0} + u^{m}_{p_1,0} \tag{11.4}\\
+& u^{m}_{p_1,2} + u_{a_3,1} \le u_{a_1,0} + u^{m}_{p_1,1} \tag{11.5}\\
+& u^{m}_{p_1,3} \le u_{a_1,1} + u^{m}_{p_1,2} \tag{11.6}\\
+& u^{m}_{p_2,1} + u_{a_1,0} \le 1 + u^{pa}_{p_2,0} \tag{11.7}\\
+& u^{m}_{p_2,2} + u_{a_1,1} \le u^{m}_{p_2,1} \tag{11.8}\\
+& u^{m}_{p_2,3} + u_{a_1,2} \le u^{m}_{p_2,2} \tag{11.9}\\
+& u_{a_1,0} + u^{m}_{p_3,1} + u_{a_2,0} \le 1 + u^{pa}_{p_3,0} \tag{11.10}\\
+& u_{a_1,1} + u^{m}_{p_3,2} + u_{a_2,1} \le u_{a_1,0} + u^{m}_{p_3,1} \tag{11.11}\\
+& u_{a_1,2} + u^{m}_{p_3,3} + u_{a_2,2} \le u_{a_1,1} + u^{m}_{p_3,2} \tag{11.12}\\
+& u_{a_3,0} + u^{m}_{p_4,1} \le u^{pa}_{p_4,0} + u^{m}_{p_4,0} \tag{11.13}\\
+& u_{a_3,1} + u^{m}_{p_4,2} \le u_{a_2,0} + u_{a_3,0} + u^{m}_{p_4,1} \tag{11.14}\\
+& u^{m}_{p_4,3} \le u_{a_2,1} + u_{a_3,1} + u^{m}_{p_4,2} \tag{11.15}
+\end{align}

@@ -1,0 +1,147 @@
+\documentclass[12pt, a4paper, twocolumn]{article} % Defines document class and options
+
+\usepackage{amsmath} % Loads the amsmath package for math
+
+\title{My First LaTeX Document}
+\author{Jane Q. Public}
+\date{\today}
+
+\begin{document}
+
+\maketitle % Generates the title
+
+\section{Introduction}
+
+\begin{align}
+\min\quad & \sum_{a\in A,\,t\in \mathcal{T}} cost_a\,u_{a,t} \tag{$SC(\Pi,T)$}\\[0.2cm]
+\text{s.t.}\quad 
+& u^a_{p,0} = I(p) && \forall p \in V_p \tag{1}\\
+& u^{a}_{p,T} + u^{pa}_{p,T} + u^{m}_{p,T} \ge 1 && \forall p \in G_p \tag{2}\\
+& \sum_{a\in pnd(p)} u_{a,t} \ge u^{pa}_{p,t+1} && \forall p\in V_p,\ \forall t\in \mathcal{T} \tag{3}\\
+& \sum_{a\in anp(p)} u_{a,t} \ge u^{a}_{p,t+1} && \forall p\in V_p,\ \forall t\in \mathcal{T} \tag{4}\\
+& \sum_{a\in pd(p)} u_{a,t} = u^{pd}_{p,t+1} && \forall p\in V_p,\ \forall t\in \mathcal{T} \tag{5}\\
+& u_{a,t} \le u^{pa}_{p,t+1} && \forall p\in V_p,\ \forall a\in pnd(p),\ \forall t\in \mathcal{T} \tag{6}\\
+& u_{a,t} \le u^{a}_{p,t+1} && \forall p\in V_p,\ \forall a\in anp(p),\ \forall t\in \mathcal{T} \tag{7}\\
+& u^{a}_{p,t} + u^{m}_{p,t} + u^{pd}_{p,t} \le 1 && \forall p\in V_p,\ \forall t\in \tilde{\mathcal{T}} \tag{8}\\
+& u^{pa}_{p,t} + u^{m}_{p,t} + u^{pd}_{p,t} \le 1 && \forall p\in V_p,\ \forall t\in \tilde{\mathcal{T}} \tag{9}\\
+& u_{a,t} + u_{a',t} \le 1 && \forall a,a' \in \tilde{A}\ \text{s.t. } a\neq a',\notag\\
+& & & del(a)\cap (add(a')\cup pre(a')) \neq \emptyset,\ \forall t\in\tilde{\mathcal{T}} \tag{10}\\
+& u^{pa}_{p,t+1} + u^{m}_{p,t+1} + u^{pd}_{p,t+1} \le u^{a}_{p,t} + u^{pa}_{p,t} + u^{m}_{p,t} 
+&& \forall p\in V_p,\ \forall t\in\mathcal{T} \tag{11}
+\end{align}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Variables:
+
+Actions
+$y_{a,i} \forall a \in actions \forall i \in \{1, T+1\}$
+
+fluents change
+$x^{m}_{f,i}, x^{pa}_{f,i}, x^{pd}_{f,i}, x^{a}_{f,i} \forall f \in Vp \forall i \in \{1, T+1\}$
+
+Initial state is set only with values, not variables. That is, $x^{m}_{f,0}, x^{pa}_{f,0}, x^{pd}_{f,0}, x^{a}_{f,0}$ are just values, not additional variables. Equalities are not added as additional constraints to model.
+
+
+
+\begin{align}
+& x^{a}_{f,0} = I(f) \forall f \in V_p\\
+& x^{m}_{f,0} = x^{pa}_{f,0} = x^{pd}_{f,0}= 0 \forall f \in V_p\\
+& x^{a}_{f,T} + x^{pa}_{f,T} + x^{m}_{f,T} \ge 1 && \forall f \in G_p
+\end{align}
+
+
+\begin{align}
+& \forall f \in Vp \forall i \in \{1, T+1\}\\
+% 
+& \sum_{a \in pref(f) \backslash delf(f)} y_{a,i} \ge x^{pa}_{f,i}\\
+& y_{a,i} \le x^{pa}_{f,i} \forall a\in pref(f) \backslash delf(f)\\
+& \sum_{a \in addf(f) \backslash pref(f)} y_{a,i} \ge x^{a}_{f,i}\\
+& y_{a,i} \le x^{a}_{f,i} \forall a\in addf(f) \backslash pref(f)\\
+& \sum_{a \in pref(f) \cap delf(f)} y_{a,i} = x^{pd}_{f,i}\\
+& x^{a}_{f,i} + x^{m}_{f,i} + x^{pd}_{f,i} \le 1\\
+& x^{pa}_{f,i} + x^{m}_{f,i} + x^{pd}_{f,i} \le 1\\
+& x^{pa}_{f,i} + x^{m}_{f,i} + x^{pd}_{f,i} \le x^{a}_{f,i-1} + x^{pa}_{f,i-1} + x^{m}_{f,i-1}\\
+& \sum_{a \in actions} y_{a,i} \le 1 (\text{Optional: sequential plan})
+\end{align}
+
+
+
+
+
+\section{Problem}
+
+\begin{align}
+& a_1 = \texttt{board\_p1\_pl1\_c1}\\
+& a_2 = \texttt{fly\_c1\_c2}\\
+& a_3 = \texttt{debark\_p1\_c2}\\
+% 
+& p_0 = \texttt{loc\_p1\_c2}\\
+& pnd(p_0) = \{  ... \}\\
+& anp(p_0) = \{ a_3 \}\\
+& pd(p_0) = \{ ... \}\\
+% 
+& p_1 = \texttt{in\_p1\_pl1}\\
+& pnd(p_1) = \{ ... \}\\
+& anp(p_1) = \{ a_1 \}\\
+& pd(p_1) = \{ a_3 \}\\
+% 
+& p_2 = \texttt{loc\_p1\_c1}\\
+& pnd(p_2) = \{ ... \}\\
+& anp(p_2) = \{ ... \}\\
+& pd(p_2) = \{ a1 \}\\
+% 
+& p_3 = \texttt{loc\_pl1\_c1}\\
+& pnd(p_3) = \{ a1 \}\\
+& anp(p_3) = \{ ... \}\\
+& pd(p_3) = \{ a2 \}\\
+% 
+& p_4 = \texttt{loc\_pl1\_c2}\\
+& pnd(p_4) = \{ a3 \}\\
+& anp(p_4) = \{ a2 \}\\
+& pd(p_4) = \{ ... \}\\
+% 
+& G_p = \{ p_0 \}\\
+& I = \{ p_2, p_3 \}
+\end{align}
+
+
+\section{Known:}
+
+\begin{align}
+& u_{a_1,0} = 1\\
+& u_{a_2,0} = 0\\
+& u_{a_3,0} = 0\\
+& u^{a}_{p_1,1} = 1\\
+& u^{pd}_{p_2,1} = 1\\
+& u^{pa}_{p_3,1} = 1\\
+% 
+& u_{a_1,1} = 0\\
+& u_{a_2,1} = 1\\
+& u_{a_3,1} = 0\\
+& u^{pd}_{p_3,2} = 1\\
+& u^{a}_{p_4,2} = 1\\
+% 
+& u_{a_1,2} = 0\\
+& u_{a_2,2} = 0\\
+& u_{a_3,2} = 1\\
+& u^{a}_{p_0,3} = 1\\
+& u^{pd}_{p_1,3} = 1\\
+& u^{pa}_{p_4,3} = 1\\
+\end{align}
+
+\newpage
+\include{reset}
+
+\newpage
+\include{simplify}
+
+\newpage
+\include{replaced}
+
+\newpage
+\include{testing}
+
+\end{document}

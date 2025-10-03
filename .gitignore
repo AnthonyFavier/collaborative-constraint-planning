@@ -3,3 +3,11 @@ __pycache__/
 env_cai/
 .env
 *.png
+
+# latex equations MILP
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.aux
+root.pdf
+root.log

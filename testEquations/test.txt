@@ -1,0 +1,36 @@
+p_0 = loc_p1_c2
+p_1 = in_p1_pl1
+p_2 = loc_p1_c1
+p_3 = loc_pl1_c1
+p_4 = loc_pl1_c2
+
+## t=0 ##
+p_0 = loc_p1_c2 = False
+p_1 = in_p1_pl1 = False
+p_2 = loc_p1_c1 = True
+p_3 = loc_pl1_c1 = True
+p_4 = loc_pl1_c2 = False
+a1
+
+## t=1 ##
+p_0 = loc_p1_c2 = False
+p_1 = in_p1_pl1 = True
+p_2 = loc_p1_c1 = False
+p_3 = loc_pl1_c1 = True
+p_4 = loc_pl1_c2 = False
+a2
+
+## t=2 ##
+p_0 = loc_p1_c2 = False
+p_1 = in_p1_pl1 = True
+p_2 = loc_p1_c1 = False
+p_3 = loc_pl1_c1 = False
+p_4 = loc_pl1_c2 = True
+a3
+
+## t=3 ##
+p_0 = loc_p1_c2 = True
+p_1 = in_p1_pl1 = False
+p_2 = loc_p1_c1 = False
+p_3 = loc_pl1_c1 = False
+p_4 = loc_pl1_c2 = True
