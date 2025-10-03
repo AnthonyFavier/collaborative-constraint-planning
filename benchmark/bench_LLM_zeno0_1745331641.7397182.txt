@@ -4,7 +4,7 @@ Looking at the problem:
 - We need to transport person1 from city1 to city2
 - We have plane1 in city1 with 4000 units of fuel
 - The distance between city1 and city2 is 810
-- We need to minimize total-fuel-used
+- We need to minimize total_fuel_used
 
 Let me analyze the possible actions:
 1. Flying slow burns 4 fuel units per distance unit (810 × 4 = 3240 fuel)

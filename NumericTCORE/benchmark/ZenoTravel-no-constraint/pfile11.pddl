@@ -22,24 +22,24 @@
 	(located plane1 city4)
 	(= (capacity plane1) 5423)
 	(= (fuel plane1) 1075)
-	(= (slow-burn plane1) 2)
-	(= (fast-burn plane1) 5)
+	(= (slow_burn plane1) 2)
+	(= (fast_burn plane1) 5)
 	(= (onboard plane1) 0)
-	(= (zoom-limit plane1) 3)
+	(= (zoom_limit plane1) 3)
 	(located plane2 city4)
 	(= (capacity plane2) 3038)
 	(= (fuel plane2) 45)
-	(= (slow-burn plane2) 1)
-	(= (fast-burn plane2) 2)
+	(= (slow_burn plane2) 1)
+	(= (fast_burn plane2) 2)
 	(= (onboard plane2) 0)
-	(= (zoom-limit plane2) 5)
+	(= (zoom_limit plane2) 5)
 	(located plane3 city1)
 	(= (capacity plane3) 9837)
 	(= (fuel plane3) 3036)
-	(= (slow-burn plane3) 4)
-	(= (fast-burn plane3) 10)
+	(= (slow_burn plane3) 4)
+	(= (fast_burn plane3) 10)
 	(= (onboard plane3) 0)
-	(= (zoom-limit plane3) 4)
+	(= (zoom_limit plane3) 4)
 	(located person1 city4)
 	(located person2 city2)
 	(located person3 city2)
@@ -83,7 +83,7 @@
 	(= (distance city5 city3) 778)
 	(= (distance city5 city4) 556)
 	(= (distance city5 city5) 0)
-	(= (total-fuel-used) 0)
+	(= (total_fuel_used) 0)
 )
 (:goal (and
 	(located plane1 city1)
@@ -98,7 +98,7 @@
 
 
 
-(:metric minimize (total-fuel-used))
+(:metric minimize (total_fuel_used))
 
 
 

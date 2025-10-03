@@ -39,7 +39,7 @@ The plane starts with 4000 fuel units, which is enough for the first leg (2712 <
 (debark person3 plane1 city2)
 ```
 
-This plan achieves all goals while minimizing fuel usage by using the slow-burn flying mode throughout.
+This plan achieves all goals while minimizing fuel usage by using the slow_burn flying mode throughout.
 
 =================
 plan:

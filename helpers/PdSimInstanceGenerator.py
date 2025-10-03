@@ -2,17 +2,17 @@ pddl_init="""
     (located plane1 city1)
 	(= (capacity plane1) 2990)
 	(= (fuel plane1) 174)
-	(= (slow-burn plane1) 1)
-	(= (fast-burn plane1) 3)
+	(= (slow_burn plane1) 1)
+	(= (fast_burn plane1) 3)
 	(= (onboard plane1) 0)
-	(= (zoom-limit plane1) 3)
+	(= (zoom_limit plane1) 3)
 	(located plane2 city2)
 	(= (capacity plane2) 4839)
 	(= (fuel plane2) 1617)
-	(= (slow-burn plane2) 2)
-	(= (fast-burn plane2) 5)
+	(= (slow_burn plane2) 2)
+	(= (fast_burn plane2) 5)
 	(= (onboard plane2) 0)
-	(= (zoom-limit plane2) 5)
+	(= (zoom_limit plane2) 5)
 	(located person1 city3)
 	(located person2 city0)
 	(located person3 city0)
@@ -33,7 +33,7 @@ pddl_init="""
 	(= (distance city3 city1) 557)
 	(= (distance city3 city2) 660)
 	(= (distance city3 city3) 0)
-	(= (total-fuel-used) 0)
+	(= (total_fuel_used) 0)
 """
 
 pddl_init_lines = pddl_init.splitlines()
@@ -47,7 +47,7 @@ for l in pddl_init_lines:
         continue
     
     fluentName = l[0]
-    if fluentName=='total-fuel-used':
+    if fluentName=='total_fuel_used':
         contentCase = '2'
         valueSymbol = '0'
         parameters = '[]'

@@ -20,7 +20,7 @@
             "(n_debark(person1, plane3, city3) == 0)",
             "(n_board(person4, plane3, city2) == 0)",
             "(not in(person4, plane3))",
-            "(total-fuel-used == 0)",
+            "(total_fuel_used == 0)",
             "(fuel(plane3) == 1532)",
             "(n_flyslow(plane1, city0, city2) == 0)",
             "(n_flyfast(plane2, city0, city2) == 0)",
@@ -86,7 +86,7 @@
             "Always((n_board(person3, plane2, city3) == 0))",
             "Always((n_flyslow(plane1, city0, city2) == 0))",
             "Always((n_flyfast(plane1, city2, city3) == 0))",
-            "Always((total-fuel-used == 0))",
+            "Always((total_fuel_used == 0))",
             "Always((n_flyslow(plane3, city1, city5) == 0))",
             "Always((n_board(person2, plane1, city4) == 0))",
             "Always((n_flyfast(plane2, city0, city2) == 0))",
@@ -126,7 +126,7 @@
             "Always(((not located(plane2, city1)) and (n_flyfast(plane1, city2, city3) == 0)))",
             "Always(((n_flyfast(plane2, city0, city2) == 0) and (not in(person6, plane2))))",
             "Always(((n_flyslow(plane2, city5, city5) == 0) and (n_flyslow(plane1, city4, city0) == 0)))",
-            "Always(((total-fuel-used == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((total_fuel_used == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
             "Always(((n_flyfast(plane2, city5, city0) == 0) and (n_flyfast(plane1, city0, city5) == 0)))",
             "Always(((n_board(person4, plane1, city0) == 0) and (n_flyslow(plane1, city4, city0) == 0)))",
             "Always(((not in(person10, plane2)) and (n_flyfast(plane2, city5, city0) == 0)))",
@@ -203,7 +203,7 @@
             "Always(((n_board(person2, plane2, city4) == 0) and (fuel(plane3) == 1532) and (n_flyfast(plane2, city5, city0) == 0)))",
             "Always((located(person10, city5) and (onboard(plane2) == 0) and (n_board(person10, plane1, city2) == 0)))",
             "Always(((n_board(person10, plane1, city2) == 0) and (n_flyfast(plane1, city2, city1) == 0) and (n_flyfast(plane2, city3, city4) == 0)))",
-            "Always(((not in(person8, plane1)) and (n_flyfast(plane1, city2, city3) == 0) and (total-fuel-used == 0)))",
+            "Always(((not in(person8, plane1)) and (n_flyfast(plane1, city2, city3) == 0) and (total_fuel_used == 0)))",
             "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyslow(plane1, city4, city0) == 0) and (n_refuel(plane3) == 0)))",
             "Always(((n_flyfast(plane1, city2, city1) == 0) and (n_flyslow(plane2, city4, city1) == 0) and (n_flyslow(plane2, city5, city5) == 0)))",
             "Always(((onboard(plane2) == 0) and (n_board(person10, plane3, city1) == 0) and (n_board(person2, plane2, city4) == 0)))",
@@ -284,7 +284,7 @@
             "Always(((n_board(person3, plane2, city3) == 0) or (n_flyfast(plane3, city5, city0) == 0) or (n_flyfast(plane2, city5, city0) == 0)))",
             "Always(((n_flyfast(plane2, city3, city4) == 0) or (n_board(person10, plane1, city2) == 0) or (n_board(person10, plane3, city1) == 0)))",
             "Always(((n_flyfast(plane1, city2, city3) == 0) or (not in(person4, plane3)) or (n_flyfast(plane2, city4, city1) == 0)))",
-            "Always(((not in(person8, plane3)) or (total-fuel-used == 0) or (n_flyslow(plane3, city1, city5) == 0)))",
+            "Always(((not in(person8, plane3)) or (total_fuel_used == 0) or (n_flyslow(plane3, city1, city5) == 0)))",
             "Always(((n_flyfast(plane1, city0, city5) == 0) or (n_flyfast(plane2, city0, city2) == 0) or (n_flyslow(plane1, city4, city3) == 0)))",
             "Always(((onboard(plane2) == 0) or (not located(person8, city0)) or (n_flyslow(plane2, city4, city1) == 0)))",
             "Always(((n_flyfast(plane1, city2, city3) == 0) or (not in(person7, plane1)) or (n_flyfast(plane2, city3, city2) == 0)))",
@@ -293,7 +293,7 @@
             "Always(((n_flyfast(plane2, city5, city0) == 0) or (not located(plane2, city1)) or (onboard(plane2) == 0)))",
             "Always(((n_debark(person4, plane2, city2) == 0) or (n_board(person10, plane3, city1) == 0) or (n_flyfast(plane3, city5, city0) == 0)))",
             "Always(((not in(person2, plane3)) or (n_flyfast(plane2, city5, city0) == 0) or located(person1, city1)))",
-            "Always(((n_refuel(plane2) == 0) or (n_flyfast(plane3, city4, city1) == 0) or (total-fuel-used == 0)))",
+            "Always(((n_refuel(plane2) == 0) or (n_flyfast(plane3, city4, city1) == 0) or (total_fuel_used == 0)))",
             "Always(((not located(plane2, city5)) or located(person1, city1) or (n_flyslow(plane1, city4, city3) == 0)))",
             "Always((located(person1, city1) or (n_board(person4, plane1, city0) == 0) or (n_flyfast(plane1, city2, city1) == 0)))",
             "Always(((n_board(person10, plane1, city2) == 0) or (onboard(plane2) == 0) or (n_debark(person7, plane1, city2) == 0)))",
@@ -305,7 +305,7 @@
             "Always(((not in(person5, plane2)) or (n_board(person10, plane3, city1) == 0) or (not located(plane2, city5))))",
             "Always(((fuel(plane1) == 205) or (n_flyfast(plane1, city0, city5) == 0) or located(person10, city5)))",
             "Always(((onboard(plane2) == 0) or (not in(person2, plane3)) or (n_flyfast(plane1, city0, city5) == 0)))",
-            "Always(((total-fuel-used == 0) or (n_flyfast(plane3, city3, city5) == 0) or (n_refuel(plane3) == 0)))",
+            "Always(((total_fuel_used == 0) or (n_flyfast(plane3, city3, city5) == 0) or (n_refuel(plane3) == 0)))",
             "Always(((n_board(person4, plane1, city0) == 0) or (n_board(person10, plane3, city1) == 0) or (n_refuel(plane2) == 0)))",
             "Always(((n_flyfast(plane3, city3, city5) == 0) or located(person1, city1) or (n_flyfast(plane3, city4, city1) == 0)))",
             "Always(((n_flyslow(plane2, city5, city5) == 0) or (n_flyslow(plane3, city1, city5) == 0) or (n_board(person4, plane3, city2) == 0)))",
@@ -751,7 +751,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always(((not in(person8, plane1)) and (n_flyfast(plane1, city2, city3) == 0) and (total-fuel-used == 0)))",
+            "constraint": "Always(((not in(person8, plane1)) and (n_flyfast(plane1, city2, city3) == 0) and (total_fuel_used == 0)))",
             "constraint_type": "AND3",
             "result": "failed",
             "reason": "Timeout"
@@ -913,7 +913,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always(((total-fuel-used == 0) or (n_flyfast(plane3, city3, city5) == 0) or (n_refuel(plane3) == 0)))",
+            "constraint": "Always(((total_fuel_used == 0) or (n_flyfast(plane3, city3, city5) == 0) or (n_refuel(plane3) == 0)))",
             "constraint_type": "OR3",
             "result": "failed",
             "reason": "Timeout"
@@ -1189,7 +1189,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always((total-fuel-used == 0))",
+            "constraint": "Always((total_fuel_used == 0))",
             "constraint_type": "SIMPLE",
             "result": "failed",
             "reason": "Timeout"
@@ -1363,7 +1363,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always(((not in(person8, plane3)) or (total-fuel-used == 0) or (n_flyslow(plane3, city1, city5) == 0)))",
+            "constraint": "Always(((not in(person8, plane3)) or (total_fuel_used == 0) or (n_flyslow(plane3, city1, city5) == 0)))",
             "constraint_type": "OR3",
             "result": "failed",
             "reason": "Timeout"
@@ -1465,7 +1465,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always(((total-fuel-used == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint": "Always(((total_fuel_used == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
             "constraint_type": "AND2",
             "result": "failed",
             "reason": "Timeout"

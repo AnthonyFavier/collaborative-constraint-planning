@@ -34,9 +34,9 @@
             "(n_debark(person1, plane3, city3) == 0)",
             "(n_board(person4, plane3, city2) == 0)",
             "(not in(person4, plane3))",
-            "(total-fuel-used == 0)",
+            "(total_fuel_used == 0)",
             "(not in(person4, plane3))",
-            "(total-fuel-used == 0)",
+            "(total_fuel_used == 0)",
             "(fuel(plane3) == 1532)",
             "(n_flyslow(plane1, city0, city2) == 0)",
             "(fuel(plane3) == 1532)",
@@ -151,7 +151,7 @@
             "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_board(person10, plane3, city1) == 0)))",
             "Always(((n_flyfast(plane2, city3, city4) == 0) and (n_flyfast(plane1, city0, city5) == 0)))",
             "Always(((n_debark(person1, plane3, city3) == 0) and (n_board(person4, plane3, city2) == 0)))",
-            "Always(((not in(person4, plane3)) and (total-fuel-used == 0)))",
+            "Always(((not in(person4, plane3)) and (total_fuel_used == 0)))",
             "Always(((fuel(plane3) == 1532) and (n_flyslow(plane1, city0, city2) == 0)))"
         ],
         "AND3": [
@@ -412,7 +412,7 @@
             "reason": ""
         },
         {
-            "constraint": "Always(((not in(person4, plane3)) and (total-fuel-used == 0)))",
+            "constraint": "Always(((not in(person4, plane3)) and (total_fuel_used == 0)))",
             "constraint_type": "AND2",
             "result": "failed",
             "compilation_time": 3.024892807006836,

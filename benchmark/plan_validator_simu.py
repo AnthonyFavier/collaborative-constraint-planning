@@ -68,7 +68,7 @@ with PlanValidator(name="aries-val") as validator:
     result = validator.validate(problem, plan)
     print(result)
 
-fuel = FluentExp(problem.fluent("total-fuel-used"))
+fuel = FluentExp(problem.fluent("total_fuel_used"))
 with SequentialSimulator(problem) as simulator:
     state = simulator.get_initial_state()
     print(f"Initial fuel = {state.get_value(fuel)}")

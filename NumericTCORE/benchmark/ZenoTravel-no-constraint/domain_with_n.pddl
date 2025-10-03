@@ -12,12 +12,12 @@
         (:functions
                 (fuel ?a - aircraft)
                 (distance ?c1 - city ?c2 - city)
-                (slow-burn ?a - aircraft)
-                (fast-burn ?a - aircraft)
+                (slow_burn ?a - aircraft)
+                (fast_burn ?a - aircraft)
                 (capacity ?a - aircraft)
-                (total-fuel-used)
+                (total_fuel_used)
                 (onboard ?a - aircraft)
-                (zoom-limit ?a - aircraft)
+                (zoom_limit ?a - aircraft)
 
                 (n_board ?p - person ?a - aircraft ?c - city)
                 (n_debark ?p - person ?a - aircraft ?c - city)
@@ -50,15 +50,15 @@
                 :parameters (?a - aircraft ?c1 ?c2 - city)
                 :precondition (and (located ?a ?c1)
                         (>= (fuel ?a)
-                                (* (distance ?c1 ?c2) (slow-burn ?a))))
+                                (* (distance ?c1 ?c2) (slow_burn ?a))))
                 :effect (and (not (located ?a ?c1))
                         (located ?a ?c2)
                         (increase
-                                (total-fuel-used)
-                                (* (distance ?c1 ?c2) (slow-burn ?a)))
+                                (total_fuel_used)
+                                (* (distance ?c1 ?c2) (slow_burn ?a)))
                         (decrease
                                 (fuel ?a)
-                                (* (distance ?c1 ?c2) (slow-burn ?a)))
+                                (* (distance ?c1 ?c2) (slow_burn ?a)))
                         (increase (n_flyslow ?a ?c1 ?c2) 1))
         )
 
@@ -66,16 +66,16 @@
                 :parameters (?a - aircraft ?c1 ?c2 - city)
                 :precondition (and (located ?a ?c1)
                         (>= (fuel ?a)
-                                (* (distance ?c1 ?c2) (fast-burn ?a)))
-                        (<= (onboard ?a) (zoom-limit ?a)))
+                                (* (distance ?c1 ?c2) (fast_burn ?a)))
+                        (<= (onboard ?a) (zoom_limit ?a)))
                 :effect (and (not (located ?a ?c1))
                         (located ?a ?c2)
                         (increase
-                                (total-fuel-used)
-                                (* (distance ?c1 ?c2) (fast-burn ?a)))
+                                (total_fuel_used)
+                                (* (distance ?c1 ?c2) (fast_burn ?a)))
                         (decrease
                                 (fuel ?a)
-                                (* (distance ?c1 ?c2) (fast-burn ?a)))
+                                (* (distance ?c1 ?c2) (fast_burn ?a)))
                         (increase (n_flyfast ?a ?c1 ?c2) 1))
         )
 

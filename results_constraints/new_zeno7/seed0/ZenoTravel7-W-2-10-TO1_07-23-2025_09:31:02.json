@@ -25,10 +25,10 @@
             "(n_board(person5, plane1, city3) == 0)",
             "(n_flyslow(plane2, city0, city0) == 0)",
             "(not located(person6, city2))",
-            "(total-fuel-used == 0)",
+            "(total_fuel_used == 0)",
             "(n_flyslow(plane2, city0, city0) == 0)",
             "(not located(person6, city2))",
-            "(total-fuel-used == 0)",
+            "(total_fuel_used == 0)",
             "(n_board(person6, plane1, city1) == 0)",
             "(n_refuel(plane1) == 0)",
             "(n_board(person6, plane1, city1) == 0)",
@@ -60,7 +60,7 @@
         ],
         "AND3": [
             "Always(((not in(person6, plane2)) and (n_flyslow(plane1, city2, city3) == 0) and (n_board(person5, plane1, city3) == 0)))",
-            "Always(((n_flyslow(plane2, city0, city0) == 0) and (not located(person6, city2)) and (total-fuel-used == 0)))"
+            "Always(((n_flyslow(plane2, city0, city0) == 0) and (not located(person6, city2)) and (total_fuel_used == 0)))"
         ],
         "OR2": [
             "Always(((n_board(person6, plane1, city1) == 0) or (n_refuel(plane1) == 0)))",
@@ -150,7 +150,7 @@
             "reason": "Timeout"
         },
         {
-            "constraint": "Always(((n_flyslow(plane2, city0, city0) == 0) and (not located(person6, city2)) and (total-fuel-used == 0)))",
+            "constraint": "Always(((n_flyslow(plane2, city0, city0) == 0) and (not located(person6, city2)) and (total_fuel_used == 0)))",
             "constraint_type": "AND3",
             "result": "failed",
             "compilation_time": 0.6882305145263672,

@@ -36,7 +36,7 @@ The correct plan is:
 (debark person3 plane1 city0)
 ```
 
-This plan uses the slow-burn rate of plane1 (3 units per distance) for both flights:
+This plan uses the slow_burn rate of plane1 (3 units per distance) for both flights:
 - city0 to city1: 750 * 3 = 2250 fuel
 - city1 to city0: 750 * 3 = 2250 fuel
 Total fuel used: 4500

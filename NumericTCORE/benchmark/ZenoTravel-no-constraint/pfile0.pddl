@@ -10,22 +10,22 @@
 	(located plane1 city1)
 	(= (capacity plane1) 6000)
 	(= (fuel plane1) 4000)
-	(= (slow-burn plane1) 4)
-	(= (fast-burn plane1) 15)
+	(= (slow_burn plane1) 4)
+	(= (fast_burn plane1) 15)
 	(= (onboard plane1) 0)
-	(= (zoom-limit plane1) 8)
+	(= (zoom_limit plane1) 8)
 	(located person1 city1)
 	(= (distance city1 city1) 0)
 	(= (distance city1 city2) 810)
 	(= (distance city2 city1) 810)
 	(= (distance city2 city2) 0)
-	(= (total-fuel-used) 0)
+	(= (total_fuel_used) 0)
 
 )
 (:goal (and	
 	(located person1 city2)
 	))
 
-(:metric minimize (total-fuel-used))
+(:metric minimize (total_fuel_used))
 
 )
