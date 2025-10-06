@@ -196,20 +196,20 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         return False
     
     # declare k parameters from effects
-    k = {}
-    k_w = {}
+    k_v_a = {}
+    k_v_a_w = {}
     for f in Vn:
-        k[f] = {}
-        k_w[f] = {}
+        k_v_a[f] = {}
+        k_v_a_w[f] = {}
         for a in problem.actions:
-            k[f][a.name] = 0
-            k_w[f][a.name] = {}
+            k_v_a[f][a.name] = 0
+            k_v_a_w[f][a.name] = {}
             for w in Vn:
-                k_w[f][a.name][w] = 0
+                k_v_a_w[f][a.name][w] = 0
 
     # declare w parameters from goal and preconditions
-    w = {}
-    w_0 = {}
+    w_c_v = {}
+    w_0_c = {}
 
     actions = {}
     for a in problem.actions:
@@ -233,12 +233,12 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 c = str(c).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
                 actions[a.name]['pre_n'].add(c)
                 
-                # Init w and w_0
-                w[c] = {}
+                # Init w_c_v and w_0_c
+                w_c_v[c] = {}
                 for f in Vn:
-                    w[c][f] = 0
+                    w_c_v[c][f] = 0
 
-                # Extract w and w_0
+                # Extract w_c_v and w_0_c
                 left_side = c.replace(' ', '').split('==')[0].split('>=')[0].split('>')[0]
                 for x in left_side.split('+'):
                     if contains_fluent(x):
@@ -248,11 +248,11 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                         else:
                             w_value = 1
                             v = x
-                        w[c][v] = w_value
+                        w_c_v[c][v] = w_value
 
                     else:
                         w_value = float(x)
-                        w_0[c] = w_value
+                        w_0_c[c] = w_value
 
         
         ## EFFECTS ##
@@ -289,11 +289,11 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                             k_value = 1
                             v = x
                         
-                        k_w[f][a.name][v] = k_value
+                        k_v_a_w[f][a.name][v] = k_value
 
                     else:
                         k_value = float(x)
-                        k[f][a.name] = k_value
+                        k_v_a[f][a.name] = k_value
 
 
     #############
@@ -337,12 +337,12 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
             c = str(c).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
             Gn.add(c)
             
-            # Init w and w_0
-            w[c] = {}
+            # Init w_c_v and w_0_c
+            w_c_v[c] = {}
             for f in Vn:
-                w[c][f] = 0
+                w_c_v[c][f] = 0
 
-            # Extract w and w_0
+            # Extract w_c_v and w_0_c
             left_side = c.replace(' ', '').split('==')[0].split('>=')[0].split('>')[0]
             for x in left_side.split('+'):
                 if contains_fluent(x):
@@ -352,11 +352,11 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                     else:
                         w_value = 1
                         v = x
-                    w[c][v] = w_value
+                    w_c_v[c][v] = w_value
 
                 else:
                     w_value = float(x)
-                    w_0[c] = w_value
+                    w_0_c[c] = w_value
 
         
     ############
@@ -385,5 +385,5 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                  '\n' + '\n'.join( [f'- {c}' for c in Gn] )
                 )
         
-    return (problem_name, (Vp, Vn), actions, I, (Gp, Gn), (w, w_0, k_w, k))
+    return (problem_name, (Vp, Vn), actions, I, (Gp, Gn), (w_c_v, w_0_c, k_v_a_w, k_v_a))
     

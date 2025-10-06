@@ -10,9 +10,9 @@ import click
 ## LOAD PROBLEM ##
 ##################
 def load_problem():
-    global Vp, actions, problem_name, I, Gp, Gn
+    global problem_name, Vp, Vn, actions, I, Gp, Gn
+    global w_c_v, w_0_c, k_v_a_w, k_v_a
     global pref, addf, delf
-    global w, w_0, k_w, k
     
     t1 = time.time()
     print('Loading problem...')
@@ -36,7 +36,7 @@ def load_problem():
     loaded_problem = load_pddl(domain_filename, problem_filename, show=True, solve=False)
     # unpacking
     problem_name, (Vp, Vn), actions, I, (Gp, Gn), parameters = loaded_problem
-    w, w_0, k_w, k = parameters
+    w_c_v, w_0_c, k_v_a_w, k_v_a = parameters
 
     def generatePreF(actions, Vp):
         pref = {}
