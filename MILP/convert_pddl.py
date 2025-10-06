@@ -89,8 +89,8 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         constant_with_values[txt] = problem.initial_value(f)
 
     # Write grounded problem and domain in PDDL (easier but slower by writing file..)
-    grounded_domain_filename = 'grounded_domain.pddl'
-    grounded_problem_filename = 'grounded_problem.pddl'
+    grounded_domain_filename = 'tmp/grounded_domain.pddl'
+    grounded_problem_filename = 'tmp/grounded_problem.pddl'
     writter = PDDLWriter(problem)
     writter.write_domain(grounded_domain_filename)
     writter.write_problem(grounded_problem_filename)
