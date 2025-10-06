@@ -67,6 +67,39 @@ def load_problem():
     addf = generateAddF(actions, Vp) # actions with p in add effects
     delf = generateDelF(actions, Vp) # actions with p in del effects
  
+    
+    se = {} # actions with constant numeric effects affecting v, i.e. v := v + k^{v,a} in num(a)
+    le = {} # actions with linear numeric effects affecting v, i.e. v := sum_{w in Vn} k^{v,a}_w * w + k^{v,a} in num(a), a not in se(v)
+    for v in Vn:
+        se[v] = set()
+        le[v] = set()
+        for a in actions:
+            if v=='fuel_plane1' and a=='refuel_plane1':
+                pass
+            # check if affecting v
+            affecting_v = False
+            for e in actions[a]['num']:
+                fluent_affected = e.split(':=')[0].strip()
+                if fluent_affected == v:
+                    affecting_v = True
+                    break
+            if not affecting_v:
+                continue
+
+            # check if constant effects
+            has_constant_effects = True
+            for w in Vn:
+                if (w==v and k_v_a_w[v][a][v] != 1)\
+                or (w!=v and k_v_a_w[v][a][w] != 0):
+                    has_constant_effects = False
+                    break
+                
+            if has_constant_effects:
+                se[v].add(a)
+            else:
+                le[v].add(a)
+        
+
     print(f"[Loading Problem: {time.time()-t1:.2f}s]")
  
 #################
