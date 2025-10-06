@@ -3,7 +3,8 @@ from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.engines import PlanGenerationResultStatus
 import itertools
-from boxprint import boxprint
+
+from MILP.boxprint import boxprint
 
 from sympy import expand, simplify
 from sympy.parsing.sympy_parser import parse_expr

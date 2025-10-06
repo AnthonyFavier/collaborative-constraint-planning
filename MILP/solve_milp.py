@@ -1,6 +1,6 @@
 from pulp import *
-from boxprint import boxprint
-from convert_pddl import load_pddl
+from MILP.boxprint import boxprint
+from MILP.convert_pddl import load_pddl
 from datetime import datetime
 import time
 import click
@@ -244,9 +244,11 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
             m += lpSum(u[a][i] for a in pref[f].difference(delf[f])) >= u_pa[f][i+1]
             for a in pref[f].difference(delf[f]):
                 m += u[a][i] <= u_pa[f][i+1]
+
             m += lpSum(u[a][i] for a in addf[f].difference(pref[f])) >= u_a[f][i+1]
             for a in addf[f].difference(pref[f]):
                 m += u[a][i] <= u_a[f][i+1]
+                
             m += lpSum(u[a][i] for a in pref[f].intersection(delf[f])) == u_pd[f][i+1]
             
             m += u_pa[f][i+1] + u_m[f][i+1] + u_pd[f][i+1] <= u_a[f][i] + u_pa[f][i] + u_m[f][i]
