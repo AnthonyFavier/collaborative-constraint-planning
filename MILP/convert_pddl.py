@@ -195,7 +195,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 return True
         return False
     
-    # k parameters from effects
+    # declare k parameters from effects
     k = {}
     k_w = {}
     for f in Vn:
@@ -207,7 +207,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
             for w in Vn:
                 k_w[f][a.name][w] = 0
 
-    # w parameters from goal and preconditions
+    # declare w parameters from goal and preconditions
     w = {}
     w_0 = {}
 
@@ -233,11 +233,14 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 c = str(c).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
                 actions[a.name]['pre_n'].add(c)
                 
+                # Init w and w_0
                 w[c] = {}
                 for f in Vn:
                     w[c][f] = 0
 
-                for x in c.replace(' ', '').split('+'):
+                # Extract w and w_0
+                left_side = c.replace(' ', '').split('==')[0].split('>=')[0].split('>')[0]
+                for x in left_side.split('+'):
                     if contains_fluent(x):
                         if '*' in x:
                             w_value = float(x.split('*')[0])
@@ -276,6 +279,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 exp = str(exp).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
                 actions[a.name]['num'].add(f + ' := ' + exp)
 
+                # Extract k values
                 for x in exp.replace(' ', '').split('+'):
                     if contains_fluent(x):
                         if '*' in x:
@@ -300,15 +304,15 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     problem_name = problem.name
 
     # Initial State
-    Ip = []
-    for f, value in problem.initial_values.items():
+    I = {}
+    for f, initial_value in problem.initial_values.items():
+        f_str = str(f).replace('(','_').replace(', ','_').replace(')','')
         if f.is_fluent_exp() and f.type.is_bool_type():
-            if value.is_true(): # Forced by NEGATIVE_CONDITIONS_REMOVING
-                Ip.append(str(f).replace('(','_').replace(', ','_').replace(')',''))
+            I[f_str] = 1 if initial_value.is_true() else 0
         else:
-            raise Exception("fluent type not supported")
+            I[f_str] = initial_value
         
-
+    # Goal State
     def flatten_conjunction(expr: FNode):
         """Recursively flatten a goal FNode into a list of conjuncts."""
         if expr.is_and():
@@ -318,21 +322,42 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
             return result
         else:
             return [expr]
-        
     def flatten_goals(goals):
         flat_goal = []
         for g in goals:
             flat_goal += flatten_conjunction(g)
         return flat_goal
-
-    # Goal State
-    Gp = []
+    Gp = set()
+    Gn = set()
     for f in flatten_goals(problem.goals):
         if f.is_fluent_exp() and f.type.is_bool_type():
-            Gp.append(str(f).replace('(','_').replace(', ','_').replace(')',''))
+            Gp.add(str(f).replace('(','_').replace(', ','_').replace(')',''))
         else:
             c = normalize_equation(str(f))
-            raise Exception("fluent type not supported")
+            c = str(c).replace('(','_').replace(', ','_').replace(')','').replace('- ', '+ -')
+            Gn.add(c)
+            
+            # Init w and w_0
+            w[c] = {}
+            for f in Vn:
+                w[c][f] = 0
+
+            # Extract w and w_0
+            left_side = c.replace(' ', '').split('==')[0].split('>=')[0].split('>')[0]
+            for x in left_side.split('+'):
+                if contains_fluent(x):
+                    if '*' in x:
+                        w_value = float(x.split('*')[0])
+                        v = x.split('*')[1]
+                    else:
+                        w_value = 1
+                        v = x
+                    w[c][v] = w_value
+
+                else:
+                    w_value = float(x)
+                    w_0[c] = w_value
+
         
     ############
     ## OUTPUT ##
@@ -351,5 +376,5 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         boxprint( boxprint('INIT', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Ip] ) )
         boxprint( boxprint('GOAL', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Gp] ) )
         
-    return (Vp, actions, problem_name, Ip, Gp)
+    return (problem_name, (Vp, Vn), actions, I, (Gp, Gn), (w, w_0, k_w, k))
     

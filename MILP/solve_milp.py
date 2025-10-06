@@ -10,8 +10,9 @@ import click
 ## LOAD PROBLEM ##
 ##################
 def load_problem():
-    global Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp
+    global Vp, actions, problem_name, I, Gp, Gn
     global pref, addf, delf
+    global w, w_0, k_w, k
     
     t1 = time.time()
     print('Loading problem...')
@@ -33,17 +34,16 @@ def load_problem():
     problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
 
     loaded_problem = load_pddl(domain_filename, problem_filename, show=True, solve=False)
-    Vp, actions, pre_p, del_p, add_p, problem_name, Ip, Gp = loaded_problem
-    Vp, actions, problem_name, Ip, Gp = loaded_problem
-
-    exit()
+    # unpacking
+    problem_name, (Vp, Vn), actions, I, (Gp, Gn), parameters = loaded_problem
+    w, w_0, k_w, k = parameters
 
     def generatePreF(actions, Vp):
         pref = {}
         for f in Vp:
             pref[f] = set()
             for a in actions:
-                if f in pre_p[a]:
+                if f in actions[a]['pre_p']:
                     pref[f] = pref[f].union({a})
         return pref
     def generateAddF(actions, Vp):
@@ -51,7 +51,7 @@ def load_problem():
         for f in Vp:
             addf[f] = set()
             for a in actions:
-                if f in add_p[a]:
+                if f in actions[a]['add']:
                     addf[f] = addf[f].union({a})
         return addf
     def generateDelF(actions, Vp):
@@ -59,7 +59,7 @@ def load_problem():
         for f in Vp:
             delf[f] = set()
             for a in actions:
-                if f in del_p[a]:
+                if f in actions[a]['del']:
                     delf[f] = delf[f].union({a})
         return delf
 
@@ -128,12 +128,8 @@ def build_model_vossen2001_state_change_prop(T, sequential):
     
     # Initial/Goal State
     for f in Vp:
-        if f in Ip:
-            # (10)
-            x_a[f][0] = 1
-        else:
-            # (10)
-            x_a[f][0] = 0
+        # (10)
+        x_a[f][0] = I[f]
         x_m[f][0] = 0
         x_pa[f][0] = 0
         x_pd[f][0] = 0
@@ -225,12 +221,8 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
     
     # Initial/Goal State
     for f in Vp:
-        if f in Ip:
-            # (10)
-            m += u_a[f][0] == 1
-        else:
-            # (10)
-            m += u_a[f][0] == 0
+        # (10)
+        m += u_a[f][0] == I[f]
         m += u_m[f][0] == 0
         m += u_pa[f][0] == 0
         m += u_pd[f][0] == 0
