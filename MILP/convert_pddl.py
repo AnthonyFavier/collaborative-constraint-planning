@@ -47,13 +47,95 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     reader = PDDLReader()
     problem = reader.parse_problem(domain_filename, problem_filename)
 
-    #############
-    ## COMPILE ##
-    #############
+    ###############
+    ## GROUNDING ##
+    ###############
     # with Compiler(name="fast-downward-grounder") as compiler:
     with Compiler(name="up_grounder") as compiler:
         compilation_result = compiler.compile(problem, CompilationKind.GROUNDING)
         problem = compilation_result.problem
+
+    #############################################
+    ## REPLACE CONSTRANT NUM FLUENT WITH VALUE ##
+    #############################################
+    # Collect fluents that appear as effects (i.e., modified)
+    modified_fluents = set()
+    for action in problem.actions:
+        for eff in action.effects:
+            if eff.fluent.type.is_real_type():
+                modified_fluents.add(eff.fluent)
+
+    # Collect grounded fluents (i.e. all)
+    initial_Vn = set()
+    for f in problem.fluents:
+        object_sets = []
+        for s in f.signature:
+            objects = [str(o) for o in problem.objects(s.type)]
+            object_sets.append(objects)
+        combinations = list(itertools.product(*object_sets))
+        for comb in combinations:
+            if f.type.is_real_type(): # Numeric
+                exp = f(*[problem.object(c) for c in comb])
+                initial_Vn.add(exp)
+
+    # Set difference to obtained modified grounded fluents
+    constant_numeric_fluents = initial_Vn - modified_fluents
+
+    # Save them in a disctionary with pddl str as key and initial value
+    constant_with_values = {}
+    for f in constant_numeric_fluents:
+        txt = str(f).replace('(', ' ').replace(')', ' ').replace(',', '')
+        txt = "(" + " ".join(txt.split()) + ")"
+        constant_with_values[txt] = problem.initial_value(f)
+
+    # Write grounded problem and domain in PDDL (easier but slower by writing file..)
+    grounded_domain_filename = 'grounded_domain.pddl'
+    grounded_problem_filename = 'grounded_problem.pddl'
+    writter = PDDLWriter(problem)
+    writter.write_domain(grounded_domain_filename)
+    writter.write_problem(grounded_problem_filename)
+
+    # Read grounded domain file
+    with open(grounded_domain_filename, 'r') as domain_file:
+        domain_str = domain_file.read()
+    # Replace constrant fluent with initial values in domain 
+    for f_str, initial_value in constant_with_values.items():
+        domain_str = domain_str.replace(f_str, str(initial_value))
+    # Remove fluent declaration in domain
+    for f_str, initial_value in constant_with_values.items():
+        fluent_name = f_str.replace('(','').replace(')','').split()[0]
+        i_def = domain_str.find(f'({fluent_name}')
+        if i_def!=-1:
+            i_end = domain_str.find(')', i_def)+1
+            domain_str = domain_str[:i_def] + domain_str[i_end:]
+    # Overwrite grounded domain file
+    with open(grounded_domain_filename, 'w') as domain_file:
+        domain_file.write(domain_str)
+
+    # Read grounded problem file
+    with open(grounded_problem_filename, 'r') as problem_file:
+        problem_str = problem_file.read()
+    # Delete each constant fluent assignment
+        # find f_str, delete from '(=' to next ')
+    for f_str, initial_value in constant_with_values.items():
+        i_f = problem_str.find(f_str)
+        i1 = problem_str.rfind('(=', 0, i_f)
+        i2 = problem_str.find(')',  problem_str.find(')', i_f)+1)+1
+        problem_str = problem_str[:i1] + problem_str[i2:]
+    # Overwrite grounded problem file
+    with open(grounded_problem_filename, 'w') as problem_file:
+        problem_file.write(problem_str)
+
+    # TODO: Might need to replace in metric also... But currently not considered in milp formulation..
+
+    # Load new problem
+    reader = PDDLReader()
+    problem = reader.parse_problem(grounded_domain_filename, grounded_problem_filename)
+
+
+    #############
+    ## COMPILE ##
+    #############
 
     with Compiler(
         problem_kind=problem.kind,
