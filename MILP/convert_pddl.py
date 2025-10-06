@@ -365,16 +365,25 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     
     if show:
         boxprint(f'Problem name: {problem_name}')
-        boxprint( boxprint('FLUENTS', show=False, mode='d') + '\n' + '\n'.join([f'- {gf}' for gf in Vp]))
-        list_prep_p = list(actions[a]['prep_p'])
-        list_del_p = list(actions[a]['del_p'])
-        list_add_p = list(actions[a]['add_p'])
+        boxprint( boxprint('FLUENTS PROPOSITIONNAL (Vp)', show=False, mode='d') + '\n' + '\n'.join([f'- {f}' for f in Vp]))
+        boxprint( boxprint('FLUENTS NUMERIC (Vn)', show=False, mode='d') + '\n' + '\n'.join([f'- {f}' for f in Vn]))
         boxprint( 
-            boxprint('ACTIONS', show=False, mode='d') + 
-            '\n' + '\n'.join( [f'- {a}\n\tpre: {list_prep_p}\n\tdel: {list_del_p}\n\tadd: {list_add_p}' for a in actions] ) 
+            boxprint('ACTIONS', show=False, mode='d') + '\n' + '\n'.join( ['- ' + str(a) + 
+                '\n\tpre_p: ' + str(list(actions[a]['pre_p'])) + 
+                '\n\tpre_n: ' + str(list(actions[a]['pre_n'])) + 
+                '\n\tdel: ' + str(list(actions[a]['del'])) + 
+                '\n\tadd: ' + str(list(actions[a]['add'])) +
+                '\n\tnum: ' + str(list(actions[a]['num'])) 
+            for a in actions] ) 
         )
-        boxprint( boxprint('INIT', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Ip] ) )
-        boxprint( boxprint('GOAL', show=False, mode='d') + '\n' + '\n'.join( [f'\t- {p}' for p in Gp] ) )
+        boxprint( boxprint('INIT', show=False, mode='d') + 
+                 '\n' + '\n'.join( [f'- {p}' for p,v in I.items() if p in Vp and v==1] ) + 
+                 '\n' + '\n'.join( [f'- {f} = {v}' for f,v in I.items() if f in Vn] ) 
+                )
+        boxprint( boxprint('GOAL', show=False, mode='d') + 
+                 '\n' + '\n'.join( [f'- {p}' for p in Gp] ) + 
+                 '\n' + '\n'.join( [f'- {c}' for c in Gn] )
+                )
         
     return (problem_name, (Vp, Vn), actions, I, (Gp, Gn), (w, w_0, k_w, k))
     
