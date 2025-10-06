@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper, twocolumn]{article} % Defines document class and options
+\documentclass[12pt, a4paper]{article} % Defines document class and options
 
 \usepackage{amsmath} % Loads the amsmath package for math
 
@@ -34,17 +34,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\subsection{Vossen 2001 state change}
+
 Variables:
 
 Actions
-$y_{a,i} \forall a \in actions \forall i \in \{1, T+1\}$
+$y_{a,i}, \forall a \in \mathcal{A}, \forall i \in \{1, T+1\}$
 
 fluents change
 $x^{m}_{f,i}, x^{pa}_{f,i}, x^{pd}_{f,i}, x^{a}_{f,i} \forall f \in Vp \forall i \in \{1, T+1\}$
 
 Initial state is set only with values, not variables. That is, $x^{m}_{f,0}, x^{pa}_{f,0}, x^{pd}_{f,0}, x^{a}_{f,0}$ are just values, not additional variables. Equalities are not added as additional constraints to model.
-
-
 
 \begin{align}
 & x^{a}_{f,0} = I(f) \forall f \in V_p\\
@@ -68,8 +69,86 @@ Initial state is set only with values, not variables. That is, $x^{m}_{f,0}, x^{
 \end{align}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Piacentini 2018 state change Model}
 
+$T$ is the time horizon, number of time steps. Initial state is $t=0$.
+
+\subsection{Variables}
+
+\textbf{Actions:} $u_{a,i}, \forall a \in A, \forall i \in \{0, T-1\}$
+
+\textit{Notes:} Action $a$ is applicable at $t=i$ if its preconditions ($pre(a)$) hold at $t=i$ and its effects ($eff(a)$) at $t=i+1$. Last action applied at $T-1$. Final state at $t=T$.
+
+State change variables $\forall f \in V_p, \forall i \in \{0, T \}$:
+$u^{m}_{f,i}$
+$u^{pa}_{f,i}$
+$u^{pd}_{f,i}$
+$u^{a}_{f,i}$
+
+\subsection{Objective}
+
+\begin{equation}
+    \min\quad \sum_{a \in A,\,t \in \{0,\,T-1\}} cost_a\,u_{a,t}
+\end{equation}
+
+\subsection{Constraints}
+
+\paragraph{Initial state} ($t=0$), $\forall f \in V_p$:
+\begin{align}
+    u^{a}_{f,0} & = 
+    \begin{cases}
+        1 & \text{if $f$ in $\mathcal{I}$}\\
+        0 & otherwise
+    \end{cases} \label{eq:init_a} \\
+    u^{m}_{f,0} & = 0 && \text{Needed ? Not in model...} \label{eq:init_m}\\
+    u^{pa}_{f,0} & = 0 && \text{Needed ? Not in model...} \label{eq:init_pa}\\
+    u^{pd}_{f,0} & = 0 && \text{Needed ? Not in model...} \label{eq:init_pd}
+\end{align}
+
+\paragraph{Goal state} ($t=T$), $\forall f \in G_p$:
+\begin{align}
+    u^{a}_{f,T} + u^{pa}_{f,T} + u^{m}_{f,T} & \ge 1 \label{eq:goal}
+\end{align}
+
+\paragraph{State change} $\forall f \in V_p, \forall i \in \{0, T-1\}$:
+\begin{align}
+    & \sum_{a \in pref(f) \backslash delf(f)} u_{a,i} \ge u^{pa}_{f,i+1} \label{eq:change_pa}\\
+    & \sum_{a \in addf(f) \backslash pref(f)} u_{a,i} \ge u^{a}_{f,i+1} \label{eq:change_a}\\
+    & \sum_{a \in pref(f) \cap delf(f)} u_{a,i} = u^{pd}_{f,i+1} \label{eq:change_pd}\\
+    % 
+    & u_{a,i} \le u^{pa}_{f,i+1} && \forall a \in pref(f) \backslash delf(f) \label{eq:pre_eff1}\\ 
+    & u_{a,i} \le u^{a}_{f,i+1} && \forall a \in addf(f) \backslash pref(f)  \label{eq:pre_eff2}
+\end{align}
+
+\paragraph{Backward chaining requirement} $\forall f \in V_p, \forall i \in \{0, T-1\}$
+\begin{align}
+    & u^{pa}_{f,i+1} + u^{m}_{f,i+1} + u^{pd}_{f,i+1} \le u^{a}_{f,i} + u^{pa}_{f,i} + u^{m}_{f,i} \label{eq:backward_chaining}
+\end{align}
+
+\paragraph{Action Conflict Exclusion Constraints} $\forall f \in V_p, \forall i \in \{0, T\}$:
+\begin{align}
+    & u^{a}_{f,i} + u^{m}_{f,i} + u^{pd}_{f,i} \le 1 \label{eq:conflict_exclusion_a}\\
+    & u^{pa}_{f,i} + u^{m}_{f,i} + u^{pd}_{f,i} \le 1 \label{eq:conflict_exclusion_pa}
+\end{align}
+\textit{Note: the exclusiveness exclusion constraint is captured with the auxiliary vairables. As explained in Vossen 2001. Equation (10) in Piacentini 2018 is redundant and unnecessary.}
+
+\paragraph{[Optional] sequential plan} $\forall i \in \{0, T-1\}$:
+\begin{align}
+    & \sum_{a \in \mathcal{A}} u_{a,i} <= 1 \label{eq:sequential}
+\end{align}
+
+Constraints (\ref{eq:init_a})-(\ref{eq:init_pd}) represent the initial state and constraint (\ref{eq:goal}) represents the goal state.
+Constraints (\ref{eq:change_pa})-(\ref{eq:change_pd}) update the value of state change variables.
+Constraints (\ref{eq:pre_eff1})-(\ref{eq:pre_eff2}) enforce actions preconditions and effects.
+Constraint (\ref{eq:backward_chaining}) represent the backward chaining requirement, i.e., it propagates the value of the state change variables from one time-step to the next.
+The exlusiveness exclusion constraints (\ref{eq:conflict_exclusion_a})-(\ref{eq:conflict_exclusion_pa}) prevent simulataneous conflicting actions.
+Constraint (\ref{eq:sequential}) is optional and makes the plan sequential. Otherwise, partial ordering is used.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Problem}
 
