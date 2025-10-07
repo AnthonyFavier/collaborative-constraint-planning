@@ -4,6 +4,7 @@ from MILP.convert_pddl import load_pddl
 from datetime import datetime
 import time
 import click
+import math
 
 
 ##################
@@ -293,6 +294,287 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
     return m 
 
 
+def compute_m_constants(T):
+
+    # compute m_v_t, M_v_t
+    m_v_t = {}
+    M_v_t = {}
+    for v in Vn:
+        m_v_t[v] = {}
+        M_v_t[v] = {}
+        for t in range(0, T+1):
+            if t==0:
+                m_v_t[v][t] = I[v]
+                M_v_t[v][t] = I[v]
+
+            else:
+                min_a_bot = min(
+                    sum(k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] > 0)\
+                    + sum(k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] < 0)\
+                    for a in le[v]
+                ) if le[v] else math.inf
+
+                max_a_top = max(
+                    sum(k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] > 0) \
+                    + sum(k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] < 0)\
+                    for a in le[v]
+                ) if le[v] else -math.inf
+
+                m_v_t[v][t] = min(
+                    m_v_t[v][t-1] + sum(k_v_a[v][a] for a in se[v] if k_v_a[v][a] < 0),
+                    min_a_bot
+                )
+ 
+                M_v_t[v][t] = max(
+                    M_v_t[v][t-1] + sum(k_v_a[v][a] for a in se[v] if k_v_a[v][a] > 0),
+                    max_a_top
+                )
+
+    # Compute m_c_t
+    m_c_t = {}
+    for a in actions:
+        for c in actions[a]['pre_n']:
+            m_c_t[c] = {}
+            for t in range(0, T):
+                m_c_t[c][t] = sum(w_c_v[c][v] * M_v_t[v][t] for v in Vn if w_c_v[c][v]<0)\
+                + sum(w_c_v[c][v] * m_v_t[v][t] for v in Vn if w_c_v[c][v]>0)\
+                + w_0_c[c]
+
+    # Compute m/M_step_c_t
+    M_step_v_t = {}
+    m_step_v_t = {}
+    for v in Vn:
+        M_step_v_t[v] = {}
+        m_step_v_t[v] = {}
+        for t in range(0, T+1):
+            if t==0:
+                M_step_v_t[v][t] = M_v_t[v][t]
+                m_step_v_t[v][t] = m_v_t[v][t]
+            else:
+                M_step_v_t[v][t] = M_v_t[v][t] - m_v_t[v][t-1]
+                m_step_v_t[v][t] = m_v_t[v][t] - M_v_t[v][t-1]
+
+    # Compute m/M_v_a_t
+    M_v_a_t = {}
+    m_v_a_t = {}
+    for v in Vn:
+        M_v_a_t[v] = {}
+        m_v_a_t[v] = {}
+        for a in le[v]:
+            M_v_a_t[v][a] = {}
+            m_v_a_t[v][a] = {}
+            for t in range(0, T+1):
+                if t==0:
+                    M_v_a_t[v][a][t] = M_v_t[v][t]
+                    m_v_a_t[v][a][t] = m_v_t[v][t]
+                else:
+                    M_v_a_t[v][a][t] = M_v_t[v][t]\
+                    - sum(k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]<0)\
+                    + sum(k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]>0)\
+                    - k_v_a[v][a]
+                    
+                    m_v_a_t[v][a][t] = m_v_t[v][t]\
+                    - sum(k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]>0)\
+                    + sum(k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]<0)\
+                    - k_v_a[v][a]
+
+    return m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t
+
+def build_nmutex():
+    nmutex = {}
+
+    for a1 in actions:
+        nmutex[a1] = set()
+        for a2 in actions:
+            if a1 != a2:
+                are_mutex = False
+                for e1 in actions[a1]['num']:
+                    v = e1.split(':=')[0].strip()
+
+                    # check (i): v is assigned by a1 and is also used in one of the numeric effects of a2
+                    for e2 in actions[a2]['num']:
+                        if v in e2:
+                            nmutex[a1].add(a2)
+                            are_mutex = True
+                            break
+                    if are_mutex: break
+
+                    # check (ii): v is assigned by a1 and is also part of a precondition of a2
+                    for pre in actions[a2]['pre_n']:
+                        if v in pre:
+                            nmutex[a1].add(a2)
+                            are_mutex = True
+                            break
+                    if are_mutex: break
+
+    return nmutex
+
+def get_op(c):
+    rel_ops = ['>=', '>', '==', None]
+    for op in rel_ops:
+        if op in c:
+            break
+    assert op != None
+    return op
+                
+def build_model_piacentini2018_state_change_numeric(T, sequential):
+    global u
+
+    m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t = compute_m_constants(T)
+    nmutex = build_nmutex()
+
+    t1 = time.time()
+    print('Building model...')
+
+    ###########
+    ## MODEL ##
+    ###########
+    m = LpProblem(sense=LpMinimize)
+ 
+
+    ###############
+    ## VARIABLES ##
+    ###############
+    # Action variables
+    u = {}
+    for a in actions:
+        u[a] = {}
+        for i in range(0, T):
+            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            
+    # Propositional fluent state change variables
+    u_m = {} 
+    u_pa = {}
+    u_pd = {}
+    u_a = {}
+    for f in Vp:
+        u_m[f] = {}
+        u_pa[f] = {}
+        u_pd[f] = {}
+        u_a[f] = {}
+        for i in range(0, T+1):
+            u_m[f][i] = LpVariable(f'u_m_{f}_{i}', cat='Binary') # True if fluent is propagated (noop)
+            u_pa[f][i] = LpVariable(f'u_pa_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and doesn't delete it (maintainted/propagated)
+            u_pd[f][i] = LpVariable(f'u_pd_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and delete effect
+            u_a[f][i] = LpVariable(f'u_a_{f}_{i}', cat='Binary') # True if an action is executed at i and has f in add effect but not in precondition
+    
+    # Numeric fluent value variables
+    y_v_t = {}
+    for v in Vn:
+        y_v_t[v] = {}
+        for t in range(0, T+1):
+            y_v_t[v][t] = LpVariable(f'y_v_t_{v}_{t}', cat='Continuous') # value of fluent v at time step t
+            
+    ###############
+    ## OBJECTIVE ##
+    ###############
+    def obj_nb_actions(m):
+        L = []
+        for a in actions:
+            for t in range(0, T):
+                L.append(u[a][t])
+        m += lpSum(L)
+    obj_nb_actions(m)
+        
+        
+    ###############################
+    ## CONSTRAINTS PROPOSITIONAL ##
+    ###############################
+    
+    # Initial State
+    for f in Vp:
+        # (10)
+        m += u_a[f][0] == I[f]
+        m += u_m[f][0] == 0
+        m += u_pa[f][0] == 0
+        m += u_pd[f][0] == 0
+        
+    # Goal State
+    for f in Gp:
+        # (9)
+        m += u_a[f][T] + u_pa[f][T] + u_m[f][T] >= 1
+    
+    for f in Vp:
+        for i in range(0, T):
+            m += lpSum(u[a][i] for a in pref[f].difference(delf[f])) >= u_pa[f][i+1]
+            for a in pref[f].difference(delf[f]):
+                m += u[a][i] <= u_pa[f][i+1]
+
+            m += lpSum(u[a][i] for a in addf[f].difference(pref[f])) >= u_a[f][i+1]
+            for a in addf[f].difference(pref[f]):
+                m += u[a][i] <= u_a[f][i+1]
+                
+            m += lpSum(u[a][i] for a in pref[f].intersection(delf[f])) == u_pd[f][i+1]
+            
+            m += u_pa[f][i+1] + u_m[f][i+1] + u_pd[f][i+1] <= u_a[f][i] + u_pa[f][i] + u_m[f][i]
+            
+            # (own)
+            # if sequential:
+            #     m += lpSum(u[a][i] for a in actions) <= 1
+        
+        for i in range(0, T+1):
+            m += u_a[f][i] + u_m[f][i] + u_pd[f][i] <= 1
+            m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
+
+    #########################
+    ## CONSTRAINTS NUMERIC ##
+    #########################
+
+    for v in Vn:
+        m += y_v_t[v][0] == I[v] #(12)
+    
+    for c in Gn: #(13)
+        op = get_op(c)
+        if op=='>=':
+            m += lpSum(w_c_v[c][v] * y_v_t[v][T] for v in Vn) + w_0_c[c] >= 0
+        elif op=='==':
+            m += lpSum(w_c_v[c][v] * y_v_t[v][T] for v in Vn) + w_0_c[c] == 0
+        else:
+            raise Exception('Numeric goal constraint: op not supported')
+
+    for a in actions: #(14)
+        for c in actions[a]['pre_n']:
+            for t in range(0, T):
+                op = get_op(c)
+                if op=='>=':
+                    m += sum(w_c_v[c][v] * y_v_t[v][t] for v in Vn) + w_0_c[c] >= m_c_t[c][t]*(1-u[a][t])
+                if op=='==':
+                    m += sum(w_c_v[c][v] * y_v_t[v][t] for v in Vn) + w_0_c[c] == m_c_t[c][t]*(1-u[a][t])
+
+    for v in Vn: #(15)
+        for t in range(0, T):
+            m += y_v_t[v][t+1] <= y_v_t[v][t]\
+            + sum(k_v_a[v][a] * u[a][t] for a in se[v])\
+            + M_step_v_t[v][t+1] * sum(u[a][t] for a in le[v])
+
+    for v in Vn: #(16)
+        for t in range(0, T):
+            m += y_v_t[v][t+1] >= y_v_t[v][t]\
+            + sum(k_v_a[v][a] * u[a][t] for a in se[v])\
+            + m_step_v_t[v][t+1] * sum(u[a][t] for a in le[v])
+
+    for v in Vn: #(17)
+        for a in le[v]:
+            for t in range(0, T):
+                m += y_v_t[v][t+1] - sum(k_v_a_w[v][a][w] * y_v_t[w][t] for w in Vn) <=\
+                k_v_a[v][a] + M_v_a_t[v][a][t+1] * (1-u[a][t])
+
+    for v in Vn: #(18)
+        for a in le[v]:
+            for t in range(0, T):
+                m += y_v_t[v][t+1] - sum(k_v_a_w[v][a][w] * y_v_t[w][t] for w in Vn) >=\
+                k_v_a[v][a] + m_v_a_t[v][a][t+1] * (1-u[a][t])
+
+    for a1 in actions: #(19)
+        for a2 in nmutex[a]:
+            for t in range(0, T):
+                m += u[a1][t] + u[a2][t] <= 1
+
+
+    #########################
+      
+    print(f"[Building Model: {time.time()-t1:.2f}s]")
+    return m      
 
 
 #############
@@ -411,8 +693,9 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
         boxprint(f"Solving with T={T}")
         
         # m = build_model_vossen2001_state_change_prop(T, sequential)
-        m = build_model_piacentini2018_state_change_prop(T, sequential)
-        
+        # m = build_model_piacentini2018_state_change_prop(T, sequential)
+        m = build_model_piacentini2018_state_change_numeric(T, sequential)
+
         solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
         if m.status==1:
