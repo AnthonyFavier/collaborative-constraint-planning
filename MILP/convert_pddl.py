@@ -67,8 +67,11 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
 
     t1 = time.time()
     print('\tGrounding ... ', end='', flush=True)
-    # with Compiler(name="fast-downward-grounder") as compiler:
-    with Compiler(name="up_grounder") as compiler:
+    if problem.kind.has_general_numeric_planning() or problem.kind.has_simple_numeric_planning():
+        compiler_name = 'up_grounder'
+    else:
+        compiler_name = 'fast-downward-grounder'
+    with Compiler(name=compiler_name) as compiler:
         compilation_result = compiler.compile(problem, CompilationKind.GROUNDING)
         problem = compilation_result.problem
     print(f'Ok [{time.time()-t1:.2f}s]')
