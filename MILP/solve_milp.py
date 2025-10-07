@@ -127,7 +127,7 @@ def build_model_vossen2001_state_change_prop(T, sequential):
     for a in actions:
         u[a] = {}
         for i in range(1, T+1):
-            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            u[a][i] = LpVariable(f'u_{a}_{i}', cat='Binary') # True if action a is executed at time step i
             
     x_m = {} 
     x_pa = {}
@@ -222,7 +222,7 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
     for a in actions:
         u[a] = {}
         for i in range(0, T):
-            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            u[a][i] = LpVariable(f'u_{a}_{i}', cat='Binary') # True if action a is executed at time step i
             
     u_m = {} 
     u_pa = {}
@@ -440,7 +440,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     for a in actions:
         u[a] = {}
         for i in range(0, T):
-            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            u[a][i] = LpVariable(f'u_{a}_{i}', cat='Binary') # True if action a is executed at time step i
             
     # Propositional fluent state change variables
     u_m = {} 
