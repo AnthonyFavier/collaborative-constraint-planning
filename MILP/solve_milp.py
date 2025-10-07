@@ -107,7 +107,8 @@ def load_problem():
 ## BUILD MODEL ##
 #################
 def build_model_vossen2001_state_change_prop(T, sequential):
-    global y, x_m, x_pa, x_pd, x_a
+    global u
+    global x_m, x_pa, x_pd, x_a
     
     t1 = time.time()
     print('Building model...')
@@ -121,11 +122,11 @@ def build_model_vossen2001_state_change_prop(T, sequential):
     ###############
     ## VARIABLES ##
     ###############
-    y = {}
+    u = {}
     for a in actions:
-        y[a] = {}
+        u[a] = {}
         for i in range(1, T+1):
-            y[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+            u[a][i] = LpVariable(f'y_{a}_{i}', cat='Binary') # True if action a is executed at time step i
             
     x_m = {} 
     x_pa = {}
@@ -150,7 +151,7 @@ def build_model_vossen2001_state_change_prop(T, sequential):
         L = []
         for a in actions:
             for t in range(1, T+1):
-                L.append(y[a][t])
+                L.append(u[a][t])
         m += lpSum(L)
     
     obj_nb_actions(m)
@@ -175,17 +176,17 @@ def build_model_vossen2001_state_change_prop(T, sequential):
     for f in Vp:
         for i in range(1, T+1):
             # (1)
-            m += lpSum(y[a][i] for a in pref[f].difference(delf[f])) >= x_pa[f][i]
+            m += lpSum(u[a][i] for a in pref[f].difference(delf[f])) >= x_pa[f][i]
             # (2)
             for a in pref[f].difference(delf[f]):
-                m += y[a][i] <= x_pa[f][i]
+                m += u[a][i] <= x_pa[f][i]
             # (3)
-            m += lpSum(y[a][i] for a in addf[f].difference(pref[f])) >= x_a[f][i]
+            m += lpSum(u[a][i] for a in addf[f].difference(pref[f])) >= x_a[f][i]
             # (4)
             for a in addf[f].difference(pref[f]):
-                m += y[a][i] <= x_a[f][i]
+                m += u[a][i] <= x_a[f][i]
             # (5)
-            m += lpSum(y[a][i] for a in pref[f].intersection(delf[f])) == x_pd[f][i]
+            m += lpSum(u[a][i] for a in pref[f].intersection(delf[f])) == x_pd[f][i]
             
             # (6)(7)
             m += x_a[f][i] + x_m[f][i] + x_pd[f][i] <= 1
@@ -196,12 +197,13 @@ def build_model_vossen2001_state_change_prop(T, sequential):
             
             # (own)
             if sequential:
-                m += lpSum(y[a][i] for a in actions) <= 1
+                m += lpSum(u[a][i] for a in actions) <= 1
       
     print(f"[Building Model: {time.time()-t1:.2f}s]")
     return m      
 
 def build_model_piacentini2018_state_change_prop(T, sequential):
+    global u 
     
     t1 = time.time()
     print('Building model...')
@@ -288,10 +290,9 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
             m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
       
     print(f"[Building Model: {time.time()-t1:.2f}s]")
-    
-    global y 
-    y = u
-    return m      
+    return m 
+
+
 
 
 #############
@@ -347,7 +348,7 @@ def export_internal(m, time_horizon):
             if t!=0:
                 file.write(f"\n-- ACTIONS --\n")
                 for a in actions:
-                    file.write(f'{y[a][t]} = {round(y[a][t].value())  if y[a][t].value()!=None else None}\n')
+                    file.write(f'{u[a][t]} = {round(u[a][t].value())  if u[a][t].value()!=None else None}\n')
     return m
 
 
@@ -367,18 +368,18 @@ def extract_solution(m, time_horizon):
         
         plan = {}
         print("plan:")
-        for t in range(0, time_horizon): # for piacentini
         # for t in range(1, time_horizon+1): # for vossen
+        for t in range(0, time_horizon): # for piacentini
             time_stamp_txt = f'{t}: '
             print(time_stamp_txt, end='')
-            for a in y:
+            for a in u:
                 if t not in plan:
                     plan[t] = []
                     
-                if y[a][t].value():
+                if u[a][t].value():
                     spaces = '' if len(plan[t])==0 else ' '*(len(time_stamp_txt))
                     
-                    action_name = str(y[a][t])
+                    action_name = str(u[a][t])
                     action_name = action_name[action_name.find('_')+1:action_name.rfind('_')]
                         
                     plan[t].append( action_name )
@@ -388,7 +389,6 @@ def extract_solution(m, time_horizon):
             if plan[t] == []:
                 print('<noop>')
                 
-
 ##########
 ## MAIN ##
 ##########
