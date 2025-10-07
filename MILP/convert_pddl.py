@@ -4,15 +4,24 @@ from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.engines import PlanGenerationResultStatus
 import itertools
 
+import time
+
 from MILP.boxprint import boxprint
 
 from sympy import expand, simplify
 from sympy.parsing.sympy_parser import parse_expr
 
+# used to convert strict inequalities into regular ones
+# i.e. ax+b > 0 becomes ax+b-epsilon>=0
+epsilon = 1e-5
+
 def normalize_equation(expr_str):
     rel_ops = ['<=', '>=', '<', '>', '==', '!=']
 
     expr_str = str(simplify(expr_str))
+
+    if '!=' in expr_str:
+        raise Exception('!= operator found, unsupported')
     
     for op in rel_ops:
         if op in expr_str:
@@ -28,6 +37,11 @@ def normalize_equation(expr_str):
                 op = '>'
             elif op == '<=':
                 expr = -expr
+                op = '>='
+
+            # Transform strict operator
+            if op == '>':
+                expr -= epsilon
                 op = '>='
             
             # Expand and simplify
@@ -50,14 +64,20 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     ###############
     ## GROUNDING ##
     ###############
+
+    t1 = time.time()
+    print('\tGrounding ... ', end='', flush=True)
     # with Compiler(name="fast-downward-grounder") as compiler:
     with Compiler(name="up_grounder") as compiler:
         compilation_result = compiler.compile(problem, CompilationKind.GROUNDING)
         problem = compilation_result.problem
+    print(f'Ok [{time.time()-t1:.2f}s]')
 
     #############################################
-    ## REPLACE CONSTRANT NUM FLUENT WITH VALUE ##
+    ## REPLACE CONSTANT NUM FLUENT WITH VALUE ##
     #############################################
+    t1 = time.time()
+    print('\tReplacing constant fluents ... ', end='', flush=True)
     # Collect fluents that appear as effects (i.e., modified)
     modified_fluents = set()
     for action in problem.actions:
@@ -132,10 +152,14 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     reader = PDDLReader()
     problem = reader.parse_problem(grounded_domain_filename, grounded_problem_filename)
 
+    print(f'Ok [{time.time()-t1:.2f}s]')
 
     #############
     ## COMPILE ##
     #############
+
+    t1 = time.time()
+    print('\tCompiles ... ', end='', flush=True)
 
     with Compiler(
         problem_kind=problem.kind,
@@ -150,13 +174,13 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     ) as compiler:
         compilation_result = compiler.compile(problem)
         problem = compilation_result.problem
+    print(f'Ok [{time.time()-t1:.2f}s]')
 
     # boxprint('PROBLEM')
     # print(problem)
 
     # with OneshotPlanner(problem_kind=problem.kind) as planner:
     if solve:
-        import time
         t1=time.time()
         with OneshotPlanner(problem_kind=problem.kind, 
                 optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
@@ -169,6 +193,9 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     #############
     ## FLUENTS ##
     #############
+
+    t1 = time.time()
+    print('\tData extraction ... ', end='', flush=True)
 
     Vp = []
     Vn = []
@@ -183,7 +210,6 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 Vp.append( "_".join( [f.name]+list(comb) )  )
             if f.type.is_real_type(): # Numeric
                 Vn.append( "_".join( [f.name]+list(comb) )  )
-
 
     #############
     ## ACTIONS ##
@@ -234,6 +260,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 actions[a.name]['pre_n'].add(c)
                 
                 # Init w_c_v and w_0_c
+                w_0_c[c] = 0
                 w_c_v[c] = {}
                 for f in Vn:
                     w_c_v[c][f] = 0
@@ -310,7 +337,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         if f.is_fluent_exp() and f.type.is_bool_type():
             I[f_str] = 1 if initial_value.is_true() else 0
         else:
-            I[f_str] = initial_value
+            I[f_str] = float(str(initial_value))
         
     # Goal State
     def flatten_conjunction(expr: FNode):
@@ -357,6 +384,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                 else:
                     w_value = float(x)
                     w_0_c[c] = w_value
+    print(f'Ok [{time.time()-t1:.2f}s]')
 
         
     ############

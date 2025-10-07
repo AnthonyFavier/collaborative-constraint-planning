@@ -13,6 +13,7 @@ def load_problem():
     global problem_name, Vp, Vn, actions, I, Gp, Gn
     global w_c_v, w_0_c, k_v_a_w, k_v_a
     global pref, addf, delf
+    global se, le
     
     t1 = time.time()
     print('Loading problem...')
@@ -32,8 +33,9 @@ def load_problem():
 
     domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
     problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
+    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
 
-    loaded_problem = load_pddl(domain_filename, problem_filename, show=True, solve=False)
+    loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
     # unpacking
     problem_name, (Vp, Vn), actions, I, (Gp, Gn), parameters = loaded_problem
     w_c_v, w_0_c, k_v_a_w, k_v_a = parameters
@@ -74,8 +76,6 @@ def load_problem():
         se[v] = set()
         le[v] = set()
         for a in actions:
-            if v=='fuel_plane1' and a=='refuel_plane1':
-                pass
             # check if affecting v
             affecting_v = False
             for e in actions[a]['num']:
@@ -99,9 +99,10 @@ def load_problem():
             else:
                 le[v].add(a)
         
+    # TODO: Merge both functions (convert_pddl and this one)
 
     print(f"[Loading Problem: {time.time()-t1:.2f}s]")
- 
+
 #################
 ## BUILD MODEL ##
 #################
