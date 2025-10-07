@@ -121,9 +121,6 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     # Read grounded domain file
     with open(grounded_domain_filename, 'r') as domain_file:
         domain_str = domain_file.read()
-    # Replace constrant fluent with initial values in domain 
-    for f_str, initial_value in constant_with_values.items():
-        domain_str = domain_str.replace(f_str, str(initial_value))
     # Remove fluent declaration in domain
     for f_str, initial_value in constant_with_values.items():
         fluent_name = f_str.replace('(','').replace(')','').split()[0]
@@ -131,6 +128,9 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         if i_def!=-1:
             i_end = domain_str.find(')', i_def)+1
             domain_str = domain_str[:i_def] + domain_str[i_end:]
+    # Replace constrant fluent with initial values in domain 
+    for f_str, initial_value in constant_with_values.items():
+        domain_str = domain_str.replace(f_str, str(initial_value))
     # Overwrite grounded domain file
     with open(grounded_domain_filename, 'w') as domain_file:
         domain_file.write(domain_str)
