@@ -284,8 +284,12 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                             w_value = float(x.split('*')[0])
                             v = x.split('*')[1]
                         else:
-                            w_value = 1
-                            v = x
+                            if x[0]=='-':
+                                w_value = -1
+                                v = x[1:]
+                            else:
+                                w_value = 1
+                                v = x
                         w_c_v[c][v] = w_value
 
                     else:
@@ -376,6 +380,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
             Gn.add(c)
             
             # Init w_c_v and w_0_c
+            w_0_c[c] = 0
             w_c_v[c] = {}
             for f in Vn:
                 w_c_v[c][f] = 0
@@ -388,13 +393,18 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
                         w_value = float(x.split('*')[0])
                         v = x.split('*')[1]
                     else:
-                        w_value = 1
-                        v = x
+                        if x[0]=='-':
+                            w_value = -1
+                            v = x[1:]
+                        else:
+                            w_value = 1
+                            v = x
                     w_c_v[c][v] = w_value
 
                 else:
                     w_value = float(x)
                     w_0_c[c] = w_value
+
     print(f'Ok [{time.time()-t1:.2f}s]')
 
         
