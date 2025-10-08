@@ -563,7 +563,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
                 k_v_a[v][a] + m_v_a_t[v][a][t+1] * (1-u[a][t])
 
     for a1 in actions: #(19)
-        for a2 in nmutex[a]:
+        for a2 in nmutex[a1]:
             for t in range(0, T):
                 m += u[a1][t] + u[a2][t] <= 1
 
