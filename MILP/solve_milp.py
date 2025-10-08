@@ -647,7 +647,6 @@ def export_internal(m, time_horizon):
                     file.write(f'{u[a][t]} = {round(u[a][t].value())  if u[a][t].value()!=None else None}\n')
     return m
 
-
 ######################
 ## EXTRACT SOLUTION ##
 ######################
@@ -712,6 +711,16 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
 
         solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
+        with open('output.txt', 'w') as f:
+            txt = ''
+            txt += 'Constraints:\n'
+            for k,c in m.constraints.items():
+                txt += f'{k} = {c}\n'
+            txt += '\nVariables:\n'
+            for v in m._variables:
+                txt += f'{v} = {v.varValue}\n'
+            f.write(txt)
+            
         if m.status==1:
             solved=True
         elif T==T_max:

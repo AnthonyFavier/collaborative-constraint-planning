@@ -11,3 +11,4 @@ env_cai/
 *.aux
 root.pdf
 root.log
+output.txt
