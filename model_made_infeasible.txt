@@ -1,0 +1,35 @@
+
+(:action test	
+ :parameters (?a1 ?a2 - aircraft)
+;  :effect (and (assign (total_fuel_used) (* 3 (+ (+ (* 2 (+ (fuel ?a1) (capacity ?a2))) (- (fuel ?a2) 10)) (capacity ?a1) ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;  :effect (and (increase (total_fuel_used) (fuel ?a1) ))                       ;OK
+;  :effect (and (increase (total_fuel_used) (* 2 (fuel ?a1)) ))                 ;OK
+;  :effect (and (increase (total_fuel_used) 15 ))                               ;OK
+;  :effect (and (increase (total_fuel_used) (* 3 15) ))                         ;OK
+;  :effect (and (increase (total_fuel_used) (+ (fuel ?a1) 15 ) ))               ;OK
+;  :effect (and (increase (total_fuel_used) (+ (* 2 (fuel ?a1)) 15 ) ))         ;OK
+;  :effect (and (increase (total_fuel_used) (+ (fuel ?a1) (* 2 15) ) ))         ;OK
+;  :effect (and (increase (total_fuel_used) (+ (* 2 (fuel ?a1)) 15 ) ))         ;OK
+
+;  :effect (and (assign (total_fuel_used) (fuel ?a1) ))                         ;OK
+;  :effect (and (assign (total_fuel_used) (* 2 (fuel ?a1)) ))                   ;OK
+;  :effect (and (assign (total_fuel_used) 15 ))                                 ;OK
+;  :effect (and (assign (total_fuel_used) (* 3 15) ))                           ;OK
+;  :effect (and (assign (total_fuel_used) (+ (fuel ?a1) 15 ) ))                 ;OK
+;  :effect (and (assign (total_fuel_used) (+ (* 2 (fuel ?a1)) 15 ) ))           ;OK
+;  :effect (and (assign (total_fuel_used) (+ (fuel ?a1) (* 2 15) ) ))           ;OK
+;  :effect (and (assign (total_fuel_used) (+ (* 2 (fuel ?a1)) 15)    ))         ;OK
+
+;  :effect (and (assign (total_fuel_used) (+ (* 2 (fuel ?a1)) 18000) ))         ;OK
+ :effect (and (assign (total_fuel_used) (+ (* 3 (fuel ?a1)) 18000) ))           ;FAIL
+
+
+ )
+
+
+With this action, depending on effect given, the model can become infeasible... ? 
+Doesn't seem to be a syntax or parsing issue. But rather a value problem.
+Too big assignment makes the problem infeasible, even if action not needed...
