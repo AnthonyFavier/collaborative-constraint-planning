@@ -119,11 +119,22 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     with open(grounded_domain_filename, 'r') as domain_file:
         domain_str = domain_file.read()
     # Remove fluent declaration in domain
+        # identify functions declaration start and end
+    i1 = i2 = domain_str.find('(:functions')
+    if i1!=-1:
+        n = 1
+        i2 += 1
+        while n!=0:
+            if domain_str[i2]=='(':
+                n+=1
+            elif domain_str[i2]==')':
+                n-=1
+            i2 += 1
     for f_str, initial_value in constant_with_values.items():
         fluent_name = f_str.replace('(','').replace(')','').split()[0]
-        i_def = domain_str.find(f'({fluent_name}')
+        i_def = domain_str.find(f'({fluent_name}', i1, i2)
         if i_def!=-1:
-            i_end = domain_str.find(')', i_def)+1
+            i_end = domain_str.find(')', i_def, i2)+1
             domain_str = domain_str[:i_def] + domain_str[i_end:]
     # Replace constrant fluent with initial values in domain 
     for f_str, initial_value in constant_with_values.items():
