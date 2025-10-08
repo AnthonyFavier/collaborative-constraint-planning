@@ -508,10 +508,6 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
             
             m += u_pa[f][i+1] + u_m[f][i+1] + u_pd[f][i+1] <= u_a[f][i] + u_pa[f][i] + u_m[f][i]
             
-            # (own)
-            # if sequential:
-            #     m += lpSum(u[a][i] for a in actions) <= 1
-        
         for i in range(0, T+1):
             m += u_a[f][i] + u_m[f][i] + u_pd[f][i] <= 1
             m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
@@ -570,6 +566,14 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
             for t in range(0, T):
                 m += u[a1][t] + u[a2][t] <= 1
 
+    ############################
+    ## ADDITIONAL CONSTRAINTS ##
+    ############################
+
+    # (own)
+    if sequential:
+        for i in range (0, T):
+            m += lpSum(u[a][i] for a in actions) <= 1
 
     #########################
       
