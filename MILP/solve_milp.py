@@ -32,9 +32,18 @@ def load_problem():
     # domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
     # problem_filename = 'classical-domains/classical/zenotravel/pfile5.pddl'
 
+
     domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
-    problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
+
+    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile0.pddl'
+    problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile1.pddl'
+    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
+    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile4.pddl'
+    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl'
     # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
+
+    # domain_filename = 'MILP/simple_num/domain.pddl'
+    # problem_filename = 'MILP/simple_num/pfile1.pddl'
 
     loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
     # unpacking
