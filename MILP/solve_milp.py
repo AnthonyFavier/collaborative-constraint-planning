@@ -518,6 +518,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
 
     for v in Vn:
         m += y_v_t[v][0] == I[v] #(12)
+        # y_v_t[v][0] = I[v] #(12)
     
     for c in Gn: #(13)
         op = get_op(c)
