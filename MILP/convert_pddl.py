@@ -16,41 +16,38 @@ from sympy.parsing.sympy_parser import parse_expr
 epsilon = 1e-5
 
 def normalize_equation(expr_str):
-    rel_ops = ['<=', '>=', '<', '>', '==', '!=']
+    exp = parse_expr(expr_str, evaluate=False)
 
-    expr_str = str(simplify(expr_str))
+    if exp.is_Relational:
+        op = exp.rel_op
 
-    if '!=' in expr_str:
-        raise Exception('!= operator found, unsupported')
-    
-    for op in rel_ops:
-        if op in expr_str:
-            lhs_str, rhs_str = expr_str.split(op, 1)
-            lhs = parse_expr(lhs_str, evaluate=False)
-            rhs = parse_expr(rhs_str, evaluate=False)
-            
-            expr = expand(lhs - rhs)
-            
-            # Convert <, <= into >, >= by flipping sign
-            if op == '<':
-                expr = -expr
-                op = '>'
-            elif op == '<=':
-                expr = -expr
-                op = '>='
+        if op == '!=':
+            raise Exception('!= operator found, unsupported')
 
-            # Transform strict operator
-            if op == '>':
-                expr -= epsilon
-                op = '>='
-            
-            # Expand and simplify
-            expr = simplify(expand(expr)).evalf()
-            
-            return f"{expr} {op} 0"
-    
-    # If no relational operator, just expand
-    return str(simplify(expand(parse_expr(expr_str, evaluate=False))))
+        # Move everything to the left side
+        exp = expand(exp.lhs - exp.rhs)
+        
+        # Convert <, <= into >, >= by flipping sign
+        if op == '<':
+            exp = -exp
+            op = '>'
+        elif op == '<=':
+            exp = -exp
+            op = '>='
+
+        # Transform strict operator
+        if op == '>':
+            exp -= epsilon
+            op = '>='
+
+        exp = expand(exp)
+        exp_str = str(exp) + ' ' + op + ' 0'
+
+    else:
+        exp = expand(exp)
+        exp_str = str(exp)
+
+    return exp_str
 
 def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     up.shortcuts.get_environment().credits_stream = None
