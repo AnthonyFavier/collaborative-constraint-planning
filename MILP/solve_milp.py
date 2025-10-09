@@ -17,7 +17,7 @@ def load_problem():
     global se, le
     
     t1 = time.time()
-    print('Loading problem...')
+    boxprint('Loading problem')
     
     # from pb_zeno import *
     # from pb_blocks import *
@@ -111,7 +111,9 @@ def load_problem():
         
     # TODO: Merge both functions (convert_pddl and this one)
 
-    print(f"[Loading Problem: {time.time()-t1:.2f}s]")
+    global g_loading_problem_time
+    g_loading_problem_time = time.time()-t1
+    print(f"[Loading Problem: {g_loading_problem_time:.2f}s]")
 
 #################
 ## BUILD MODEL ##
@@ -586,8 +588,10 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
             m += lpSum(u[a][i] for a in actions) <= 1
 
     #########################
-      
-    print(f"[Building Model: {time.time()-t1:.2f}s]")
+    
+    global g_building_model_time
+    g_building_model_time = time.time()-t1
+    print(f"[Building Model: {g_building_model_time:.2f}s]")
     return m      
 
 
@@ -602,7 +606,10 @@ def solve(m, sol_gap, solver_name="PULP_CBC_CMD"):
     solver = getSolver(solver_name, gapRel=sol_gap)
     t1 = time.time()
     m.solve(solver=solver)
-    print(f'elapsed: {time.time()-t1:.2f}s')
+
+    global g_solving_time
+    g_solving_time = time.time()-t1
+    print(f'elapsed: {g_solving_time:.2f}s')
     
 
 ############
@@ -695,11 +702,13 @@ def extract_solution(m, time_horizon):
 @click.option('--seq', 'sequential', is_flag=True, default=False)
 @click.option('--export', 'export', is_flag=True, default=False)
 def main(T_min, T_max, T_user, sol_gap, sequential, export):
+    t_start = time.time()
+
     load_problem()
     
     if T_user!=None:
         T_min = T_max = int(T_user)
-        
+    
     solved = False
     T = T_min
     while not solved and T<=T_max:
@@ -723,6 +732,8 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
             
         if m.status==1:
             solved=True
+            global g_total_solving_time
+            g_total_solving_time = time.time()-t_start
         elif T==T_max:
             raise Exception(f"Max time horizon ({T_max}) reached.")
         else: 
@@ -732,5 +743,14 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
         export_internal(m, T)
         
     extract_solution(m, T)
+
+    # show times
+    boxprint(f'\
+Loading problem: {g_loading_problem_time:.2f}s\n\
+Building model: {g_building_model_time:.2f}s\n\
+Solving instance: {g_solving_time:.2f}s\n\
+Total time: {g_total_solving_time:.2f}s\
+')
+    
 if __name__=='__main__':
     main()
