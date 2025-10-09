@@ -735,7 +735,11 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export):
             global g_total_solving_time
             g_total_solving_time = time.time()-t_start
         elif T==T_max:
-            raise Exception(f"Max time horizon ({T_max}) reached.")
+            if T_user!=None:
+                raise Exception(f"No solution found for time horizon ({T_user}).")
+                break
+            else:
+                raise Exception(f"Max time horizon ({T_max}) reached.")
         else: 
             T+=1
             
