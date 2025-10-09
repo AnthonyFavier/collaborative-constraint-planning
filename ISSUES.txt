@@ -28,3 +28,26 @@ ORIGINAL GOAL
 	(located person3 city2)
 	))
 => FAIL
+
+
+
+pfile0.pdd by adding person2 init located in city1
+ 
+
+ (:goal (and	
+	(located person1 city2)
+	(located person2 city2)
+	))
+=> OK
+
+with init (located person2 city2)
+(:goal (and	
+	(located person2 city1)
+	))
+=> FAIL
+
+Double checked
+- all normalized equations, all fine
+- all loaded data: Vp, Vn, actions, I, Gp, Gn
+- all parameters loaded: w_c_v, w_0_c, k_v_a_w, k_v_a
+- also checked the se and le sets
