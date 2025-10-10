@@ -456,16 +456,14 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     
     # Initial State
     for p in Vp:
-        # (1)
-        m += u_a[p][0] == I[p]
-        m += u_m[p][0] == 0
-        m += u_pa[p][0] == 0
-        m += u_pd[p][0] == 0
+        m += u_a[p][0] == I[p] #(1)
+        m += u_m[p][0] == 0 #?
+        m += u_pa[p][0] == 0 #?
+        m += u_pd[p][0] == 0 #?
         
     # Goal State
     for p in Gp:
-        # (2)
-        m += u_a[p][T] + u_pa[p][T] + u_m[p][T] >= 1
+        m += u_a[p][T] + u_pa[p][T] + u_m[p][T] >= 1 #(2)
     
     for p in Vp:
         for t in range(0, T):
@@ -473,17 +471,17 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
             for a in pref[p].difference(delf[p]):
                 m += u[a][t] <= u_pa[p][t+1] #(6)
 
-            m += lpSum(u[a][t] for a in addf[p].difference(pref[p])) >= u_a[p][t+1]
+            m += lpSum(u[a][t] for a in addf[p].difference(pref[p])) >= u_a[p][t+1] #(4)
             for a in addf[p].difference(pref[p]):
-                m += u[a][t] <= u_a[p][t+1]
+                m += u[a][t] <= u_a[p][t+1] #(7)
                 
-            m += lpSum(u[a][t] for a in pref[p].intersection(delf[p])) == u_pd[p][t+1]
+            m += lpSum(u[a][t] for a in pref[p].intersection(delf[p])) == u_pd[p][t+1] #(5)
             
-            m += u_pa[p][t+1] + u_m[p][t+1] + u_pd[p][t+1] <= u_a[p][t] + u_pa[p][t] + u_m[p][t]
+            m += u_pa[p][t+1] + u_m[p][t+1] + u_pd[p][t+1] <= u_a[p][t] + u_pa[p][t] + u_m[p][t] #(11)
             
         for t in range(0, T+1):
-            m += u_a[p][t] + u_m[p][t] + u_pd[p][t] <= 1
-            m += u_pa[p][t] + u_m[p][t] + u_pd[p][t] <= 1
+            m += u_a[p][t] + u_m[p][t] + u_pd[p][t] <= 1 #(8)
+            m += u_pa[p][t] + u_m[p][t] + u_pd[p][t] <= 1 #(9)
 
 
     #########################
