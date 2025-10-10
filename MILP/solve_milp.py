@@ -545,8 +545,8 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
 
     # (own)
     if sequential:
-        for i in range (0, T):
-            m += lpSum(u[a][i] for a in actions) <= 1
+        for t in range (0, T):
+            m += lpSum(u[a][t] for a in actions) <= 1
 
     #########################
     
