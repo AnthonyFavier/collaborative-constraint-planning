@@ -13,9 +13,9 @@ import math
 def load_problem(n_problem):
     global problem_name, Vp, Vn, actions, I, Gp, Gn
     global w_c_v, w_0_c, k_v_a_w, k_v_a
-    global pref, addf, delf
-    global se, le
-    
+    global pref, addf, delf, se, le
+
+
     t1 = time.time()
     boxprint('Loading problem')
 
@@ -340,31 +340,38 @@ def compute_m_constants(T):
     return m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t
 
 def build_nmutex():
-    nmutex = {}
+    def are_nmutex(a1, a2):
+        if a1 != a2:
+            for e1 in actions[a1]['num']:
+                v = e1.split(':=')[0].strip()
 
+                # check (i): v is assigned by a1 and is also used in one of the numeric effects of a2
+                for e2 in actions[a2]['num']:
+                    # if v in e2: 
+                        # return True
+
+                    # paper exact below
+                    xi = e2.split(':=')[1].strip()
+                    if v in xi:
+                        return True
+
+                # check (ii): v is assigned by a1 and is also part of a precondition of a2
+                for pre in actions[a2]['pre_n']:
+                    # if v in pre:
+                    #     return True
+
+                    # paper exact below
+                    if w_c_v[pre][v]!=0:
+                        return True
+
+        return False
+
+    nmutex = {}
     for a1 in actions:
         nmutex[a1] = set()
         for a2 in actions:
-            if a1 != a2:
-                are_mutex = False
-                for e1 in actions[a1]['num']:
-                    v = e1.split(':=')[0].strip()
-
-                    # check (i): v is assigned by a1 and is also used in one of the numeric effects of a2
-                    for e2 in actions[a2]['num']:
-                        if v in e2:
-                            nmutex[a1].add(a2)
-                            are_mutex = True
-                            break
-                    if are_mutex: break
-
-                    # check (ii): v is assigned by a1 and is also part of a precondition of a2
-                    for pre in actions[a2]['pre_n']:
-                        if v in pre:
-                            nmutex[a1].add(a2)
-                            are_mutex = True
-                            break
-                    if are_mutex: break
+            if are_nmutex(a1, a2):
+                nmutex[a1].add(a2)
 
     return nmutex
 
