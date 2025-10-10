@@ -1,0 +1,111 @@
+In propositional model:
+- when removing initial constraint for u_m, u_pa, u_pd == 0, finds a noop solution instantly
+    - But these constraints are not in the paper model
+    - Maybe still incorrect then?
+    - Uncertain:
+        m += u_m[f][0] == 0
+        m += u_pa[f][0] == 0
+        m += u_pd[f][0] == 0
+
+
+
+Difference between Vossen and Piacentini propositional:
+problem: 
+actions: a1: pre=(p0), del=(p0), add=(p1)
+actions: a2: pre=(p1), add=(p2)
+I = p0
+G = p2
+
+Piacentini:
+0: u_a1_0,  u_a_p0_0
+1: u_a2_1,  u_a_p1_1, u_pd_p0_1
+2:          u_a_p2_2, u_pa_p2_2
+
+Vossen:
+0:          u_a_p0_0
+1: u_a1_1,  u_a_p1_1, u_pd_p0_1
+2: u_a2_2,  u_a_p2_2, u_pa_p2_2
+
+
+==================================================================
+==================================================================
+
+
+(3)
+u_pa[p][t] : indicates if p is required and not deleted by any action at timestep t
+    => Simply wrong... actually if an action is executed at time-step t-1
+
+pnd(p): set of actions that require and not delete p
+
+so, for all p in Vn, sum of u[a][t] for a in pnd(p) greater or equal to u_pa[p][t+1]
+-> u_pa[p][t+1]: indicates if p is required and not deleted by any action at time-step t
+-> sum of u[a][t] for a in pnd(p): number of actions that require p and don't delete it being executed at time-step t
+
+==> if p is marked as required and not deleted at time-step t (u_pa[p][t+1]=1) then there must be at least one action executed at time-step t with p in precondition and not in delete effect
+==> if no action requiring and not deleting p is executed at time-step t than p is marked as not being required and not delete at time-step t
+
+(6)
+u[a][t] <= u_pa[p][t+1] for all a in pnd(p)
+-> u[a][t] with a in pnd(p): indicates if an action that requires p and don't delete it is executed at time-step t
+-> u_pa[p][t+1]: indicates if p is required and not deleted by any action at time-step t
+
+==> if an action that requires p and don't delete it is executed at time-step t then p is marked as required and not deleted at time-step t (u_pa[p][t+1] := 1)
+==> if p is marked as not being required and not delete at time-step t then no action requiring and not deleting p must be executed at time-step t
+
+
+(4)
+so, for all p in Vn, sum of u[a][t] for a in anp(p) greater or equal to u_a[p][t+1]
+-> u_a[p][t+1]: indicates if p is added and not required at time-step t
+-> sum of u[a][t] for a in anp(p): number of actions that add p and don't require it being executed at time-step t
+
+==> if p is added and not required at time-step t (u_a[p][t+1]=1) then there must be at least one action executed at time-step t with p in add effect and not in precondition
+==> if no action adding p and not requiring p is executed at time-step t then p is marked as not being added and not required at time-step t
+
+(7)
+u[a][t] <= u_a[p][t+1] for all a in anp(p)
+-> u[a][t] with a in anp(p): indicates if an action that add p and don't require it is executed at time-step t
+-> u_a[p][t+1]: indicates if p is marked as being added and not required at time-step t
+
+==> if an action that adds p and don't require it is executed at time-step t then p is marked as being added and not required at time-step t (u_a[p][t+1] := 1)
+==> if p is marked as not being added and not required at time-step t then no action adding and not requiring p must be executed at time-step t
+
+
+(5)
+sum u[a][t] for a in pd(p) = u_pd[a][t+1]
+-> sum u[a][t] for a in pd(p): number of actions that requires and deletes p being executed at time-step t
+-> u_pd[a][t+1]: indicates if p is marked as being required and deleted by any action at time-step t
+
+==> if p is required and deleted at time-step t then one and only one action requiring and deleting p must be executed at time-step t
+==> actions requiring and deleting p are mutually exclusive
+
+note: (3)/(6) and (4)/(7) are pairs with sums since actions adding or requiring p and not exclusive. Several actions can add or require p at a same time-step t. Equality of (5) enforces the mutual exclusiveness of actions deleting p.
+
+(8)
+u_a[p][t] + u_m[p][t] + u_pd[p][t] <= 1
+
+=> adding p, propagating p and deleting p is mutually exclusive
+==> prevent conflicting actions
+
+(9)
+u_pa[p][t] + u_m[p][t] + u_pd[p][t] <= 1
+
+=> requiring p, propagating p, and deleting p is mutually exclusive
+==> prevent conflicting actions
+
+(10)
+really needed?
+isn't it already covered by (8) and (9)?
+a1: deleting p
+a2: adding or requiring p
+are mutually exclusive
+
+Should be covered by previous constraints, proof: 
+if a1 deletes p (a1 in pd(p)) is executed at time-step t then from (5) u_pd[p][t+1]:=1 (p is marked as being deleted) and no other action can delete p at time-step t
+thus, (8) and (9) indicates that u_a[p][t+1]:=0, u_pa[p][t+1]:=0, u_m[p][t+1]:=0, that is, p can't be added, propagated, or be required at time-step t
+thus, (6) and (7) indicates that no action requiring (in pnd) or adding p (in anp) can be executed at time-step t (for all a in pnd(p) or in anp(p) u[a][t]:=0)
+if a is in pnd then p is in pre(a) and p not in del(a) and not in add(p), so if p in del(a1) and a2 is in pnd(p) then add(a2) union pre(a2) = {p}, so inter del(a1) == {p} != empty set
+
+(11)
+u_pa[p][t+1] + u_m[p][t+1] + u_pd[p][t+1] <= u_a[p][t] + u_pa[p][t] + u_m[p][t]
+=> if p is required, propagated or delete at time-step t then it should be either added, required or propagated at time-step t-1
+=> if p is not added, not required, and not propagated at time-step t-1 then p is can't be required, propagated, nor deleted at time-step t
