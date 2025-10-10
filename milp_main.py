@@ -1,4 +1,4 @@
-from MILP.solve_milp import main
+from MILP.solve_milp import mainCLI
 
-main()
+mainCLI()
 

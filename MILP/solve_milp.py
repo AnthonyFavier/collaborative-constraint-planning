@@ -10,7 +10,7 @@ import math
 ##################
 ## LOAD PROBLEM ##
 ##################
-def load_problem():
+def load_problem(n_problem):
     global problem_name, Vp, Vn, actions, I, Gp, Gn
     global w_c_v, w_0_c, k_v_a_w, k_v_a
     global pref, addf, delf
@@ -18,33 +18,35 @@ def load_problem():
     
     t1 = time.time()
     boxprint('Loading problem')
-    
-    # from pb_zeno import *
-    # from pb_blocks import *
-    # from pb_log import *
 
-    # domain_filename = "classical-domains/classical/blocks/domain.pddl"
-    # problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
+    if n_problem!=None:
+        domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'  
+        problem_filename = f'classical-domains/classical/zenotravel/pfile{n_problem}.pddl'
+    else:
+        # domain_filename = "classical-domains/classical/blocks/domain.pddl"
+        # problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
 
-    # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
-    # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
+        # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
+        # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
 
-    # domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
-    # problem_filename = 'classical-domains/classical/zenotravel/pfile5.pddl'
+        domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
+        problem_filename = 'classical-domains/classical/zenotravel/pfile3.pddl'
 
 
-    domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
+        # domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
 
-    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile0.pddl'
-    problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile1.pddl'
-    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
-    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile4.pddl'
-    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl'
-    # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile0.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile1.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile4.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl'
+        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
 
-    # domain_filename = 'MILP/simple_num/domain.pddl'
-    # problem_filename = 'MILP/simple_num/pfile1.pddl'
+        # domain_filename = 'MILP/simple_num/domain.pddl'
+        # problem_filename = 'MILP/simple_num/pfile1.pddl'
 
+    print('domain_filename=', domain_filename)
+    print('problem_filename=', problem_filename)
     loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
     # unpacking
     problem_name, (Vp, Vn), actions, I, (Gp, Gn), parameters = loaded_problem
@@ -701,10 +703,13 @@ def extract_solution(m, time_horizon):
 @click.option('--gap', 'sol_gap', default=None)
 @click.option('--seq', 'sequential', is_flag=True, default=False)
 @click.option('--export', 'export', is_flag=True, default=False)
-def main(T_min, T_max, T_user, sol_gap, sequential, export):
+@click.option('--n_problem', 'n_problem', default=None)
+def mainCLI(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
+    main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem)
+def main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
     t_start = time.time()
 
-    load_problem()
+    load_problem(n_problem)
     
     if T_user!=None:
         T_min = T_max = int(T_user)
@@ -755,6 +760,6 @@ Building model: {g_building_model_time:.2f}s\n\
 Solving instance: {g_solving_time:.2f}s\n\
 Total time: {g_total_solving_time:.2f}s\
 ')
-    
+
 if __name__=='__main__':
-    main()
+    mainCLI()
