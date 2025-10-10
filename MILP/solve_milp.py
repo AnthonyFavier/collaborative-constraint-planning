@@ -159,8 +159,10 @@ def build_model_vossen2001_state_change_prop(T, sequential):
             if sequential:
                 m += lpSum(u[a][i] for a in actions) <= 1
       
-    print(f"[Building Model: {time.time()-t1:.2f}s]")
-    return m      
+    global g_building_model_time
+    g_building_model_time = time.time()-t1
+    print(f"[Building Model: {g_building_model_time:.2f}s]")
+    return m 
 
 def build_model_piacentini2018_state_change_prop(T, sequential):
     global u 
@@ -249,9 +251,12 @@ def build_model_piacentini2018_state_change_prop(T, sequential):
             m += u_a[f][i] + u_m[f][i] + u_pd[f][i] <= 1
             m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
       
-    print(f"[Building Model: {time.time()-t1:.2f}s]")
+    global g_building_model_time
+    g_building_model_time = time.time()-t1
+    print(f"[Building Model: {g_building_model_time:.2f}s]")
     return m 
 
+###############################
 
 def compute_m_constants(T):
 
@@ -405,24 +410,24 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     u = {}
     for a in actions:
         u[a] = {}
-        for i in range(0, T):
-            u[a][i] = LpVariable(f'u_{a}_{i}', cat='Binary') # True if action a is executed at time step i
+        for t in range(0, T):
+            u[a][t] = LpVariable(f'u_{a}_{t}', cat='Binary') # True if action a is executed at time step t
             
     # Propositional fluent state change variables
     u_m = {} 
     u_pa = {}
     u_pd = {}
     u_a = {}
-    for f in Vp:
-        u_m[f] = {}
-        u_pa[f] = {}
-        u_pd[f] = {}
-        u_a[f] = {}
-        for i in range(0, T+1):
-            u_m[f][i] = LpVariable(f'u_m_{f}_{i}', cat='Binary') # True if fluent is propagated (noop)
-            u_pa[f][i] = LpVariable(f'u_pa_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and doesn't delete it (maintainted/propagated)
-            u_pd[f][i] = LpVariable(f'u_pd_{f}_{i}', cat='Binary') # True if an action is executed at i and has f as precondition and delete effect
-            u_a[f][i] = LpVariable(f'u_a_{f}_{i}', cat='Binary') # True if an action is executed at i and has f in add effect but not in precondition
+    for p in Vp:
+        u_m[p] = {}
+        u_pa[p] = {}
+        u_pd[p] = {}
+        u_a[p] = {}
+        for t in range(0, T+1):
+            u_m[p][t] = LpVariable(f'u_m_{p}_{t}', cat='Binary') # True if fluent is propagated (noop)
+            u_pa[p][t] = LpVariable(f'u_pa_{p}_{t}', cat='Binary') # True if an action is executed at t and has f as precondition and doesn't delete it (maintainted/propagated)
+            u_pd[p][t] = LpVariable(f'u_pd_{p}_{t}', cat='Binary') # True if an action is executed at t and has f as precondition and delete effect
+            u_a[p][t] = LpVariable(f'u_a_{p}_{t}', cat='Binary') # True if an action is executed at t and has f in add effect but not in precondition
     
     # Numeric fluent value variables
     y_v_t = {}
@@ -431,6 +436,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
         for t in range(0, T+1):
             y_v_t[v][t] = LpVariable(f'y_v_t_{v}_{t}', cat='Continuous') # value of fluent v at time step t
             
+
     ###############
     ## OBJECTIVE ##
     ###############
@@ -438,7 +444,8 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
         L = []
         for a in actions:
             for t in range(0, T):
-                L.append(u[a][t])
+                cost_a = 1
+                L.append(cost_a * u[a][t])
         m += lpSum(L)
     obj_nb_actions(m)
         
@@ -448,35 +455,36 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     ###############################
     
     # Initial State
-    for f in Vp:
-        # (10)
-        m += u_a[f][0] == I[f]
-        m += u_m[f][0] == 0
-        m += u_pa[f][0] == 0
-        m += u_pd[f][0] == 0
+    for p in Vp:
+        # (1)
+        m += u_a[p][0] == I[p]
+        m += u_m[p][0] == 0
+        m += u_pa[p][0] == 0
+        m += u_pd[p][0] == 0
         
     # Goal State
-    for f in Gp:
-        # (9)
-        m += u_a[f][T] + u_pa[f][T] + u_m[f][T] >= 1
+    for p in Gp:
+        # (2)
+        m += u_a[p][T] + u_pa[p][T] + u_m[p][T] >= 1
     
-    for f in Vp:
-        for i in range(0, T):
-            m += lpSum(u[a][i] for a in pref[f].difference(delf[f])) >= u_pa[f][i+1]
-            for a in pref[f].difference(delf[f]):
-                m += u[a][i] <= u_pa[f][i+1]
+    for p in Vp:
+        for t in range(0, T):
+            m += lpSum(u[a][t] for a in pref[p].difference(delf[p])) >= u_pa[p][t+1] #(3)
+            for a in pref[p].difference(delf[p]):
+                m += u[a][t] <= u_pa[p][t+1] #(6)
 
-            m += lpSum(u[a][i] for a in addf[f].difference(pref[f])) >= u_a[f][i+1]
-            for a in addf[f].difference(pref[f]):
-                m += u[a][i] <= u_a[f][i+1]
+            m += lpSum(u[a][t] for a in addf[p].difference(pref[p])) >= u_a[p][t+1]
+            for a in addf[p].difference(pref[p]):
+                m += u[a][t] <= u_a[p][t+1]
                 
-            m += lpSum(u[a][i] for a in pref[f].intersection(delf[f])) == u_pd[f][i+1]
+            m += lpSum(u[a][t] for a in pref[p].intersection(delf[p])) == u_pd[p][t+1]
             
-            m += u_pa[f][i+1] + u_m[f][i+1] + u_pd[f][i+1] <= u_a[f][i] + u_pa[f][i] + u_m[f][i]
+            m += u_pa[p][t+1] + u_m[p][t+1] + u_pd[p][t+1] <= u_a[p][t] + u_pa[p][t] + u_m[p][t]
             
-        for i in range(0, T+1):
-            m += u_a[f][i] + u_m[f][i] + u_pd[f][i] <= 1
-            m += u_pa[f][i] + u_m[f][i] + u_pd[f][i] <= 1
+        for t in range(0, T+1):
+            m += u_a[p][t] + u_m[p][t] + u_pd[p][t] <= 1
+            m += u_pa[p][t] + u_m[p][t] + u_pd[p][t] <= 1
+
 
     #########################
     ## CONSTRAINTS NUMERIC ##
