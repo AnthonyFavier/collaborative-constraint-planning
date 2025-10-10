@@ -47,70 +47,16 @@ def load_problem(n_problem):
 
     print('domain_filename=', domain_filename)
     print('problem_filename=', problem_filename)
+
     loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
+
     # unpacking
-    problem_name, (Vp, Vn), actions, I, (Gp, Gn), parameters = loaded_problem
-    w_c_v, w_0_c, k_v_a_w, k_v_a = parameters
+    problem_name, V, actions, I, G, num_param, actionsAffectingF = loaded_problem
+    Vp, Vn = V # Fluents
+    Gp, Gn = G # Goal state
+    w_c_v, w_0_c, k_v_a_w, k_v_a = num_param # Parameters describing numerical preconditions, goals, and effects
+    pref, addf, delf, se, le = actionsAffectingF # Actions affecting given fluent
 
-    def generatePreF(actions, Vp):
-        pref = {}
-        for f in Vp:
-            pref[f] = set()
-            for a in actions:
-                if f in actions[a]['pre_p']:
-                    pref[f] = pref[f].union({a})
-        return pref
-    def generateAddF(actions, Vp):
-        addf = {}
-        for f in Vp:
-            addf[f] = set()
-            for a in actions:
-                if f in actions[a]['add']:
-                    addf[f] = addf[f].union({a})
-        return addf
-    def generateDelF(actions, Vp):
-        delf = {}
-        for f in Vp:
-            delf[f] = set()
-            for a in actions:
-                if f in actions[a]['del']:
-                    delf[f] = delf[f].union({a})
-        return delf
-
-    pref = generatePreF(actions, Vp) # actions with p in preconditions
-    addf = generateAddF(actions, Vp) # actions with p in add effects
-    delf = generateDelF(actions, Vp) # actions with p in del effects
- 
-    
-    se = {} # actions with constant numeric effects affecting v, i.e. v := v + k^{v,a} in num(a)
-    le = {} # actions with linear numeric effects affecting v, i.e. v := sum_{w in Vn} k^{v,a}_w * w + k^{v,a} in num(a), a not in se(v)
-    for v in Vn:
-        se[v] = set()
-        le[v] = set()
-        for a in actions:
-            # check if affecting v
-            affecting_v = False
-            for e in actions[a]['num']:
-                fluent_affected = e.split(':=')[0].strip()
-                if fluent_affected == v:
-                    affecting_v = True
-                    break
-            if not affecting_v:
-                continue
-
-            # check if constant effects
-            has_constant_effects = True
-            for w in Vn:
-                if (w==v and k_v_a_w[v][a][v] != 1)\
-                or (w!=v and k_v_a_w[v][a][w] != 0):
-                    has_constant_effects = False
-                    break
-                
-            if has_constant_effects:
-                se[v].add(a)
-            else:
-                le[v].add(a)
-        
     # TODO: Merge both functions (convert_pddl and this one)
 
     global g_loading_problem_time
