@@ -1,4 +1,4 @@
-from MILP.solve_milp import mainCLI
+from MILP.solve_milp import mainCLI as milpCLI
 
-mainCLI()
-
+if __name__=='__main__':
+    milpCLI()
