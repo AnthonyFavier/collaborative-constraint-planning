@@ -29,7 +29,7 @@ ORIGINAL GOAL
 	))
 => FAIL
 
-
+Tested with arbitrary M values, from 10e0 to 10e9. still FAIL
 
 pfile0.pdd by adding person2 init located in city1
  
