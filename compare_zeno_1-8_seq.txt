@@ -1,0 +1,58 @@
+prop zeno travel
+
+zeno1:
+	UP  : length=1 duration=0.94s
+	0: fly_plane1_city0_city1_fl1_fl0
+
+	MILP: length=1 duration=0.82s (build=0.13s last=0.18s => 0.31s)
+	0: fly_plane1_city0_city1_fl1_fl0
+
+zeno2:
+	UP  : length=6 duration=0.61s
+	0: fly_plane1_city0_city2_fl2_fl1 | 1: board_person1_plane1_city2 | 2: refuel_plane1_city2_fl1_fl2 | 3: fly_plane1_city2_city1_fl2_fl1 | 4: debark_person1_plane1_city1 | 5: fly_plane1_city1_city2_fl1_fl0
+
+	MILP: length=6 duration=6.73s (build=0.62s last=0.62s => 1.24s)
+	0: fly_plane1_city0_city2_fl2_fl1 | 1: refuel_plane1_city2_fl1_fl2 | 2: board_person1_plane1_city2 | 3: fly_plane1_city2_city1_fl2_fl1 | 4: debark_person1_plane1_city1 | 5: fly_plane1_city1_city2_fl1_fl0
+
+zeno3:
+	UP  : length=6 duration=0.91s
+	0: board_person1_plane1_city0 | 1: fly_plane1_city0_city1_fl4_fl3 | 2: board_person3_plane1_city1 | 3: debark_person1_plane1_city1 | 4: fly_plane1_city1_city0_fl3_fl2 | 5: debark_person3_plane1_city0
+
+	MILP: length=6 duration=10.20s (build=1.06s last=1.27s => 2.33s)
+	0: board_person1_plane1_city0 | 1: fly_plane1_city0_city1_fl4_fl3 | 2: debark_person1_plane1_city1 | 3: board_person3_plane1_city1 | 4: fly_plane1_city1_city0_fl3_fl2 | 5: debark_person3_plane1_city0
+
+zeno4:
+	UP  : length=8 duration=0.91s
+	0: fly_plane1_city2_city0_fl5_fl4 | 1: board_person4_plane1_city0 | 2: fly_plane1_city0_city1_fl4_fl3 | 3: debark_person4_plane1_city1 | 4: board_person2_plane1_city1 | 5: fly_plane1_city1_city2_fl3_fl2 | 6: debark_person2_plane1_city2 | 7: fly_plane1_city2_city0_fl2_fl1
+
+	MILP: length=8 duration=16.95s (build=1.47s last=1.29s => 2.76s)
+	0: fly_plane1_city2_city0_fl5_fl4 | 1: board_person4_plane1_city0 | 2: fly_plane1_city0_city1_fl4_fl3 | 3: board_person2_plane1_city1 | 4: debark_person4_plane1_city1 | 5: fly_plane1_city1_city2_fl3_fl2 | 6: debark_person2_plane1_city2 | 7: zoom_plane1_city2_city0_fl2_fl1_fl0
+
+zeno5:
+	UP  : length=11 duration=1.47s
+	0: board_person4_plane1_city1 | 1: fly_plane1_city1_city0_fl6_fl5 | 2: board_person3_plane1_city0 | 3: board_person2_plane1_city0 | 4: fly_plane1_city0_city3_fl5_fl4 | 5: debark_person4_plane1_city3 | 6: debark_person3_plane1_city3 | 7: debark_person2_plane1_city3 | 8: board_person1_plane1_city3 | 9: fly_plane1_city3_city2_fl4_fl3 | 10: debark_person1_plane1_city2
+
+	MILP: length=11 duration=38.02s (build=3.12s last=2.03s => 5.15s)
+	0: board_person4_plane1_city1 | 1: fly_plane1_city1_city0_fl6_fl5 | 2: board_person2_plane1_city0 | 3: board_person3_plane1_city0 | 4: fly_plane1_city0_city3_fl5_fl4 | 5: debark_person2_plane1_city3 | 6: board_person1_plane1_city3 | 7: debark_person3_plane1_city3 | 8: debark_person4_plane1_city3 | 9: zoom_plane1_city3_city2_fl4_fl3_fl2 | 10: debark_person1_plane1_city2
+
+zeno6:
+	UP  : length=11 duration=1.31s
+	0: board_person5_plane1_city2 | 1: fly_plane1_city2_city0_fl5_fl4 | 2: board_person2_plane1_city0 | 3: board_person1_plane1_city0 | 4: fly_plane1_city0_city1_fl4_fl3 | 5: debark_person5_plane1_city1 | 6: board_person4_plane1_city1 | 7: debark_person2_plane1_city1 | 8: fly_plane1_city1_city3_fl3_fl2 | 9: debark_person4_plane1_city3 | 10: debark_person1_plane1_city3
+
+	MILP: length=11 duration=46.88s (build=3.30s last=5.70s => 9.00s)
+	0: board_person5_plane1_city2 | 1: fly_plane1_city2_city0_fl5_fl4 | 2: board_person2_plane1_city0 | 3: board_person1_plane1_city0 | 4: zoom_plane1_city0_city1_fl4_fl3_fl2 | 5: board_person4_plane1_city1 | 6: debark_person2_plane1_city1 | 7: debark_person5_plane1_city1 | 8: zoom_plane1_city1_city3_fl2_fl1_fl0 | 9: debark_person1_plane1_city3 | 10: debark_person4_plane1_city3
+
+zeno7:
+	UP  : length=15 duration=1.66s
+	0: board_person4_plane2_city1 | 1: refuel_plane2_city1_fl1_fl2 | 2: fly_plane2_city1_city3_fl2_fl1 | 3: board_person5_plane2_city3 | 4: debark_person4_plane2_city3 | 5: board_person1_plane2_city3 | 6: fly_plane2_city3_city0_fl1_fl0 | 7: refuel_plane2_city0_fl0_fl1 | 8: board_person6_plane2_city0 | 9: fly_plane2_city0_city2_fl1_fl0 | 10: refuel_plane2_city2_fl0_fl1 | 11: debark_person6_plane2_city2 | 12: debark_person5_plane2_city2 | 13: debark_person1_plane2_city2 | 14: fly_plane2_city2_city1_fl1_fl0
+
+	MILP: length=15 duration=195.58s (build=4.85s last=60.85s => 65.70s)
+	0: refuel_plane1_city2_fl1_fl2 | 1: fly_plane1_city2_city0_fl2_fl1 | 2: board_person6_plane1_city0 | 3: fly_plane1_city0_city1_fl1_fl0 | 4: refuel_plane1_city1_fl0_fl1 | 5: refuel_plane1_city1_fl1_fl2 | 6: board_person4_plane1_city1 | 7: fly_plane1_city1_city3_fl2_fl1 | 8: board_person1_plane1_city3 | 9: board_person5_plane1_city3 | 10: debark_person4_plane1_city3 | 11: fly_plane1_city3_city2_fl1_fl0 | 12: debark_person6_plane1_city2 | 13: debark_person5_plane1_city2 | 14: debark_person1_plane1_city2
+
+zeno8:
+	UP  : length=11 duration=2.66s
+	0: fly_plane1_city0_city4_fl6_fl5 | 1: board_person6_plane1_city4 | 2: fly_plane1_city4_city2_fl5_fl4 | 3: debark_person6_plane1_city2 | 4: board_person3_plane1_city2 | 5: fly_plane1_city2_city1_fl4_fl3 | 6: debark_person3_plane1_city1 | 7: board_person1_plane1_city1 | 8: fly_plane1_city1_city0_fl3_fl2 | 9: debark_person1_plane1_city0 | 10: fly_plane1_city0_city3_fl2_fl1
+
+	MILP: length=11 duration=108.87s (build=8.74s last=13.62s => 22.36s)
+	0: fly_plane1_city0_city4_fl6_fl5 | 1: board_person6_plane1_city4 | 2: fly_plane1_city4_city2_fl5_fl4 | 3: debark_person6_plane1_city2 | 4: board_person3_plane1_city2 | 5: fly_plane1_city2_city1_fl4_fl3 | 6: debark_person3_plane1_city1 | 7: board_person1_plane1_city1 | 8: fly_plane1_city1_city0_fl3_fl2 | 9: debark_person1_plane1_city0 | 10: fly_plane1_city0_city3_fl2_fl1
+

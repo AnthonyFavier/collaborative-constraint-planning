@@ -1,0 +1,25 @@
+problem1:
+	MILP: length=8 duration=8.68s (build=0.60s last=0.68s => 1.28s)
+	0: sample_rock_rover0_rover0store_waypoint0 | 1: drop_rover0_rover0store | 2: communicate_rock_data_rover0_general_waypoint0_waypoint0_waypoint1 | 3: sample_soil_rover0_rover0store_waypoint0 | 4: calibrate_rover0_camera0_objective0_waypoint0 | 5: communicate_soil_data_rover0_general_waypoint0_waypoint0_waypoint1 | 6: take_image_rover0_waypoint0_objective1_camera0_low_res | 7: communicate_image_data_rover0_general_objective1_low_res_waypoint0_waypoint1
+
+problem2:
+
+	MILP: length=10 duration=12.33s (build=0.69s last=0.86s => 1.55s)
+	0: calibrate_rover0_camera0_objective1_waypoint3 | 1: sample_rock_rover0_rover0store_waypoint3 | 2: communicate_rock_data_rover0_general_waypoint3_waypoint3_waypoint0 | 3: navigate_rover0_waypoint3_waypoint1 | 4: drop_rover0_rover0store | 5: navigate_rover0_waypoint1_waypoint2 | 6: take_image_rover0_waypoint2_objective1_camera0_high_res | 7: communicate_image_data_rover0_general_objective1_high_res_waypoint2_waypoint0 | 8: sample_soil_rover0_rover0store_waypoint2 | 9: communicate_soil_data_rover0_general_waypoint2_waypoint2_waypoint0
+
+problem3:
+
+	MILP: length=11 duration=22.67s (build=1.09s last=1.51s => 2.59s)
+	0: navigate_rover1_waypoint3_waypoint0 | 1: sample_rock_rover1_rover1store_waypoint0 | 2: calibrate_rover1_camera1_objective0_waypoint0 | 3: drop_rover1_rover1store | 4: take_image_rover1_waypoint0_objective0_camera1_colour | 5: navigate_rover1_waypoint0_waypoint3 | 6: communicate_rock_data_rover1_general_waypoint0_waypoint3_waypoint0 | 7: communicate_image_data_rover1_general_objective0_colour_waypoint3_waypoint0 | 8: navigate_rover1_waypoint3_waypoint2 | 9: sample_soil_rover1_rover1store_waypoint2 | 10: communicate_soil_data_rover1_general_waypoint2_waypoint2_waypoint0
+
+problem4:
+
+	MILP: length=8 duration=14.75s (build=0.96s last=1.20s => 2.16s)
+	0: navigate_rover1_waypoint2_waypoint1 | 1: sample_rock_rover1_rover1store_waypoint1 | 2: communicate_rock_data_rover1_general_waypoint1_waypoint1_waypoint2 | 3: sample_soil_rover0_rover0store_waypoint3 | 4: calibrate_rover1_camera0_objective0_waypoint1 | 5: communicate_soil_data_rover0_general_waypoint3_waypoint3_waypoint2 | 6: take_image_rover1_waypoint1_objective0_camera0_high_res | 7: communicate_image_data_rover1_general_objective0_high_res_waypoint1_waypoint2
+
+problem5:
+
+	MILP: length=22 duration=267.58s (build=4.17s last=89.67s => 93.84s)
+	0: calibrate_rover1_camera1_objective1_waypoint0 | 1: navigate_rover1_waypoint0_waypoint1 | 2: take_image_rover1_waypoint1_objective0_camera1_colour | 3: communicate_image_data_rover1_general_objective0_colour_waypoint1_waypoint3 | 4: sample_rock_rover0_rover0store_waypoint0 | 5: calibrate_rover1_camera1_objective1_waypoint1 | 6: calibrate_rover0_camera2_objective1_waypoint0 | 7: take_image_rover1_waypoint1_objective0_camera1_high_res | 8: sample_soil_rover1_rover1store_waypoint1 | 9: communicate_image_data_rover1_general_objective0_high_res_waypoint1_waypoint3 | 10: take_image_rover0_waypoint0_objective2_camera2_high_res | 11: communicate_image_data_rover0_general_objective2_high_res_waypoint0_waypoint3 | 12: drop_rover1_rover1store | 13: communicate_rock_data_rover0_general_waypoint0_waypoint0_waypoint3 | 14: navigate_rover0_waypoint0_waypoint1 | 15: drop_rover0_rover0store | 16: communicate_soil_data_rover1_general_waypoint1_waypoint1_waypoint3 | 17: navigate_rover1_waypoint1_waypoint2 | 18: sample_rock_rover0_rover0store_waypoint1 | 19: communicate_rock_data_rover0_general_waypoint1_waypoint1_waypoint3 | 20: sample_soil_rover1_rover1store_waypoint2 | 21: communicate_soil_data_rover1_general_waypoint2_waypoint2_waypoint3
+
+problem6:
