@@ -49,6 +49,55 @@ def normalize_equation(expr_str):
 
     return exp_str
 
+def parse_and_remove_dashes(domain_filename, problem_filename):
+    """
+    Our framework grounds the PDDL problem.
+    The unified_planning replace '-' by '_' when generating PDDL.
+    This is conflicting with the format used for the MILP formulation.
+    Thus, the '-' are removed from the start from fluent, action, and object names.
+    """
+
+    t1 = time.time()
+    print('\tParsing ... ', end='', flush=True)
+
+    # Initial parsing from files
+    reader = PDDLReader()
+    problem = reader.parse_problem(domain_filename, problem_filename)
+
+    dashes = ['-', '_']
+    elements_to_check = problem.fluents + problem.actions + problem.all_objects
+
+    # Stop here if no dash in fluent name nor action name nor object name
+    if all(d not in x.name 
+           for x in elements_to_check
+           for d in dashes):
+        print(f'Ok [{time.time()-t1:.2f}s]')
+        return problem
+    
+    print(f'Ok [{time.time()-t1:.2f}s]')
+    
+    print('\tRemoving dashes ... ', end='', flush=True)
+
+    # get domain and problem as string 
+    writter = PDDLWriter(problem)
+    domain_str = writter.get_domain() # This changes '-' to '_'
+    problem_str = writter.get_problem() # This changes '-' to '_'
+
+    # remove dashes 
+    for d in dashes:
+        for x in elements_to_check:
+            if d in x.name:
+                # print(x.name + ' -> ' + x.name.replace(d, '_') + ' -> ' + x.name.replace(d, ''))
+                domain_str = domain_str.replace(x.name.replace(d, '_'), x.name.replace(d, ''))
+                problem_str = problem_str.replace(x.name.replace(d, '_'), x.name.replace(d, ''))
+
+    # parse updated string problem
+    problem = reader.parse_problem_string(domain_str, problem_str)
+    
+    print(f'Ok [{time.time()-t1:.2f}s]')
+
+    return problem
+
 def grounding(problem):
     t1 = time.time()
     print('\tGrounding ... ', end='', flush=True)
@@ -88,6 +137,10 @@ def replace_constant_n_fluent(problem):
     # Set difference to obtained modified grounded fluents
     constant_numeric_fluents = initial_Vn - modified_fluents
 
+    # Stop here if nothing to remove
+    if constant_numeric_fluents == set():
+        return problem
+
     # Save them in a disctionary with pddl str as key and initial value
     constant_with_values = {}
     for f in constant_numeric_fluents:
@@ -95,63 +148,57 @@ def replace_constant_n_fluent(problem):
         txt = "(" + " ".join(txt.split()) + ")"
         constant_with_values[txt] = problem.initial_value(f)
 
-    # Write grounded problem and domain in PDDL (easier but slower by writing file..)
-    grounded_domain_filename = 'tmp/grounded_domain.pddl'
-    grounded_problem_filename = 'tmp/grounded_problem.pddl'
+    # Get domain and problem as string
     writter = PDDLWriter(problem)
-    writter.write_domain(grounded_domain_filename)
-    writter.write_problem(grounded_problem_filename)
+    domain_str = writter.get_domain()
+    problem_str = writter.get_problem()
 
-    # Read grounded domain file
-    with open(grounded_domain_filename, 'r') as domain_file:
-        domain_str = domain_file.read()
+    ## DOMAIN ##
+
     # Remove fluent declaration in domain
+        # Check if has to be removed, if (f o1) and (f o2) are constant, maybe (f o3) isn't and thus f declaration should be kept
+    constant_functions  = set( str(f).split('(')[0] for f in constant_numeric_fluents)
+    modified_functions = set( str(f).split('(')[0] for f in modified_fluents)
+    functions_to_remove = constant_functions - modified_functions
+    if functions_to_remove:
         # identify functions declaration start and end
-    i1 = i2 = domain_str.find('(:functions')
-    if i1!=-1:
+        i_function_decla_1 = i_function_decla_2 = domain_str.find('(:functions'); assert i_function_decla_1!=-1
         n = 1
-        i2 += 1
+        i_function_decla_2 += 1
         while n!=0:
-            if domain_str[i2]=='(':
-                n+=1
-            elif domain_str[i2]==')':
-                n-=1
-            i2 += 1
-    for f_str, initial_value in constant_with_values.items():
-        fluent_name = f_str.replace('(','').replace(')','').split()[0]
-        i_def = domain_str.find(f'({fluent_name}', i1, i2)
-        if i_def!=-1:
-            i_end = domain_str.find(')', i_def, i2)+1
-            domain_str = domain_str[:i_def] + domain_str[i_end:]
+            if domain_str[i_function_decla_2]=='(': n+=1
+            elif domain_str[i_function_decla_2]==')': n-=1
+            i_function_decla_2 += 1
+
+        # Remove constant fluent from function declaration
+        for function in functions_to_remove:
+            i1 = domain_str.find(f' ({function}', i_function_decla_1, i_function_decla_2); assert i1!=-1
+            i2 = domain_str.find(')', i1, i_function_decla_2)+1; assert i2!=-1
+            domain_str = domain_str[:i1] + domain_str[i2:]
+            i_function_decla_2 -= i2-i1
+
     # Replace constrant fluent with initial values in domain 
     for f_str, initial_value in constant_with_values.items():
         domain_str = domain_str.replace(f_str, str(initial_value))
-    # Overwrite grounded domain file
-    with open(grounded_domain_filename, 'w') as domain_file:
-        domain_file.write(domain_str)
 
-    # Read grounded problem file
-    with open(grounded_problem_filename, 'r') as problem_file:
-        problem_str = problem_file.read()
-    # Delete each constant fluent assignment
+    ## PROBLEM ##
+
+    # Delete each constant fluent assignment in problem
         # find f_str, delete from '(=' to next ')
     for f_str, initial_value in constant_with_values.items():
-        i_f = problem_str.find(f_str)
-        i1 = problem_str.rfind('(=', 0, i_f)
-        i2 = problem_str.find(')',  problem_str.find(')', i_f)+1)+1
+        i_f = problem_str.find(f_str); assert i_f!=-1
+        i1 = problem_str.rfind('(=', 0, i_f); assert i1!=-1
+        i2 = problem_str.find(')',  problem_str.find(')', i_f)+1)+1; assert i2!=-1
         problem_str = problem_str[:i1] + problem_str[i2:]
-    # Overwrite grounded problem file
-    with open(grounded_problem_filename, 'w') as problem_file:
-        problem_file.write(problem_str)
 
-    # TODO: Might need to replace in metric also... But currently not considered in milp formulation..
+    # Replace constant fluent with initial values in problem (should only concern metric)
+    for f_str, initial_value in constant_with_values.items():
+        problem_str = problem_str.replace(f_str, str(initial_value))
 
-    # Load new problem
-    reader = PDDLReader()
-    problem = reader.parse_problem(grounded_domain_filename, grounded_problem_filename)
+    # Parse updated string problem
+    problem = PDDLReader().parse_problem_string(domain_str, problem_str)
 
     print(f'Ok [{time.time()-t1:.2f}s]')
-
     return problem
 
 def addition_compilations(problem, compilation_kinds):
@@ -170,6 +217,11 @@ def addition_compilations(problem, compilation_kinds):
     print(f'Ok [{time.time()-t1:.2f}s]')
 
     return problem
+
+def export_preprocessed_problem(problem):
+    w = PDDLWriter(problem)
+    w.write_domain('tmp/pre_dom.pddl')
+    w.write_problem('tmp/pre_pb.pddl')
 
 def solve_up(problem):
     # with OneshotPlanner(problem_kind=problem.kind) as planner:
@@ -373,7 +425,7 @@ def extract_initial_state(problem):
             I[f_str] = float(str(initial_value))
     return I
 
-def extract_goal(problem, Vp, Vn, w_c_v, w_0_c):
+def extract_goal(problem, Vp, Vn):
 
     def flatten_conjunction(expr: FNode):
         """Recursively flatten a goal FNode into a list of conjuncts."""
@@ -392,6 +444,8 @@ def extract_goal(problem, Vp, Vn, w_c_v, w_0_c):
     
     Gp = set()
     Gn = set()
+    w_0_c = {}
+    w_c_v = {}
     for f in flatten_goals(problem.goals):
         if f.is_fluent_exp() and f.type.is_bool_type():
             f = str(f).replace('(','_').replace(', ','_').replace(')','')
@@ -454,24 +508,15 @@ def print_info(problem_name, Vp, Vn, actions, I, Gp, Gn):
 
 ##############################
 
-def load_pddl(domain_filename, problem_filename, show=False, solve=False):
+def load_pddl(domain_filename, problem_filename, no_data_extraction=False):
     up.shortcuts.get_environment().credits_stream = None
     
-    #############
-    ## PARSING ##
-    #############
-    reader = PDDLReader()
-    problem = reader.parse_problem(domain_filename, problem_filename)
-
-    ############################
-    ## SOLVE WITH PDDL SOLVER ##
-    ############################
-    if solve:
-        solve_up(problem)
-
     ###################
     ## PREPROCESSING ##
     ###################
+
+    ## PARSE and REMOVE DASHES in names ##
+    problem = parse_and_remove_dashes(domain_filename, problem_filename)
 
     ## GROUNDING ##
     problem = grounding(problem)
@@ -484,6 +529,12 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
         CompilationKind.DISJUNCTIVE_CONDITIONS_REMOVING,
         CompilationKind.NEGATIVE_CONDITIONS_REMOVING,
     ])
+
+    ## Export preprocessed problem
+    export_preprocessed_problem(problem)
+
+    if no_data_extraction:
+        return (problem.name, problem, None)
 
     #####################
     ## DATA EXTRACTION ##
@@ -498,7 +549,7 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     Vp, Vn = extract_fluents(problem)
 
     ## ACTIONS ##
-    actions, w_c_v, w_0_c, k_v_a, k_v_a_w = extract_actions(problem, Vp, Vn)
+    actions, w_c_v_pre, w_0_c_pre, k_v_a, k_v_a_w = extract_actions(problem, Vp, Vn)
    
     ## ACTION SETS AFFECTING FLUENT ##
 
@@ -513,17 +564,14 @@ def load_pddl(domain_filename, problem_filename, show=False, solve=False):
     I = extract_initial_state(problem)
         
     ## GOAL ##
-    Gp, Gn, w_c_v, w_0_c = extract_goal(problem, Vp, Vn, w_c_v, w_0_c)
+    Gp, Gn, w_c_v_goal, w_0_c_goal = extract_goal(problem, Vp, Vn)
+
+    # Merge preconditions and goal w_c_v and w_0_c
+    w_c_v = w_c_v_pre | w_c_v_goal
+    w_0_c = w_0_c_pre | w_0_c_goal
 
     print(f'Ok [{time.time()-t1:.2f}s]')
 
-        
-    ###########
-    ## PRINT ##
-    ###########
-    if show:
-        print_info(problem_name, Vp, Vn, actions, I, Gp, Gn)
-        
-    return (problem_name, (Vp, Vn), actions, I, (Gp, Gn), (w_c_v, w_0_c, k_v_a_w, k_v_a), (pref, addf, delf, se, le))
+    return (problem_name, problem, ((Vp, Vn), actions, I, (Gp, Gn), (w_c_v, w_0_c, k_v_a_w, k_v_a), (pref, addf, delf, se, le)))
 
     

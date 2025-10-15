@@ -10,7 +10,7 @@ import math
 ##################
 ## LOAD PROBLEM ##
 ##################
-def load_problem(n_problem):
+def load_problem(n_problem, up_solving=False):
     global problem_name, Vp, Vn, actions, I, Gp, Gn
     global w_c_v, w_0_c, k_v_a_w, k_v_a
     global pref, addf, delf, se, le
@@ -20,8 +20,17 @@ def load_problem(n_problem):
     boxprint('Loading problem')
 
     if n_problem!=None:
-        domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'  
-        problem_filename = f'classical-domains/classical/zenotravel/pfile{n_problem}.pddl'
+        classical = False
+        domain_name = 'zenotravel'
+
+        if classical:
+            domain_filename = f'classical-domains/classical/{domain_name}/domain.pddl'  
+            problem_filename = f'classical-domains/classical/{domain_name}/pfile{n_problem}.pddl'
+
+        else:
+            domain_filename = f'ipc2023-dataset/{domain_name}/domain.pddl'  
+            problem_filename = f'ipc2023-dataset/{domain_name}/instances/pfile{n_problem}.pddl'
+
     else:
         # domain_filename = "classical-domains/classical/blocks/domain.pddl"
         # problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
@@ -48,10 +57,29 @@ def load_problem(n_problem):
     print('domain_filename=', domain_filename)
     print('problem_filename=', problem_filename)
 
-    loaded_problem = load_pddl(domain_filename, problem_filename, show=False, solve=False)
+    if up_solving:
+        problem_name, problem, data_extracted = load_pddl(domain_filename, problem_filename, no_data_extraction=True)
+
+        boxprint('SOLVING UP')
+        with OneshotPlanner(problem_kind=problem.kind, 
+            optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
+        ) as planner:
+            result = planner.solve(problem)
+            plan_str = []
+            for t, a in enumerate(str(result.plan).splitlines()[1:]):
+                a = a.strip().replace('(','_').replace(')','').replace(', ','_')
+                plan_str.append(f'{t}: {a}')
+            plan_str = ' | '.join(plan_str)
+            plan_length = len(result.plan.actions)
+        
+        return plan_str, plan_length
+
+
+    loaded_problem = load_pddl(domain_filename, problem_filename)
 
     # unpacking
-    problem_name, V, actions, I, G, num_param, actionsAffectingF = loaded_problem
+    problem_name, problem, data_extracted = loaded_problem
+    V, actions, I, G, num_param, actionsAffectingF = data_extracted
     Vp, Vn = V # Fluents
     Gp, Gn = G # Goal state
     w_c_v, w_0_c, k_v_a_w, k_v_a = num_param # Parameters describing numerical preconditions, goals, and effects
@@ -651,7 +679,19 @@ def extract_solution(m, time_horizon):
                     
             if plan[t] == []:
                 print('<noop>')
-                
+
+    return plan
+
+##############
+## UP SOLVE ##
+##############
+def up_solve(n_problem):
+    t_start = time.time()
+    plan, plan_length = load_problem(n_problem, True)
+    return plan, plan_length, time.time()-t_start
+
+########################################################
+
 ##########
 ## MAIN ##
 ##########
@@ -710,7 +750,7 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
     if export:
         export_internal(m, T)
         
-    extract_solution(m, T)
+    plan = extract_solution(m, T)
 
     # show times
     boxprint(f'\
@@ -719,6 +759,16 @@ Building model: {g_building_model_time:.2f}s\n\
 Solving instance: {g_solving_time:.2f}s\n\
 Total time: {g_total_solving_time:.2f}s\
 ')
+    
+
+    plan_length = 0
+    plan_str = []
+    for t in plan:
+        plan_length += len(plan[t])
+        plan_str.append(f'{t}: ' + ', '.join(plan[t]))
+    plan_str = ' | '.join(plan_str)
+
+    return plan_str, plan_length, g_total_solving_time, g_solving_time, g_building_model_time
 
 if __name__=='__main__':
     mainCLI()
