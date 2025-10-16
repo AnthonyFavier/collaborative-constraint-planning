@@ -5,7 +5,8 @@ from datetime import datetime
 import time
 import click
 import math
-
+from unified_planning.shortcuts import *
+from unified_planning.engines import PlanGenerationResultStatus
 
 ##################
 ## LOAD PROBLEM ##
