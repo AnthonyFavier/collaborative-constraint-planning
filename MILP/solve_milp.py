@@ -420,13 +420,36 @@ def extract_solution(domain_filename, problem_filename, m, time_horizon):
 
     return plan
 
+
 ##############
 ## UP SOLVE ##
 ##############
-def up_solve(n_problem):
-    t_start = time.time()
-    plan, plan_length = load_problem(n_problem, True)
-    return plan, plan_length, time.time()-t_start
+def up_solve(domain_name=None, i_instance=None, domain_filename=None, problem_filename=None, classical=False):
+    t_total_1 = time.time()
+
+    if domain_name!=None and i_instance!=None:
+        domain_filename, problem_filename = get_problem_filenames(domain_name, i_instance, classical=classical)
+    problem_name, up_problem, milp_problem = load_pddl(domain_filename, problem_filename, no_data_extraction=True)
+
+    boxprint(f"UP Solving")
+
+    t_solving_1 = time.time()
+    with OneshotPlanner(problem_kind=up_problem.kind, 
+        optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
+    ) as planner:
+        result = planner.solve(up_problem)
+        up_solving_time = time.time()-t_solving_1
+        plan_str = []
+        for t, a in enumerate(str(result.plan).splitlines()[1:]):
+            a = a.strip().replace('(','_').replace(')','').replace(', ','_')
+            plan_str.append(f'{t}: {a}')
+        plan_str = ' | '.join(plan_str)
+        plan_length = len(result.plan.actions)
+
+    total_time = time.time()-t_total_1
+
+    from MILP.convert_pddl import g_loading_problem_time
+    return plan_str, plan_length, (g_loading_problem_time, up_solving_time, total_time)
 
 ########################################################
 
