@@ -1,34 +1,57 @@
-from MILP.solve_milp import mainCLI as milpCLI
 from MILP.solve_milp import main as milp
-from MILP.solve_milp import up_solve
+from MILP.solve_milp import get_problem_filenames
 
 from MILP.boxprint import boxprint
 
+import json
+
 def run_compare():
+    domain_name = 'zenotravel'
+    classical = False
+    
     results = {}
+    data = {
+        'domain_name': domain_name,
+        'classical': classical,
+        'results': results
+    }
 
-    filename = 'compare_results_milp.txt'
+    json_filename = 'dump_results_milp.json'
 
-    f = open(filename, 'w')
-    f.close()
-
-    for i in range(1, 11):
+    for i in range(1, 3):
         problem_name = f'problem{i}'
         boxprint(problem_name, mode='d')
-        with open(filename, 'a') as f:
-            f.write(f'{problem_name}:\n')
+
+        domain_filename, problem_filename = get_problem_filenames(domain_name, i, classical=classical)
+
+        if problem_name not in results: results[problem_name] = {}
+        results[problem_name]['MILP'] = {
+            'domain_filename': domain_filename,
+            'problem_filename': problem_filename,
+        }
 
         ##################
         ## MILP SOLVING ##
         ##################
-        plan_str, plan_length, duration, last_solving_duration, build_model = milp(T_min=1, T_max=100, T_user=None, sol_gap=None, sequential=True, export=False, n_problem=i)
+        plan_str, plan_length, durations = milp(T_min=1, T_max=200, T_user=None, sol_gap=None, sequential=True, domain_name=None, i_instance=None, domain_filename=domain_filename, problem_filename=problem_filename)
+        loading_time, last_building_model, last_solving_time, total_solving_time = durations
 
-        instance_result = {'plan': plan_str, 'plan_length': plan_length, 'duration': duration, 'last_solve': last_solving_duration, 'build_model': build_model}
-        if problem_name not in results: results[problem_name] = {}
-        results[problem_name]['MILP'] = instance_result
-        with open(filename, 'a') as f:
-            f.write(f'\n\tMILP: length={plan_length} duration={duration:.2f}s (build={build_model:.2f}s last={last_solving_duration:.2f}s => {build_model+last_solving_duration:.2f}s)\n\t{plan_str}\n\n')
-        print(f'\n\tMILP: length={plan_length} duration={duration:.2f}s (build={build_model:.2f}s last={last_solving_duration:.2f}s => {build_model+last_solving_duration:.2f}s)\n\t{plan_str}\n\n')
+        plan = [a.split(': ')[1] for a in plan_str.split(' | ')]
+
+        instance_result = {
+            'plan': plan,
+            'plan_length': plan_length,
+            'loading_time': loading_time,
+            'last_building_model': last_building_model,
+            'last_solving_time': last_solving_time,
+            'total_last':loading_time+last_building_model+last_solving_time,
+            'total_solving_time': total_solving_time,
+        }
+        
+        results[problem_name]['MILP'].update(instance_result)
+        with open(json_filename, 'w') as f:
+            json.dump(data, f, indent=4)
+        print(f'\tMILP: length={plan_length} total time={total_solving_time:.2f}s (load={loading_time:.2f}s last_build={last_building_model:.2f}s last_solve={last_solving_time:.2f}s => {loading_time+last_building_model+last_solving_time:.2f}s)\n\t{plan_str}\n')
 
 if __name__=='__main__':
     run_compare()

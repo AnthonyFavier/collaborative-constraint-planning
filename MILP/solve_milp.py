@@ -10,140 +10,103 @@ import math
 ##################
 ## LOAD PROBLEM ##
 ##################
-def load_problem(n_problem, up_solving=False):
-    global problem_name, Vp, Vn, actions, I, Gp, Gn
-    global w_c_v, w_0_c, k_v_a_w, k_v_a
-    global pref, addf, delf, se, le
+def get_problem_filenames(domain_name, i_instance, classical=False):
+    """
+    ** Numerical ***
+    block-grouping, counters, delivery, drone, expedition, ext-plant-watering, farmland, fo-counters, fo-farmland, fo-sailing, hydropower, markettrader, mprime, pathwaysmetric, rover, sailing, settlersnumeric, sugar, tpp, zenotravel
 
+    ** Classical **
+    agricola-opt18, caldera-sat18, elevators-00-adl, floortile-sat14-strips, maintenance-sat14-adl, openstacks, organic-synthesis-split-opt18, pegsol-sat11-strips, scanalyzer-08-strips, spider-sat18, transport-opt14-strips, woodworking-opt11-strips, agricola-sat18, caldera-split-opt18, elevators-00-full, freecell, miconic, openstacks-opt08-adl, organic-synthesis-split-sat18, petri-net-alignment-opt18, scanalyzer-opt11-strips, storage, transport-sat08-strips, woodworking-sat08-strips, airport, caldera-split-sat18, elevators-00-strips, fridge, miconic-fulladl, openstacks-opt08-strips, parcprinter-08-strips, petri-net-alignment-sat18, scanalyzer-sat11-strips, termes-opt18, transport-sat11-strips, woodworking-sat11-strips, airport-adl, cavediving, elevators-opt08-strips, ged-opt14-strips, miconic-simpleadl, openstacks-opt11-strips, parcprinter-opt11-strips, philosophers, schedule, termes-sat18, transport-sat14-strips, zenotravel, assembly, childsnack-opt14-strips, elevators-opt11-strips, ged-sat14-strips, movie, openstacks-opt14-strips, parcprinter-sat11-strips, pipesworld-06, settlers-opt18, tetris-opt14-strips, trucks, barman-opt11-strips, childsnack-sat14-strips, elevators-sat08-strips, grid, mprime, openstacks-sat08-adl, parking-opt11-strips, pipesworld-notankage, settlers-sat18, tetris-sat14-strips, trucks-strips, barman-opt14-strips, citycar-opt14-adl, elevators-sat11-strips, gripper, mystery, openstacks-sat08-strips, parking-opt14-strips, pipesworld-tankage, snake-opt18, thoughtful-sat14-strips, tsp, barman-sat11-strips, citycar-sat14-adl, ferry, hanoi, no-mprime, openstacks-sat11-strips, parking-sat11-strips, psr-large, snake-sat18, tidybot-opt11-strips, tyreworld, barman-sat14-strips, cybersec, flashfill-opt18, hiking-opt14-strips, no-mystery, openstacks-sat14-strips, parking-sat14-strips, psr-middle, sokoban-opt08-strips, tidybot-opt14-strips, visitall-opt11-strips, blocks, data-network-opt18, flashfill-sat18, hiking-sat14-strips, nomystery-opt11-strips, openstacks-strips, pathways, psr-small, sokoban-opt11-strips, tidybot-sat11-strips, visitall-opt14-strips, blocks-3op, data-network-sat18, floortile-opt11-strips, logistics00, nomystery-sat11-strips, optical-telegraphs, pathways-noneg, rovers, sokoban-sat08-strips, tpp, visitall-sat11-strips, briefcaseworld, depot, floortile-opt14-strips, logistics98, nurikabe-opt18, organic-synthesis-opt18, pegsol-08-strips, rovers-02, sokoban-sat11-strips, transport-opt08-strips, visitall-sat14-strips, caldera-opt18, driverlog, floortile-sat11-strips, maintenance-opt14-adl, nurikabe-sat18, organic-synthesis-sat18, pegsol-opt11-strips, satellite, spider-opt18, transport-opt11-strips, woodworking-opt08-strips
+    """
 
-    t1 = time.time()
-    boxprint('Loading problem')
-
-    if n_problem!=None:
-        classical = False
-        domain_name = 'zenotravel'
-
-        if classical:
-            domain_filename = f'classical-domains/classical/{domain_name}/domain.pddl'  
-            problem_filename = f'classical-domains/classical/{domain_name}/pfile{n_problem}.pddl'
-
-        else:
-            domain_filename = f'ipc2023-dataset/{domain_name}/domain.pddl'  
-            problem_filename = f'ipc2023-dataset/{domain_name}/instances/pfile{n_problem}.pddl'
+    if classical:
+        domain_filename = f'classical-domains/classical/{domain_name}/domain.pddl'  
+        problem_filename = f'classical-domains/classical/{domain_name}/pfile{i_instance}.pddl'
 
     else:
-        # domain_filename = "classical-domains/classical/blocks/domain.pddl"
-        # problem_filename = "classical-domains/classical/blocks/probBLOCKS-8-0.pddl"
+        domain_filename = f'ipc2023-dataset/{domain_name}/domain.pddl'  
+        problem_filename = f'ipc2023-dataset/{domain_name}/instances/pfile{i_instance}.pddl'
 
-        # domain_filename = "MILP/propositional_zeno/pzeno_dom.pddl"
-        # problem_filename = "MILP/propositional_zeno/pzeno0.pddl"
+    return domain_filename, problem_filename
 
-        domain_filename = 'classical-domains/classical/zenotravel/domain.pddl'
-        problem_filename = 'classical-domains/classical/zenotravel/pfile3.pddl'
+class MILP_data_extracted:
+    def __init__(self, data_extracted):
+        V, actions, I, G, num_param, actionsAffectingF = data_extracted
+        Vp, Vn = V # Fluents
+        Gp, Gn = G # Goal state
+        w_c_v, w_0_c, k_v_a_w, k_v_a = num_param # Parameters describing numerical preconditions, goals, and effects
+        pref, addf, delf, se, le = actionsAffectingF # Actions affecting given fluent
 
-
-        # domain_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl'
-
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile0.pddl'
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile1.pddl'
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile3.pddl'
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile4.pddl'
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile5.pddl'
-        # problem_filename = '/home/afavier/ws/CAI/NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl'
-
-        # domain_filename = 'MILP/simple_num/domain.pddl'
-        # problem_filename = 'MILP/simple_num/pfile1.pddl'
-
-    print('domain_filename=', domain_filename)
-    print('problem_filename=', problem_filename)
-
-    if up_solving:
-        problem_name, problem, data_extracted = load_pddl(domain_filename, problem_filename, no_data_extraction=True)
-
-        boxprint('SOLVING UP')
-        with OneshotPlanner(problem_kind=problem.kind, 
-            optimality_guarantee=PlanGenerationResultStatus.SOLVED_OPTIMALLY
-        ) as planner:
-            result = planner.solve(problem)
-            plan_str = []
-            for t, a in enumerate(str(result.plan).splitlines()[1:]):
-                a = a.strip().replace('(','_').replace(')','').replace(', ','_')
-                plan_str.append(f'{t}: {a}')
-            plan_str = ' | '.join(plan_str)
-            plan_length = len(result.plan.actions)
-        
-        return plan_str, plan_length
-
-
-    loaded_problem = load_pddl(domain_filename, problem_filename)
-
-    # unpacking
-    problem_name, problem, data_extracted = loaded_problem
-    V, actions, I, G, num_param, actionsAffectingF = data_extracted
-    Vp, Vn = V # Fluents
-    Gp, Gn = G # Goal state
-    w_c_v, w_0_c, k_v_a_w, k_v_a = num_param # Parameters describing numerical preconditions, goals, and effects
-    pref, addf, delf, se, le = actionsAffectingF # Actions affecting given fluent
-
-    # TODO: Merge both functions (convert_pddl and this one)
-
-    global g_loading_problem_time
-    g_loading_problem_time = time.time()-t1
-    print(f"[Loading Problem: {g_loading_problem_time:.2f}s]")
+        self.actions = actions
+        self.Vp = Vp
+        self.Vn = Vn
+        self.I = I
+        self.Gp = Gp
+        self.Gn = Gn
+        self.w_c_v = w_c_v
+        self.w_0_c = w_0_c
+        self.k_v_a_w = k_v_a_w
+        self.k_v_a = k_v_a
+        self.pref = pref
+        self.addf = addf
+        self.delf = delf
+        self.se = se
+        self.le = le
 
 #################
 ## BUILD MODEL ##
 #################
-def compute_m_constants(T):
+def compute_m_constants(M: MILP_data_extracted, T):
 
     # compute m_v_t, M_v_t
+    global M_v_t, m_v_t
     m_v_t = {}
     M_v_t = {}
-    for v in Vn:
+    for v in M.Vn:
         m_v_t[v] = {}
         M_v_t[v] = {}
         for t in range(0, T+1):
             if t==0:
-                m_v_t[v][t] = I[v]
-                M_v_t[v][t] = I[v]
+                m_v_t[v][t] = M.I[v]
+                M_v_t[v][t] = M.I[v]
 
             else:
                 min_a_bot = min(
-                    sum(k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] > 0)\
-                    + sum(k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] < 0)\
-                    for a in le[v]
-                ) if le[v] else math.inf
+                    sum(M.k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in M.Vn if M.k_v_a_w[v][a][w] > 0)\
+                    + sum(M.k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in M.Vn if M.k_v_a_w[v][a][w] < 0)\
+                    for a in M.le[v]
+                ) if M.le[v] else math.inf
 
                 max_a_top = max(
-                    sum(k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] > 0) \
-                    + sum(k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in Vn if k_v_a_w[v][a][w] < 0)\
-                    for a in le[v]
-                ) if le[v] else -math.inf
+                    sum(M.k_v_a_w[v][a][w] * M_v_t[w][t-1] for w in M.Vn if M.k_v_a_w[v][a][w] > 0) \
+                    + sum(M.k_v_a_w[v][a][w] * m_v_t[w][t-1] for w in M.Vn if M.k_v_a_w[v][a][w] < 0)\
+                    for a in M.le[v]
+                ) if M.le[v] else -math.inf
 
                 m_v_t[v][t] = min(
-                    m_v_t[v][t-1] + sum(k_v_a[v][a] for a in se[v] if k_v_a[v][a] < 0),
+                    m_v_t[v][t-1] + sum(M.k_v_a[v][a] for a in M.se[v] if M.k_v_a[v][a] < 0),
                     min_a_bot
                 )
  
                 M_v_t[v][t] = max(
-                    M_v_t[v][t-1] + sum(k_v_a[v][a] for a in se[v] if k_v_a[v][a] > 0),
+                    M_v_t[v][t-1] + sum(M.k_v_a[v][a] for a in M.se[v] if M.k_v_a[v][a] > 0),
                     max_a_top
                 )
 
     # Compute m_c_t
     m_c_t = {}
-    for a in actions:
-        for c in actions[a]['pre_n']:
+    for a in M.actions:
+        for c in M.actions[a]['pre_n']:
             m_c_t[c] = {}
             for t in range(0, T):
-                m_c_t[c][t] = sum(w_c_v[c][v] * M_v_t[v][t] for v in Vn if w_c_v[c][v]<0)\
-                + sum(w_c_v[c][v] * m_v_t[v][t] for v in Vn if w_c_v[c][v]>0)\
-                + w_0_c[c]
+                m_c_t[c][t] = sum(M.w_c_v[c][v] * M_v_t[v][t] for v in M.Vn if M.w_c_v[c][v]<0)\
+                + sum(M.w_c_v[c][v] * m_v_t[v][t] for v in M.Vn if M.w_c_v[c][v]>0)\
+                + M.w_0_c[c]
 
     # Compute m/M_step_c_t
     M_step_v_t = {}
     m_step_v_t = {}
-    for v in Vn:
+    for v in M.Vn:
         M_step_v_t[v] = {}
         m_step_v_t[v] = {}
         for t in range(0, T+1):
@@ -157,10 +120,10 @@ def compute_m_constants(T):
     # Compute m/M_v_a_t
     M_v_a_t = {}
     m_v_a_t = {}
-    for v in Vn:
+    for v in M.Vn:
         M_v_a_t[v] = {}
         m_v_a_t[v] = {}
-        for a in le[v]:
+        for a in M.le[v]:
             M_v_a_t[v][a] = {}
             m_v_a_t[v][a] = {}
             for t in range(0, T+1):
@@ -169,25 +132,25 @@ def compute_m_constants(T):
                     m_v_a_t[v][a][t] = m_v_t[v][t]
                 else:
                     M_v_a_t[v][a][t] = M_v_t[v][t]\
-                    - sum(k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]<0)\
-                    + sum(k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]>0)\
-                    - k_v_a[v][a]
+                    - sum(M.k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in M.Vn if M.k_v_a_w[v][a][w]<0)\
+                    + sum(M.k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in M.Vn if M.k_v_a_w[v][a][w]>0)\
+                    - M.k_v_a[v][a]
                     
                     m_v_a_t[v][a][t] = m_v_t[v][t]\
-                    - sum(k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]>0)\
-                    + sum(k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in Vn if k_v_a_w[v][a][w]<0)\
-                    - k_v_a[v][a]
+                    - sum(M.k_v_a_w[v][a][w] * M_v_t[v][t-1] for w in M.Vn if M.k_v_a_w[v][a][w]>0)\
+                    + sum(M.k_v_a_w[v][a][w] * m_v_t[v][t-1] for w in M.Vn if M.k_v_a_w[v][a][w]<0)\
+                    - M.k_v_a[v][a]
 
     return m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t
 
-def build_nmutex():
+def build_nmutex(M: MILP_data_extracted):
     def are_nmutex(a1, a2):
         if a1 != a2:
-            for e1 in actions[a1]['num']:
+            for e1 in M.actions[a1]['num']:
                 v = e1.split(':=')[0].strip()
 
                 # check (i): v is assigned by a1 and is also used in one of the numeric effects of a2
-                for e2 in actions[a2]['num']:
+                for e2 in M.actions[a2]['num']:
                     # if v in e2: 
                         # return True
 
@@ -197,20 +160,20 @@ def build_nmutex():
                         return True
 
                 # check (ii): v is assigned by a1 and is also part of a precondition of a2
-                for pre in actions[a2]['pre_n']:
+                for pre in M.actions[a2]['pre_n']:
                     # if v in pre:
                     #     return True
 
                     # paper exact below
-                    if w_c_v[pre][v]!=0:
+                    if M.w_c_v[pre][v]!=0:
                         return True
 
         return False
 
     nmutex = {}
-    for a1 in actions:
+    for a1 in M.actions:
         nmutex[a1] = set()
-        for a2 in actions:
+        for a2 in M.actions:
             if are_nmutex(a1, a2):
                 nmutex[a1].add(a2)
 
@@ -224,11 +187,11 @@ def get_op(c):
     assert op != None
     return op
                 
-def build_model_piacentini2018_state_change_numeric(T, sequential):
+def build_model_piacentini2018_state_change_numeric(M: MILP_data_extracted, T, sequential):
     global u
 
-    m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t = compute_m_constants(T)
-    nmutex = build_nmutex()
+    m_c_t, m_step_v_t, M_step_v_t, m_v_a_t, M_v_a_t = compute_m_constants(M, T)
+    nmutex = build_nmutex(M)
 
     t1 = time.time()
     print('Building model...')
@@ -238,13 +201,12 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     ###########
     m = LpProblem(sense=LpMinimize)
  
-
     ###############
     ## VARIABLES ##
     ###############
     # Action variables
     u = {}
-    for a in actions:
+    for a in M.actions:
         u[a] = {}
         for t in range(0, T):
             u[a][t] = LpVariable(f'u_{a}_{t}', cat='Binary') # True if action a is executed at time step t
@@ -254,7 +216,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     u_pa = {}
     u_pd = {}
     u_a = {}
-    for p in Vp:
+    for p in M.Vp:
         u_m[p] = {}
         u_pa[p] = {}
         u_pd[p] = {}
@@ -267,7 +229,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     
     # Numeric fluent value variables
     y_v_t = {}
-    for v in Vn:
+    for v in M.Vn:
         y_v_t[v] = {}
         for t in range(0, T+1):
             y_v_t[v][t] = LpVariable(f'y_v_t_{v}_{t}', cat='Continuous') # value of fluent v at time step t
@@ -278,7 +240,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     ###############
     def obj_nb_actions(m):
         L = []
-        for a in actions:
+        for a in M.actions:
             for t in range(0, T):
                 cost_a = 1
                 L.append(cost_a * u[a][t])
@@ -291,27 +253,27 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     ###############################
     
     # Initial State
-    for p in Vp:
-        m += u_a[p][0] == I[p] #(1)
-        m += u_m[p][0] == 0 #?
-        m += u_pa[p][0] == 0 #?
-        m += u_pd[p][0] == 0 #?
+    for p in M.Vp:
+        m += u_a[p][0] == M.I[p] #(1)
+        m += u_m[p][0] == 0 
+        m += u_pa[p][0] == 0 
+        m += u_pd[p][0] == 0 
         
     # Goal State
-    for p in Gp:
+    for p in M.Gp:
         m += u_a[p][T] + u_pa[p][T] + u_m[p][T] >= 1 #(2)
     
-    for p in Vp:
+    for p in M.Vp:
         for t in range(0, T):
-            m += lpSum(u[a][t] for a in pref[p].difference(delf[p])) >= u_pa[p][t+1] #(3)
-            for a in pref[p].difference(delf[p]):
+            m += lpSum(u[a][t] for a in M.pref[p].difference(M.delf[p])) >= u_pa[p][t+1] #(3)
+            for a in M.pref[p].difference(M.delf[p]):
                 m += u[a][t] <= u_pa[p][t+1] #(6)
 
-            m += lpSum(u[a][t] for a in addf[p].difference(pref[p])) >= u_a[p][t+1] #(4)
-            for a in addf[p].difference(pref[p]):
+            m += lpSum(u[a][t] for a in M.addf[p].difference(M.pref[p])) >= u_a[p][t+1] #(4)
+            for a in M.addf[p].difference(M.pref[p]):
                 m += u[a][t] <= u_a[p][t+1] #(7)
                 
-            m += lpSum(u[a][t] for a in pref[p].intersection(delf[p])) == u_pd[p][t+1] #(5)
+            m += lpSum(u[a][t] for a in M.pref[p].intersection(M.delf[p])) == u_pd[p][t+1] #(5)
             
             m += u_pa[p][t+1] + u_m[p][t+1] + u_pd[p][t+1] <= u_a[p][t] + u_pa[p][t] + u_m[p][t] #(11)
             
@@ -319,61 +281,71 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
             m += u_a[p][t] + u_m[p][t] + u_pd[p][t] <= 1 #(8)
             m += u_pa[p][t] + u_m[p][t] + u_pd[p][t] <= 1 #(9)
 
+    # Add (10) back?
+    for a1_name in M.actions:
+        for a2_name in M.actions:
+            if a1_name!=a2_name:
+                a1 = M.actions[a1_name]
+                a2 = M.actions[a2_name]
+                # set operators: | union, & intersection, - difference
+                if a1['del'] & (a2['add'] | a2['pre_p']) != set():
+                    for t in range(0, T):
+                        u[a1_name][t] + u[a2_name][t] <= 1
 
     #########################
     ## CONSTRAINTS NUMERIC ##
     #########################
 
-    for v in Vn:
-        m += y_v_t[v][0] == I[v] #(12)
-        # y_v_t[v][0] = I[v] #(12)
+    for v in M.Vn:
+        m += y_v_t[v][0] == M.I[v] #(12)
     
-    for c in Gn: #(13)
+    for c in M.Gn: #(13)
         op = get_op(c)
         if op=='>=':
-            m += lpSum(w_c_v[c][v] * y_v_t[v][T] for v in Vn) + w_0_c[c] >= 0
+            m += lpSum(M.w_c_v[c][v] * y_v_t[v][T] for v in M.Vn) + M.w_0_c[c] >= 0
         elif op=='==':
-            m += lpSum(w_c_v[c][v] * y_v_t[v][T] for v in Vn) + w_0_c[c] == 0
+            m += lpSum(M.w_c_v[c][v] * y_v_t[v][T] for v in M.Vn) + M.w_0_c[c] == 0
         else:
             raise Exception('Numeric goal constraint: op not supported')
 
-    for a in actions: #(14)
-        for c in actions[a]['pre_n']:
+    for a in M.actions: #(14)
+        for c in M.actions[a]['pre_n']:
             for t in range(0, T):
                 op = get_op(c)
                 if op=='>=':
-                    m += sum(w_c_v[c][v] * y_v_t[v][t] for v in Vn) + w_0_c[c] >= m_c_t[c][t]*(1-u[a][t])
+                    m += sum(M.w_c_v[c][v] * y_v_t[v][t] for v in M.Vn) + M.w_0_c[c] >= m_c_t[c][t]*(1-u[a][t])
                 if op=='==':
-                    m += sum(w_c_v[c][v] * y_v_t[v][t] for v in Vn) + w_0_c[c] == m_c_t[c][t]*(1-u[a][t])
+                    m += sum(M.w_c_v[c][v] * y_v_t[v][t] for v in M.Vn) + M.w_0_c[c] == m_c_t[c][t]*(1-u[a][t])
 
-    for v in Vn: #(15)
+    for v in M.Vn: #(15)
         for t in range(0, T):
             m += y_v_t[v][t+1] <= y_v_t[v][t]\
-            + sum(k_v_a[v][a] * u[a][t] for a in se[v])\
-            + M_step_v_t[v][t+1] * sum(u[a][t] for a in le[v])
+            + sum(M.k_v_a[v][a] * u[a][t] for a in M.se[v])\
+            + M_step_v_t[v][t+1] * sum(u[a][t] for a in M.le[v])
 
-    for v in Vn: #(16)
+    for v in M.Vn: #(16)
         for t in range(0, T):
             m += y_v_t[v][t+1] >= y_v_t[v][t]\
-            + sum(k_v_a[v][a] * u[a][t] for a in se[v])\
-            + m_step_v_t[v][t+1] * sum(u[a][t] for a in le[v])
+            + sum(M.k_v_a[v][a] * u[a][t] for a in M.se[v])\
+            + m_step_v_t[v][t+1] * sum(u[a][t] for a in M.le[v])
 
-    for v in Vn: #(17)
-        for a in le[v]:
+    for v in M.Vn: #(17)
+        for a in M.le[v]:
             for t in range(0, T):
-                m += y_v_t[v][t+1] - sum(k_v_a_w[v][a][w] * y_v_t[w][t] for w in Vn) <=\
-                k_v_a[v][a] + M_v_a_t[v][a][t+1] * (1-u[a][t])
+                m += y_v_t[v][t+1] - sum(M.k_v_a_w[v][a][w] * y_v_t[w][t] for w in M.Vn) <=\
+                M.k_v_a[v][a] + M_v_a_t[v][a][t+1] * (1-u[a][t])
 
-    for v in Vn: #(18)
-        for a in le[v]:
+    for v in M.Vn: #(18)
+        for a in M.le[v]:
             for t in range(0, T):
-                m += y_v_t[v][t+1] - sum(k_v_a_w[v][a][w] * y_v_t[w][t] for w in Vn) >=\
-                k_v_a[v][a] + m_v_a_t[v][a][t+1] * (1-u[a][t])
+                m += y_v_t[v][t+1] - sum(M.k_v_a_w[v][a][w] * y_v_t[w][t] for w in M.Vn) >=\
+                M.k_v_a[v][a] + m_v_a_t[v][a][t+1] * (1-u[a][t])
 
-    for a1 in actions: #(19)
+    for a1 in M.actions: #(19)
         for a2 in nmutex[a1]:
             for t in range(0, T):
                 m += u[a1][t] + u[a2][t] <= 1
+
 
     ############################
     ## ADDITIONAL CONSTRAINTS ##
@@ -382,7 +354,7 @@ def build_model_piacentini2018_state_change_numeric(T, sequential):
     # (own)
     if sequential:
         for t in range (0, T):
-            m += lpSum(u[a][t] for a in actions) <= 1
+            m += lpSum(u[a][t] for a in M.actions) <= 1
 
     #########################
     
@@ -409,54 +381,12 @@ def solve(m, sol_gap, solver_name="PULP_CBC_CMD"):
     print(f'elapsed: {g_solving_time:.2f}s')
     
 
-############
-## EXPORT ##
-############
-def export_internal(m, time_horizon):
-    with open('constraints.txt', 'w') as file:
-        file.write(f"-----------------------\n")
-        file.write(f"----- CONSTRAINTS -----\n")
-        file.write(f"-----------------------\n")
-        for c in m.constraints:
-            file.write(f'{c}: {m.constraints[c]}\n')
-
-    with open('variables.txt', 'w') as file:
-        file.write(f"\n-----------------\n")
-        file.write(f"----- t = 0 -----\n")
-        file.write(f"-----------------\n")
-        file.write(f"\n-- FLUENTS --\n")
-        for f in Vp:
-            if f!=Vp[0]: file.write('\n')
-            file.write(f'x_m_{f}_0 = {x_m[f][0]}\n')
-            file.write(f'x_pa_{f}_0 = {x_pa[f][0]}\n')
-            file.write(f'x_pd_{f}_0 = {x_pd[f][0]}\n')
-            file.write(f'x_a_{f}_0 = {x_a[f][0]}\n')
-        
-        for t in range(1, time_horizon+1):
-            file.write(f"\n-----------------\n")
-            file.write(f"----- t = {t} -----\n")
-            file.write(f"-----------------\n")
-                    
-            file.write(f"\n-- FLUENTS --\n")
-            for f in Vp:
-                if f!=Vp[0]: file.write('\n')
-                file.write(f'{x_m[f][t]} = {round(x_m[f][t].value()) if x_m[f][t].value()!=None else None}\n')
-                file.write(f'{x_pa[f][t]} = {round(x_pa[f][t].value()) if x_pa[f][t].value()!=None else None}\n')
-                file.write(f'{x_pd[f][t]} = {round(x_pd[f][t].value()) if x_pd[f][t].value()!=None else None}\n')
-                file.write(f'{x_a[f][t]} = {round(x_a[f][t].value()) if x_a[f][t].value()!=None else None}\n')
-            
-            if t!=0:
-                file.write(f"\n-- ACTIONS --\n")
-                for a in actions:
-                    file.write(f'{u[a][t]} = {round(u[a][t].value())  if u[a][t].value()!=None else None}\n')
-    return m
-
 ######################
 ## EXTRACT SOLUTION ##
 ######################
-def extract_solution(m, time_horizon):
+def extract_solution(domain_filename, problem_filename, m, time_horizon):
 
-    boxprint(f'Problem name: {problem_name}\nNb Constraints: {m.numConstraints()}\nNb Variables: {m.numVariables()}')
+    boxprint(f'{domain_filename}\n{problem_filename}\nNb Constraints: {m.numConstraints()}\nNb Variables: {m.numVariables()}')
 
     boxprint(f'Time horizon: {time_horizon}')
 
@@ -509,14 +439,26 @@ def up_solve(n_problem):
 @click.option('-t', '--timehorizon', 'T_user', default=None)
 @click.option('--gap', 'sol_gap', default=None)
 @click.option('--seq', 'sequential', is_flag=True, default=False)
-@click.option('--export', 'export', is_flag=True, default=False)
-@click.option('--n_problem', 'n_problem', default=None)
-def mainCLI(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
-    main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem)
-def main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
+@click.option('--domain_name', 'domain_name', default=None)
+@click.option('--i_instance', 'i_instance', default=None)
+@click.option('--domain_filename', 'domain_filename', default=None)
+@click.option('--problem_filename', 'problem_filename', default=None)
+def mainCLI(T_min, T_max, T_user, sol_gap, sequential, domain_name, i_instance, domain_filename, problem_filename):
+    main(T_min, T_max, T_user, sol_gap, sequential, domain_name, i_instance, domain_filename, problem_filename)
+def main(T_min, T_max, T_user, sol_gap, sequential, domain_name, i_instance, domain_filename, problem_filename):
     t_start = time.time()
 
-    load_problem(n_problem)
+    if domain_name==None and i_instance==None and \
+    domain_filename==None and problem_filename==None:
+        print('ERROR: no problem given.\nSpecify either (domain_name, i_instance) or (domain_filename, problem_filename).')
+        return -1
+
+
+    if domain_name!=None and i_instance!=None:
+        domain_filename, problem_filename = get_problem_filenames(domain_name, i_instance)
+    
+    problem_name, up_problem, data_extracted = load_pddl(domain_filename, problem_filename)
+    milp_data_problem = MILP_data_extracted(data_extracted)
     
     if T_user!=None:
         T_min = T_max = int(T_user)
@@ -526,9 +468,7 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
     while not solved and T<=T_max:
         boxprint(f"Solving with T={T}")
         
-        # m = build_model_vossen2001_state_change_prop(T, sequential)
-        # m = build_model_piacentini2018_state_change_prop(T, sequential)
-        m = build_model_piacentini2018_state_change_numeric(T, sequential)
+        m = build_model_piacentini2018_state_change_numeric(milp_data_problem, T, sequential)
 
         solve(m, sol_gap, solver_name='GUROBI') # solvers: CPLEX_PY, GUROBI, PULP_CBC_CMD
         
@@ -555,10 +495,9 @@ def main(T_min, T_max, T_user, sol_gap, sequential, export, n_problem):
         else: 
             T+=1
             
-    if export:
-        export_internal(m, T)
-        
-    plan = extract_solution(m, T)
+    plan = extract_solution(domain_filename, problem_filename, m, T)
+
+    from MILP.convert_pddl import g_loading_problem_time
 
     # show times
     boxprint(f'\
@@ -576,7 +515,7 @@ Total time: {g_total_solving_time:.2f}s\
         plan_str.append(f'{t}: ' + ', '.join(plan[t]))
     plan_str = ' | '.join(plan_str)
 
-    return plan_str, plan_length, g_total_solving_time, g_solving_time, g_building_model_time
+    return plan_str, plan_length, (g_loading_problem_time, g_building_model_time, g_solving_time, g_total_solving_time)
 
 if __name__=='__main__':
     mainCLI()

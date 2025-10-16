@@ -1,35 +1,56 @@
-from MILP.solve_milp import mainCLI as milpCLI
-from MILP.solve_milp import main as milp
 from MILP.solve_milp import up_solve
+from MILP.solve_milp import get_problem_filenames
 
 from MILP.boxprint import boxprint
 
+import json
+
 def run_compare():
+    domain_name = 'zenotravel'
+    classical = False
+    
     results = {}
+    data = {
+        'domain_name': domain_name,
+        'classical': classical,
+        'results': results
+    }
 
-    filename = 'compare_results_up.txt'
+    json_filename = 'dump_results_up.json'
 
-    f = open(filename, 'w')
-    f.close()
-
-    for i in range(1, 11):
+    for i in range(1, 3):
         problem_name = f'problem{i}'
         boxprint(problem_name, mode='d')
-        with open(filename, 'a') as f:
-            f.write(f'{problem_name}:\n')
 
-        ################
-        ## UP SOLVING ##
-        ################
-        plan_str, plan_length, duration = up_solve(i)
 
-        instance_result = {'plan': plan_str, 'plan_length': plan_length, 'duration': duration}
+        domain_filename, problem_filename = get_problem_filenames(domain_name, i, classical=classical)
+
         if problem_name not in results: results[problem_name] = {}
-        results[problem_name]['UP'] = instance_result
-        with open(filename, 'a') as f:
-            f.write(f'\tUP  : length={plan_length} duration={duration:.2f}s\n\t{plan_str}\n')
-        print(f'\tUP  : length={plan_length} duration={duration:.2f}s\n\t{plan_str}\n')
+        results[problem_name]['UP'] = {
+            'domain_filename': domain_filename,
+            'problem_filename': problem_filename,
+        }
 
+        ##################
+        ## UP SOLVING ##
+        ##################
+        plan_str, plan_length, durations = up_solve(domain_filename=domain_filename, problem_filename=problem_filename)
+        loading_time, solving_time, total_time = durations
+
+        plan = [a.split(': ')[1] for a in plan_str.split(' | ')]
+
+        instance_result = {
+            'plan': plan,
+            'plan_length': plan_length,
+            'loading_time': loading_time,
+            'solving_time': solving_time,
+            'total_time': total_time,
+        }
+        
+        results[problem_name]['UP'].update(instance_result)
+        with open(json_filename, 'w') as f:
+            json.dump(data, f, indent=4)
+        print(f'\tUP: length={plan_length} total time={total_time:.2f}s (load={loading_time:.2f}s solving_time={solving_time:.2f}s)\n\t{plan_str}\n')
 
 if __name__=='__main__':
     run_compare()

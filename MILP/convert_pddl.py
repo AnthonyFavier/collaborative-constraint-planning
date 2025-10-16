@@ -509,6 +509,14 @@ def print_info(problem_name, Vp, Vn, actions, I, Gp, Gn):
 ##############################
 
 def load_pddl(domain_filename, problem_filename, no_data_extraction=False):
+    global g_loading_problem_time
+
+    t_begin = time.time()
+    boxprint('Loading problem')
+
+    print('domain_filename=', domain_filename)
+    print('problem_filename=', problem_filename)
+
     up.shortcuts.get_environment().credits_stream = None
     
     ###################
@@ -534,6 +542,8 @@ def load_pddl(domain_filename, problem_filename, no_data_extraction=False):
     export_preprocessed_problem(problem)
 
     if no_data_extraction:
+        g_loading_problem_time = time.time()-t_begin
+        print(f"[Loading Problem: {g_loading_problem_time:.2f}s]")
         return (problem.name, problem, None)
 
     #####################
@@ -571,6 +581,10 @@ def load_pddl(domain_filename, problem_filename, no_data_extraction=False):
     w_0_c = w_0_c_pre | w_0_c_goal
 
     print(f'Ok [{time.time()-t1:.2f}s]')
+
+
+    g_loading_problem_time = time.time()-t_begin
+    print(f"[Loading Problem: {g_loading_problem_time:.2f}s]")
 
     return (problem_name, problem, ((Vp, Vn), actions, I, (Gp, Gn), (w_c_v, w_0_c, k_v_a_w, k_v_a), (pref, addf, delf, se, le)))
 
