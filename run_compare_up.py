@@ -14,7 +14,7 @@ def run_compare(domain_name, i_start=1, i_last=10, classical=False):
         'results': results,
     }
 
-    json_filename = 'dump_results_up.json'
+    json_filename = f'dump_results_{domain_name}_up.json'
 
     for i in range(i_start, i_last):
         problem_name = f'problem{i}'
