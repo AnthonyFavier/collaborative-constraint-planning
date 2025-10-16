@@ -5,10 +5,9 @@ from MILP.boxprint import boxprint
 import time
 import json
 
-def run_compare():
-    domain_name = 'zenotravel'
-    classical = False
-    
+
+
+def run_compare(domain_name, i_start=1, i_last=10, classical=False):
     results = {}
     data = {
         'domain_name': domain_name,
@@ -19,7 +18,7 @@ def run_compare():
 
     json_filename = 'dump_results_milp.json'
 
-    for i in range(1, 3):
+    for i in range(i_start, i_last):
         problem_name = f'problem{i}'
         boxprint(problem_name, mode='d')
 
@@ -55,6 +54,8 @@ def run_compare():
             json.dump(data, f, indent=4)
         print(f'\tMILP: length={plan_length} total time={total_solving_time:.2f}s (load={loading_time:.2f}s last_build={last_building_model:.2f}s last_solve={last_solving_time:.2f}s => {loading_time+last_building_model+last_solving_time:.2f}s)\n\t{plan_str}\n')
 
-if __name__=='__main__':
-    run_compare()
 
+
+from MILP.start_with_timer import start_with_timer
+if __name__ == "__main__":
+    start_with_timer(300, run_compare, 'counters', i_start=1, i_last=5)
