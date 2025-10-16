@@ -8,44 +8,51 @@ times = {
     'UP':   {},
 }
 
-labels = [f"problem{i}" for i in range(1, 6)]
+# labels = [f"problem{i}" for i in range(1, 6)]
 
 filename_milp = 'dump_results_zeno1-5_milp.json'
 filename_up = 'dump_results_zeno1-5_up.json'
+
+# filename_milp = 'dump_results_counters1-7_milp.json'
+# filename_up = 'dump_results_counters1-4_up.json'
 
 with open(filename_milp, 'r') as f:
     data_milp = json.load(f)
 with open(filename_up, 'r') as f:
     data_up = json.load(f)
 
-times['MILP']['Loading'] =      [data_milp['results'][p]['MILP']['loading_time']        for p in labels]
-times['MILP']['LastBuilding'] = [data_milp['results'][p]['MILP']['last_building_model'] for p in labels]
-times['MILP']['LastSolving'] =  [data_milp['results'][p]['MILP']['last_solving_time']   for p in labels]
-times['MILP']['Solving'] =      [data_milp['results'][p]['MILP']['total_last']          for p in labels]
-times['MILP']['Total'] =        [data_milp['results'][p]['MILP']['total_solving_time']  for p in labels]
-times['UP']['Loading'] =        [data_up['results'][p]['UP']['loading_time']            for p in labels]
-times['UP']['Solving'] =        [data_up['results'][p]['UP']['solving_time']            for p in labels]
-times['UP']['Total'] =          [data_up['results'][p]['UP']['total_time']              for p in labels]
+# times['MILP']['Loading'] =      [data_milp['results'][p]['MILP']['loading_time']        for p in labels]
+# times['MILP']['LastBuilding'] = [data_milp['results'][p]['MILP']['last_building_model'] for p in labels]
+# times['MILP']['LastSolving'] =  [data_milp['results'][p]['MILP']['last_solving_time']   for p in labels]
+# times['MILP']['Solving'] =      [data_milp['results'][p]['MILP']['total_last']          for p in labels]
+# times['MILP']['Total'] =        [data_milp['results'][p]['MILP']['total_solving_time']  for p in labels]
+# times['UP']['Loading'] =        [data_up['results'][p]['UP']['loading_time']            for p in labels]
+# times['UP']['Solving'] =        [data_up['results'][p]['UP']['solving_time']            for p in labels]
+# times['UP']['Total'] =          [data_up['results'][p]['UP']['total_time']              for p in labels]
+
 
 t_start_milp = data_milp['time_start']
-n_solved = 0
-cumul_milp = [(0.0, n_solved)]
+n_solved_milp = 0
+cumul_milp = [(0.0, n_solved_milp)]
 for k,r in data_milp['results'].items():
     r = r['MILP']
     t = r['time_solved']-t_start_milp
-    n_solved+=1
-    cumul_milp.append((t, n_solved))
+    n_solved_milp+=1
+    cumul_milp.append((t, n_solved_milp))
+    
 
 t_start_up = data_up['time_start']
-n_solved = 0
-cumul_up = [(0.0, n_solved)]
+n_solved_up = 0
+cumul_up = [(0.0, n_solved_up)]
 for k,r in data_up['results'].items():
     r = r['UP']
     t = r['time_solved']-t_start_up
-    n_solved+=1
-    cumul_up.append((t, n_solved))
+    n_solved_up+=1
+    cumul_up.append((t, n_solved_up))
 
-
+t_max = max( cumul_milp[-1][0], cumul_up[-1][0] )*1.1
+cumul_milp.append((t_max, n_solved_milp))
+cumul_up.append((t_max, n_solved_up))
 
 from scipy.stats import mannwhitneyu
 import matplotlib.pyplot as plt
@@ -54,8 +61,8 @@ import numpy as np
 
 fig, ax = plt.subplots(layout='constrained')
 
-ax.plot([x[0] for x in cumul_milp], [y[1] for y in cumul_milp], label='MILP')
-ax.plot([x[0] for x in cumul_up], [y[1] for y in cumul_up], label='UP')
+ax.step([x[0] for x in cumul_milp], [y[1] for y in cumul_milp], where='post', label='MILP')
+ax.step([x[0] for x in cumul_up], [y[1] for y in cumul_up], where='post', label='UP')
 
 ax.legend(loc='upper left', ncols=3)
 
