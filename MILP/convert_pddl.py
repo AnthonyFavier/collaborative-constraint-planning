@@ -64,6 +64,9 @@ def parse_and_remove_dashes(domain_filename, problem_filename):
     reader = PDDLReader()
     problem = reader.parse_problem(domain_filename, problem_filename)
 
+    # Clear quality metrics
+    problem.clear_quality_metrics()
+
     dashes = ['-', '_']
     elements_to_check = problem.fluents + problem.actions + problem.all_objects
 
