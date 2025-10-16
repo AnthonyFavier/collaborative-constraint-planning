@@ -2,7 +2,7 @@ from MILP.solve_milp import up_solve
 from MILP.solve_milp import get_problem_filenames
 
 from MILP.boxprint import boxprint
-
+import time
 import json
 
 def run_compare():
@@ -13,7 +13,8 @@ def run_compare():
     data = {
         'domain_name': domain_name,
         'classical': classical,
-        'results': results
+        'time_start': time.time(),
+        'results': results,
     }
 
     json_filename = 'dump_results_up.json'
@@ -40,6 +41,7 @@ def run_compare():
         plan = [a.split(': ')[1] for a in plan_str.split(' | ')]
 
         instance_result = {
+            'time_solved': time.time(),
             'plan': plan,
             'plan_length': plan_length,
             'loading_time': loading_time,
