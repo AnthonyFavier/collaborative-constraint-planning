@@ -69,24 +69,21 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     result = plan = fail_reason = ''
     planlength = 0
     metric = 0.0
-    if stdout.find('Unsolvable Problem')!=-1 or stdout.find('Problem unsolvable')!=-1:
-        result = 'failed'
-        fail_reason = 'Unsolvable Problem'
-    elif stdout.find('Metric (Search):')==-1:
-        result = 'failed'
-        fail_reason = 'Timeout'
-    else:
+    if stdout.find('Problem Solved')!=-1:
         result = 'success'
         try:
-            i1_plan = stdout.rfind('Found Plan:\n') + len('Found Plan:\n')
+            find_txt = 'Found Plan:\n'
+            i1_plan = stdout.rfind(find_txt) + len(find_txt)
             i2_plan = stdout.find('\n\n', i1_plan)
             plan = stdout[i1_plan:i2_plan]
             
-            i1_length = stdout.rfind('Plan-Length:')+len('Plan-Length:')
+            find_txt = 'Plan-Length:'
+            i1_length = stdout.find(find_txt, i1_plan)+len(find_txt)
             i2_length = stdout.find('\n', i1_length)
             planlength = int(stdout[i1_length:i2_length])
             
-            i1_metric = stdout.rfind('Metric (Search):')+len('Metric (Search):')
+            find_txt = 'Metric (Search):'
+            i1_metric = stdout.find(find_txt, i1_plan)+len(find_txt)
             i2_metric = stdout.find('\n', i1_metric)
             metric = float(stdout[i1_metric:i2_metric])
         except:
@@ -98,7 +95,13 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
             print('i2_length=', i2_length)
             print('i1_metric=', i1_metric)
             print('i2_metric=', i2_metric)
-            raise Exception('metric = float(plan[i1_metric:i2_metric]) problem....')
+            raise Exception('Data extraction from planner stdout')
+    elif stdout.find('Unsolvable Problem')!=-1 or stdout.find('Problem unsolvable')!=-1:
+        result = 'failed'
+        fail_reason = 'Unsolvable Problem'
+    else:
+        result = 'failed'
+        fail_reason = 'Timeout'
                 
     return result, plan, planlength, metric, fail_reason
 
