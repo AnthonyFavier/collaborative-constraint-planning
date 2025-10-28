@@ -1,0 +1,96 @@
+{
+    "domain_name": "rover",
+    "classical": false,
+    "time_start": 1760645946.553795,
+    "results": {
+        "problem1": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile1.pddl",
+                "time_solved": 1760645947.7082462,
+                "plan": [
+                    "samplesoil_rover0_rover0store_waypoint0",
+                    "drop_rover0_rover0store",
+                    "calibrate_rover0_camera0_objective0_waypoint0",
+                    "takeimage_rover0_waypoint0_objective1_camera0_lowres",
+                    "samplerock_rover0_rover0store_waypoint0",
+                    "communicatesoildata_rover0_general_waypoint0_waypoint0_waypoint1",
+                    "communicaterockdata_rover0_general_waypoint0_waypoint0_waypoint1",
+                    "communicateimagedata_rover0_general_objective1_lowres_waypoint0_waypoint1"
+                ],
+                "plan_length": 8,
+                "loading_time": 0.6372354030609131,
+                "solving_time": 0.5171244144439697,
+                "total_time": 1.1544082164764404
+            }
+        },
+        "problem2": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile2.pddl",
+                "time_solved": 1760645948.8901181,
+                "plan": [
+                    "samplerock_rover0_rover0store_waypoint3",
+                    "navigate_rover0_waypoint3_waypoint1",
+                    "calibrate_rover0_camera0_objective1_waypoint1",
+                    "navigate_rover0_waypoint1_waypoint2",
+                    "drop_rover0_rover0store",
+                    "samplesoil_rover0_rover0store_waypoint2",
+                    "takeimage_rover0_waypoint2_objective1_camera0_highres",
+                    "communicaterockdata_rover0_general_waypoint3_waypoint2_waypoint0",
+                    "communicateimagedata_rover0_general_objective1_highres_waypoint2_waypoint0",
+                    "communicatesoildata_rover0_general_waypoint2_waypoint2_waypoint0"
+                ],
+                "plan_length": 10,
+                "loading_time": 0.6250481605529785,
+                "solving_time": 0.556614875793457,
+                "total_time": 1.181718111038208
+            }
+        },
+        "problem3": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile3.pddl",
+                "time_solved": 1760645952.967499,
+                "plan": [
+                    "navigate_rover1_waypoint3_waypoint0",
+                    "samplerock_rover1_rover1store_waypoint0",
+                    "calibrate_rover1_camera1_objective0_waypoint0",
+                    "takeimage_rover1_waypoint0_objective0_camera1_colour",
+                    "navigate_rover1_waypoint0_waypoint3",
+                    "navigate_rover1_waypoint3_waypoint2",
+                    "drop_rover1_rover1store",
+                    "samplesoil_rover1_rover1store_waypoint2",
+                    "communicatesoildata_rover1_general_waypoint2_waypoint2_waypoint0",
+                    "communicateimagedata_rover1_general_objective0_colour_waypoint2_waypoint0",
+                    "communicaterockdata_rover1_general_waypoint0_waypoint2_waypoint0"
+                ],
+                "plan_length": 11,
+                "loading_time": 1.0183115005493164,
+                "solving_time": 3.0588107109069824,
+                "total_time": 4.0771777629852295
+            }
+        },
+        "problem4": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile4.pddl",
+                "time_solved": 1760645955.272081,
+                "plan": [
+                    "navigate_rover1_waypoint2_waypoint1",
+                    "calibrate_rover1_camera0_objective0_waypoint1",
+                    "samplesoil_rover0_rover0store_waypoint3",
+                    "samplerock_rover1_rover1store_waypoint1",
+                    "takeimage_rover1_waypoint1_objective0_camera0_highres",
+                    "communicatesoildata_rover0_general_waypoint3_waypoint3_waypoint2",
+                    "communicateimagedata_rover1_general_objective0_highres_waypoint1_waypoint2",
+                    "communicaterockdata_rover1_general_waypoint1_waypoint1_waypoint2"
+                ],
+                "plan_length": 8,
+                "loading_time": 1.203728199005127,
+                "solving_time": 1.1004531383514404,
+                "total_time": 2.3042666912078857
+            }
+        }
+    }
+}

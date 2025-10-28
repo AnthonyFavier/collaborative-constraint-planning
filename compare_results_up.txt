@@ -1,0 +1,16 @@
+problem1:
+	UP  : length=9 duration=1.23s
+	0: board_person2_plane1_city0 | 1: board_person1_plane1_city0 | 2: flyslow_plane1_city0_city1 | 3: refuel_plane1 | 4: board_person3_plane1_city1 | 5: debark_person2_plane1_city1 | 6: flyslow_plane1_city1_city2 | 7: debark_person1_plane1_city2 | 8: debark_person3_plane1_city2
+problem2:
+	UP  : length=8 duration=0.97s
+	0: refuel_plane1 | 1: flyslow_plane1_city0_city2 | 2: refuel_plane1 | 3: board_person1_plane1_city2 | 4: flyslow_plane1_city2_city1 | 5: refuel_plane1 | 6: debark_person1_plane1_city1 | 7: flyslow_plane1_city1_city2
+problem3:
+	UP  : length=8 duration=1.71s
+	0: board_person1_plane1_city0 | 1: refuel_plane1 | 2: flyslow_plane1_city0_city1 | 3: refuel_plane1 | 4: board_person3_plane1_city1 | 5: debark_person1_plane1_city1 | 6: flyslow_plane1_city1_city0 | 7: debark_person3_plane1_city0
+problem4:
+	UP  : length=11 duration=4.18s
+	0: refuel_plane2 | 1: refuel_plane2 | 2: flyslow_plane2_city2_city0 | 3: board_person4_plane2_city0 | 4: flyslow_plane2_city0_city1 | 5: debark_person4_plane2_city1 | 6: board_person2_plane2_city1 | 7: flyslow_plane2_city1_city2 | 8: refuel_plane1 | 9: flyslow_plane1_city2_city0 | 10: debark_person2_plane2_city2
+problem5:
+	UP  : length=12 duration=47.96s
+	0: board_person4_plane1_city1 | 1: refuel_plane1 | 2: flyslow_plane1_city1_city0 | 3: board_person3_plane1_city0 | 4: board_person2_plane1_city0 | 5: flyslow_plane1_city0_city3 | 6: board_person1_plane1_city3 | 7: debark_person3_plane1_city3 | 8: debark_person2_plane1_city3 | 9: debark_person4_plane1_city3 | 10: flyslow_plane1_city3_city2 | 11: debark_person1_plane1_city2
+problem6:

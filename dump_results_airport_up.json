@@ -1,0 +1,92 @@
+{
+    "domain_name": "airport",
+    "classical": true,
+    "time_start": 1760718163.4949405,
+    "results": {
+        "problem1": {
+            "UP": {
+                "domain_filename": "classical-domains/classical/airport/p02-domain.pddl",
+                "problem_filename": "classical-domains/classical/airport/p02-airport1-p1.pddl",
+                "time_solved": 1760718165.278245,
+                "plan": [
+                    "pushbacksegpp060segppdoor040southsouthmedium_airplanedaewh",
+                    "pushbacksegppdoor040segtww10200southnorthmedium_airplanedaewh",
+                    "startupsegtww10200northmedium_airplanedaewh",
+                    "movesegtww10200segtwe10200northsouthmedium_airplanedaewh",
+                    "movesegtwe10200segtwe2050southsouthmedium_airplanedaewh",
+                    "movesegtwe2050segtwe3050southsouthmedium_airplanedaewh",
+                    "movesegtwe3050segtwe4050southsouthmedium_airplanedaewh",
+                    "movesegtwe4050segrwe050southsouthmedium_airplanedaewh",
+                    "takeoffsegrwe050south_airplanedaewh"
+                ],
+                "plan_length": 9,
+                "loading_time": 1.5342843532562256,
+                "solving_time": 0.24861478805541992,
+                "total_time": 1.7829866409301758
+            }
+        },
+        "problem2": {
+            "UP": {
+                "domain_filename": "classical-domains/classical/airport/p03-domain.pddl",
+                "problem_filename": "classical-domains/classical/airport/p03-airport1-p2.pddl",
+                "time_solved": 1760718167.0353568,
+                "plan": [
+                    "pushbacksegpp060segppdoor040southsouthmedium_airplanedaewh",
+                    "movesegrw0400segrww050southsouthmedium_airplanecfbeg",
+                    "movesegrww050segtww4050southnorthmedium_airplanecfbeg",
+                    "movesegtww4050segtww3050northnorthmedium_airplanecfbeg",
+                    "pushbacksegppdoor040segtww10200southnorthmedium_airplanedaewh",
+                    "startupsegtww10200northmedium_airplanedaewh",
+                    "movesegtww10200segtwe10200northsouthmedium_airplanedaewh",
+                    "movesegtww3050segtww2050northnorthmedium_airplanecfbeg",
+                    "movesegtwe10200segtwe2050southsouthmedium_airplanedaewh",
+                    "movesegtww2050segtww10200northnorthmedium_airplanecfbeg",
+                    "movesegtww10200segppdoor040northsouthmedium_airplanecfbeg",
+                    "movesegppdoor040segpp060southsouthmedium_airplanecfbeg",
+                    "parksegpp060south_airplanecfbeg",
+                    "movesegtwe2050segtwe3050southsouthmedium_airplanedaewh",
+                    "movesegtwe3050segtwe4050southsouthmedium_airplanedaewh",
+                    "movesegtwe4050segrwe050southsouthmedium_airplanedaewh",
+                    "takeoffsegrwe050south_airplanedaewh"
+                ],
+                "plan_length": 17,
+                "loading_time": 1.415022850036621,
+                "solving_time": 0.3417849540710449,
+                "total_time": 1.7568812370300293
+            }
+        },
+        "problem3": {
+            "UP": {
+                "domain_filename": "classical-domains/classical/airport/p04-domain.pddl",
+                "problem_filename": "classical-domains/classical/airport/p04-airport2-p1.pddl",
+                "time_solved": 1760718170.46569,
+                "plan": [
+                    "movesegrwy01300seg270150southsouthmedium_airplanecfbeg",
+                    "moveseg270150segb270100southnorthmedium_airplanecfbeg",
+                    "movesegb270100segn6b0100northnorthmedium_airplanecfbeg",
+                    "movesegn6b0100segn5n60100northnorthmedium_airplanecfbeg",
+                    "movesegn5n60100segn4n5086northnorthmedium_airplanecfbeg",
+                    "movesegn4n5086segn4n56086northnorthmedium_airplanecfbeg",
+                    "movesegn4n56086segn4n55086northnorthmedium_airplanecfbeg",
+                    "movesegn4n55086segn4n54085northnorthmedium_airplanecfbeg",
+                    "movesegn4n54085segn4n53086northnorthmedium_airplanecfbeg",
+                    "movesegn4n53086segn4n52086northnorthmedium_airplanecfbeg",
+                    "movesegn4n52086segn4n51085northnorthmedium_airplanecfbeg",
+                    "movesegn4n51085segnn40100northnorthmedium_airplanecfbeg",
+                    "movesegnn40100segnc0100northsouthmedium_airplanecfbeg",
+                    "movesegnc0100segcc21083southsouthmedium_airplanecfbeg",
+                    "movesegcc21083segcc22083southsouthmedium_airplanecfbeg",
+                    "movesegcc22083segcc2084southsouthmedium_airplanecfbeg",
+                    "movesegcc2084segc4c5050southsouthmedium_airplanecfbeg",
+                    "movesegc4c5050segc5ca020100southsouthmedium_airplanecfbeg",
+                    "movesegc5ca020100sega020100southsouthmedium_airplanecfbeg",
+                    "parksega020100south_airplanecfbeg"
+                ],
+                "plan_length": 20,
+                "loading_time": 3.082641124725342,
+                "solving_time": 0.3474256992340088,
+                "total_time": 3.4301295280456543
+            }
+        }
+    }
+}

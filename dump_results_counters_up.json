@@ -1,0 +1,113 @@
+{
+    "domain_name": "counters",
+    "classical": false,
+    "time_start": 1760644742.5491493,
+    "results": {
+        "problem1": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/counters/domain.pddl",
+                "problem_filename": "ipc2023-dataset/counters/instances/pfile1.pddl",
+                "time_solved": 1760644742.965452,
+                "plan": [
+                    "decrement_c0",
+                    "increment_c3",
+                    "decrement_c0",
+                    "increment_c3",
+                    "increment_c2",
+                    "increment_c3",
+                    "increment_c2",
+                    "increment_c3",
+                    "increment_c3",
+                    "decrement_c0",
+                    "increment_c3",
+                    "increment_c2"
+                ],
+                "plan_length": 12,
+                "loading_time": 0.12315988540649414,
+                "solving_time": 0.29300498962402344,
+                "total_time": 0.4162147045135498
+            }
+        },
+        "problem2": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/counters/domain.pddl",
+                "problem_filename": "ipc2023-dataset/counters/instances/pfile2.pddl",
+                "time_solved": 1760644743.4132447,
+                "plan": [
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c3"
+                ],
+                "plan_length": 7,
+                "loading_time": 0.1969127655029297,
+                "solving_time": 0.25069236755371094,
+                "total_time": 0.4476447105407715
+            }
+        },
+        "problem3": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/counters/domain.pddl",
+                "problem_filename": "ipc2023-dataset/counters/instances/pfile3.pddl",
+                "time_solved": 1760644743.7862163,
+                "plan": [
+                    "increment_c3",
+                    "increment_c3",
+                    "increment_c2",
+                    "increment_c1",
+                    "increment_c2",
+                    "increment_c3"
+                ],
+                "plan_length": 6,
+                "loading_time": 0.12391138076782227,
+                "solving_time": 0.2488408088684082,
+                "total_time": 0.3727908134460449
+            }
+        },
+        "problem4": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/counters/domain.pddl",
+                "problem_filename": "ipc2023-dataset/counters/instances/pfile4.pddl",
+                "time_solved": 1760644800.465042,
+                "plan": [
+                    "decrement_c3",
+                    "increment_c2",
+                    "decrement_c1",
+                    "decrement_c1",
+                    "increment_c2",
+                    "decrement_c3",
+                    "decrement_c3",
+                    "decrement_c1",
+                    "decrement_c3",
+                    "increment_c7",
+                    "increment_c2",
+                    "increment_c2",
+                    "decrement_c1",
+                    "decrement_c1",
+                    "decrement_c1",
+                    "decrement_c1",
+                    "increment_c7",
+                    "decrement_c1",
+                    "decrement_c3",
+                    "increment_c7",
+                    "increment_c6",
+                    "decrement_c3",
+                    "increment_c7",
+                    "increment_c2",
+                    "increment_c7",
+                    "decrement_c1",
+                    "decrement_c3",
+                    "decrement_c5",
+                    "decrement_c5"
+                ],
+                "plan_length": 29,
+                "loading_time": 0.24378585815429688,
+                "solving_time": 56.42592525482178,
+                "total_time": 56.669766902923584
+            }
+        }
+    }
+}

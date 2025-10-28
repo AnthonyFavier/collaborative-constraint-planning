@@ -1,0 +1,141 @@
+{
+    "domain_name": "rover",
+    "classical": false,
+    "time_start": 1760645645.5526588,
+    "results": {
+        "problem1": {
+            "MILP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile1.pddl",
+                "time_solved": 1760645652.3199742,
+                "plan": [
+                    "samplerock_rover0_rover0store_waypoint0",
+                    "drop_rover0_rover0store",
+                    "communicaterockdata_rover0_general_waypoint0_waypoint0_waypoint1",
+                    "samplesoil_rover0_rover0store_waypoint0",
+                    "calibrate_rover0_camera0_objective0_waypoint0",
+                    "communicatesoildata_rover0_general_waypoint0_waypoint0_waypoint1",
+                    "takeimage_rover0_waypoint0_objective1_camera0_lowres",
+                    "communicateimagedata_rover0_general_objective1_lowres_waypoint0_waypoint1"
+                ],
+                "plan_length": 8,
+                "loading_time": 0.9571285247802734,
+                "last_building_model": 0.5407083034515381,
+                "last_solving_time": 0.6016082763671875,
+                "total_last": 2.099445104598999,
+                "total_solving_time": 6.766925811767578
+            }
+        },
+        "problem2": {
+            "MILP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile2.pddl",
+                "time_solved": 1760645661.8996658,
+                "plan": [
+                    "calibrate_rover0_camera0_objective1_waypoint3",
+                    "takeimage_rover0_waypoint3_objective1_camera0_highres",
+                    "communicateimagedata_rover0_general_objective1_highres_waypoint3_waypoint0",
+                    "samplerock_rover0_rover0store_waypoint3",
+                    "communicaterockdata_rover0_general_waypoint3_waypoint3_waypoint0",
+                    "navigate_rover0_waypoint3_waypoint1",
+                    "drop_rover0_rover0store",
+                    "navigate_rover0_waypoint1_waypoint2",
+                    "samplesoil_rover0_rover0store_waypoint2",
+                    "communicatesoildata_rover0_general_waypoint2_waypoint2_waypoint0"
+                ],
+                "plan_length": 10,
+                "loading_time": 0.8822128772735596,
+                "last_building_model": 0.6622960567474365,
+                "last_solving_time": 0.7692148685455322,
+                "total_last": 2.3137238025665283,
+                "total_solving_time": 9.579102754592896
+            }
+        },
+        "problem3": {
+            "MILP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile3.pddl",
+                "time_solved": 1760645679.2999012,
+                "plan": [
+                    "navigate_rover1_waypoint3_waypoint0",
+                    "calibrate_rover1_camera1_objective0_waypoint0",
+                    "takeimage_rover1_waypoint0_objective0_camera1_colour",
+                    "samplerock_rover1_rover1store_waypoint0",
+                    "navigate_rover1_waypoint0_waypoint3",
+                    "communicaterockdata_rover1_general_waypoint0_waypoint3_waypoint0",
+                    "drop_rover1_rover1store",
+                    "navigate_rover1_waypoint3_waypoint2",
+                    "samplesoil_rover1_rover1store_waypoint2",
+                    "communicateimagedata_rover1_general_objective0_colour_waypoint2_waypoint0",
+                    "communicatesoildata_rover1_general_waypoint2_waypoint2_waypoint0"
+                ],
+                "plan_length": 11,
+                "loading_time": 1.3886361122131348,
+                "last_building_model": 1.0466022491455078,
+                "last_solving_time": 1.3892972469329834,
+                "total_last": 3.824535608291626,
+                "total_solving_time": 17.39923906326294
+            }
+        },
+        "problem4": {
+            "MILP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile4.pddl",
+                "time_solved": 1760645691.262941,
+                "plan": [
+                    "navigate_rover1_waypoint2_waypoint1",
+                    "samplerock_rover1_rover1store_waypoint1",
+                    "communicaterockdata_rover1_general_waypoint1_waypoint1_waypoint2",
+                    "samplesoil_rover0_rover0store_waypoint3",
+                    "calibrate_rover1_camera0_objective0_waypoint1",
+                    "communicatesoildata_rover0_general_waypoint3_waypoint3_waypoint2",
+                    "takeimage_rover1_waypoint1_objective0_camera0_highres",
+                    "communicateimagedata_rover1_general_objective0_highres_waypoint1_waypoint2"
+                ],
+                "plan_length": 8,
+                "loading_time": 1.4563970565795898,
+                "last_building_model": 0.9633493423461914,
+                "last_solving_time": 1.0681273937225342,
+                "total_last": 3.4878737926483154,
+                "total_solving_time": 11.962002754211426
+            }
+        },
+        "problem5": {
+            "MILP": {
+                "domain_filename": "ipc2023-dataset/rover/domain.pddl",
+                "problem_filename": "ipc2023-dataset/rover/instances/pfile5.pddl",
+                "time_solved": 1760645853.204509,
+                "plan": [
+                    "calibrate_rover0_camera2_objective1_waypoint0",
+                    "calibrate_rover1_camera1_objective1_waypoint0",
+                    "takeimage_rover0_waypoint0_objective2_camera2_highres",
+                    "takeimage_rover1_waypoint0_objective0_camera1_colour",
+                    "calibrate_rover1_camera1_objective1_waypoint0",
+                    "samplerock_rover0_rover0store_waypoint0",
+                    "takeimage_rover1_waypoint0_objective0_camera1_highres",
+                    "communicateimagedata_rover1_general_objective0_highres_waypoint0_waypoint3",
+                    "navigate_rover0_waypoint0_waypoint1",
+                    "communicateimagedata_rover0_general_objective2_highres_waypoint1_waypoint3",
+                    "navigate_rover1_waypoint0_waypoint1",
+                    "samplesoil_rover1_rover1store_waypoint1",
+                    "communicaterockdata_rover0_general_waypoint0_waypoint1_waypoint3",
+                    "drop_rover0_rover0store",
+                    "samplerock_rover0_rover0store_waypoint1",
+                    "navigate_rover1_waypoint1_waypoint2",
+                    "communicatesoildata_rover1_general_waypoint1_waypoint2_waypoint3",
+                    "communicaterockdata_rover0_general_waypoint1_waypoint1_waypoint3",
+                    "communicateimagedata_rover1_general_objective0_colour_waypoint2_waypoint3",
+                    "drop_rover1_rover1store",
+                    "samplesoil_rover1_rover1store_waypoint2",
+                    "communicatesoildata_rover1_general_waypoint2_waypoint2_waypoint3"
+                ],
+                "plan_length": 22,
+                "loading_time": 1.8289084434509277,
+                "last_building_model": 4.096737623214722,
+                "last_solving_time": 20.718239068984985,
+                "total_last": 26.643885135650635,
+                "total_solving_time": 161.93915510177612
+            }
+        }
+    }
+}

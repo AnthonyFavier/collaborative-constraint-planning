@@ -1,0 +1,22 @@
+problem1:
+	MILP: length=9 duration=2.50s (build=0.08s last=0.13s => 0.22s)
+	0: board_person2_plane1_city0 | 1: board_person1_plane1_city0 | 2: flyslow_plane1_city0_city1 | 3: refuel_plane1 | 4: board_person3_plane1_city1 | 5: debark_person2_plane1_city1 | 6: flyslow_plane1_city1_city2 | 7: debark_person3_plane1_city2 | 8: debark_person1_plane1_city2
+problem2:
+	MILP: length=8 duration=1.88s (build=0.07s last=0.10s => 0.17s)
+	0: refuel_plane1 | 1: refuel_plane1 | 2: flyslow_plane1_city0_city2 | 3: board_person1_plane1_city2 | 4: refuel_plane1 | 5: flyslow_plane1_city2_city1 | 6: debark_person1_plane1_city1 | 7: flyslow_plane1_city1_city2
+problem3:
+	MILP: length=8 duration=4.97s (build=0.28s last=0.41s => 0.69s)
+	0: refuel_plane1 | 1: board_person1_plane1_city0 | 2: flyslow_plane1_city0_city1 | 3: refuel_plane1 | 4: debark_person1_plane1_city1 | 5: board_person3_plane1_city1 | 6: flyslow_plane1_city1_city0 | 7: debark_person3_plane1_city0
+problem4:
+	MILP: length=11 duration=10.81s (build=0.44s last=1.12s => 1.56s)
+	0: refuel_plane1 | 1: flyslow_plane1_city2_city0 | 2: board_person4_plane1_city0 | 3: refuel_plane1 | 4: flyslow_plane1_city0_city1 | 5: debark_person4_plane1_city1 | 6: refuel_plane1 | 7: board_person2_plane1_city1 | 8: flyslow_plane1_city1_city2 | 9: debark_person2_plane1_city2 | 10: flyslow_plane1_city2_city0
+problem5:
+	MILP: length=12 duration=20.78s (build=0.90s last=2.22s => 3.12s)
+	0: refuel_plane1 | 1: board_person4_plane1_city1 | 2: flyslow_plane1_city1_city0 | 3: board_person2_plane1_city0 | 4: board_person3_plane1_city0 | 5: flyslow_plane1_city0_city3 | 6: debark_person2_plane1_city3 | 7: debark_person4_plane1_city3 | 8: board_person1_plane1_city3 | 9: debark_person3_plane1_city3 | 10: flyslow_plane1_city3_city2 | 11: debark_person1_plane1_city2
+problem6:
+	MILP: length=14 duration=59.57s (build=1.10s last=16.51s => 17.61s)
+	0: refuel_plane2 | 1: flyslow_plane2_city1_city2 | 2: board_person5_plane2_city2 | 3: flyslow_plane2_city2_city0 | 4: refuel_plane2 | 5: board_person1_plane2_city0 | 6: board_person2_plane2_city0 | 7: flyslow_plane2_city0_city1 | 8: debark_person5_plane2_city1 | 9: board_person4_plane2_city1 | 10: debark_person2_plane2_city1 | 11: flyslow_plane2_city1_city3 | 12: debark_person1_plane2_city3 | 13: debark_person4_plane2_city3
+problem7:
+	MILP: length=14 duration=284.80s (build=4.57s last=73.98s => 78.56s)
+	0: flyslow_plane2_city3_city4 | 1: board_person6_plane2_city4 | 2: refuel_plane2 | 3: flyslow_plane2_city4_city2 | 4: board_person3_plane2_city2 | 5: refuel_plane1 | 6: debark_person6_plane2_city2 | 7: flyslow_plane2_city2_city1 | 8: debark_person3_plane2_city1 | 9: board_person1_plane2_city1 | 10: flyslow_plane1_city0_city3 | 11: refuel_plane2 | 12: flyslow_plane2_city1_city0 | 13: debark_person1_plane2_city0
+problem8:

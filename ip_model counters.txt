@@ -1,0 +1,138 @@
+NoName:
+MINIMIZE
+1*u_decrement_c0_0 + 1*u_decrement_c0_1 + 1*u_decrement_c0_2 + 1*u_decrement_c0_3 + 1*u_decrement_c1_0 + 1*u_decrement_c1_1 + 1*u_decrement_c1_2 + 1*u_decrement_c1_3 + 1*u_increment_c0_0 + 1*u_increment_c0_1 + 1*u_increment_c0_2 + 1*u_increment_c0_3 + 1*u_increment_c1_0 + 1*u_increment_c1_1 + 1*u_increment_c1_2 + 1*u_increment_c1_3 + 0.0
+SUBJECT TO
+
+## Initial values
+_C1: y_v_t_value_counter_c1_0 = 1
+_C2: y_v_t_value_counter_c0_0 = 7
+
+## Goal 
+_C3: y_v_t_value_counter_c1_4 = 2
+_C4: y_v_t_value_counter_c0_4 >= 2
+_C5: - y_v_t_value_counter_c0_4 >= -4
+
+## Preconditions
+
+### increment c0
+_C6: - 4 u_increment_c0_0 - y_v_t_value_counter_c0_0 >= -7
+_C7: - 5 u_increment_c0_1 - y_v_t_value_counter_c0_1 >= -8
+_C8: - 6 u_increment_c0_2 - y_v_t_value_counter_c0_2 >= -9
+_C9: - 7 u_increment_c0_3 - y_v_t_value_counter_c0_3 >= -10
+
+## increment c1
+_C10: 2 u_increment_c1_0 - y_v_t_value_counter_c1_0 >= -1
+_C11: u_increment_c1_1 - y_v_t_value_counter_c1_1 >= -2
+_C12: - y_v_t_value_counter_c1_2 >= -3
+_C13: - u_increment_c1_3 - y_v_t_value_counter_c1_3 >= -4
+
+## decrement c0
+_C14: 6 u_decrement_c0_0 + y_v_t_value_counter_c0_0 >= 7
+_C15: 5 u_decrement_c0_1 + y_v_t_value_counter_c0_1 >= 6
+_C16: 4 u_decrement_c0_2 + y_v_t_value_counter_c0_2 >= 5
+_C17: 3 u_decrement_c0_3 + y_v_t_value_counter_c0_3 >= 4
+
+## decrement c1
+_C18: y_v_t_value_counter_c1_0 >= 1
+_C19: - u_decrement_c1_1 + y_v_t_value_counter_c1_1 >= 0
+_C20: - 2 u_decrement_c1_2 + y_v_t_value_counter_c1_2 >= -1
+_C21: - 3 u_decrement_c1_3 + y_v_t_value_counter_c1_3 >= -2
+
+## update Vn with action effect with constant effects
+
+# 15
+_C22: u_decrement_c1_0 - u_increment_c1_0 - y_v_t_value_counter_c1_0
+ + y_v_t_value_counter_c1_1 <= 0
+_C23: u_decrement_c1_1 - u_increment_c1_1 - y_v_t_value_counter_c1_1
+ + y_v_t_value_counter_c1_2 <= 0
+_C24: u_decrement_c1_2 - u_increment_c1_2 - y_v_t_value_counter_c1_2
+ + y_v_t_value_counter_c1_3 <= 0
+_C25: u_decrement_c1_3 - u_increment_c1_3 - y_v_t_value_counter_c1_3
+ + y_v_t_value_counter_c1_4 <= 0
+
+_C26: u_decrement_c0_0 - u_increment_c0_0 - y_v_t_value_counter_c0_0
+ + y_v_t_value_counter_c0_1 <= 0
+_C27: u_decrement_c0_1 - u_increment_c0_1 - y_v_t_value_counter_c0_1
+ + y_v_t_value_counter_c0_2 <= 0
+_C28: u_decrement_c0_2 - u_increment_c0_2 - y_v_t_value_counter_c0_2
+ + y_v_t_value_counter_c0_3 <= 0
+_C29: u_decrement_c0_3 - u_increment_c0_3 - y_v_t_value_counter_c0_3
+ + y_v_t_value_counter_c0_4 <= 0
+
+# 16
+_C30: u_decrement_c1_0 - u_increment_c1_0 - y_v_t_value_counter_c1_0
+ + y_v_t_value_counter_c1_1 >= 0
+_C31: u_decrement_c1_1 - u_increment_c1_1 - y_v_t_value_counter_c1_1
+ + y_v_t_value_counter_c1_2 >= 0
+_C32: u_decrement_c1_2 - u_increment_c1_2 - y_v_t_value_counter_c1_2
+ + y_v_t_value_counter_c1_3 >= 0
+_C33: u_decrement_c1_3 - u_increment_c1_3 - y_v_t_value_counter_c1_3
+ + y_v_t_value_counter_c1_4 >= 0
+
+_C34: u_decrement_c0_0 - u_increment_c0_0 - y_v_t_value_counter_c0_0
+ + y_v_t_value_counter_c0_1 >= 0
+_C35: u_decrement_c0_1 - u_increment_c0_1 - y_v_t_value_counter_c0_1
+ + y_v_t_value_counter_c0_2 >= 0
+_C36: u_decrement_c0_2 - u_increment_c0_2 - y_v_t_value_counter_c0_2
+ + y_v_t_value_counter_c0_3 >= 0
+_C37: u_decrement_c0_3 - u_increment_c0_3 - y_v_t_value_counter_c0_3
+ + y_v_t_value_counter_c0_4 >= 0
+
+# 17 rien
+# 18 rien
+
+# 19 exclusion
+_C38: u_decrement_c0_0 + u_increment_c0_0 <= 1
+_C39: u_decrement_c0_1 + u_increment_c0_1 <= 1
+_C40: u_decrement_c0_2 + u_increment_c0_2 <= 1
+_C41: u_decrement_c0_3 + u_increment_c0_3 <= 1
+_C42: u_decrement_c1_0 + u_increment_c1_0 <= 1
+_C43: u_decrement_c1_1 + u_increment_c1_1 <= 1
+_C44: u_decrement_c1_2 + u_increment_c1_2 <= 1
+_C45: u_decrement_c1_3 + u_increment_c1_3 <= 1
+_C46: u_decrement_c0_0 + u_increment_c0_0 <= 1
+_C47: u_decrement_c0_1 + u_increment_c0_1 <= 1
+_C48: u_decrement_c0_2 + u_increment_c0_2 <= 1
+_C49: u_decrement_c0_3 + u_increment_c0_3 <= 1
+_C50: u_decrement_c1_0 + u_increment_c1_0 <= 1
+_C51: u_decrement_c1_1 + u_increment_c1_1 <= 1
+_C52: u_decrement_c1_2 + u_increment_c1_2 <= 1
+_C53: u_decrement_c1_3 + u_increment_c1_3 <= 1
+
+# sequential
+_C54: u_decrement_c0_0 + u_decrement_c1_0 + u_increment_c0_0
+ + u_increment_c1_0 <= 1
+_C55: u_decrement_c0_1 + u_decrement_c1_1 + u_increment_c0_1
+ + u_increment_c1_1 <= 1
+_C56: u_decrement_c0_2 + u_decrement_c1_2 + u_increment_c0_2
+ + u_increment_c1_2 <= 1
+_C57: u_decrement_c0_3 + u_decrement_c1_3 + u_increment_c0_3
+ + u_increment_c1_3 <= 1
+
+VARIABLES
+0 <= u_decrement_c0_0 <= 1 Integer
+0 <= u_decrement_c0_1 <= 1 Integer
+0 <= u_decrement_c0_2 <= 1 Integer
+0 <= u_decrement_c0_3 <= 1 Integer
+0 <= u_decrement_c1_0 <= 1 Integer
+0 <= u_decrement_c1_1 <= 1 Integer
+0 <= u_decrement_c1_2 <= 1 Integer
+0 <= u_decrement_c1_3 <= 1 Integer
+0 <= u_increment_c0_0 <= 1 Integer
+0 <= u_increment_c0_1 <= 1 Integer
+0 <= u_increment_c0_2 <= 1 Integer
+0 <= u_increment_c0_3 <= 1 Integer
+0 <= u_increment_c1_0 <= 1 Integer
+0 <= u_increment_c1_1 <= 1 Integer
+0 <= u_increment_c1_2 <= 1 Integer
+0 <= u_increment_c1_3 <= 1 Integer
+y_v_t_value_counter_c0_0 free Continuous
+y_v_t_value_counter_c0_1 free Continuous
+y_v_t_value_counter_c0_2 free Continuous
+y_v_t_value_counter_c0_3 free Continuous
+y_v_t_value_counter_c0_4 free Continuous
+y_v_t_value_counter_c1_0 free Continuous
+y_v_t_value_counter_c1_1 free Continuous
+y_v_t_value_counter_c1_2 free Continuous
+y_v_t_value_counter_c1_3 free Continuous
+y_v_t_value_counter_c1_4 free Continuous

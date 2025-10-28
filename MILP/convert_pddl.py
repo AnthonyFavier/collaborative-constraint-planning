@@ -15,6 +15,8 @@ from sympy.parsing.sympy_parser import parse_expr
 # i.e. ax+b > 0 becomes ax+b-epsilon>=0
 epsilon = 1e-5
 
+
+all_equations = []
 def normalize_equation(expr_str):
     exp = parse_expr(expr_str, evaluate=False)
 
@@ -46,6 +48,8 @@ def normalize_equation(expr_str):
     else:
         exp = expand(exp)
         exp_str = str(exp)
+
+    all_equations.append((expr_str, exp_str))
 
     return exp_str
 

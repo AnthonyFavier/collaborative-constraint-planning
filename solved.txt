@@ -1,0 +1,38 @@
+classical ZenoTravel pfile10
+
+up FD
+20.31
+
+MILP
+┌─────────────────────────┐
+│ Loading problem: 8.44s  │
+│ Building model: 1.46s   │
+│ Solving instance: 7.16s │
+│ Total time: 30.01s      │
+└─────────────────────────┘
+
+
+pfile11
+
+UP 5.22
+
+MILP
+┌─────────────────────────┐
+│ Loading problem: 11.34s │
+│ Building model: 1.79s   │
+│ Solving instance: 4.49s │
+│ Total time: 23.54s      │
+└─────────────────────────┘
+
+
+pfile12
+
+UP 130.13
+
+MILP
+┌──────────────────────────┐
+│ Loading problem: 13.13s  │
+│ Building model: 1.59s    │
+│ Solving instance: 10.84s │
+│ Total time: 42.44s       │
+└──────────────────────────┘

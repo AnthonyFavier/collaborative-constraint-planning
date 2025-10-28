@@ -1,0 +1,147 @@
+{
+    "domain_name": "zenotravel",
+    "classical": false,
+    "time_start": 1760645344.5512934,
+    "results": {
+        "problem1": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile1.pddl",
+                "time_solved": 1760645345.4088748,
+                "plan": [
+                    "board_person2_plane1_city0",
+                    "board_person1_plane1_city0",
+                    "flyslow_plane1_city0_city1",
+                    "refuel_plane1",
+                    "board_person3_plane1_city1",
+                    "debark_person2_plane1_city1",
+                    "flyslow_plane1_city1_city2",
+                    "debark_person1_plane1_city2",
+                    "debark_person3_plane1_city2"
+                ],
+                "plan_length": 9,
+                "loading_time": 0.5005910396575928,
+                "solving_time": 0.3568880558013916,
+                "total_time": 0.857534646987915
+            }
+        },
+        "problem2": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile2.pddl",
+                "time_solved": 1760645346.2734835,
+                "plan": [
+                    "refuel_plane1",
+                    "flyslow_plane1_city0_city2",
+                    "refuel_plane1",
+                    "board_person1_plane1_city2",
+                    "flyslow_plane1_city2_city1",
+                    "refuel_plane1",
+                    "debark_person1_plane1_city1",
+                    "flyslow_plane1_city1_city2"
+                ],
+                "plan_length": 8,
+                "loading_time": 0.5059065818786621,
+                "solving_time": 0.3584768772125244,
+                "total_time": 0.8644394874572754
+            }
+        },
+        "problem3": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile3.pddl",
+                "time_solved": 1760645348.7375135,
+                "plan": [
+                    "board_person1_plane1_city0",
+                    "refuel_plane1",
+                    "flyslow_plane1_city0_city1",
+                    "refuel_plane1",
+                    "board_person3_plane1_city1",
+                    "debark_person1_plane1_city1",
+                    "flyslow_plane1_city1_city0",
+                    "debark_person3_plane1_city0"
+                ],
+                "plan_length": 8,
+                "loading_time": 1.8315181732177734,
+                "solving_time": 0.6322510242462158,
+                "total_time": 2.463822364807129
+            }
+        },
+        "problem4": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile4.pddl",
+                "time_solved": 1760645352.6027262,
+                "plan": [
+                    "refuel_plane2",
+                    "refuel_plane2",
+                    "flyslow_plane2_city2_city0",
+                    "board_person4_plane2_city0",
+                    "flyslow_plane2_city0_city1",
+                    "debark_person4_plane2_city1",
+                    "board_person2_plane2_city1",
+                    "flyslow_plane2_city1_city2",
+                    "refuel_plane1",
+                    "flyslow_plane1_city2_city0",
+                    "debark_person2_plane2_city2"
+                ],
+                "plan_length": 11,
+                "loading_time": 1.1906166076660156,
+                "solving_time": 2.6743011474609375,
+                "total_time": 3.864975690841675
+            }
+        },
+        "problem5": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile5.pddl",
+                "time_solved": 1760645396.4316359,
+                "plan": [
+                    "board_person4_plane1_city1",
+                    "refuel_plane1",
+                    "flyslow_plane1_city1_city0",
+                    "board_person3_plane1_city0",
+                    "board_person2_plane1_city0",
+                    "flyslow_plane1_city0_city3",
+                    "board_person1_plane1_city3",
+                    "debark_person3_plane1_city3",
+                    "debark_person2_plane1_city3",
+                    "debark_person4_plane1_city3",
+                    "flyslow_plane1_city3_city2",
+                    "debark_person1_plane1_city2"
+                ],
+                "plan_length": 12,
+                "loading_time": 1.5611002445220947,
+                "solving_time": 42.267444133758545,
+                "total_time": 43.828601360321045
+            }
+        },
+        "problem6": {
+            "UP": {
+                "domain_filename": "ipc2023-dataset/zenotravel/domain.pddl",
+                "problem_filename": "ipc2023-dataset/zenotravel/instances/pfile6.pddl",
+                "time_solved": 1760645486.7903922,
+                "plan": [
+                    "refuel_plane2",
+                    "board_person4_plane2_city1",
+                    "flyslow_plane2_city1_city0",
+                    "board_person2_plane2_city0",
+                    "board_person1_plane2_city0",
+                    "flyslow_plane2_city0_city3",
+                    "refuel_plane2",
+                    "debark_person4_plane2_city3",
+                    "debark_person1_plane2_city3",
+                    "flyfast_plane2_city3_city2",
+                    "board_person5_plane2_city2",
+                    "flyslow_plane2_city2_city1",
+                    "debark_person2_plane2_city1",
+                    "debark_person5_plane2_city1"
+                ],
+                "plan_length": 14,
+                "loading_time": 1.619988203048706,
+                "solving_time": 88.73842906951904,
+                "total_time": 90.35847735404968
+            }
+        }
+    }
+}

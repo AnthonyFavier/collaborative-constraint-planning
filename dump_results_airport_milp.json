@@ -1,0 +1,31 @@
+{
+    "domain_name": "airport",
+    "classical": true,
+    "time_start": 1760718152.4715276,
+    "results": {
+        "problem1": {
+            "MILP": {
+                "domain_filename": "classical-domains/classical/airport/p02-domain.pddl",
+                "problem_filename": "classical-domains/classical/airport/p02-airport1-p1.pddl",
+                "time_solved": 1760718155.9754224,
+                "plan": [
+                    "pushbacksegpp060segppdoor040southsouthmedium_airplanedaewh",
+                    "pushbacksegppdoor040segtww10200southnorthmedium_airplanedaewh",
+                    "startupsegtww10200southmedium_airplanedaewh",
+                    "movesegtww10200segtwe10200northsouthmedium_airplanedaewh",
+                    "movesegtwe10200segtwe2050southsouthmedium_airplanedaewh",
+                    "movesegtwe2050segtwe3050southsouthmedium_airplanedaewh",
+                    "movesegtwe3050segtwe4050southsouthmedium_airplanedaewh",
+                    "movesegtwe4050segrwe050southsouthmedium_airplanedaewh",
+                    "takeoffsegrwe050south_airplanedaewh"
+                ],
+                "plan_length": 9,
+                "loading_time": 1.5536913871765137,
+                "last_building_model": 0.19497108459472656,
+                "last_solving_time": 0.15530157089233398,
+                "total_last": 1.9039640426635742,
+                "total_solving_time": 3.5032598972320557
+            }
+        }
+    }
+}

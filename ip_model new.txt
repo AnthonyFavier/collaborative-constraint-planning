@@ -1,0 +1,1355 @@
+NoName:
+MINIMIZE
+1*u_board_person1_plane1_city1_0 + 1*u_board_person1_plane1_city1_1 + 1*u_board_person1_plane1_city1_2 + 1*u_board_person1_plane1_city2_0 + 1*u_board_person1_plane1_city2_1 + 1*u_board_person1_plane1_city2_2 + 1*u_debark_person1_plane1_city1_0 + 1*u_debark_person1_plane1_city1_1 + 1*u_debark_person1_plane1_city1_2 + 1*u_debark_person1_plane1_city2_0 + 1*u_debark_person1_plane1_city2_1 + 1*u_debark_person1_plane1_city2_2 + 1*u_flyfast_plane1_city1_city1_0 + 1*u_flyfast_plane1_city1_city1_1 + 1*u_flyfast_plane1_city1_city1_2 + 1*u_flyfast_plane1_city1_city2_0 + 1*u_flyfast_plane1_city1_city2_1 + 1*u_flyfast_plane1_city1_city2_2 + 1*u_flyfast_plane1_city2_city1_0 + 1*u_flyfast_plane1_city2_city1_1 + 1*u_flyfast_plane1_city2_city1_2 + 1*u_flyfast_plane1_city2_city2_0 + 1*u_flyfast_plane1_city2_city2_1 + 1*u_flyfast_plane1_city2_city2_2 + 1*u_flyslow_plane1_city1_city1_0 + 1*u_flyslow_plane1_city1_city1_1 + 1*u_flyslow_plane1_city1_city1_2 + 1*u_flyslow_plane1_city1_city2_0 + 1*u_flyslow_plane1_city1_city2_1 + 1*u_flyslow_plane1_city1_city2_2 + 1*u_flyslow_plane1_city2_city1_0 + 1*u_flyslow_plane1_city2_city1_1 + 1*u_flyslow_plane1_city2_city1_2 + 1*u_flyslow_plane1_city2_city2_0 + 1*u_flyslow_plane1_city2_city2_1 + 1*u_flyslow_plane1_city2_city2_2 + 1*u_refuel_plane1_0 + 1*u_refuel_plane1_1 + 1*u_refuel_plane1_2 + 0.0
+SUBJECT TO
+_C1: u_a_located_person1_city1_0 = 1
+
+_C2: u_m_located_person1_city1_0 = 0
+
+_C3: u_pa_located_person1_city1_0 = 0
+
+_C4: u_pd_located_person1_city1_0 = 0
+
+_C5: u_a_located_person1_city2_0 = 0
+
+_C6: u_m_located_person1_city2_0 = 0
+
+_C7: u_pa_located_person1_city2_0 = 0
+
+_C8: u_pd_located_person1_city2_0 = 0
+
+_C9: u_a_located_plane1_city1_0 = 1
+
+_C10: u_m_located_plane1_city1_0 = 0
+
+_C11: u_pa_located_plane1_city1_0 = 0
+
+_C12: u_pd_located_plane1_city1_0 = 0
+
+_C13: u_a_located_plane1_city2_0 = 0
+
+_C14: u_m_located_plane1_city2_0 = 0
+
+_C15: u_pa_located_plane1_city2_0 = 0
+
+_C16: u_pd_located_plane1_city2_0 = 0
+
+_C17: u_a_in_person1_plane1_0 = 0
+
+_C18: u_m_in_person1_plane1_0 = 0
+
+_C19: u_pa_in_person1_plane1_0 = 0
+
+_C20: u_pd_in_person1_plane1_0 = 0
+
+_C21: u_a_located_person1_city2_3 + u_m_located_person1_city2_3
+ + u_pa_located_person1_city2_3 >= 1
+
+_C22: - u_pa_located_person1_city1_1 >= 0
+
+_C23: - u_a_located_person1_city1_1 + u_debark_person1_plane1_city1_0 >= 0
+
+_C24: - u_a_located_person1_city1_1 + u_debark_person1_plane1_city1_0 <= 0
+
+_C25: u_board_person1_plane1_city1_0 - u_pd_located_person1_city1_1 = 0
+
+_C26: - u_a_located_person1_city1_0 - u_m_located_person1_city1_0
+ + u_m_located_person1_city1_1 - u_pa_located_person1_city1_0
+ + u_pa_located_person1_city1_1 + u_pd_located_person1_city1_1 <= 0
+
+_C27: - u_pa_located_person1_city1_2 >= 0
+
+_C28: - u_a_located_person1_city1_2 + u_debark_person1_plane1_city1_1 >= 0
+
+_C29: - u_a_located_person1_city1_2 + u_debark_person1_plane1_city1_1 <= 0
+
+_C30: u_board_person1_plane1_city1_1 - u_pd_located_person1_city1_2 = 0
+
+_C31: - u_a_located_person1_city1_1 - u_m_located_person1_city1_1
+ + u_m_located_person1_city1_2 - u_pa_located_person1_city1_1
+ + u_pa_located_person1_city1_2 + u_pd_located_person1_city1_2 <= 0
+
+_C32: - u_pa_located_person1_city1_3 >= 0
+
+_C33: - u_a_located_person1_city1_3 + u_debark_person1_plane1_city1_2 >= 0
+
+_C34: - u_a_located_person1_city1_3 + u_debark_person1_plane1_city1_2 <= 0
+
+_C35: u_board_person1_plane1_city1_2 - u_pd_located_person1_city1_3 = 0
+
+_C36: - u_a_located_person1_city1_2 - u_m_located_person1_city1_2
+ + u_m_located_person1_city1_3 - u_pa_located_person1_city1_2
+ + u_pa_located_person1_city1_3 + u_pd_located_person1_city1_3 <= 0
+
+_C37: u_a_located_person1_city1_0 + u_m_located_person1_city1_0
+ + u_pd_located_person1_city1_0 <= 1
+
+_C38: u_m_located_person1_city1_0 + u_pa_located_person1_city1_0
+ + u_pd_located_person1_city1_0 <= 1
+
+_C39: u_a_located_person1_city1_1 + u_m_located_person1_city1_1
+ + u_pd_located_person1_city1_1 <= 1
+
+_C40: u_m_located_person1_city1_1 + u_pa_located_person1_city1_1
+ + u_pd_located_person1_city1_1 <= 1
+
+_C41: u_a_located_person1_city1_2 + u_m_located_person1_city1_2
+ + u_pd_located_person1_city1_2 <= 1
+
+_C42: u_m_located_person1_city1_2 + u_pa_located_person1_city1_2
+ + u_pd_located_person1_city1_2 <= 1
+
+_C43: u_a_located_person1_city1_3 + u_m_located_person1_city1_3
+ + u_pd_located_person1_city1_3 <= 1
+
+_C44: u_m_located_person1_city1_3 + u_pa_located_person1_city1_3
+ + u_pd_located_person1_city1_3 <= 1
+
+_C45: - u_pa_located_person1_city2_1 >= 0
+
+_C46: - u_a_located_person1_city2_1 + u_debark_person1_plane1_city2_0 >= 0
+
+_C47: - u_a_located_person1_city2_1 + u_debark_person1_plane1_city2_0 <= 0
+
+_C48: u_board_person1_plane1_city2_0 - u_pd_located_person1_city2_1 = 0
+
+_C49: - u_a_located_person1_city2_0 - u_m_located_person1_city2_0
+ + u_m_located_person1_city2_1 - u_pa_located_person1_city2_0
+ + u_pa_located_person1_city2_1 + u_pd_located_person1_city2_1 <= 0
+
+_C50: - u_pa_located_person1_city2_2 >= 0
+
+_C51: - u_a_located_person1_city2_2 + u_debark_person1_plane1_city2_1 >= 0
+
+_C52: - u_a_located_person1_city2_2 + u_debark_person1_plane1_city2_1 <= 0
+
+_C53: u_board_person1_plane1_city2_1 - u_pd_located_person1_city2_2 = 0
+
+_C54: - u_a_located_person1_city2_1 - u_m_located_person1_city2_1
+ + u_m_located_person1_city2_2 - u_pa_located_person1_city2_1
+ + u_pa_located_person1_city2_2 + u_pd_located_person1_city2_2 <= 0
+
+_C55: - u_pa_located_person1_city2_3 >= 0
+
+_C56: - u_a_located_person1_city2_3 + u_debark_person1_plane1_city2_2 >= 0
+
+_C57: - u_a_located_person1_city2_3 + u_debark_person1_plane1_city2_2 <= 0
+
+_C58: u_board_person1_plane1_city2_2 - u_pd_located_person1_city2_3 = 0
+
+_C59: - u_a_located_person1_city2_2 - u_m_located_person1_city2_2
+ + u_m_located_person1_city2_3 - u_pa_located_person1_city2_2
+ + u_pa_located_person1_city2_3 + u_pd_located_person1_city2_3 <= 0
+
+_C60: u_a_located_person1_city2_0 + u_m_located_person1_city2_0
+ + u_pd_located_person1_city2_0 <= 1
+
+_C61: u_m_located_person1_city2_0 + u_pa_located_person1_city2_0
+ + u_pd_located_person1_city2_0 <= 1
+
+_C62: u_a_located_person1_city2_1 + u_m_located_person1_city2_1
+ + u_pd_located_person1_city2_1 <= 1
+
+_C63: u_m_located_person1_city2_1 + u_pa_located_person1_city2_1
+ + u_pd_located_person1_city2_1 <= 1
+
+_C64: u_a_located_person1_city2_2 + u_m_located_person1_city2_2
+ + u_pd_located_person1_city2_2 <= 1
+
+_C65: u_m_located_person1_city2_2 + u_pa_located_person1_city2_2
+ + u_pd_located_person1_city2_2 <= 1
+
+_C66: u_a_located_person1_city2_3 + u_m_located_person1_city2_3
+ + u_pd_located_person1_city2_3 <= 1
+
+_C67: u_m_located_person1_city2_3 + u_pa_located_person1_city2_3
+ + u_pd_located_person1_city2_3 <= 1
+
+_C68: u_board_person1_plane1_city1_0 + u_debark_person1_plane1_city1_0
+ - u_pa_located_plane1_city1_1 >= 0
+
+_C69: u_debark_person1_plane1_city1_0 - u_pa_located_plane1_city1_1 <= 0
+
+_C70: u_board_person1_plane1_city1_0 - u_pa_located_plane1_city1_1 <= 0
+
+_C71: - u_a_located_plane1_city1_1 + u_flyfast_plane1_city2_city1_0
+ + u_flyslow_plane1_city2_city1_0 >= 0
+
+_C72: - u_a_located_plane1_city1_1 + u_flyslow_plane1_city2_city1_0 <= 0
+
+_C73: - u_a_located_plane1_city1_1 + u_flyfast_plane1_city2_city1_0 <= 0
+
+_C74: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city1_city2_0
+ + u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0
+ - u_pd_located_plane1_city1_1 = 0
+
+_C75: - u_a_located_plane1_city1_0 - u_m_located_plane1_city1_0
+ + u_m_located_plane1_city1_1 - u_pa_located_plane1_city1_0
+ + u_pa_located_plane1_city1_1 + u_pd_located_plane1_city1_1 <= 0
+
+_C76: u_board_person1_plane1_city1_1 + u_debark_person1_plane1_city1_1
+ - u_pa_located_plane1_city1_2 >= 0
+
+_C77: u_debark_person1_plane1_city1_1 - u_pa_located_plane1_city1_2 <= 0
+
+_C78: u_board_person1_plane1_city1_1 - u_pa_located_plane1_city1_2 <= 0
+
+_C79: - u_a_located_plane1_city1_2 + u_flyfast_plane1_city2_city1_1
+ + u_flyslow_plane1_city2_city1_1 >= 0
+
+_C80: - u_a_located_plane1_city1_2 + u_flyslow_plane1_city2_city1_1 <= 0
+
+_C81: - u_a_located_plane1_city1_2 + u_flyfast_plane1_city2_city1_1 <= 0
+
+_C82: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city1_city2_1
+ + u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1
+ - u_pd_located_plane1_city1_2 = 0
+
+_C83: - u_a_located_plane1_city1_1 - u_m_located_plane1_city1_1
+ + u_m_located_plane1_city1_2 - u_pa_located_plane1_city1_1
+ + u_pa_located_plane1_city1_2 + u_pd_located_plane1_city1_2 <= 0
+
+_C84: u_board_person1_plane1_city1_2 + u_debark_person1_plane1_city1_2
+ - u_pa_located_plane1_city1_3 >= 0
+
+_C85: u_debark_person1_plane1_city1_2 - u_pa_located_plane1_city1_3 <= 0
+
+_C86: u_board_person1_plane1_city1_2 - u_pa_located_plane1_city1_3 <= 0
+
+_C87: - u_a_located_plane1_city1_3 + u_flyfast_plane1_city2_city1_2
+ + u_flyslow_plane1_city2_city1_2 >= 0
+
+_C88: - u_a_located_plane1_city1_3 + u_flyslow_plane1_city2_city1_2 <= 0
+
+_C89: - u_a_located_plane1_city1_3 + u_flyfast_plane1_city2_city1_2 <= 0
+
+_C90: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city1_city2_2
+ + u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2
+ - u_pd_located_plane1_city1_3 = 0
+
+_C91: - u_a_located_plane1_city1_2 - u_m_located_plane1_city1_2
+ + u_m_located_plane1_city1_3 - u_pa_located_plane1_city1_2
+ + u_pa_located_plane1_city1_3 + u_pd_located_plane1_city1_3 <= 0
+
+_C92: u_a_located_plane1_city1_0 + u_m_located_plane1_city1_0
+ + u_pd_located_plane1_city1_0 <= 1
+
+_C93: u_m_located_plane1_city1_0 + u_pa_located_plane1_city1_0
+ + u_pd_located_plane1_city1_0 <= 1
+
+_C94: u_a_located_plane1_city1_1 + u_m_located_plane1_city1_1
+ + u_pd_located_plane1_city1_1 <= 1
+
+_C95: u_m_located_plane1_city1_1 + u_pa_located_plane1_city1_1
+ + u_pd_located_plane1_city1_1 <= 1
+
+_C96: u_a_located_plane1_city1_2 + u_m_located_plane1_city1_2
+ + u_pd_located_plane1_city1_2 <= 1
+
+_C97: u_m_located_plane1_city1_2 + u_pa_located_plane1_city1_2
+ + u_pd_located_plane1_city1_2 <= 1
+
+_C98: u_a_located_plane1_city1_3 + u_m_located_plane1_city1_3
+ + u_pd_located_plane1_city1_3 <= 1
+
+_C99: u_m_located_plane1_city1_3 + u_pa_located_plane1_city1_3
+ + u_pd_located_plane1_city1_3 <= 1
+
+_C100: u_board_person1_plane1_city2_0 + u_debark_person1_plane1_city2_0
+ - u_pa_located_plane1_city2_1 >= 0
+
+_C101: u_board_person1_plane1_city2_0 - u_pa_located_plane1_city2_1 <= 0
+
+_C102: u_debark_person1_plane1_city2_0 - u_pa_located_plane1_city2_1 <= 0
+
+_C103: - u_a_located_plane1_city2_1 + u_flyfast_plane1_city1_city2_0
+ + u_flyslow_plane1_city1_city2_0 >= 0
+
+_C104: - u_a_located_plane1_city2_1 + u_flyfast_plane1_city1_city2_0 <= 0
+
+_C105: - u_a_located_plane1_city2_1 + u_flyslow_plane1_city1_city2_0 <= 0
+
+_C106: u_flyfast_plane1_city2_city1_0 + u_flyfast_plane1_city2_city2_0
+ + u_flyslow_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0
+ - u_pd_located_plane1_city2_1 = 0
+
+_C107: - u_a_located_plane1_city2_0 - u_m_located_plane1_city2_0
+ + u_m_located_plane1_city2_1 - u_pa_located_plane1_city2_0
+ + u_pa_located_plane1_city2_1 + u_pd_located_plane1_city2_1 <= 0
+
+_C108: u_board_person1_plane1_city2_1 + u_debark_person1_plane1_city2_1
+ - u_pa_located_plane1_city2_2 >= 0
+
+_C109: u_board_person1_plane1_city2_1 - u_pa_located_plane1_city2_2 <= 0
+
+_C110: u_debark_person1_plane1_city2_1 - u_pa_located_plane1_city2_2 <= 0
+
+_C111: - u_a_located_plane1_city2_2 + u_flyfast_plane1_city1_city2_1
+ + u_flyslow_plane1_city1_city2_1 >= 0
+
+_C112: - u_a_located_plane1_city2_2 + u_flyfast_plane1_city1_city2_1 <= 0
+
+_C113: - u_a_located_plane1_city2_2 + u_flyslow_plane1_city1_city2_1 <= 0
+
+_C114: u_flyfast_plane1_city2_city1_1 + u_flyfast_plane1_city2_city2_1
+ + u_flyslow_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1
+ - u_pd_located_plane1_city2_2 = 0
+
+_C115: - u_a_located_plane1_city2_1 - u_m_located_plane1_city2_1
+ + u_m_located_plane1_city2_2 - u_pa_located_plane1_city2_1
+ + u_pa_located_plane1_city2_2 + u_pd_located_plane1_city2_2 <= 0
+
+_C116: u_board_person1_plane1_city2_2 + u_debark_person1_plane1_city2_2
+ - u_pa_located_plane1_city2_3 >= 0
+
+_C117: u_board_person1_plane1_city2_2 - u_pa_located_plane1_city2_3 <= 0
+
+_C118: u_debark_person1_plane1_city2_2 - u_pa_located_plane1_city2_3 <= 0
+
+_C119: - u_a_located_plane1_city2_3 + u_flyfast_plane1_city1_city2_2
+ + u_flyslow_plane1_city1_city2_2 >= 0
+
+_C120: - u_a_located_plane1_city2_3 + u_flyfast_plane1_city1_city2_2 <= 0
+
+_C121: - u_a_located_plane1_city2_3 + u_flyslow_plane1_city1_city2_2 <= 0
+
+_C122: u_flyfast_plane1_city2_city1_2 + u_flyfast_plane1_city2_city2_2
+ + u_flyslow_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2
+ - u_pd_located_plane1_city2_3 = 0
+
+_C123: - u_a_located_plane1_city2_2 - u_m_located_plane1_city2_2
+ + u_m_located_plane1_city2_3 - u_pa_located_plane1_city2_2
+ + u_pa_located_plane1_city2_3 + u_pd_located_plane1_city2_3 <= 0
+
+_C124: u_a_located_plane1_city2_0 + u_m_located_plane1_city2_0
+ + u_pd_located_plane1_city2_0 <= 1
+
+_C125: u_m_located_plane1_city2_0 + u_pa_located_plane1_city2_0
+ + u_pd_located_plane1_city2_0 <= 1
+
+_C126: u_a_located_plane1_city2_1 + u_m_located_plane1_city2_1
+ + u_pd_located_plane1_city2_1 <= 1
+
+_C127: u_m_located_plane1_city2_1 + u_pa_located_plane1_city2_1
+ + u_pd_located_plane1_city2_1 <= 1
+
+_C128: u_a_located_plane1_city2_2 + u_m_located_plane1_city2_2
+ + u_pd_located_plane1_city2_2 <= 1
+
+_C129: u_m_located_plane1_city2_2 + u_pa_located_plane1_city2_2
+ + u_pd_located_plane1_city2_2 <= 1
+
+_C130: u_a_located_plane1_city2_3 + u_m_located_plane1_city2_3
+ + u_pd_located_plane1_city2_3 <= 1
+
+_C131: u_m_located_plane1_city2_3 + u_pa_located_plane1_city2_3
+ + u_pd_located_plane1_city2_3 <= 1
+
+_C132: - u_pa_in_person1_plane1_1 >= 0
+
+_C133: - u_a_in_person1_plane1_1 + u_board_person1_plane1_city1_0
+ + u_board_person1_plane1_city2_0 >= 0
+
+_C134: - u_a_in_person1_plane1_1 + u_board_person1_plane1_city2_0 <= 0
+
+_C135: - u_a_in_person1_plane1_1 + u_board_person1_plane1_city1_0 <= 0
+
+_C136: u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0
+ - u_pd_in_person1_plane1_1 = 0
+
+_C137: - u_a_in_person1_plane1_0 - u_m_in_person1_plane1_0
+ + u_m_in_person1_plane1_1 - u_pa_in_person1_plane1_0
+ + u_pa_in_person1_plane1_1 + u_pd_in_person1_plane1_1 <= 0
+
+_C138: - u_pa_in_person1_plane1_2 >= 0
+
+_C139: - u_a_in_person1_plane1_2 + u_board_person1_plane1_city1_1
+ + u_board_person1_plane1_city2_1 >= 0
+
+_C140: - u_a_in_person1_plane1_2 + u_board_person1_plane1_city2_1 <= 0
+
+_C141: - u_a_in_person1_plane1_2 + u_board_person1_plane1_city1_1 <= 0
+
+_C142: u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1
+ - u_pd_in_person1_plane1_2 = 0
+
+_C143: - u_a_in_person1_plane1_1 - u_m_in_person1_plane1_1
+ + u_m_in_person1_plane1_2 - u_pa_in_person1_plane1_1
+ + u_pa_in_person1_plane1_2 + u_pd_in_person1_plane1_2 <= 0
+
+_C144: - u_pa_in_person1_plane1_3 >= 0
+
+_C145: - u_a_in_person1_plane1_3 + u_board_person1_plane1_city1_2
+ + u_board_person1_plane1_city2_2 >= 0
+
+_C146: - u_a_in_person1_plane1_3 + u_board_person1_plane1_city2_2 <= 0
+
+_C147: - u_a_in_person1_plane1_3 + u_board_person1_plane1_city1_2 <= 0
+
+_C148: u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2
+ - u_pd_in_person1_plane1_3 = 0
+
+_C149: - u_a_in_person1_plane1_2 - u_m_in_person1_plane1_2
+ + u_m_in_person1_plane1_3 - u_pa_in_person1_plane1_2
+ + u_pa_in_person1_plane1_3 + u_pd_in_person1_plane1_3 <= 0
+
+_C150: u_a_in_person1_plane1_0 + u_m_in_person1_plane1_0
+ + u_pd_in_person1_plane1_0 <= 1
+
+_C151: u_m_in_person1_plane1_0 + u_pa_in_person1_plane1_0
+ + u_pd_in_person1_plane1_0 <= 1
+
+_C152: u_a_in_person1_plane1_1 + u_m_in_person1_plane1_1
+ + u_pd_in_person1_plane1_1 <= 1
+
+_C153: u_m_in_person1_plane1_1 + u_pa_in_person1_plane1_1
+ + u_pd_in_person1_plane1_1 <= 1
+
+_C154: u_a_in_person1_plane1_2 + u_m_in_person1_plane1_2
+ + u_pd_in_person1_plane1_2 <= 1
+
+_C155: u_m_in_person1_plane1_2 + u_pa_in_person1_plane1_2
+ + u_pd_in_person1_plane1_2 <= 1
+
+_C156: u_a_in_person1_plane1_3 + u_m_in_person1_plane1_3
+ + u_pd_in_person1_plane1_3 <= 1
+
+_C157: u_m_in_person1_plane1_3 + u_pa_in_person1_plane1_3
+ + u_pd_in_person1_plane1_3 <= 1
+
+_C158: y_v_t_fuel_plane1_0 = 4000
+
+_C159: y_v_t_total_fuel_used_0 = 0
+
+_C160: y_v_t_onboard_plane1_0 = 0
+
+_C161: 4000 u_flyslow_plane1_city1_city1_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C162: - 26780 u_flyslow_plane1_city1_city1_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C163: - 57560 u_flyslow_plane1_city1_city1_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C164: 760 u_flyslow_plane1_city1_city2_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C165: - 30020 u_flyslow_plane1_city1_city2_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C166: - 60800 u_flyslow_plane1_city1_city2_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C167: 760 u_flyslow_plane1_city2_city1_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C168: - 30020 u_flyslow_plane1_city2_city1_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C169: - 60800 u_flyslow_plane1_city2_city1_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C170: 4000 u_flyslow_plane1_city2_city2_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C171: - 26780 u_flyslow_plane1_city2_city2_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C172: - 57560 u_flyslow_plane1_city2_city2_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C173: 8 u_flyfast_plane1_city1_city1_0 - y_v_t_onboard_plane1_0 = 0
+
+_C174: 6 u_flyfast_plane1_city1_city1_1 - y_v_t_onboard_plane1_1 = -2
+
+_C175: 4 u_flyfast_plane1_city1_city1_2 - y_v_t_onboard_plane1_2 = -4
+
+_C176: 4000 u_flyfast_plane1_city1_city1_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C177: - 26780 u_flyfast_plane1_city1_city1_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C178: - 57560 u_flyfast_plane1_city1_city1_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C179: 8 u_flyfast_plane1_city1_city2_0 - y_v_t_onboard_plane1_0 = 0
+
+_C180: 6 u_flyfast_plane1_city1_city2_1 - y_v_t_onboard_plane1_1 = -2
+
+_C181: 4 u_flyfast_plane1_city1_city2_2 - y_v_t_onboard_plane1_2 = -4
+
+_C182: - 8150 u_flyfast_plane1_city1_city2_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C183: - 38930 u_flyfast_plane1_city1_city2_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C184: - 69710 u_flyfast_plane1_city1_city2_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C185: 8 u_flyfast_plane1_city2_city1_0 - y_v_t_onboard_plane1_0 = 0
+
+_C186: 6 u_flyfast_plane1_city2_city1_1 - y_v_t_onboard_plane1_1 = -2
+
+_C187: 4 u_flyfast_plane1_city2_city1_2 - y_v_t_onboard_plane1_2 = -4
+
+_C188: - 8150 u_flyfast_plane1_city2_city1_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C189: - 38930 u_flyfast_plane1_city2_city1_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C190: - 69710 u_flyfast_plane1_city2_city1_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C191: 8 u_flyfast_plane1_city2_city2_0 - y_v_t_onboard_plane1_0 = 0
+
+_C192: 6 u_flyfast_plane1_city2_city2_1 - y_v_t_onboard_plane1_1 = -2
+
+_C193: 4 u_flyfast_plane1_city2_city2_2 - y_v_t_onboard_plane1_2 = -4
+
+_C194: 4000 u_flyfast_plane1_city2_city2_0 + y_v_t_fuel_plane1_0 = 4000
+
+_C195: - 26780 u_flyfast_plane1_city2_city2_1 + y_v_t_fuel_plane1_1 = -26780
+
+_C196: - 57560 u_flyfast_plane1_city2_city2_2 + y_v_t_fuel_plane1_2 = -57560
+
+_C197: 1999.99999 u_refuel_plane1_0 - y_v_t_fuel_plane1_0 = -4000
+
+_C198: 1999.99999 u_refuel_plane1_1 - y_v_t_fuel_plane1_1 = -4000
+
+_C199: 1999.99999 u_refuel_plane1_2 - y_v_t_fuel_plane1_2 = -4000
+
+_C200: 12150 u_flyfast_plane1_city1_city2_0
+ + 12150 u_flyfast_plane1_city2_city1_0 + 3240 u_flyslow_plane1_city1_city2_0
+ + 3240 u_flyslow_plane1_city2_city1_0 - y_v_t_fuel_plane1_0
+ + y_v_t_fuel_plane1_1 <= 0
+
+_C201: 12150 u_flyfast_plane1_city1_city2_1
+ + 12150 u_flyfast_plane1_city2_city1_1 + 3240 u_flyslow_plane1_city1_city2_1
+ + 3240 u_flyslow_plane1_city2_city1_1 - 30780 u_refuel_plane1_1
+ - y_v_t_fuel_plane1_1 + y_v_t_fuel_plane1_2 <= 0
+
+_C202: 12150 u_flyfast_plane1_city1_city2_2
+ + 12150 u_flyfast_plane1_city2_city1_2 + 3240 u_flyslow_plane1_city1_city2_2
+ + 3240 u_flyslow_plane1_city2_city1_2 - 61560 u_refuel_plane1_2
+ - y_v_t_fuel_plane1_2 + y_v_t_fuel_plane1_3 <= 0
+
+_C203: - 12150 u_flyfast_plane1_city1_city2_0
+ - 12150 u_flyfast_plane1_city2_city1_0 - 3240 u_flyslow_plane1_city1_city2_0
+ - 3240 u_flyslow_plane1_city2_city1_0 - y_v_t_total_fuel_used_0
+ + y_v_t_total_fuel_used_1 <= 0
+
+_C204: - 12150 u_flyfast_plane1_city1_city2_1
+ - 12150 u_flyfast_plane1_city2_city1_1 - 3240 u_flyslow_plane1_city1_city2_1
+ - 3240 u_flyslow_plane1_city2_city1_1 - y_v_t_total_fuel_used_1
+ + y_v_t_total_fuel_used_2 <= 0
+
+_C205: - 12150 u_flyfast_plane1_city1_city2_2
+ - 12150 u_flyfast_plane1_city2_city1_2 - 3240 u_flyslow_plane1_city1_city2_2
+ - 3240 u_flyslow_plane1_city2_city1_2 - y_v_t_total_fuel_used_2
+ + y_v_t_total_fuel_used_3 <= 0
+
+_C206: - u_board_person1_plane1_city1_0 - u_board_person1_plane1_city2_0
+ + u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0
+ - y_v_t_onboard_plane1_0 + y_v_t_onboard_plane1_1 <= 0
+
+_C207: - u_board_person1_plane1_city1_1 - u_board_person1_plane1_city2_1
+ + u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1
+ - y_v_t_onboard_plane1_1 + y_v_t_onboard_plane1_2 <= 0
+
+_C208: - u_board_person1_plane1_city1_2 - u_board_person1_plane1_city2_2
+ + u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2
+ - y_v_t_onboard_plane1_2 + y_v_t_onboard_plane1_3 <= 0
+
+_C209: 12150 u_flyfast_plane1_city1_city2_0
+ + 12150 u_flyfast_plane1_city2_city1_0 + 3240 u_flyslow_plane1_city1_city2_0
+ + 3240 u_flyslow_plane1_city2_city1_0 + 30780 u_refuel_plane1_0
+ - y_v_t_fuel_plane1_0 + y_v_t_fuel_plane1_1 >= 0
+
+_C210: 12150 u_flyfast_plane1_city1_city2_1
+ + 12150 u_flyfast_plane1_city2_city1_1 + 3240 u_flyslow_plane1_city1_city2_1
+ + 3240 u_flyslow_plane1_city2_city1_1 + 61560 u_refuel_plane1_1
+ - y_v_t_fuel_plane1_1 + y_v_t_fuel_plane1_2 >= 0
+
+_C211: 12150 u_flyfast_plane1_city1_city2_2
+ + 12150 u_flyfast_plane1_city2_city1_2 + 3240 u_flyslow_plane1_city1_city2_2
+ + 3240 u_flyslow_plane1_city2_city1_2 + 92340 u_refuel_plane1_2
+ - y_v_t_fuel_plane1_2 + y_v_t_fuel_plane1_3 >= 0
+
+_C212: - 12150 u_flyfast_plane1_city1_city2_0
+ - 12150 u_flyfast_plane1_city2_city1_0 - 3240 u_flyslow_plane1_city1_city2_0
+ - 3240 u_flyslow_plane1_city2_city1_0 - y_v_t_total_fuel_used_0
+ + y_v_t_total_fuel_used_1 >= 0
+
+_C213: - 12150 u_flyfast_plane1_city1_city2_1
+ - 12150 u_flyfast_plane1_city2_city1_1 - 3240 u_flyslow_plane1_city1_city2_1
+ - 3240 u_flyslow_plane1_city2_city1_1 - y_v_t_total_fuel_used_1
+ + y_v_t_total_fuel_used_2 >= 0
+
+_C214: - 12150 u_flyfast_plane1_city1_city2_2
+ - 12150 u_flyfast_plane1_city2_city1_2 - 3240 u_flyslow_plane1_city1_city2_2
+ - 3240 u_flyslow_plane1_city2_city1_2 - y_v_t_total_fuel_used_2
+ + y_v_t_total_fuel_used_3 >= 0
+
+_C215: - u_board_person1_plane1_city1_0 - u_board_person1_plane1_city2_0
+ + u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0
+ - y_v_t_onboard_plane1_0 + y_v_t_onboard_plane1_1 >= 0
+
+_C216: - u_board_person1_plane1_city1_1 - u_board_person1_plane1_city2_1
+ + u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1
+ - y_v_t_onboard_plane1_1 + y_v_t_onboard_plane1_2 >= 0
+
+_C217: - u_board_person1_plane1_city1_2 - u_board_person1_plane1_city2_2
+ + u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2
+ - y_v_t_onboard_plane1_2 + y_v_t_onboard_plane1_3 >= 0
+
+_C218: - 2000 u_refuel_plane1_0 + y_v_t_fuel_plane1_1 <= 4000
+
+_C219: - 2000 u_refuel_plane1_1 + y_v_t_fuel_plane1_2 <= 4000
+
+_C220: - 2000 u_refuel_plane1_2 + y_v_t_fuel_plane1_3 <= 4000
+
+_C221: - 32780 u_refuel_plane1_0 + y_v_t_fuel_plane1_1 >= -26780
+
+_C222: - 63560 u_refuel_plane1_1 + y_v_t_fuel_plane1_2 >= -57560
+
+_C223: - 94340 u_refuel_plane1_2 + y_v_t_fuel_plane1_3 >= -88340
+
+_C224: u_board_person1_plane1_city1_0 + u_board_person1_plane1_city2_0 <= 1
+
+_C225: u_board_person1_plane1_city1_1 + u_board_person1_plane1_city2_1 <= 1
+
+_C226: u_board_person1_plane1_city1_2 + u_board_person1_plane1_city2_2 <= 1
+
+_C227: u_board_person1_plane1_city1_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C228: u_board_person1_plane1_city1_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C229: u_board_person1_plane1_city1_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C230: u_board_person1_plane1_city1_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C231: u_board_person1_plane1_city1_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C232: u_board_person1_plane1_city1_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C233: u_board_person1_plane1_city1_0 + u_flyfast_plane1_city1_city1_0 <= 1
+
+_C234: u_board_person1_plane1_city1_1 + u_flyfast_plane1_city1_city1_1 <= 1
+
+_C235: u_board_person1_plane1_city1_2 + u_flyfast_plane1_city1_city1_2 <= 1
+
+_C236: u_board_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C237: u_board_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C238: u_board_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C239: u_board_person1_plane1_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C240: u_board_person1_plane1_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C241: u_board_person1_plane1_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C242: u_board_person1_plane1_city1_0 + u_debark_person1_plane1_city1_0 <= 1
+
+_C243: u_board_person1_plane1_city1_1 + u_debark_person1_plane1_city1_1 <= 1
+
+_C244: u_board_person1_plane1_city1_2 + u_debark_person1_plane1_city1_2 <= 1
+
+_C245: u_board_person1_plane1_city2_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C246: u_board_person1_plane1_city2_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C247: u_board_person1_plane1_city2_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C248: u_board_person1_plane1_city2_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C249: u_board_person1_plane1_city2_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C250: u_board_person1_plane1_city2_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C251: u_board_person1_plane1_city1_0 + u_board_person1_plane1_city2_0 <= 1
+
+_C252: u_board_person1_plane1_city1_1 + u_board_person1_plane1_city2_1 <= 1
+
+_C253: u_board_person1_plane1_city1_2 + u_board_person1_plane1_city2_2 <= 1
+
+_C254: u_board_person1_plane1_city2_0 + u_flyfast_plane1_city1_city1_0 <= 1
+
+_C255: u_board_person1_plane1_city2_1 + u_flyfast_plane1_city1_city1_1 <= 1
+
+_C256: u_board_person1_plane1_city2_2 + u_flyfast_plane1_city1_city1_2 <= 1
+
+_C257: u_board_person1_plane1_city2_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C258: u_board_person1_plane1_city2_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C259: u_board_person1_plane1_city2_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C260: u_board_person1_plane1_city2_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C261: u_board_person1_plane1_city2_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C262: u_board_person1_plane1_city2_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C263: u_board_person1_plane1_city2_0 + u_debark_person1_plane1_city1_0 <= 1
+
+_C264: u_board_person1_plane1_city2_1 + u_debark_person1_plane1_city1_1 <= 1
+
+_C265: u_board_person1_plane1_city2_2 + u_debark_person1_plane1_city1_2 <= 1
+
+_C266: u_board_person1_plane1_city2_0 + u_debark_person1_plane1_city1_0 <= 1
+
+_C267: u_board_person1_plane1_city2_1 + u_debark_person1_plane1_city1_1 <= 1
+
+_C268: u_board_person1_plane1_city2_2 + u_debark_person1_plane1_city1_2 <= 1
+
+_C269: u_debark_person1_plane1_city1_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C270: u_debark_person1_plane1_city1_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C271: u_debark_person1_plane1_city1_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C272: u_debark_person1_plane1_city1_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C273: u_debark_person1_plane1_city1_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C274: u_debark_person1_plane1_city1_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C275: u_board_person1_plane1_city1_0 + u_debark_person1_plane1_city1_0 <= 1
+
+_C276: u_board_person1_plane1_city1_1 + u_debark_person1_plane1_city1_1 <= 1
+
+_C277: u_board_person1_plane1_city1_2 + u_debark_person1_plane1_city1_2 <= 1
+
+_C278: u_debark_person1_plane1_city1_0 + u_flyfast_plane1_city1_city1_0 <= 1
+
+_C279: u_debark_person1_plane1_city1_1 + u_flyfast_plane1_city1_city1_1 <= 1
+
+_C280: u_debark_person1_plane1_city1_2 + u_flyfast_plane1_city1_city1_2 <= 1
+
+_C281: u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C282: u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C283: u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C284: u_debark_person1_plane1_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C285: u_debark_person1_plane1_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C286: u_debark_person1_plane1_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C287: u_board_person1_plane1_city2_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C288: u_board_person1_plane1_city2_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C289: u_board_person1_plane1_city2_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C290: u_debark_person1_plane1_city2_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C291: u_debark_person1_plane1_city2_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C292: u_debark_person1_plane1_city2_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C293: u_debark_person1_plane1_city2_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C294: u_debark_person1_plane1_city2_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C295: u_debark_person1_plane1_city2_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C296: u_board_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C297: u_board_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C298: u_board_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C299: u_debark_person1_plane1_city2_0 + u_flyfast_plane1_city1_city1_0 <= 1
+
+_C300: u_debark_person1_plane1_city2_1 + u_flyfast_plane1_city1_city1_1 <= 1
+
+_C301: u_debark_person1_plane1_city2_2 + u_flyfast_plane1_city1_city1_2 <= 1
+
+_C302: u_debark_person1_plane1_city2_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C303: u_debark_person1_plane1_city2_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C304: u_debark_person1_plane1_city2_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C305: u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0 <= 1
+
+_C306: u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1 <= 1
+
+_C307: u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2 <= 1
+
+_C308: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C309: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C310: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C311: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C312: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C313: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C314: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C315: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C316: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C317: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C318: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C319: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C320: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C321: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C322: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C323: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C324: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C325: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C326: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C327: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C328: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C329: u_flyslow_plane1_city1_city1_0 + u_refuel_plane1_0 <= 1
+
+_C330: u_flyslow_plane1_city1_city1_1 + u_refuel_plane1_1 <= 1
+
+_C331: u_flyslow_plane1_city1_city1_2 + u_refuel_plane1_2 <= 1
+
+_C332: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C333: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C334: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C335: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C336: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C337: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C338: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C339: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C340: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C341: u_flyslow_plane1_city1_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C342: u_flyslow_plane1_city1_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C343: u_flyslow_plane1_city1_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C344: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C345: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C346: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C347: u_flyslow_plane1_city1_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C348: u_flyslow_plane1_city1_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C349: u_flyslow_plane1_city1_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C350: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C351: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C352: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C353: u_flyslow_plane1_city1_city2_0 + u_refuel_plane1_0 <= 1
+
+_C354: u_flyslow_plane1_city1_city2_1 + u_refuel_plane1_1 <= 1
+
+_C355: u_flyslow_plane1_city1_city2_2 + u_refuel_plane1_2 <= 1
+
+_C356: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C357: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C358: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C359: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C360: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C361: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C362: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C363: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C364: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C365: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C366: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C367: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C368: u_flyslow_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C369: u_flyslow_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C370: u_flyslow_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C371: u_flyslow_plane1_city1_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C372: u_flyslow_plane1_city1_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C373: u_flyslow_plane1_city1_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C374: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C375: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C376: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C377: u_flyslow_plane1_city2_city1_0 + u_refuel_plane1_0 <= 1
+
+_C378: u_flyslow_plane1_city2_city1_1 + u_refuel_plane1_1 <= 1
+
+_C379: u_flyslow_plane1_city2_city1_2 + u_refuel_plane1_2 <= 1
+
+_C380: u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C381: u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C382: u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C383: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C384: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C385: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C386: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C387: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C388: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C389: u_flyslow_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C390: u_flyslow_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C391: u_flyslow_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C392: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C393: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C394: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C395: u_flyslow_plane1_city1_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C396: u_flyslow_plane1_city1_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C397: u_flyslow_plane1_city1_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C398: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C399: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C400: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C401: u_flyslow_plane1_city2_city2_0 + u_refuel_plane1_0 <= 1
+
+_C402: u_flyslow_plane1_city2_city2_1 + u_refuel_plane1_1 <= 1
+
+_C403: u_flyslow_plane1_city2_city2_2 + u_refuel_plane1_2 <= 1
+
+_C404: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C405: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C406: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C407: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C408: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C409: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C410: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C411: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C412: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C413: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C414: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C415: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C416: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C417: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C418: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C419: u_flyfast_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C420: u_flyfast_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C421: u_flyfast_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C422: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C423: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C424: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C425: u_flyfast_plane1_city1_city1_0 + u_refuel_plane1_0 <= 1
+
+_C426: u_flyfast_plane1_city1_city1_1 + u_refuel_plane1_1 <= 1
+
+_C427: u_flyfast_plane1_city1_city1_2 + u_refuel_plane1_2 <= 1
+
+_C428: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C429: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C430: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C431: u_flyfast_plane1_city1_city2_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C432: u_flyfast_plane1_city1_city2_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C433: u_flyfast_plane1_city1_city2_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C434: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C435: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C436: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C437: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city1_city2_0 <= 1
+
+_C438: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city1_city2_1 <= 1
+
+_C439: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city1_city2_2 <= 1
+
+_C440: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C441: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C442: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C443: u_flyfast_plane1_city1_city2_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C444: u_flyfast_plane1_city1_city2_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C445: u_flyfast_plane1_city1_city2_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C446: u_flyfast_plane1_city1_city2_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C447: u_flyfast_plane1_city1_city2_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C448: u_flyfast_plane1_city1_city2_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C449: u_flyfast_plane1_city1_city2_0 + u_refuel_plane1_0 <= 1
+
+_C450: u_flyfast_plane1_city1_city2_1 + u_refuel_plane1_1 <= 1
+
+_C451: u_flyfast_plane1_city1_city2_2 + u_refuel_plane1_2 <= 1
+
+_C452: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C453: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C454: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C455: u_flyfast_plane1_city1_city2_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C456: u_flyfast_plane1_city1_city2_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C457: u_flyfast_plane1_city1_city2_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C458: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C459: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C460: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C461: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city2_city1_0 <= 1
+
+_C462: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city2_city1_1 <= 1
+
+_C463: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city2_city1_2 <= 1
+
+_C464: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C465: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C466: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C467: u_flyfast_plane1_city2_city1_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C468: u_flyfast_plane1_city2_city1_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C469: u_flyfast_plane1_city2_city1_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C470: u_flyfast_plane1_city2_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C471: u_flyfast_plane1_city2_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C472: u_flyfast_plane1_city2_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C473: u_flyfast_plane1_city2_city1_0 + u_refuel_plane1_0 <= 1
+
+_C474: u_flyfast_plane1_city2_city1_1 + u_refuel_plane1_1 <= 1
+
+_C475: u_flyfast_plane1_city2_city1_2 + u_refuel_plane1_2 <= 1
+
+_C476: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city1_city1_0 <= 1
+
+_C477: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city1_city1_1 <= 1
+
+_C478: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city1_city1_2 <= 1
+
+_C479: u_flyfast_plane1_city2_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C480: u_flyfast_plane1_city2_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C481: u_flyfast_plane1_city2_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C482: u_flyfast_plane1_city1_city2_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C483: u_flyfast_plane1_city1_city2_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C484: u_flyfast_plane1_city1_city2_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C485: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city2_city1_0 <= 1
+
+_C486: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city2_city1_1 <= 1
+
+_C487: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city2_city1_2 <= 1
+
+_C488: u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city2_city2_0 <= 1
+
+_C489: u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city2_city2_1 <= 1
+
+_C490: u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city2_city2_2 <= 1
+
+_C491: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city2_city2_0 <= 1
+
+_C492: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city2_city2_1 <= 1
+
+_C493: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city2_city2_2 <= 1
+
+_C494: u_flyfast_plane1_city2_city2_0 + u_flyslow_plane1_city1_city2_0 <= 1
+
+_C495: u_flyfast_plane1_city2_city2_1 + u_flyslow_plane1_city1_city2_1 <= 1
+
+_C496: u_flyfast_plane1_city2_city2_2 + u_flyslow_plane1_city1_city2_2 <= 1
+
+_C497: u_flyfast_plane1_city2_city2_0 + u_refuel_plane1_0 <= 1
+
+_C498: u_flyfast_plane1_city2_city2_1 + u_refuel_plane1_1 <= 1
+
+_C499: u_flyfast_plane1_city2_city2_2 + u_refuel_plane1_2 <= 1
+
+_C500: u_flyslow_plane1_city1_city1_0 + u_refuel_plane1_0 <= 1
+
+_C501: u_flyslow_plane1_city1_city1_1 + u_refuel_plane1_1 <= 1
+
+_C502: u_flyslow_plane1_city1_city1_2 + u_refuel_plane1_2 <= 1
+
+_C503: u_flyfast_plane1_city2_city1_0 + u_refuel_plane1_0 <= 1
+
+_C504: u_flyfast_plane1_city2_city1_1 + u_refuel_plane1_1 <= 1
+
+_C505: u_flyfast_plane1_city2_city1_2 + u_refuel_plane1_2 <= 1
+
+_C506: u_flyfast_plane1_city1_city2_0 + u_refuel_plane1_0 <= 1
+
+_C507: u_flyfast_plane1_city1_city2_1 + u_refuel_plane1_1 <= 1
+
+_C508: u_flyfast_plane1_city1_city2_2 + u_refuel_plane1_2 <= 1
+
+_C509: u_flyslow_plane1_city2_city1_0 + u_refuel_plane1_0 <= 1
+
+_C510: u_flyslow_plane1_city2_city1_1 + u_refuel_plane1_1 <= 1
+
+_C511: u_flyslow_plane1_city2_city1_2 + u_refuel_plane1_2 <= 1
+
+_C512: u_flyfast_plane1_city1_city1_0 + u_refuel_plane1_0 <= 1
+
+_C513: u_flyfast_plane1_city1_city1_1 + u_refuel_plane1_1 <= 1
+
+_C514: u_flyfast_plane1_city1_city1_2 + u_refuel_plane1_2 <= 1
+
+_C515: u_flyslow_plane1_city2_city2_0 + u_refuel_plane1_0 <= 1
+
+_C516: u_flyslow_plane1_city2_city2_1 + u_refuel_plane1_1 <= 1
+
+_C517: u_flyslow_plane1_city2_city2_2 + u_refuel_plane1_2 <= 1
+
+_C518: u_flyslow_plane1_city1_city2_0 + u_refuel_plane1_0 <= 1
+
+_C519: u_flyslow_plane1_city1_city2_1 + u_refuel_plane1_1 <= 1
+
+_C520: u_flyslow_plane1_city1_city2_2 + u_refuel_plane1_2 <= 1
+
+_C521: u_flyfast_plane1_city2_city2_0 + u_refuel_plane1_0 <= 1
+
+_C522: u_flyfast_plane1_city2_city2_1 + u_refuel_plane1_1 <= 1
+
+_C523: u_flyfast_plane1_city2_city2_2 + u_refuel_plane1_2 <= 1
+
+_C524: u_board_person1_plane1_city1_0 + u_board_person1_plane1_city2_0
+ + u_debark_person1_plane1_city1_0 + u_debark_person1_plane1_city2_0
+ + u_flyfast_plane1_city1_city1_0 + u_flyfast_plane1_city1_city2_0
+ + u_flyfast_plane1_city2_city1_0 + u_flyfast_plane1_city2_city2_0
+ + u_flyslow_plane1_city1_city1_0 + u_flyslow_plane1_city1_city2_0
+ + u_flyslow_plane1_city2_city1_0 + u_flyslow_plane1_city2_city2_0
+ + u_refuel_plane1_0 <= 1
+
+_C525: u_board_person1_plane1_city1_1 + u_board_person1_plane1_city2_1
+ + u_debark_person1_plane1_city1_1 + u_debark_person1_plane1_city2_1
+ + u_flyfast_plane1_city1_city1_1 + u_flyfast_plane1_city1_city2_1
+ + u_flyfast_plane1_city2_city1_1 + u_flyfast_plane1_city2_city2_1
+ + u_flyslow_plane1_city1_city1_1 + u_flyslow_plane1_city1_city2_1
+ + u_flyslow_plane1_city2_city1_1 + u_flyslow_plane1_city2_city2_1
+ + u_refuel_plane1_1 <= 1
+
+_C526: u_board_person1_plane1_city1_2 + u_board_person1_plane1_city2_2
+ + u_debark_person1_plane1_city1_2 + u_debark_person1_plane1_city2_2
+ + u_flyfast_plane1_city1_city1_2 + u_flyfast_plane1_city1_city2_2
+ + u_flyfast_plane1_city2_city1_2 + u_flyfast_plane1_city2_city2_2
+ + u_flyslow_plane1_city1_city1_2 + u_flyslow_plane1_city1_city2_2
+ + u_flyslow_plane1_city2_city1_2 + u_flyslow_plane1_city2_city2_2
+ + u_refuel_plane1_2 <= 1
+
+VARIABLES
+0 <= u_a_in_person1_plane1_0 <= 1 Integer
+0 <= u_a_in_person1_plane1_1 <= 1 Integer
+0 <= u_a_in_person1_plane1_2 <= 1 Integer
+0 <= u_a_in_person1_plane1_3 <= 1 Integer
+0 <= u_a_located_person1_city1_0 <= 1 Integer
+0 <= u_a_located_person1_city1_1 <= 1 Integer
+0 <= u_a_located_person1_city1_2 <= 1 Integer
+0 <= u_a_located_person1_city1_3 <= 1 Integer
+0 <= u_a_located_person1_city2_0 <= 1 Integer
+0 <= u_a_located_person1_city2_1 <= 1 Integer
+0 <= u_a_located_person1_city2_2 <= 1 Integer
+0 <= u_a_located_person1_city2_3 <= 1 Integer
+0 <= u_a_located_plane1_city1_0 <= 1 Integer
+0 <= u_a_located_plane1_city1_1 <= 1 Integer
+0 <= u_a_located_plane1_city1_2 <= 1 Integer
+0 <= u_a_located_plane1_city1_3 <= 1 Integer
+0 <= u_a_located_plane1_city2_0 <= 1 Integer
+0 <= u_a_located_plane1_city2_1 <= 1 Integer
+0 <= u_a_located_plane1_city2_2 <= 1 Integer
+0 <= u_a_located_plane1_city2_3 <= 1 Integer
+0 <= u_board_person1_plane1_city1_0 <= 1 Integer
+0 <= u_board_person1_plane1_city1_1 <= 1 Integer
+0 <= u_board_person1_plane1_city1_2 <= 1 Integer
+0 <= u_board_person1_plane1_city2_0 <= 1 Integer
+0 <= u_board_person1_plane1_city2_1 <= 1 Integer
+0 <= u_board_person1_plane1_city2_2 <= 1 Integer
+0 <= u_debark_person1_plane1_city1_0 <= 1 Integer
+0 <= u_debark_person1_plane1_city1_1 <= 1 Integer
+0 <= u_debark_person1_plane1_city1_2 <= 1 Integer
+0 <= u_debark_person1_plane1_city2_0 <= 1 Integer
+0 <= u_debark_person1_plane1_city2_1 <= 1 Integer
+0 <= u_debark_person1_plane1_city2_2 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city1_0 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city1_1 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city1_2 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city2_0 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city2_1 <= 1 Integer
+0 <= u_flyfast_plane1_city1_city2_2 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city1_0 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city1_1 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city1_2 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city2_0 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city2_1 <= 1 Integer
+0 <= u_flyfast_plane1_city2_city2_2 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city1_0 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city1_1 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city1_2 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city2_0 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city2_1 <= 1 Integer
+0 <= u_flyslow_plane1_city1_city2_2 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city1_0 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city1_1 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city1_2 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city2_0 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city2_1 <= 1 Integer
+0 <= u_flyslow_plane1_city2_city2_2 <= 1 Integer
+0 <= u_m_in_person1_plane1_0 <= 1 Integer
+0 <= u_m_in_person1_plane1_1 <= 1 Integer
+0 <= u_m_in_person1_plane1_2 <= 1 Integer
+0 <= u_m_in_person1_plane1_3 <= 1 Integer
+0 <= u_m_located_person1_city1_0 <= 1 Integer
+0 <= u_m_located_person1_city1_1 <= 1 Integer
+0 <= u_m_located_person1_city1_2 <= 1 Integer
+0 <= u_m_located_person1_city1_3 <= 1 Integer
+0 <= u_m_located_person1_city2_0 <= 1 Integer
+0 <= u_m_located_person1_city2_1 <= 1 Integer
+0 <= u_m_located_person1_city2_2 <= 1 Integer
+0 <= u_m_located_person1_city2_3 <= 1 Integer
+0 <= u_m_located_plane1_city1_0 <= 1 Integer
+0 <= u_m_located_plane1_city1_1 <= 1 Integer
+0 <= u_m_located_plane1_city1_2 <= 1 Integer
+0 <= u_m_located_plane1_city1_3 <= 1 Integer
+0 <= u_m_located_plane1_city2_0 <= 1 Integer
+0 <= u_m_located_plane1_city2_1 <= 1 Integer
+0 <= u_m_located_plane1_city2_2 <= 1 Integer
+0 <= u_m_located_plane1_city2_3 <= 1 Integer
+0 <= u_pa_in_person1_plane1_0 <= 1 Integer
+0 <= u_pa_in_person1_plane1_1 <= 1 Integer
+0 <= u_pa_in_person1_plane1_2 <= 1 Integer
+0 <= u_pa_in_person1_plane1_3 <= 1 Integer
+0 <= u_pa_located_person1_city1_0 <= 1 Integer
+0 <= u_pa_located_person1_city1_1 <= 1 Integer
+0 <= u_pa_located_person1_city1_2 <= 1 Integer
+0 <= u_pa_located_person1_city1_3 <= 1 Integer
+0 <= u_pa_located_person1_city2_0 <= 1 Integer
+0 <= u_pa_located_person1_city2_1 <= 1 Integer
+0 <= u_pa_located_person1_city2_2 <= 1 Integer
+0 <= u_pa_located_person1_city2_3 <= 1 Integer
+0 <= u_pa_located_plane1_city1_0 <= 1 Integer
+0 <= u_pa_located_plane1_city1_1 <= 1 Integer
+0 <= u_pa_located_plane1_city1_2 <= 1 Integer
+0 <= u_pa_located_plane1_city1_3 <= 1 Integer
+0 <= u_pa_located_plane1_city2_0 <= 1 Integer
+0 <= u_pa_located_plane1_city2_1 <= 1 Integer
+0 <= u_pa_located_plane1_city2_2 <= 1 Integer
+0 <= u_pa_located_plane1_city2_3 <= 1 Integer
+0 <= u_pd_in_person1_plane1_0 <= 1 Integer
+0 <= u_pd_in_person1_plane1_1 <= 1 Integer
+0 <= u_pd_in_person1_plane1_2 <= 1 Integer
+0 <= u_pd_in_person1_plane1_3 <= 1 Integer
+0 <= u_pd_located_person1_city1_0 <= 1 Integer
+0 <= u_pd_located_person1_city1_1 <= 1 Integer
+0 <= u_pd_located_person1_city1_2 <= 1 Integer
+0 <= u_pd_located_person1_city1_3 <= 1 Integer
+0 <= u_pd_located_person1_city2_0 <= 1 Integer
+0 <= u_pd_located_person1_city2_1 <= 1 Integer
+0 <= u_pd_located_person1_city2_2 <= 1 Integer
+0 <= u_pd_located_person1_city2_3 <= 1 Integer
+0 <= u_pd_located_plane1_city1_0 <= 1 Integer
+0 <= u_pd_located_plane1_city1_1 <= 1 Integer
+0 <= u_pd_located_plane1_city1_2 <= 1 Integer
+0 <= u_pd_located_plane1_city1_3 <= 1 Integer
+0 <= u_pd_located_plane1_city2_0 <= 1 Integer
+0 <= u_pd_located_plane1_city2_1 <= 1 Integer
+0 <= u_pd_located_plane1_city2_2 <= 1 Integer
+0 <= u_pd_located_plane1_city2_3 <= 1 Integer
+0 <= u_refuel_plane1_0 <= 1 Integer
+0 <= u_refuel_plane1_1 <= 1 Integer
+0 <= u_refuel_plane1_2 <= 1 Integer
+y_v_t_fuel_plane1_0 free Continuous
+y_v_t_fuel_plane1_1 free Continuous
+y_v_t_fuel_plane1_2 free Continuous
+y_v_t_fuel_plane1_3 free Continuous
+y_v_t_onboard_plane1_0 free Continuous
+y_v_t_onboard_plane1_1 free Continuous
+y_v_t_onboard_plane1_2 free Continuous
+y_v_t_onboard_plane1_3 free Continuous
+y_v_t_total_fuel_used_0 free Continuous
+y_v_t_total_fuel_used_1 free Continuous
+y_v_t_total_fuel_used_2 free Continuous
+y_v_t_total_fuel_used_3 free Continuous

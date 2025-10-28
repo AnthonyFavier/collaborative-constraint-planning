@@ -1,0 +1,52 @@
+{
+    "domain_name": "blocks",
+    "classical": true,
+    "time_start": 1760718185.5339546,
+    "results": {
+        "problem1": {
+            "UP": {
+                "domain_filename": "classical-domains/classical/blocks/domain.pddl",
+                "problem_filename": "classical-domains/classical/blocks/probBLOCKS-10-1.pddl",
+                "time_solved": 1760718191.300645,
+                "plan": [
+                    "unstack_c_g",
+                    "putdown_c",
+                    "unstack_g_e",
+                    "putdown_g",
+                    "unstack_e_i",
+                    "putdown_e",
+                    "unstack_i_j",
+                    "putdown_i",
+                    "unstack_j_a",
+                    "putdown_j",
+                    "pickup_g",
+                    "stack_g_j",
+                    "unstack_f_d",
+                    "putdown_f",
+                    "unstack_d_h",
+                    "putdown_d",
+                    "pickup_h",
+                    "stack_h_g",
+                    "pickup_e",
+                    "stack_e_h",
+                    "unstack_a_b",
+                    "stack_a_e",
+                    "pickup_i",
+                    "stack_i_a",
+                    "pickup_f",
+                    "stack_f_i",
+                    "pickup_d",
+                    "stack_d_f",
+                    "pickup_b",
+                    "stack_b_d",
+                    "pickup_c",
+                    "stack_c_b"
+                ],
+                "plan_length": 32,
+                "loading_time": 0.8479175567626953,
+                "solving_time": 4.9182963371276855,
+                "total_time": 5.766370058059692
+            }
+        }
+    }
+}

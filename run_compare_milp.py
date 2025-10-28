@@ -17,6 +17,8 @@ def run_compare(domain_name, i_start=1, i_last=10, classical=False):
     }
 
     json_filename = f'dump_results_{domain_name}_milp.json'
+    with open(json_filename, 'w') as f:
+        json.dump(data, f, indent=4)
 
     for i in range(i_start, i_last):
         problem_name = f'problem{i}'
@@ -58,4 +60,4 @@ def run_compare(domain_name, i_start=1, i_last=10, classical=False):
 
 from MILP.start_with_timer import start_with_timer
 if __name__ == "__main__":
-    start_with_timer(300, run_compare, 'counters', i_start=1, i_last=5)
+    start_with_timer(5, run_compare, 'counters', i_start=1, i_last=10)
