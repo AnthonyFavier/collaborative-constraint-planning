@@ -527,6 +527,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         }
         
         # Show previous results
+        txt = 'No plan'
         if self.master.plan_frame.previous_results=={}:
             self.master.plan_frame.printPrevious("None")
         elif self.master.plan_frame.previous_results['result']=='failed':
