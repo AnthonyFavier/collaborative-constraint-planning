@@ -762,8 +762,8 @@ def up_solve(domain_name=None, i_instance=None, domain_filename=None, problem_fi
 @click.option('-t', '--timehorizon', 'T_user', default=None)
 @click.option('--gap', 'sol_gap', default=None)
 @click.option('--seq', 'sequential', is_flag=True, default=False)
-@click.option('--domain_name', 'domain_name', default='zenotravel')
-@click.option('--i_instance', 'i_instance', default=1)
+@click.option('--domain_name', 'domain_name', default=None)
+@click.option('--i_instance', 'i_instance', default=None)
 @click.option('--domain_filename', 'domain_filename', default=None)
 @click.option('--problem_filename', 'problem_filename', default=None)
 def mainCLI(T_min, T_max, T_user, sol_gap, sequential, domain_name, i_instance, domain_filename, problem_filename):
