@@ -719,7 +719,6 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         
         mprint("\n=== CHAT ===")
-        mprint("\nAI: Please what is your question?")
         agentic_constraint.Chat()
         
         self.master.enableAllButtons()

@@ -1603,9 +1603,10 @@ def ChatGetUserInput(state: ChatState):
         print("Node: ChatGetUserInput")
         logger.info("Node: ChatGetUserInput")
         
+    mprint("\n[ Ask anything or type 'exit' ]\n" + chat_separator + '\n')
+    mprint("User: ", end='')
     question = minput()
-    mprint(chat_separator)
-    mprint("User: " + question)
+    mprint(question)
     return {"messages": [HumanMessage(content=question)]}
 
 #CondEdge
@@ -1641,12 +1642,13 @@ def ChatAnswer(state: ChatState):
     llm = g_llm.bind_tools(chat_tools)
     messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=g_domain, pddl_problem=g_problem, pddl_plan=g_plan))] + state['messages']
     
+    mprint('\n' + chat_separator + '\n')
+    mprint("AI: ", end='')
     msg = call(llm, messages)
     answer = extractAITextAnswer(msg)
     if answer:
-        mprint(chat_separator)
-        mprint("AI: " + answer) 
-    
+        mprint(answer)
+
     return {"messages": [msg]}
 
 #### BUILD ####
