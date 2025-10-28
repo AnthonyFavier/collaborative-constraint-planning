@@ -505,15 +505,6 @@ def deactivateFakeWeather():
     global FAKE_WEATHER
     FAKE_WEATHER = False
 
-# Built-in RETRIEVAL TOOL
-from langchain.tools.retriever import create_retriever_tool
-def build_retriever_tool(retriever):
-    retriever_tool = create_retriever_tool(
-        retriever,
-        "retriever",
-        "Retriever tool able to extract content from available documents that is relevant to the given query.",
-    )
-    return retriever_tool
 # OWN RETRIEVAL TOOL WITH METADATA
 @tool
 def retrieve_with_metadata(query: str) -> str:
