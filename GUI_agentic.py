@@ -13,13 +13,13 @@ import ctypes
 import json
 import jsonpickle
 import agentic_constraint
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
-except:
-    pass
 
-customtkinter.set_window_scaling(2.0)   # scales the window content (default is 1.0)
-customtkinter.set_widget_scaling(1.5)   # scales widgets/fonts (default is 1.0)
+customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
+customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+
+customtkinter.deactivate_automatic_dpi_awareness()
+customtkinter.set_window_scaling(1.0)   # scales the window dimensions (default is 1.0)
+customtkinter.set_widget_scaling(1.0)   # scales widgets/fonts (default is 1.0)
 
 # Custom thread creation with return value. Used for timers
 class ThreadWithReturnValue(threading.Thread):
@@ -32,9 +32,6 @@ class ThreadWithReturnValue(threading.Thread):
     def join(self, *args):
         threading.Thread.join(self, *args)
         return self._return
-
-customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 class ConstraintsFrame(customtkinter.CTkScrollableFrame):
     font = ("Arial", 18)
