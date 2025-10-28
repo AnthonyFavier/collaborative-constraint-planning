@@ -59,8 +59,13 @@ Ignore the two _Note:_ lines.
 
 ### 5. LLM APIs
 
-Replace `REPLACE_WITH_YOUR_KEY` in `.env`, for ANTHROPIC_API_KEY and OPENAI_API_KEY
+Create a `.env` file in root folder to store API keys in the form:
+```
+ANTHROPIC_API_KEY = 'REPLACE_WITH_YOUR_KEY'
+OPENAI_API_KEY = 'REPLACE_WITH_YOUR_KEY'
+```
 
+Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
 
 ## RUN
 
