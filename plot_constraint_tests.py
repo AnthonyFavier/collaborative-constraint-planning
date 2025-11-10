@@ -732,7 +732,92 @@ def several(problem_name, seed, without_constraints_folder, h_folder, violin):
         axs[0].legend(*zip(*labels), loc='upper left', ncols=4)
     else:
         axs[0].legend(loc='upper left', ncols=4)
+
+
+    # stats:
+    # width= widths+0.02
+
+    # significances = [
+    #     ("*", "**"),
+    #     ("ns", "ns"),
+    #     ("ns", "***"),
+    #     ("ns", "***"),
+    #     ("ns", "***"),
+    #     ("ns", "***"),
+    # ]
+
+    # x_m = 0
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "*", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "**", ha='center', va='bottom', color='k')
     
+    # x_m = 1
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    
+    # x_m = 2
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "***", ha='center', va='bottom', color='k')
+    
+    # x_m = 3
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "***", ha='center', va='bottom', color='k')
+    
+    # x_m = 4
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "***", ha='center', va='bottom', color='k')
+    
+    # x_m = 5
+    # x1 = x_m-width
+    # x2 = x_m
+    # y = 75000
+    # h = 2000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y+h, "ns", ha='center', va='bottom', color='k')
+    # x2 = x_m+width
+    # y += h + 10000
+    # axs[0].plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, color='k')
+    # axs[0].text((x1+x2)*.5, y, "***", ha='center', va='bottom', color='k')
+
     ##########################################################
     ##################### Success Ratio ######################
     ##########################################################
