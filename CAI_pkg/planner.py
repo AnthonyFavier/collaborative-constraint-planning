@@ -27,7 +27,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
     if problem_name==PlanFiles.COMPILED:
         DOMAIN_PATH, PROBLEM_PATH = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
     else:
-        DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[problem_name]
+        DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(problem_name)
         
     if PlanMode.OPTIMAL==plan_mode:
         mode = [f'-planner', f'{PlanMode.OPTIMAL}']
@@ -105,7 +105,7 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
                 
     return result, plan, planlength, metric, fail_reason
 
-@click.command(help=f"{KNOWN_PROBLEMS_STR}")
+@click.command(help=f"{PROBLEMS.get_known_problems()}")
 @click.argument('problem_name')
 @click.option('--original', 'files', flag_value=PlanFiles.ORIGINAL, default=True, help="Use the original problem files (default)")
 @click.option('-c', '--compiled', 'files', flag_value=PlanFiles.COMPILED, help="Use the last compiled problem files. PROBLEM_NAME not used")
@@ -125,13 +125,13 @@ def main(problem_name, files, planning_mode, custom_planning_mode, domain_path, 
         d, p = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
         problem_name = PlanFiles.COMPILED
     elif files==PlanFiles.ORIGINAL:
-        if not problem_name in PROBLEMS:
-            click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
+        if not PROBLEMS.exists(problem_name):
+            click.echo("Unknown problem.\n" + PROBLEMS.get_known_problems())
             exit()
-        d, p = PROBLEMS[problem_name]
+        d, p = PROBLEMS.get_paths(problem_name)
     if files==PlanFiles.PATH:
         d, p = domain_path, problem_path
-        PROBLEMS[PlanFiles.PATH] = (d, p)
+        PROBLEMS.add_problem(PlanFiles.PATH, d, p)
         problem_name = PlanFiles.PATH
         
     if custom_planning_mode!="":

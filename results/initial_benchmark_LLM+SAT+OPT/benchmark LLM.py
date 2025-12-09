@@ -1,5 +1,5 @@
 import time
-from defs import *
+from CAI_pkg.defs import *
 import os                                                                                                                                                                                                          
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
@@ -54,10 +54,10 @@ if __name__=="__main__":
     for i in range(16):
         
         print(f"zeno{i}")
-        
-        with open(PROBLEMS[f"zeno{i}"][0]) as f:
+        d, p = PROBLEMS.get_paths(f"zeno{i}")
+        with open(d) as f:
             domain = f.read()
-        with open(PROBLEMS[f"zeno{i}"][1]) as f:
+        with open(p) as f:
             problem = f.read()
         
         t_1 = time.time()

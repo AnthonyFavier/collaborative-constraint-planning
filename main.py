@@ -7,7 +7,7 @@ import faulthandler
 
 #########################################################################################################
 
-@click.command(help=f"{KNOWN_PROBLEMS_STR}")
+@click.command(help=f"{PROBLEMS.get_known_problems()}")
 @click.argument('problem_name', default='zeno13_n') # zeno13_n, zeno5, rover8_n, rover8_n_t, rover10_n_t
 @click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
 @click.option('-aa', '--anytimeauto', 'planning_mode', flag_value=PlanMode.ANYTIMEAUTO, help="Set the planning mode to 'AnytimeAuto'")

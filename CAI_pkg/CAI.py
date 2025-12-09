@@ -128,12 +128,13 @@ def init(problem_name, planning_mode, timeout):
     global CM
     global verifier
     
-    if not problem_name in PROBLEMS:
-        click.echo("Unknown problem.\n" + KNOWN_PROBLEMS_STR)
+    if not PROBLEMS.exists(problem_name):
+        click.echo("Unknown problem.\n" + PROBLEMS.get_known_problems())
         exit()
         
     g_problem_name = problem_name
-    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(g_problem_name)
+
 
     g_planning_mode = planning_mode
     
@@ -200,6 +201,6 @@ def checkIfUpdatedProblemIsParsable():
         
 def showSettings():
     timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
-    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS[g_problem_name]
+    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(g_problem_name)
     mprint(f"Setting: {SETTING_NAME}")
     mprint(f"Planning mode: {g_planning_mode}{timeout_str}\nProblem ({g_problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
