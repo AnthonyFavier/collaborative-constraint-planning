@@ -9,7 +9,7 @@ CAI
 
 ## INSTALLATION
 
-Tested on Ubuntu 20.04
+Tested on Ubuntu 24.04
 
 ### 1. Create a python3.10 virtual environment 
 
