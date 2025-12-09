@@ -11,53 +11,40 @@ CAI
 
 Tested on Ubuntu 24.04
 
-### 1. Create a python3.10 virtual environment 
+### 1. Install dependencies and Python3.10
 
-**IMPORTANT**: Currently only supporting **Venv** (<u>not</u> Conda) due to later manual patching of the packages `unified-planning` and `customtkinter`.
-
+Rely on **Python3.10** so it might be required to install this specific version through: `apt` or `deadsnake`
 ```
-python3.10 -m venv env_cai
-source env_cai/bin/activate
+$ sudo apt-get install -y python3.10 python3.10-tk
 ```
 
-### 2. Install dependencies
-
 ```
-pip install --upgrade pip -r requirements.txt --no-cache-dir
-sudo apt-get install openjdk-17-jdk python3.10-tk unifont
+$ sudo apt-get -y install openjdk-17-jdk unifont
 ```
 
-Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
-```
-python patches.py 
-```
+### 2. Create a python3.10 virtual environment 
 
+**IMPORTANT**: Currently only supporting **Venv** (<u>not</u> **Conda**) due to later manual patching of the packages `unified-planning` and `customtkinter`.
 
+```
+$ python3.10 -m venv env_cai
+$ source env_cai/bin/activate
+```
 **Note**: to deactivate the python environment simply run: `deactivate`
 
 
-### 3. NTCORE: Numeric constraints compilation
+### 3. Install package
 
+Make sure the virutal environment is activated.
 
-**Note**: Conflicting command line management in `NumericTCORE/bin/ntcore.py`, already solved by commenting `@click.command()`.
-
-Install the package:
+Easiest way is to run the installation script:
 ```
-cd NumericTCORE/
-pip install .
+$ ./install.sh
 ```
 
-### 4. ENHSP: Compile planner 
+Look at the detailed install below for more insight.
 
-Compile the planner by running:
-```
-cd ENHSP-Public
-./compile
-```
-
-Ignore the two _Note:_ lines.
-
-### 5. LLM APIs
+### 4. LLM APIs
 
 Create a `.env` file in root folder to store API keys in the form:
 ```
@@ -66,6 +53,7 @@ OPENAI_API_KEY = 'REPLACE_WITH_YOUR_KEY'
 ```
 
 Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
+
 
 ## RUN
 
@@ -79,6 +67,9 @@ python main.py [OPTIONS] PROBLEM_NAME
 Problems and options can be listed using `python main.py --help`.
 
 ---
+---
+
+## Additional information
 
 ### Adding new problems
 
@@ -91,6 +82,8 @@ PROBLEMS = {
     'new_problem_name': ('Path/To/Domain.pddl', 'Path/To/Problem.pddl'),
 }
 ```
+
+---
 
 ### Run Planner Only
 
@@ -105,3 +98,39 @@ Problems and options can be listed using `python planner.py --help`
 You can either use the original files corresponding to the given problem name or plan using the last compiled files using `-c`.
 
 The planning mode used (i.e. optimal, satisficing, default) can be used using the respective options `-o`, `-s`, `-d`.
+
+---
+
+### [Alternative] Detailed install
+
+#### Install python requirements
+```
+pip install --upgrade pip -r requirements.txt --no-cache-dir
+```
+
+#### Manual patch
+
+Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
+```
+python patches.py 
+```
+
+#### NTCORE: Numeric constraints compilation
+
+**Note**: Conflicting command line management in `NumericTCORE/bin/ntcore.py`, already solved by commenting `@click.command()`.
+
+Install the package:
+```
+cd NumericTCORE/
+pip install .
+```
+
+#### ENHSP: Compile planner 
+
+Compile the planner by running:
+```
+cd ENHSP-Public
+./compile
+```
+
+Ignore the two _Note:_ lines.
