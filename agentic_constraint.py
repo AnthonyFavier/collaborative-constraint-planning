@@ -95,7 +95,7 @@ def set_up_rag():
     print('Loading documents ... ', end='', flush=True)
     # mprint('Loading documents ... ')
 
-    DOCUMENT_PATH = "RAG/"
+    DOCUMENT_PATH = "RAG_documents/"
     files = [
         # Fake reports
         {
@@ -129,10 +129,6 @@ def set_up_rag():
             "description": "Transcript of radio transmissions.",
             # Suggests that Los Angeles airport can't refuel planes
         },
-        # {
-        #     "path": DOCUMENT_PATH+"Current Operations Plan Advisory.pdf",
-        #     "description": "Current Operations Plan Advisory.",
-        # },
     ]
     
     # PDDL Files
