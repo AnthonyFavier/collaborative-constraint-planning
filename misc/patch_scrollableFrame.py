@@ -1,7 +1,9 @@
 
 import sys
-path = "env_cai/lib/python3.10/site-packages/customtkinter/windows/widgets/ctk_scrollable_frame.py"
-#path = "/home/nicole/miniconda3/envs/onr/lib/python3.10/site-packages/unified_planning/io/pddl_reader.py"
+
+from pathlib import Path
+
+path = Path() / 'env_cai' / 'lib' / 'python3.10' / 'site-packages' / 'customtkinter' / 'windows' / 'widgets' / 'ctk_scrollable_frame.py'
 
 
 new_txt = """

@@ -1,16 +1,8 @@
-
-# PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/PDSim/Assets/Scenes/Blocks/Data/PdSimInstance.asset"
-# PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/simplified zenotravel/Data/PdSimInstance.asset"
-# PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/ZenoTravel12/Data/PdSimInstance.asset"
-# PDSIM_INSTANCE_PATH = "/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset"
-# PDSIM_INSTANCE_PATH = "/home/afavier/my_pdsim/PDSim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset"
-# PDSIM_INSTANCE_PATH = '/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/Zeno13/Data/PdSimInstance.asset'
-# PDSIM_INSTANCE_PATH = '/home/afavier/pdsim/zenotravel_pdsim/Assets/Scenes/ZenoR/Data/PdSimInstance.asset'
-PDSIM_INSTANCE_PATH = '/home/nicole/research/PDSim_Scenes_zenotravel/Assets/Scenes/ZenoR/Data/PdSimInstance.asset'
-# PDSIM_INSTANCE_PATH = "/home/afavier/my_pdsim/PDSim/Assets/Scenes/Rover3/Data/PdSimInstance.asset"
-
+from pathlib import Path
 from CAI_pkg.defs import *
 
+PDSIM_INSTANCE_PATH = (Path().home()/'ws'/'PDSim_Scenes_zenotravel'/'Assets'/'Scenes'/'ZenoR'/'Data'/'PdSimInstance.asset').resolve()
+PDSIM_instance_found = PDSIM_INSTANCE_PATH.exists()
 
 def createActionStr(name, *parameters):
     
@@ -52,13 +44,12 @@ def convertPlanIntoActionTuples(plan):
 def main(plan):
     # Takes as input directly a list of actions, without any additional text
     
-    try:
-        with open(PDSIM_INSTANCE_PATH, 'r') as f:
-            pdFileStr = f.read()
-    except Exception as e:
-        mprint("WARNING: Can't open PDSim file to update simulation plan, check log. [Skipped]")
-        mprint('-> ' + str(e), logonly=True)
+    # Skip if not found
+    if not PDSIM_instance_found:
         return None
+    
+    with open(PDSIM_INSTANCE_PATH, 'r') as f:
+        pdFileStr = f.read()
         
     w = "plan:\n"
     i_plan = pdFileStr.find(w) + len(w)

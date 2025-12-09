@@ -6,6 +6,7 @@ from CAI_pkg.defs import *
 from CAI_pkg import CAI
 from PIL import Image, ImageTk
 from CAI_pkg.updatePDSimPlan import main as updatePDSimPlan
+import CAI_pkg.updatePDSimPlan
 import time
 import threading
 import pyperclip
@@ -1226,6 +1227,12 @@ class App(customtkinter.CTk):
         setReplacePrintFunction(self.display_frame.replace_last_line)
         setStartTimer(self.display_frame.startTimer)
         setStopTimer(self.display_frame.stopTimer)
+
+        if CAI_pkg.updatePDSimPlan.PDSIM_instance_found:
+            mprint('Found PDSim instance.\n')
+        else:
+            mprint("WARNING: Can't find PDSim file to update simulation plan, check log. Simpulation updates will be skipped.")
+            mprint('-> ' + str(CAI_pkg.updatePDSimPlan.PDSIM_INSTANCE_PATH)+'\n')
         
         # agentic_constraint.draw_graph()
     
