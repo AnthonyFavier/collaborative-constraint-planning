@@ -23,7 +23,7 @@ PROBLEMS = {
     "zeno12_n":     ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain_with_n.pddl",  "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile12.pddl"),
     "zeno13":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl"),
     "zeno13_n":     ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain_with_n.pddl",  "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile13.pddl"),
-    "zenoreal":     ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain_with_n.pddl",  "PDDL/zenoreal.pddl"),
+    "zenoreal":     ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain_with_n.pddl",  "NumericTCORE/benchmark/ZenoTravel-no-constraint/zenoreal.pddl"),
     "zeno14":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile14.pddl"),
     "zeno15":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile15.pddl"),
     "zeno16":       ("NumericTCORE/benchmark/ZenoTravel-no-constraint/domain.pddl",         "NumericTCORE/benchmark/ZenoTravel-no-constraint/pfile16.pddl"),
@@ -41,8 +41,8 @@ PROBLEMS = {
     "rover8_n":     ("NumericTCORE/benchmark/Rover-Numeric/domain_n.pddl",                  "NumericTCORE/benchmark/Rover-Numeric/pfile8.pddl"),
     "rover8_n_t":   ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile8_t.pddl"),
     "rover13_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile13_t.pddl"),
-    "rover6_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile6_t.pddl"),
-    "rover4_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile4_t.pddl"),
+    "rover6_n_t":   ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile6_t.pddl"),
+    "rover4_n_t":   ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile4_t.pddl"),
     "rover10_n_t":  ("NumericTCORE/benchmark/Rover-Numeric/domain_n_t.pddl",                "NumericTCORE/benchmark/Rover-Numeric/pfile10_t.pddl"),
 }
 KNOWN_PROBLEMS_STR = 'PROBLEM_NAME: [' + ', '.join(PROBLEMS) + ']'
