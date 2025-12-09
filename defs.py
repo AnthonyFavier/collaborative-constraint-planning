@@ -59,9 +59,9 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-COMPILED_DOMAIN_PATH = "tmp/compiled_dom.pddl"
-COMPILED_PROBLEM_PATH = "tmp/compiled_prob.pddl"
-UPDATED_PROBLEM_PATH = "tmp/updatedProblem.pddl"
+COMPILED_DOMAIN_PATH = "tmp/pddl_files/compiled_dom.pddl"
+COMPILED_PROBLEM_PATH = "tmp/pddl_files/compiled_prob.pddl"
+UPDATED_PROBLEM_PATH = "tmp/pddl_files/updatedProblem.pddl"
 
 class PlanFiles:
     ORIGINAL = 'original'
@@ -145,7 +145,7 @@ class ModuleFilter(logging.Filter):
 def setupLogger():
     # log filename
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-    filename = f'logs/log__{date}.log' 
+    filename = f'tmp/logs/log__{date}.log' 
     
     # Only log agentic_constraint, tools and defs modules
     allowed_modules = ["agentic_constraint", "tools", "defs"]

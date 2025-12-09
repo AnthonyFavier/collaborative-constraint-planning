@@ -282,7 +282,7 @@ def planWithConstraints():
         # Compile the updated problem
         mprint("\nCompiling ... ", end="")
         time_compilation = time.time()
-        ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+        ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/pddl_files/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
         time_compilation = time.time() - time_compilation
         mprint(f"OK [{time_compilation:.2f}s]")
         

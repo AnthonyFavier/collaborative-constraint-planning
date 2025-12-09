@@ -768,7 +768,7 @@ def randomc(problemname, timeout, hideprogressbar=False):
         with open(path+filename, 'w') as f:
             all_results['elapsed'] = time.time()-t_elapsed
             f.write(json.dumps(all_results, indent=4))
-        PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+        PROBLEMS[problem_name] = (f"tmp/pddl_files/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
         t1_plan = time.time()
         result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration)
         t2_plan = time.time()
@@ -954,7 +954,7 @@ def humanc(problemname, timeout, remove_translation_time=False, hideprogressbar=
             with open(path+filename, 'w') as f:
                 all_results['elapsed'] = time.time()-t_elapsed
                 f.write(json.dumps(all_results, indent=4))
-            PROBLEMS[problem_name] = (f"tmp/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
+            PROBLEMS[problem_name] = (f"tmp/pddl_files/{problem_name}_compiled_dom.pddl", f"tmp/{problem_name}_compiled_prob.pddl")
             t1_plan = time.time()
             compile_duration=0.0
             result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=PlanMode.ANYTIME, hide_plan=True, timeout=timeout-compile_duration-translation_duration)

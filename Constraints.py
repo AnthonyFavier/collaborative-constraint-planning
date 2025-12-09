@@ -197,7 +197,7 @@ class ConstraintManager:
         json_string = jsonpickle.encode(self, indent=4)
         
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        filename = f"dumps_CM/{problem_name}_{date}.json"
+        filename = f"tmp/dumps_CM/{problem_name}_{date}.json"
         
         with open(filename, 'w') as f:
             f.write(json_string)
