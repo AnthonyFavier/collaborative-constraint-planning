@@ -1,0 +1,50 @@
+plan_mode: opt-hmax
+timeout: 60
+
+zeno0: 24.0ms 26.0ms 25.0ms 
+	m=3240.0 average time = 25.00ms
+
+zeno1: 41.0ms 37.0ms 35.0ms 
+	m=5952.0 average time = 37.67ms
+
+zeno2: 40.0ms 40.0ms 41.0ms 
+	m=6780.0 average time = 40.33ms
+
+zeno3: 183.0ms 147.0ms 131.0ms 
+	m=4500.0 average time = 153.67ms
+
+zeno4: 5047.0ms 4976.0ms 5218.0ms 
+	m=5644.0 average time = 5080.33ms
+
+zeno5: 682.0ms 605.0ms 606.0ms 
+	m=1983.0 average time = 631.00ms
+
+zeno6: 2413.0ms 2443.0ms 2470.0ms 
+	m=3039.0 average time = 2442.00ms
+
+zeno7: failed failed failed 
+	failed domain...
+
+zeno8: failed failed failed 
+	failed domain...
+
+zeno9: failed failed failed 
+	failed domain...
+
+zeno10: failed failed failed 
+	failed domain...
+
+zeno11: failed failed failed 
+	failed domain...
+
+zeno12: failed failed failed 
+	failed domain...
+
+zeno13: failed failed failed 
+	failed domain...
+
+zeno14: failed failed failed 
+	failed domain...
+
+zeno15: failed failed failed 
+	failed domain...

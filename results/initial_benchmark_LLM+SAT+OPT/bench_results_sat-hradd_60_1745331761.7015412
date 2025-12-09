@@ -1,0 +1,50 @@
+plan_mode: sat-hradd
+timeout: 60
+
+zeno0: 20.0ms 22.0ms 20.0ms 
+	m=3240.0 average time = 20.67ms
+
+zeno1: 29.0ms 29.0ms 29.0ms 
+	m=17576.0 average time = 29.00ms
+
+zeno2: 34.0ms 33.0ms 26.0ms 
+	m=6780.0 average time = 31.00ms
+
+zeno3: 59.0ms 71.0ms 64.0ms 
+	m=4500.0 average time = 64.67ms
+
+zeno4: 72.0ms 57.0ms 56.0ms 
+	m=7652.0 average time = 61.67ms
+
+zeno5: 93.0ms 146.0ms 133.0ms 
+	m=4086.0 average time = 124.00ms
+
+zeno6: 143.0ms 135.0ms 131.0ms 
+	m=7055.0 average time = 136.33ms
+
+zeno7: 190.0ms 182.0ms 247.0ms 
+	m=14394.0 average time = 206.33ms
+
+zeno8: 488.0ms 459.0ms 441.0ms 
+	m=8381.0 average time = 462.67ms
+
+zeno9: 919.0ms 945.0ms 897.0ms 
+	m=16570.0 average time = 920.33ms
+
+zeno10: 547.0ms 625.0ms 539.0ms 
+	m=57706.0 average time = 570.33ms
+
+zeno11: 544.0ms 576.0ms 570.0ms 
+	m=7831.0 average time = 563.33ms
+
+zeno12: 1405.0ms 1573.0ms 1454.0ms 
+	m=14987.0 average time = 1477.33ms
+
+zeno13: 6596.0ms 6641.0ms 6551.0ms 
+	m=24466.0 average time = 6596.00ms
+
+zeno14: failed failed failed 
+	failed domain...
+
+zeno15: failed failed failed 
+	failed domain...

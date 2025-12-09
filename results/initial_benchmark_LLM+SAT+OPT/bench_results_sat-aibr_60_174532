@@ -1,0 +1,50 @@
+plan_mode: sat-aibr
+timeout: 60
+
+zeno0: 30.0ms 27.0ms 26.0ms 
+	m=3240.0 average time = 27.67ms
+
+zeno1: 93.0ms 99.0ms 122.0ms 
+	m=5952.0 average time = 104.67ms
+
+zeno2: 152.0ms 115.0ms 138.0ms 
+	m=6780.0 average time = 135.00ms
+
+zeno3: 2163.0ms 2098.0ms 2064.0ms 
+	m=4500.0 average time = 2108.33ms
+
+zeno4: failed failed failed 
+	failed domain...
+
+zeno5: 37796.0ms 36509.0ms 40824.0ms 
+	m=1983.0 average time = 38376.33ms
+
+zeno6: failed failed failed 
+	failed domain...
+
+zeno7: failed failed failed 
+	failed domain...
+
+zeno8: failed failed failed 
+	failed domain...
+
+zeno9: failed failed failed 
+	failed domain...
+
+zeno10: failed failed failed 
+	failed domain...
+
+zeno11: failed failed failed 
+	failed domain...
+
+zeno12: failed failed failed 
+	failed domain...
+
+zeno13: failed failed failed 
+	failed domain...
+
+zeno14: failed failed failed 
+	failed domain...
+
+zeno15: failed failed failed 
+	failed domain...

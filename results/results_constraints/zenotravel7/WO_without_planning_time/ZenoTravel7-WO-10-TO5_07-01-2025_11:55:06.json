@@ -1,0 +1,88 @@
+{
+    "timeout": 5,
+    "domain": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraintdomain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraint/pfile7.pddl",
+    "tests": [
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "success",
+            "reason": "",
+            "plan": "0.0: (board person4 plane2 city1)\n1.0: (refuel plane2)\n2.0: (flyslow plane2 city1 city3)\n3.0: (debark person4 plane2 city3)\n4.0: (flyslow plane2 city3 city1)\n5.0: (flyslow plane2 city1 city3)\n6.0: (board person1 plane2 city3)\n7.0: (flyslow plane2 city3 city1)\n8.0: (refuel plane2)\n9.0: (flyslow plane2 city1 city2)\n10.0: (debark person1 plane2 city2)\n11.0: (flyslow plane2 city2 city1)\n12.0: (refuel plane2)\n13.0: (flyslow plane2 city1 city3)\n14.0: (board person5 plane2 city3)\n15.0: (flyslow plane2 city3 city2)\n16.0: (debark person5 plane2 city2)\n17.0: (flyslow plane2 city2 city1)\n18.0: (flyslow plane1 city2 city0)\n19.0: (refuel plane1)\n20.0: (board person6 plane1 city0)\n21.0: (flyslow plane1 city0 city2)\n22.0: (debark person6 plane1 city2)",
+            "planlength": 23,
+            "metric": 21804.0
+        }
+    ],
+    "elapsed": "0:00:50"
+}

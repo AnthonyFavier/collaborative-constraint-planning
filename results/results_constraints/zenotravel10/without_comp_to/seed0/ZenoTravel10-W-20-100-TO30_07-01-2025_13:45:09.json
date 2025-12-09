@@ -1,0 +1,1043 @@
+{
+    "seed": 0,
+    "timeout": 30,
+    "domain": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraintdomain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraint/pfile10.pddl",
+    "generated_constraints": {
+        "EXPRESSIONS": [
+            "(n_debark(person7, plane1, city2) == 0)",
+            "(n_flyfast(plane2, city3, city2) == 0)",
+            "(n_flyslow(plane2, city4, city1) == 0)",
+            "(n_flyfast(plane1, city2, city1) == 0)",
+            "(not in(person5, plane3))",
+            "(n_refuel(plane1) == 0)",
+            "(onboard(plane1) == 0)",
+            "(not in(person6, plane2))",
+            "(n_flyfast(plane1, city2, city3) == 0)",
+            "(n_board(person4, plane3, city3) == 0)",
+            "(n_flyslow(plane3, city2, city0) == 0)",
+            "(n_flyfast(plane1, city0, city3) == 0)",
+            "(not located(person7, city3))",
+            "(n_board(person4, plane3, city2) == 0)",
+            "(not in(person4, plane3))",
+            "(total-fuel-used == 0)",
+            "(fuel(plane3) == 667)",
+            "(n_flyslow(plane1, city0, city2) == 0)",
+            "(n_flyfast(plane2, city0, city2) == 0)",
+            "(n_flyfast(plane2, city0, city4) == 0)"
+        ],
+        "SIMPLE": [
+            "Always((n_flyslow(plane3, city2, city0) == 0))",
+            "Always((n_flyslow(plane1, city0, city2) == 0))",
+            "Always((onboard(plane1) == 0))",
+            "Always((n_flyfast(plane2, city0, city4) == 0))",
+            "Always((n_flyfast(plane2, city0, city2) == 0))",
+            "Always((n_board(person4, plane3, city3) == 0))",
+            "Always((not in(person4, plane3)))",
+            "Always((n_flyslow(plane2, city4, city1) == 0))",
+            "Always((not located(person7, city3)))",
+            "Always((not in(person6, plane2)))",
+            "Always((n_refuel(plane1) == 0))",
+            "Always((n_flyfast(plane2, city3, city2) == 0))",
+            "Always((n_flyfast(plane1, city2, city3) == 0))",
+            "Always((total-fuel-used == 0))",
+            "Always((not in(person5, plane3)))",
+            "Always((fuel(plane3) == 667))",
+            "Always((n_board(person4, plane3, city2) == 0))",
+            "Always((n_flyfast(plane1, city0, city3) == 0))",
+            "Always((n_flyfast(plane1, city2, city1) == 0))",
+            "Always((n_debark(person7, plane1, city2) == 0))"
+        ],
+        "AND2": [
+            "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((not in(person6, plane2)) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((n_refuel(plane1) == 0) and (n_flyslow(plane3, city2, city0) == 0)))",
+            "Always(((n_board(person4, plane3, city2) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyfast(plane1, city2, city1) == 0) and (not in(person5, plane3))))",
+            "Always(((not in(person6, plane2)) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyslow(plane1, city0, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyslow(plane2, city4, city1) == 0)))",
+            "Always(((n_debark(person7, plane1, city2) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((onboard(plane1) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((not located(person7, city3)) and (n_flyslow(plane2, city4, city1) == 0)))",
+            "Always(((n_flyfast(plane1, city0, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((n_flyfast(plane2, city3, city2) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "Always(((n_debark(person7, plane1, city2) == 0) and (onboard(plane1) == 0)))",
+            "Always(((n_refuel(plane1) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "Always(((total-fuel-used == 0) and (onboard(plane1) == 0)))",
+            "Always(((n_flyfast(plane2, city3, city2) == 0) and (n_debark(person7, plane1, city2) == 0)))",
+            "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_board(person4, plane3, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyfast(plane1, city2, city1) == 0)))"
+        ],
+        "AND3": [
+            "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyslow(plane2, city4, city1) == 0) and (not in(person6, plane2))))",
+            "Always(((n_flyslow(plane2, city4, city1) == 0) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((n_board(person4, plane3, city2) == 0) and (n_refuel(plane1) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((fuel(plane3) == 667) and (not in(person4, plane3)) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyfast(plane1, city2, city1) == 0) and (not located(person7, city3))))",
+            "Always(((onboard(plane1) == 0) and (n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((total-fuel-used == 0) and (n_flyfast(plane2, city0, city2) == 0) and (n_refuel(plane1) == 0)))",
+            "Always(((onboard(plane1) == 0) and (n_flyfast(plane2, city3, city2) == 0) and (n_refuel(plane1) == 0)))",
+            "Always(((n_refuel(plane1) == 0) and (n_flyslow(plane3, city2, city0) == 0) and (fuel(plane3) == 667)))",
+            "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "Always(((not in(person4, plane3)) and (n_refuel(plane1) == 0) and (n_debark(person7, plane1, city2) == 0)))",
+            "Always(((total-fuel-used == 0) and (n_board(person4, plane3, city2) == 0) and (n_flyfast(plane2, city0, city2) == 0)))",
+            "Always(((fuel(plane3) == 667) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((not located(person7, city3)) and (n_flyfast(plane1, city2, city3) == 0) and (not in(person5, plane3))))",
+            "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_debark(person7, plane1, city2) == 0) and (not in(person4, plane3))))",
+            "Always(((n_flyslow(plane2, city4, city1) == 0) and (n_flyslow(plane3, city2, city0) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_flyfast(plane1, city2, city3) == 0) and (not in(person5, plane3))))",
+            "Always(((not in(person6, plane2)) and (total-fuel-used == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyfast(plane2, city0, city4) == 0) and (not in(person5, plane3))))"
+        ],
+        "OR2": [
+            "Always(((n_board(person4, plane3, city3) == 0) or (not located(person7, city3))))",
+            "Always(((n_board(person4, plane3, city2) == 0) or (n_flyslow(plane2, city4, city1) == 0)))",
+            "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city0, city4) == 0)))",
+            "Always(((onboard(plane1) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "Always(((n_refuel(plane1) == 0) or (not in(person6, plane2))))",
+            "Always(((not in(person6, plane2)) or (not in(person4, plane3))))",
+            "Always(((not located(person7, city3)) or (n_flyfast(plane2, city0, city2) == 0)))",
+            "Always(((n_board(person4, plane3, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_refuel(plane1) == 0) or (not in(person4, plane3))))",
+            "Always(((n_flyslow(plane2, city4, city1) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "Always(((fuel(plane3) == 667) or (total-fuel-used == 0)))",
+            "Always(((n_flyslow(plane1, city0, city2) == 0) or (n_flyfast(plane2, city0, city4) == 0)))",
+            "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((total-fuel-used == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "Always(((n_board(person4, plane3, city3) == 0) or (not in(person4, plane3))))",
+            "Always(((n_flyfast(plane2, city3, city2) == 0) or (n_board(person4, plane3, city2) == 0)))",
+            "Always(((onboard(plane1) == 0) or (n_flyslow(plane1, city0, city2) == 0)))",
+            "Always(((n_flyslow(plane2, city4, city1) == 0) or (not in(person5, plane3))))",
+            "Always(((n_debark(person7, plane1, city2) == 0) or (not located(person7, city3))))",
+            "Always(((n_board(person4, plane3, city2) == 0) or (n_flyslow(plane3, city2, city0) == 0)))"
+        ],
+        "OR3": [
+            "Always(((n_debark(person7, plane1, city2) == 0) or (onboard(plane1) == 0) or (fuel(plane3) == 667)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) or (n_flyfast(plane1, city2, city1) == 0) or (onboard(plane1) == 0)))",
+            "Always(((n_flyfast(plane1, city2, city1) == 0) or (n_flyfast(plane2, city0, city4) == 0) or (onboard(plane1) == 0)))",
+            "Always(((n_board(person4, plane3, city3) == 0) or (n_flyfast(plane1, city2, city3) == 0) or (n_refuel(plane1) == 0)))",
+            "Always(((n_flyfast(plane1, city2, city1) == 0) or (total-fuel-used == 0) or (not located(person7, city3))))",
+            "Always(((n_flyslow(plane2, city4, city1) == 0) or (n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "Always(((not in(person4, plane3)) or (n_flyfast(plane1, city2, city1) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "Always(((not in(person5, plane3)) or (fuel(plane3) == 667) or (n_flyfast(plane1, city0, city3) == 0)))",
+            "Always(((n_flyfast(plane1, city2, city1) == 0) or (not in(person5, plane3)) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0) or (onboard(plane1) == 0)))",
+            "Always(((n_flyfast(plane1, city2, city3) == 0) or (n_flyslow(plane1, city0, city2) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "Always(((n_flyfast(plane1, city0, city3) == 0) or (n_flyfast(plane2, city0, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city0, city4) == 0) or (total-fuel-used == 0) or (not in(person4, plane3))))",
+            "Always(((n_board(person4, plane3, city2) == 0) or (n_flyfast(plane1, city0, city3) == 0) or (n_flyslow(plane1, city0, city2) == 0)))",
+            "Always(((n_refuel(plane1) == 0) or (onboard(plane1) == 0) or (not located(person7, city3))))",
+            "Always(((n_flyfast(plane2, city0, city2) == 0) or (n_board(person4, plane3, city3) == 0) or (n_debark(person7, plane1, city2) == 0)))",
+            "Always(((not in(person5, plane3)) or (n_flyfast(plane1, city2, city3) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "Always(((n_flyslow(plane3, city2, city0) == 0) or (n_flyfast(plane1, city0, city3) == 0) or (n_flyslow(plane2, city4, city1) == 0)))",
+            "Always(((n_flyslow(plane3, city2, city0) == 0) or (n_flyfast(plane2, city0, city4) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "Always(((n_flyfast(plane2, city3, city2) == 0) or (n_flyfast(plane1, city2, city3) == 0) or (n_refuel(plane1) == 0)))"
+        ]
+    },
+    "tests": [
+        {
+            "constraint": "Always((n_flyfast(plane2, city0, city2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_board(person4, plane3, city2) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (debark_person3_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyfast_plane1_city3_city2)\n22.0: (board_person3_plane2_city1)\n23.0: (refuel_plane2)\n24.0: (flyfast_plane2_city1_city3)\n25.0: (refuel_plane3)\n26.0: (flyslow_plane3_city2_city1)\n27.0: (board_person5_plane3_city1)\n28.0: (flyslow_plane3_city1_city2)\n29.0: (refuel_plane2)\n30.0: (debark_person3_plane2_city3)\n31.0: (flyfast_plane2_city3_city1)\n32.0: (flyslow_plane3_city2_city0)\n33.0: (refuel_plane3)\n34.0: (debark_person5_plane3_city0)\n35.0: (flyslow_plane3_city0_city2)\n36.0: (debark_person2_plane3_city2)\n37.0: (flyslow_plane3_city2_city3)\n38.0: (refuel_plane2)\n39.0: (debark_person4_plane2_city1)\n40.0: (flyslow_plane2_city1_city4)\n41.0: (debark_person7_plane2_city4)\n42.0: (board_person8_plane3_city3)\n43.0: (board_person2_plane1_city2)\n44.0: (flyslow_plane2_city4_city0)\n45.0: (board_person6_plane2_city0)\n46.0: (flyslow_plane2_city0_city3)\n47.0: (refuel_plane3)\n48.0: (board_person1_plane3_city3)\n49.0: (debark_person8_plane3_city3)\n50.0: (flyslow_plane3_city3_city1)\n51.0: (refuel_plane3)\n52.0: (debark_person1_plane3_city1)\n53.0: (debark_person6_plane2_city3)\n54.0: (debark_person2_plane1_city2)",
+            "planlength": 55,
+            "metric": 87386.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person5_plane2_city1)\n26.0: (debark_person8_plane1_city2)\n27.0: (refuel_plane2)\n28.0: (flyslow_plane2_city1_city4)\n29.0: (debark_person7_plane2_city4)\n30.0: (flyslow_plane2_city4_city0)\n31.0: (board_person6_plane2_city0)\n32.0: (flyslow_plane2_city0_city3)\n33.0: (board_person1_plane3_city3)\n34.0: (flyslow_plane3_city3_city1)\n35.0: (refuel_plane2)\n36.0: (debark_person6_plane2_city3)\n37.0: (flyslow_plane2_city3_city0)\n38.0: (debark_person5_plane2_city0)\n39.0: (flyslow_plane2_city0_city1)\n40.0: (refuel_plane3)\n41.0: (debark_person1_plane3_city1)\n42.0: (flyslow_plane3_city1_city2)\n43.0: (refuel_plane2)\n44.0: (board_person8_plane3_city2)\n45.0: (flyslow_plane3_city2_city1)\n46.0: (board_person3_plane3_city1)\n47.0: (flyslow_plane3_city1_city3)\n48.0: (debark_person8_plane3_city3)\n49.0: (debark_person3_plane3_city3)\n50.0: (board_person2_plane1_city2)\n51.0: (board_person6_plane3_city3)\n52.0: (debark_person4_plane2_city1)\n53.0: (board_person1_plane2_city1)\n54.0: (debark_person6_plane3_city3)\n55.0: (debark_person2_plane1_city2)\n56.0: (refuel_plane3)\n57.0: (board_person6_plane3_city3)\n58.0: (debark_person1_plane2_city1)\n59.0: (flyfast_plane2_city1_city1)\n60.0: (debark_person6_plane3_city3)",
+            "planlength": 61,
+            "metric": 62954.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane1, city0, city2) == 0) or (n_flyfast(plane2, city0, city4) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) or (total-fuel-used == 0) or (not in(person4, plane3))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_flyfast(plane1, city0, city3) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (refuel_plane2)\n26.0: (board_person7_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyfast_plane2_city3_city1)\n37.0: (debark_person1_plane3_city1)\n38.0: (flyslow_plane3_city1_city2)\n39.0: (refuel_plane2)\n40.0: (debark_person4_plane2_city1)\n41.0: (flyslow_plane2_city1_city3)\n42.0: (refuel_plane3)\n43.0: (flyslow_plane3_city2_city3)\n44.0: (flyslow_plane2_city3_city0)\n45.0: (refuel_plane3)\n46.0: (refuel_plane2)\n47.0: (debark_person5_plane2_city0)\n48.0: (board_person6_plane3_city3)\n49.0: (board_person2_plane1_city2)\n50.0: (flyslow_plane2_city0_city2)\n51.0: (debark_person8_plane1_city2)\n52.0: (board_person8_plane2_city2)\n53.0: (flyslow_plane2_city2_city1)\n54.0: (refuel_plane2)\n55.0: (board_person3_plane2_city1)\n56.0: (flyslow_plane2_city1_city3)\n57.0: (refuel_plane2)\n58.0: (debark_person8_plane2_city3)\n59.0: (debark_person6_plane3_city3)\n60.0: (debark_person2_plane1_city2)\n61.0: (debark_person3_plane2_city3)",
+            "planlength": 62,
+            "metric": 78643.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city1) == 0) and (not in(person5, plane3))))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (refuel_plane2)\n26.0: (board_person7_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyslow_plane2_city3_city0)\n37.0: (debark_person5_plane2_city0)\n38.0: (flyslow_plane2_city0_city1)\n39.0: (debark_person4_plane2_city1)\n40.0: (flyslow_plane2_city1_city2)\n41.0: (refuel_plane3)\n42.0: (refuel_plane2)\n43.0: (debark_person8_plane1_city2)\n44.0: (board_person8_plane2_city2)\n45.0: (flyslow_plane2_city2_city1)\n46.0: (board_person3_plane2_city1)\n47.0: (flyslow_plane2_city1_city3)\n48.0: (refuel_plane2)\n49.0: (board_person2_plane1_city2)\n50.0: (board_person6_plane2_city3)\n51.0: (debark_person3_plane2_city3)\n52.0: (board_person4_plane3_city1)\n53.0: (debark_person8_plane2_city3)\n54.0: (debark_person6_plane2_city3)\n55.0: (debark_person2_plane1_city2)\n56.0: (debark_person1_plane3_city1)\n57.0: (debark_person4_plane3_city1)",
+            "planlength": 58,
+            "metric": 62954.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((fuel(plane3) == 667) and (not in(person4, plane3)) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (debark_person8_plane1_city3)\n9.0: (flyslow_plane1_city3_city2)\n10.0: (board_person5_plane2_city1)\n11.0: (flyslow_plane2_city1_city3)\n12.0: (flyslow_plane1_city2_city1)\n13.0: (board_person2_plane2_city3)\n14.0: (debark_person3_plane2_city3)\n15.0: (flyslow_plane2_city3_city0)\n16.0: (refuel_plane2)\n17.0: (board_person6_plane2_city0)\n18.0: (flyslow_plane2_city0_city1)\n19.0: (flyslow_plane1_city1_city2)\n20.0: (refuel_plane1)\n21.0: (board_person7_plane2_city1)\n22.0: (debark_person2_plane2_city1)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (board_person8_plane2_city3)\n25.0: (board_person1_plane2_city3)\n26.0: (flyslow_plane2_city3_city1)\n27.0: (refuel_plane2)\n28.0: (debark_person1_plane2_city1)\n29.0: (flyslow_plane2_city1_city3)\n30.0: (debark_person6_plane2_city3)\n31.0: (flyslow_plane2_city3_city4)\n32.0: (board_person4_plane2_city4)\n33.0: (flyslow_plane2_city4_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person4_plane2_city1)\n36.0: (flyslow_plane2_city1_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city3)\n41.0: (refuel_plane2)\n42.0: (debark_person8_plane2_city3)\n43.0: (flyslow_plane2_city3_city1)\n44.0: (board_person2_plane2_city1)\n45.0: (flyslow_plane2_city1_city2)\n46.0: (debark_person2_plane2_city2)",
+            "planlength": 47,
+            "metric": 53992.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city3, city2) == 0) or (n_board(person4, plane3, city2) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person5, plane3)) or (fuel(plane3) == 667) or (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (refuel_plane2)\n12.0: (board_person2_plane3_city3)\n13.0: (flyslow_plane3_city3_city2)\n14.0: (flyslow_plane1_city2_city3)\n15.0: (refuel_plane1)\n16.0: (debark_person8_plane1_city3)\n17.0: (flyslow_plane1_city3_city2)\n18.0: (refuel_plane3)\n19.0: (debark_person2_plane3_city2)\n20.0: (flyfast_plane3_city2_city0)\n21.0: (board_person6_plane3_city0)\n22.0: (board_person2_plane1_city2)\n23.0: (refuel_plane3)\n24.0: (flyslow_plane3_city0_city3)\n25.0: (board_person5_plane2_city1)\n26.0: (board_person7_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (board_person4_plane2_city4)\n29.0: (flyslow_plane2_city4_city1)\n30.0: (debark_person4_plane2_city1)\n31.0: (flyslow_plane2_city1_city0)\n32.0: (refuel_plane2)\n33.0: (debark_person2_plane1_city2)\n34.0: (debark_person5_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (debark_person7_plane2_city4)\n37.0: (flyslow_plane2_city4_city3)\n38.0: (board_person1_plane2_city3)\n39.0: (debark_person3_plane2_city3)\n40.0: (flyslow_plane2_city3_city1)\n41.0: (debark_person1_plane2_city1)\n42.0: (debark_person6_plane3_city3)",
+            "planlength": 43,
+            "metric": 56698.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_flyslow(plane1, city0, city2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person7_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person5_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person3_plane2_city1)\n20.0: (flyslow_plane2_city1_city4)\n21.0: (refuel_plane2)\n22.0: (debark_person7_plane2_city4)\n23.0: (flyslow_plane2_city4_city1)\n24.0: (debark_person4_plane2_city1)\n25.0: (flyslow_plane2_city1_city0)\n26.0: (board_person1_plane3_city3)\n27.0: (flyslow_plane3_city3_city1)\n28.0: (board_person6_plane2_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane3)\n32.0: (debark_person1_plane3_city1)\n33.0: (debark_person6_plane2_city3)\n34.0: (board_person3_plane3_city1)\n35.0: (flyslow_plane3_city1_city3)\n36.0: (refuel_plane2)\n37.0: (debark_person8_plane2_city3)\n38.0: (flyslow_plane2_city3_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (debark_person2_plane1_city2)\n41.0: (debark_person3_plane3_city3)",
+            "planlength": 42,
+            "metric": 47714.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((onboard(plane1) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person3_plane2_city4)\n1.0: (refuel_plane2)\n2.0: (flyslow_plane2_city4_city3)\n3.0: (refuel_plane1)\n4.0: (flyfast_plane1_city0_city2)\n5.0: (refuel_plane3)\n6.0: (flyslow_plane3_city2_city1)\n7.0: (refuel_plane3)\n8.0: (board_person7_plane3_city1)\n9.0: (flyslow_plane3_city1_city4)\n10.0: (board_person4_plane3_city4)\n11.0: (flyslow_plane3_city4_city1)\n12.0: (refuel_plane3)\n13.0: (debark_person4_plane3_city1)\n14.0: (flyslow_plane3_city1_city4)\n15.0: (debark_person7_plane3_city4)\n16.0: (flyslow_plane3_city4_city1)\n17.0: (board_person5_plane3_city1)\n18.0: (flyslow_plane3_city1_city4)\n19.0: (refuel_plane3)\n20.0: (flyslow_plane3_city4_city0)\n21.0: (refuel_plane1)\n22.0: (board_person8_plane3_city0)\n23.0: (board_person6_plane3_city0)\n24.0: (flyfast_plane3_city0_city3)\n25.0: (board_person2_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city2)\n28.0: (refuel_plane3)\n29.0: (board_person1_plane3_city3)\n30.0: (debark_person5_plane3_city3)\n31.0: (debark_person8_plane3_city3)\n32.0: (debark_person6_plane3_city3)\n33.0: (board_person5_plane3_city3)\n34.0: (flyslow_plane3_city3_city1)\n35.0: (debark_person1_plane3_city1)\n36.0: (flyslow_plane3_city1_city0)\n37.0: (debark_person5_plane3_city0)\n38.0: (debark_person2_plane2_city2)",
+            "planlength": 39,
+            "metric": 51880.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((onboard(plane1) == 0) and (n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city2)\n2.0: (board_person4_plane2_city4)\n3.0: (refuel_plane3)\n4.0: (flyslow_plane3_city2_city3)\n5.0: (refuel_plane2)\n6.0: (flyslow_plane2_city4_city1)\n7.0: (refuel_plane1)\n8.0: (board_person7_plane2_city1)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person3_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (board_person2_plane3_city3)\n14.0: (flyslow_plane3_city3_city0)\n15.0: (refuel_plane3)\n16.0: (board_person8_plane3_city0)\n17.0: (flyslow_plane3_city0_city3)\n18.0: (refuel_plane3)\n19.0: (debark_person8_plane3_city3)\n20.0: (flyslow_plane3_city3_city2)\n21.0: (refuel_plane2)\n22.0: (flyslow_plane2_city1_city3)\n23.0: (board_person1_plane2_city3)\n24.0: (debark_person3_plane2_city3)\n25.0: (flyslow_plane2_city3_city1)\n26.0: (debark_person4_plane2_city1)\n27.0: (flyslow_plane2_city1_city0)\n28.0: (refuel_plane3)\n29.0: (debark_person2_plane3_city2)\n30.0: (flyfast_plane3_city2_city0)\n31.0: (refuel_plane2)\n32.0: (flyslow_plane2_city0_city4)\n33.0: (debark_person7_plane2_city4)\n34.0: (flyslow_plane2_city4_city0)\n35.0: (board_person6_plane3_city0)\n36.0: (debark_person1_plane2_city0)\n37.0: (board_person1_plane3_city0)\n38.0: (refuel_plane3)\n39.0: (flyslow_plane3_city0_city3)\n40.0: (debark_person6_plane3_city3)\n41.0: (flyslow_plane3_city3_city1)\n42.0: (refuel_plane3)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person5_plane2_city0)",
+            "planlength": 46,
+            "metric": 62916.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((onboard(plane1) == 0) or (n_flyslow(plane1, city0, city2) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane2)\n20.0: (flyslow_plane2_city1_city3)\n21.0: (refuel_plane1)\n22.0: (flyslow_plane1_city3_city2)\n23.0: (refuel_plane3)\n24.0: (board_person1_plane2_city3)\n25.0: (debark_person3_plane2_city3)\n26.0: (flyslow_plane2_city3_city1)\n27.0: (flyslow_plane1_city2_city3)\n28.0: (debark_person4_plane2_city1)\n29.0: (flyslow_plane2_city1_city0)\n30.0: (flyslow_plane1_city3_city2)\n31.0: (refuel_plane2)\n32.0: (board_person6_plane2_city0)\n33.0: (flyslow_plane2_city0_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person1_plane2_city1)\n36.0: (flyslow_plane2_city1_city0)\n37.0: (debark_person5_plane2_city0)\n38.0: (flyslow_plane2_city0_city4)\n39.0: (debark_person7_plane2_city4)\n40.0: (flyslow_plane2_city4_city3)\n41.0: (refuel_plane1)\n42.0: (debark_person2_plane3_city2)\n43.0: (debark_person8_plane1_city2)\n44.0: (board_person8_plane3_city2)\n45.0: (flyslow_plane3_city2_city3)\n46.0: (refuel_plane2)\n47.0: (board_person3_plane2_city3)\n48.0: (debark_person8_plane3_city3)\n49.0: (refuel_plane3)\n50.0: (debark_person6_plane2_city3)\n51.0: (debark_person3_plane2_city3)",
+            "planlength": 52,
+            "metric": 68490.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city1) == 0) or (n_flyfast(plane2, city0, city4) == 0) or (onboard(plane1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (debark_person4_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (board_person7_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (refuel_plane3)\n24.0: (debark_person5_plane2_city0)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane2)\n32.0: (debark_person8_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person1_plane3_city1)\n40.0: (debark_person6_plane2_city3)\n41.0: (debark_person2_plane1_city2)",
+            "planlength": 42,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((not in(person6, plane2)))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (refuel_plane1)\n17.0: (refuel_plane2)\n18.0: (board_person5_plane2_city1)\n19.0: (flyslow_plane2_city1_city4)\n20.0: (debark_person7_plane2_city4)\n21.0: (flyslow_plane2_city4_city0)\n22.0: (debark_person5_plane2_city0)\n23.0: (flyslow_plane2_city0_city1)\n24.0: (board_person1_plane3_city3)\n25.0: (board_person2_plane3_city3)\n26.0: (flyslow_plane3_city3_city1)\n27.0: (flyfast_plane1_city2_city3)\n28.0: (debark_person1_plane3_city1)\n29.0: (flyslow_plane3_city1_city2)\n30.0: (refuel_plane1)\n31.0: (debark_person8_plane1_city3)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane3)\n34.0: (flyslow_plane3_city2_city0)\n35.0: (board_person6_plane3_city0)\n36.0: (flyslow_plane3_city0_city2)\n37.0: (debark_person6_plane3_city2)\n38.0: (debark_person2_plane3_city2)\n39.0: (refuel_plane3)\n40.0: (board_person1_plane2_city1)\n41.0: (board_person6_plane3_city2)\n42.0: (flyslow_plane3_city2_city1)\n43.0: (board_person3_plane3_city1)\n44.0: (flyslow_plane3_city1_city3)\n45.0: (refuel_plane3)\n46.0: (refuel_plane2)\n47.0: (debark_person1_plane2_city1)\n48.0: (board_person8_plane3_city3)\n49.0: (debark_person6_plane3_city3)\n50.0: (debark_person3_plane3_city3)\n51.0: (debark_person8_plane3_city3)\n52.0: (debark_person4_plane2_city1)",
+            "planlength": 53,
+            "metric": 65268.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city0, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyfast_plane1_city3_city2)\n24.0: (refuel_plane2)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (refuel_plane1)\n29.0: (flyfast_plane1_city2_city3)\n30.0: (debark_person4_plane2_city1)\n31.0: (flyslow_plane2_city1_city0)\n32.0: (refuel_plane1)\n33.0: (flyfast_plane1_city3_city2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane2)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city3)\n41.0: (debark_person6_plane2_city3)\n42.0: (flyslow_plane2_city3_city4)\n43.0: (debark_person2_plane3_city2)\n44.0: (debark_person8_plane1_city2)\n45.0: (board_person8_plane3_city2)\n46.0: (flyslow_plane3_city2_city3)\n47.0: (refuel_plane1)\n48.0: (debark_person7_plane2_city4)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 94068.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person4, plane3)) and (n_refuel(plane1) == 0) and (n_debark(person7, plane1, city2) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane2, city4, city1) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) or (n_flyfast(plane1, city0, city3) == 0) or (n_flyslow(plane1, city0, city2) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_flyfast(plane2, city0, city4) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (refuel_plane2)\n26.0: (board_person5_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyfast_plane2_city3_city1)\n37.0: (board_person2_plane1_city2)\n38.0: (refuel_plane2)\n39.0: (debark_person4_plane2_city1)\n40.0: (board_person3_plane2_city1)\n41.0: (flyslow_plane2_city1_city3)\n42.0: (debark_person3_plane2_city3)\n43.0: (flyslow_plane2_city3_city0)\n44.0: (refuel_plane2)\n45.0: (debark_person2_plane1_city2)\n46.0: (refuel_plane1)\n47.0: (debark_person5_plane2_city0)\n48.0: (debark_person1_plane3_city1)",
+            "planlength": 49,
+            "metric": 63999.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person6, plane2)) and (total-fuel-used == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((fuel(plane3) == 667) or (total-fuel-used == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city3) == 0) or (n_flyslow(plane1, city0, city2) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((fuel(plane3) == 667))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (debark_person8_plane1_city3)\n9.0: (flyslow_plane1_city3_city2)\n10.0: (board_person5_plane2_city1)\n11.0: (flyslow_plane2_city1_city3)\n12.0: (flyslow_plane1_city2_city1)\n13.0: (board_person2_plane2_city3)\n14.0: (debark_person3_plane2_city3)\n15.0: (flyslow_plane2_city3_city0)\n16.0: (refuel_plane2)\n17.0: (board_person6_plane2_city0)\n18.0: (flyslow_plane2_city0_city1)\n19.0: (flyslow_plane1_city1_city2)\n20.0: (refuel_plane1)\n21.0: (board_person7_plane2_city1)\n22.0: (debark_person2_plane2_city1)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (board_person8_plane2_city3)\n25.0: (board_person1_plane2_city3)\n26.0: (flyslow_plane2_city3_city1)\n27.0: (refuel_plane2)\n28.0: (debark_person1_plane2_city1)\n29.0: (flyslow_plane2_city1_city3)\n30.0: (debark_person6_plane2_city3)\n31.0: (flyslow_plane2_city3_city4)\n32.0: (board_person4_plane2_city4)\n33.0: (flyslow_plane2_city4_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person4_plane2_city1)\n36.0: (flyslow_plane2_city1_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city3)\n41.0: (refuel_plane2)\n42.0: (debark_person8_plane2_city3)\n43.0: (flyslow_plane2_city3_city1)\n44.0: (board_person2_plane2_city1)\n45.0: (flyslow_plane2_city1_city2)\n46.0: (debark_person2_plane2_city2)",
+            "planlength": 47,
+            "metric": 53992.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not located(person7, city3)) and (n_flyfast(plane1, city2, city3) == 0) and (not in(person5, plane3))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (debark_person3_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (refuel_plane2)\n26.0: (debark_person4_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (flyslow_plane2_city4_city0)\n29.0: (flyslow_plane3_city3_city1)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane3)\n33.0: (board_person7_plane3_city1)\n34.0: (flyslow_plane3_city1_city4)\n35.0: (refuel_plane2)\n36.0: (board_person1_plane2_city3)\n37.0: (debark_person6_plane2_city3)\n38.0: (flyfast_plane2_city3_city1)\n39.0: (debark_person8_plane1_city2)\n40.0: (debark_person7_plane3_city4)\n41.0: (flyslow_plane3_city4_city3)\n42.0: (refuel_plane2)\n43.0: (board_person3_plane2_city1)\n44.0: (flyslow_plane2_city1_city3)\n45.0: (debark_person3_plane2_city3)\n46.0: (flyslow_plane2_city3_city0)\n47.0: (debark_person5_plane2_city0)\n48.0: (flyslow_plane2_city0_city2)\n49.0: (board_person2_plane1_city2)\n50.0: (refuel_plane2)\n51.0: (board_person8_plane2_city2)\n52.0: (flyslow_plane2_city2_city1)\n53.0: (debark_person1_plane2_city1)\n54.0: (flyslow_plane2_city1_city3)\n55.0: (refuel_plane3)\n56.0: (debark_person8_plane2_city3)\n57.0: (debark_person2_plane1_city2)",
+            "planlength": 58,
+            "metric": 78835.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) or (n_flyslow(plane2, city4, city1) == 0)))",
+            "constraint_type": "OR2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0) or (onboard(plane1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (debark_person4_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (board_person7_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (refuel_plane3)\n24.0: (debark_person5_plane2_city0)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane2)\n32.0: (debark_person8_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person1_plane3_city1)\n40.0: (debark_person6_plane2_city3)\n41.0: (debark_person2_plane1_city2)",
+            "planlength": 42,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_refuel(plane1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((not in(person6, plane2)) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (refuel_plane1)\n17.0: (refuel_plane2)\n18.0: (board_person5_plane2_city1)\n19.0: (flyslow_plane2_city1_city4)\n20.0: (debark_person7_plane2_city4)\n21.0: (flyslow_plane2_city4_city0)\n22.0: (debark_person5_plane2_city0)\n23.0: (flyslow_plane2_city0_city1)\n24.0: (board_person1_plane3_city3)\n25.0: (board_person2_plane3_city3)\n26.0: (flyslow_plane3_city3_city1)\n27.0: (flyfast_plane1_city2_city3)\n28.0: (debark_person1_plane3_city1)\n29.0: (flyslow_plane3_city1_city2)\n30.0: (refuel_plane1)\n31.0: (debark_person8_plane1_city3)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane3)\n34.0: (flyslow_plane3_city2_city0)\n35.0: (board_person6_plane3_city0)\n36.0: (flyslow_plane3_city0_city2)\n37.0: (debark_person6_plane3_city2)\n38.0: (debark_person2_plane3_city2)\n39.0: (refuel_plane3)\n40.0: (board_person1_plane2_city1)\n41.0: (board_person6_plane3_city2)\n42.0: (flyslow_plane3_city2_city1)\n43.0: (board_person3_plane3_city1)\n44.0: (flyslow_plane3_city1_city3)\n45.0: (refuel_plane3)\n46.0: (refuel_plane2)\n47.0: (debark_person1_plane2_city1)\n48.0: (board_person8_plane3_city3)\n49.0: (debark_person6_plane3_city3)\n50.0: (debark_person3_plane3_city3)\n51.0: (debark_person8_plane3_city3)\n52.0: (debark_person4_plane2_city1)",
+            "planlength": 53,
+            "metric": 65268.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (refuel_plane2)\n26.0: (board_person5_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyslow_plane2_city3_city0)\n37.0: (refuel_plane3)\n38.0: (board_person2_plane1_city2)\n39.0: (board_person3_plane3_city1)\n40.0: (flyslow_plane3_city1_city3)\n41.0: (refuel_plane3)\n42.0: (debark_person2_plane1_city2)\n43.0: (debark_person3_plane3_city3)\n44.0: (flyslow_plane3_city3_city1)\n45.0: (debark_person5_plane2_city0)\n46.0: (flyslow_plane2_city0_city2)\n47.0: (refuel_plane2)\n48.0: (debark_person8_plane1_city2)\n49.0: (board_person8_plane2_city2)\n50.0: (flyslow_plane2_city2_city1)\n51.0: (debark_person4_plane2_city1)\n52.0: (flyslow_plane2_city1_city3)\n53.0: (debark_person1_plane3_city1)\n54.0: (debark_person8_plane2_city3)",
+            "planlength": 55,
+            "metric": 66598.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person4, plane3)) or (n_flyfast(plane1, city2, city1) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_flyslow(plane2, city4, city1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city1)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city3)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city0)\n6.0: (flyslow_plane2_city0_city1)\n7.0: (flyslow_plane1_city1_city2)\n8.0: (refuel_plane3)\n9.0: (refuel_plane2)\n10.0: (board_person7_plane2_city1)\n11.0: (board_person5_plane2_city1)\n12.0: (flyslow_plane2_city1_city0)\n13.0: (debark_person5_plane2_city0)\n14.0: (flyslow_plane2_city0_city4)\n15.0: (board_person4_plane2_city4)\n16.0: (board_person3_plane2_city4)\n17.0: (flyslow_plane2_city4_city3)\n18.0: (refuel_plane2)\n19.0: (flyfast_plane2_city3_city1)\n20.0: (board_person2_plane3_city3)\n21.0: (flyslow_plane3_city3_city0)\n22.0: (board_person6_plane3_city0)\n23.0: (flyslow_plane3_city0_city3)\n24.0: (refuel_plane3)\n25.0: (debark_person6_plane3_city3)\n26.0: (flyslow_plane3_city3_city2)\n27.0: (refuel_plane2)\n28.0: (flyslow_plane2_city1_city3)\n29.0: (debark_person3_plane2_city3)\n30.0: (flyslow_plane2_city3_city1)\n31.0: (debark_person2_plane3_city2)\n32.0: (flyslow_plane3_city2_city3)\n33.0: (debark_person4_plane2_city1)\n34.0: (flyslow_plane2_city1_city4)\n35.0: (refuel_plane1)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city0)\n39.0: (board_person3_plane3_city3)\n40.0: (board_person8_plane2_city0)\n41.0: (flyslow_plane2_city0_city3)\n42.0: (board_person1_plane2_city3)\n43.0: (debark_person8_plane2_city3)\n44.0: (flyslow_plane2_city3_city1)\n45.0: (debark_person3_plane3_city3)\n46.0: (debark_person1_plane2_city1)",
+            "planlength": 47,
+            "metric": 68796.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person6, plane2)) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (refuel_plane1)\n17.0: (refuel_plane2)\n18.0: (board_person5_plane2_city1)\n19.0: (flyslow_plane2_city1_city4)\n20.0: (debark_person7_plane2_city4)\n21.0: (flyslow_plane2_city4_city0)\n22.0: (debark_person5_plane2_city0)\n23.0: (flyslow_plane2_city0_city1)\n24.0: (refuel_plane3)\n25.0: (board_person1_plane3_city3)\n26.0: (board_person2_plane3_city3)\n27.0: (flyfast_plane3_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person1_plane3_city1)\n30.0: (flyslow_plane3_city1_city2)\n31.0: (refuel_plane1)\n32.0: (debark_person8_plane1_city3)\n33.0: (flyfast_plane1_city3_city2)\n34.0: (refuel_plane3)\n35.0: (flyslow_plane3_city2_city0)\n36.0: (board_person6_plane3_city0)\n37.0: (flyslow_plane3_city0_city2)\n38.0: (refuel_plane3)\n39.0: (refuel_plane2)\n40.0: (debark_person2_plane3_city2)\n41.0: (flyslow_plane3_city2_city1)\n42.0: (board_person3_plane3_city1)\n43.0: (flyslow_plane3_city1_city3)\n44.0: (refuel_plane1)\n45.0: (debark_person4_plane2_city1)\n46.0: (board_person8_plane3_city3)\n47.0: (debark_person3_plane3_city3)\n48.0: (board_person2_plane1_city2)\n49.0: (flyfast_plane2_city1_city1)\n50.0: (refuel_plane3)\n51.0: (debark_person2_plane1_city2)\n52.0: (debark_person8_plane3_city3)\n53.0: (debark_person6_plane3_city3)",
+            "planlength": 54,
+            "metric": 76402.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((fuel(plane3) == 667) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (debark_person8_plane1_city3)\n9.0: (flyslow_plane1_city3_city2)\n10.0: (refuel_plane2)\n11.0: (board_person7_plane2_city1)\n12.0: (flyfast_plane2_city1_city3)\n13.0: (flyslow_plane1_city2_city1)\n14.0: (board_person5_plane1_city1)\n15.0: (debark_person7_plane2_city3)\n16.0: (debark_person3_plane2_city3)\n17.0: (board_person2_plane2_city3)\n18.0: (board_person1_plane2_city3)\n19.0: (refuel_plane2)\n20.0: (flyfast_plane2_city3_city1)\n21.0: (flyslow_plane1_city1_city0)\n22.0: (refuel_plane1)\n23.0: (board_person6_plane1_city0)\n24.0: (flyslow_plane1_city0_city3)\n25.0: (debark_person6_plane1_city3)\n26.0: (flyslow_plane1_city3_city0)\n27.0: (debark_person5_plane1_city0)\n28.0: (flyslow_plane1_city0_city2)\n29.0: (refuel_plane2)\n30.0: (debark_person1_plane2_city1)\n31.0: (flyslow_plane2_city1_city4)\n32.0: (board_person4_plane2_city4)\n33.0: (flyslow_plane2_city4_city3)\n34.0: (board_person7_plane2_city3)\n35.0: (flyslow_plane2_city3_city4)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city1)\n39.0: (debark_person4_plane2_city1)\n40.0: (flyslow_plane2_city1_city2)\n41.0: (debark_person2_plane2_city2)",
+            "planlength": 42,
+            "metric": 62647.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city3) == 0) or (not located(person7, city3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city3) == 0) or (n_flyfast(plane1, city2, city3) == 0) or (n_refuel(plane1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_flyfast(plane1, city2, city3) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyslow_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (flyslow_plane1_city3_city2)\n32.0: (refuel_plane2)\n33.0: (board_person6_plane2_city0)\n34.0: (flyslow_plane2_city0_city1)\n35.0: (debark_person1_plane2_city1)\n36.0: (flyslow_plane2_city1_city0)\n37.0: (debark_person5_plane2_city0)\n38.0: (flyslow_plane2_city0_city4)\n39.0: (refuel_plane2)\n40.0: (debark_person7_plane2_city4)\n41.0: (flyslow_plane2_city4_city3)\n42.0: (debark_person2_plane3_city2)\n43.0: (debark_person8_plane1_city2)\n44.0: (board_person8_plane3_city2)\n45.0: (flyslow_plane3_city2_city3)\n46.0: (debark_person6_plane2_city3)\n47.0: (debark_person8_plane3_city3)",
+            "planlength": 48,
+            "metric": 68490.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city3, city2) == 0) and (n_debark(person7, plane1, city2) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_flyfast(plane1, city2, city3) == 0) and (not in(person5, plane3))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (debark_person4_plane2_city1)\n15.0: (debark_person2_plane1_city2)\n16.0: (refuel_plane2)\n17.0: (flyslow_plane2_city1_city4)\n18.0: (board_person3_plane2_city4)\n19.0: (flyslow_plane2_city4_city1)\n20.0: (debark_person3_plane2_city1)\n21.0: (flyslow_plane2_city1_city4)\n22.0: (refuel_plane2)\n23.0: (board_person2_plane1_city2)\n24.0: (flyslow_plane2_city4_city0)\n25.0: (flyfast_plane3_city3_city1)\n26.0: (board_person7_plane3_city1)\n27.0: (board_person3_plane3_city1)\n28.0: (flyslow_plane3_city1_city3)\n29.0: (refuel_plane3)\n30.0: (board_person1_plane3_city3)\n31.0: (flyslow_plane3_city3_city1)\n32.0: (debark_person1_plane3_city1)\n33.0: (flyslow_plane3_city1_city4)\n34.0: (debark_person7_plane3_city4)\n35.0: (flyslow_plane3_city4_city3)\n36.0: (refuel_plane3)\n37.0: (board_person8_plane2_city0)\n38.0: (debark_person5_plane2_city0)\n39.0: (debark_person2_plane1_city2)\n40.0: (board_person6_plane2_city0)\n41.0: (flyslow_plane2_city0_city3)\n42.0: (debark_person8_plane2_city3)\n43.0: (debark_person6_plane2_city3)\n44.0: (debark_person3_plane3_city3)",
+            "planlength": 45,
+            "metric": 52826.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city3) == 0) or (not in(person4, plane3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city3)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city0)\n4.0: (flyslow_plane1_city3_city2)\n5.0: (refuel_plane3)\n6.0: (flyslow_plane3_city0_city3)\n7.0: (refuel_plane2)\n8.0: (flyslow_plane2_city4_city1)\n9.0: (refuel_plane1)\n10.0: (board_person7_plane2_city1)\n11.0: (flyslow_plane2_city1_city4)\n12.0: (board_person4_plane2_city4)\n13.0: (flyslow_plane2_city4_city1)\n14.0: (refuel_plane3)\n15.0: (debark_person4_plane2_city1)\n16.0: (board_person1_plane3_city3)\n17.0: (refuel_plane2)\n18.0: (flyslow_plane2_city1_city4)\n19.0: (flyfast_plane3_city3_city0)\n20.0: (board_person3_plane2_city4)\n21.0: (flyslow_plane2_city4_city3)\n22.0: (refuel_plane3)\n23.0: (flyfast_plane3_city0_city1)\n24.0: (debark_person1_plane3_city1)\n25.0: (refuel_plane3)\n26.0: (board_person5_plane3_city1)\n27.0: (flyslow_plane3_city1_city0)\n28.0: (debark_person3_plane2_city3)\n29.0: (flyslow_plane2_city3_city4)\n30.0: (board_person8_plane3_city0)\n31.0: (flyslow_plane3_city0_city3)\n32.0: (refuel_plane3)\n33.0: (board_person2_plane3_city3)\n34.0: (flyslow_plane3_city3_city0)\n35.0: (board_person6_plane3_city0)\n36.0: (flyslow_plane3_city0_city3)\n37.0: (refuel_plane3)\n38.0: (debark_person6_plane3_city3)\n39.0: (debark_person8_plane3_city3)\n40.0: (flyslow_plane3_city3_city0)\n41.0: (debark_person5_plane3_city0)\n42.0: (flyslow_plane3_city0_city2)\n43.0: (debark_person7_plane2_city4)\n44.0: (debark_person2_plane3_city2)",
+            "planlength": 45,
+            "metric": 75786.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city2) == 0) or (n_board(person4, plane3, city3) == 0) or (n_debark(person7, plane1, city2) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_flyfast(plane1, city2, city1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (debark_person2_plane3_city2)\n37.0: (board_person2_plane1_city2)\n38.0: (debark_person1_plane2_city1)\n39.0: (flyslow_plane2_city1_city0)\n40.0: (debark_person8_plane1_city2)\n41.0: (board_person8_plane3_city2)\n42.0: (flyslow_plane3_city2_city3)\n43.0: (debark_person5_plane2_city0)\n44.0: (flyslow_plane2_city0_city4)\n45.0: (refuel_plane2)\n46.0: (debark_person7_plane2_city4)\n47.0: (flyslow_plane2_city4_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person2_plane1_city2)\n50.0: (debark_person8_plane3_city3)",
+            "planlength": 51,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyslow(plane1, city0, city2) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person7_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person5_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person3_plane2_city1)\n20.0: (flyslow_plane2_city1_city4)\n21.0: (refuel_plane2)\n22.0: (debark_person7_plane2_city4)\n23.0: (flyslow_plane2_city4_city1)\n24.0: (debark_person4_plane2_city1)\n25.0: (flyslow_plane2_city1_city0)\n26.0: (board_person1_plane3_city3)\n27.0: (flyslow_plane3_city3_city1)\n28.0: (board_person6_plane2_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane3)\n32.0: (debark_person1_plane3_city1)\n33.0: (debark_person6_plane2_city3)\n34.0: (board_person3_plane3_city1)\n35.0: (flyslow_plane3_city1_city3)\n36.0: (refuel_plane2)\n37.0: (debark_person8_plane2_city3)\n38.0: (flyslow_plane2_city3_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (debark_person2_plane1_city2)\n41.0: (debark_person3_plane3_city3)",
+            "planlength": 42,
+            "metric": 47714.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) and (n_refuel(plane1) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city1) == 0) or (not in(person5, plane3)) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_board(person4, plane3, city3) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city3)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city0)\n4.0: (flyslow_plane1_city3_city2)\n5.0: (refuel_plane3)\n6.0: (flyslow_plane3_city0_city3)\n7.0: (refuel_plane2)\n8.0: (flyslow_plane2_city4_city1)\n9.0: (refuel_plane1)\n10.0: (board_person7_plane2_city1)\n11.0: (flyslow_plane2_city1_city4)\n12.0: (board_person4_plane2_city4)\n13.0: (flyslow_plane2_city4_city1)\n14.0: (refuel_plane3)\n15.0: (debark_person4_plane2_city1)\n16.0: (board_person1_plane3_city3)\n17.0: (refuel_plane2)\n18.0: (flyslow_plane2_city1_city4)\n19.0: (flyfast_plane3_city3_city0)\n20.0: (board_person3_plane2_city4)\n21.0: (flyslow_plane2_city4_city3)\n22.0: (refuel_plane3)\n23.0: (flyfast_plane3_city0_city1)\n24.0: (debark_person1_plane3_city1)\n25.0: (refuel_plane3)\n26.0: (board_person5_plane3_city1)\n27.0: (flyslow_plane3_city1_city0)\n28.0: (debark_person3_plane2_city3)\n29.0: (flyslow_plane2_city3_city4)\n30.0: (board_person8_plane3_city0)\n31.0: (flyslow_plane3_city0_city3)\n32.0: (refuel_plane3)\n33.0: (board_person2_plane3_city3)\n34.0: (flyslow_plane3_city3_city0)\n35.0: (board_person6_plane3_city0)\n36.0: (flyslow_plane3_city0_city3)\n37.0: (refuel_plane3)\n38.0: (debark_person6_plane3_city3)\n39.0: (debark_person8_plane3_city3)\n40.0: (flyslow_plane3_city3_city0)\n41.0: (debark_person5_plane3_city0)\n42.0: (flyslow_plane3_city0_city2)\n43.0: (debark_person7_plane2_city4)\n44.0: (debark_person2_plane3_city2)",
+            "planlength": 45,
+            "metric": 75786.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city3, city2) == 0) and (n_flyfast(plane2, city0, city4) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (refuel_plane2)\n26.0: (board_person5_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyfast_plane2_city3_city1)\n37.0: (board_person2_plane1_city2)\n38.0: (refuel_plane2)\n39.0: (debark_person4_plane2_city1)\n40.0: (board_person3_plane2_city1)\n41.0: (flyslow_plane2_city1_city3)\n42.0: (debark_person3_plane2_city3)\n43.0: (flyslow_plane2_city3_city0)\n44.0: (refuel_plane2)\n45.0: (debark_person2_plane1_city2)\n46.0: (refuel_plane1)\n47.0: (debark_person5_plane2_city0)\n48.0: (debark_person1_plane3_city1)",
+            "planlength": 49,
+            "metric": 63999.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((total-fuel-used == 0) and (n_flyfast(plane2, city0, city2) == 0) and (n_refuel(plane1) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((onboard(plane1) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane2)\n20.0: (flyslow_plane2_city1_city3)\n21.0: (refuel_plane1)\n22.0: (flyslow_plane1_city3_city2)\n23.0: (refuel_plane3)\n24.0: (board_person1_plane2_city3)\n25.0: (debark_person3_plane2_city3)\n26.0: (flyslow_plane2_city3_city1)\n27.0: (flyslow_plane1_city2_city3)\n28.0: (debark_person4_plane2_city1)\n29.0: (flyslow_plane2_city1_city0)\n30.0: (flyslow_plane1_city3_city2)\n31.0: (refuel_plane2)\n32.0: (board_person6_plane2_city0)\n33.0: (flyslow_plane2_city0_city1)\n34.0: (refuel_plane1)\n35.0: (debark_person1_plane2_city1)\n36.0: (flyslow_plane2_city1_city0)\n37.0: (debark_person5_plane2_city0)\n38.0: (flyslow_plane2_city0_city4)\n39.0: (refuel_plane2)\n40.0: (debark_person7_plane2_city4)\n41.0: (flyslow_plane2_city4_city3)\n42.0: (debark_person2_plane3_city2)\n43.0: (board_person2_plane1_city2)\n44.0: (debark_person8_plane1_city2)\n45.0: (board_person8_plane3_city2)\n46.0: (flyslow_plane3_city2_city3)\n47.0: (refuel_plane3)\n48.0: (debark_person8_plane3_city3)\n49.0: (debark_person2_plane1_city2)\n50.0: (flyfast_plane3_city3_city3)\n51.0: (debark_person6_plane2_city3)",
+            "planlength": 52,
+            "metric": 68490.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) or (onboard(plane1) == 0) or (fuel(plane3) == 667)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (debark_person4_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (board_person7_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (refuel_plane3)\n24.0: (debark_person5_plane2_city0)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane2)\n32.0: (debark_person8_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person1_plane3_city1)\n40.0: (debark_person6_plane2_city3)\n41.0: (debark_person2_plane1_city2)",
+            "planlength": 42,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_board(person4, plane3, city2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) and (onboard(plane1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person3_plane2_city4)\n1.0: (refuel_plane2)\n2.0: (flyslow_plane2_city4_city3)\n3.0: (refuel_plane1)\n4.0: (flyfast_plane1_city0_city2)\n5.0: (refuel_plane3)\n6.0: (flyslow_plane3_city2_city1)\n7.0: (refuel_plane3)\n8.0: (board_person5_plane3_city1)\n9.0: (flyslow_plane3_city1_city4)\n10.0: (board_person4_plane3_city4)\n11.0: (flyslow_plane3_city4_city1)\n12.0: (refuel_plane3)\n13.0: (debark_person4_plane3_city1)\n14.0: (flyslow_plane3_city1_city4)\n15.0: (debark_person5_plane3_city4)\n16.0: (refuel_plane2)\n17.0: (board_person2_plane2_city3)\n18.0: (debark_person3_plane2_city3)\n19.0: (board_person1_plane2_city3)\n20.0: (board_person5_plane3_city4)\n21.0: (flyfast_plane3_city4_city0)\n22.0: (flyslow_plane2_city3_city1)\n23.0: (board_person7_plane2_city1)\n24.0: (debark_person1_plane2_city1)\n25.0: (flyslow_plane2_city1_city2)\n26.0: (board_person8_plane3_city0)\n27.0: (debark_person2_plane2_city2)\n28.0: (flyslow_plane2_city2_city4)\n29.0: (debark_person7_plane2_city4)\n30.0: (board_person6_plane3_city0)\n31.0: (refuel_plane2)\n32.0: (refuel_plane3)\n33.0: (debark_person5_plane3_city0)\n34.0: (flyslow_plane3_city0_city3)\n35.0: (refuel_plane3)\n36.0: (debark_person8_plane3_city3)\n37.0: (debark_person6_plane3_city3)",
+            "planlength": 38,
+            "metric": 44856.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane2, city4, city1) == 0) and (n_flyslow(plane3, city2, city0) == 0) and (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city3)\n6.0: (flyslow_plane2_city3_city1)\n7.0: (refuel_plane1)\n8.0: (flyslow_plane1_city0_city3)\n9.0: (refuel_plane3)\n10.0: (flyslow_plane3_city2_city3)\n11.0: (flyslow_plane1_city3_city2)\n12.0: (board_person2_plane3_city3)\n13.0: (flyslow_plane3_city3_city2)\n14.0: (flyslow_plane1_city2_city3)\n15.0: (refuel_plane1)\n16.0: (debark_person8_plane1_city3)\n17.0: (flyfast_plane1_city3_city2)\n18.0: (board_person7_plane2_city1)\n19.0: (board_person5_plane2_city1)\n20.0: (flyslow_plane2_city1_city3)\n21.0: (refuel_plane3)\n22.0: (flyslow_plane3_city2_city1)\n23.0: (refuel_plane2)\n24.0: (flyslow_plane2_city3_city0)\n25.0: (board_person6_plane2_city0)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane2)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city4)\n32.0: (board_person4_plane2_city4)\n33.0: (flyslow_plane2_city4_city3)\n34.0: (flyslow_plane3_city1_city2)\n35.0: (flyslow_plane2_city3_city1)\n36.0: (refuel_plane2)\n37.0: (debark_person4_plane2_city1)\n38.0: (flyslow_plane2_city1_city3)\n39.0: (refuel_plane1)\n40.0: (debark_person2_plane3_city2)\n41.0: (board_person1_plane2_city3)\n42.0: (debark_person6_plane2_city3)\n43.0: (flyslow_plane2_city3_city1)\n44.0: (debark_person1_plane2_city1)\n45.0: (flyslow_plane2_city1_city4)\n46.0: (debark_person7_plane2_city4)",
+            "planlength": 47,
+            "metric": 73048.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) or (not in(person4, plane3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (debark_person5_plane2_city0)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (refuel_plane3)\n28.0: (debark_person6_plane2_city3)\n29.0: (debark_person2_plane1_city2)\n30.0: (debark_person3_plane2_city3)\n31.0: (flyslow_plane2_city3_city0)\n32.0: (board_person8_plane2_city0)\n33.0: (flyslow_plane2_city0_city4)\n34.0: (refuel_plane2)\n35.0: (debark_person7_plane2_city4)\n36.0: (flyslow_plane2_city4_city3)\n37.0: (debark_person1_plane3_city1)\n38.0: (debark_person8_plane2_city3)",
+            "planlength": 39,
+            "metric": 45086.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) or (n_flyfast(plane1, city2, city1) == 0) or (onboard(plane1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (debark_person4_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (board_person7_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (refuel_plane3)\n24.0: (debark_person5_plane2_city0)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane2)\n32.0: (debark_person8_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (refuel_plane2)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person1_plane3_city1)\n40.0: (debark_person6_plane2_city3)\n41.0: (debark_person2_plane1_city2)",
+            "planlength": 42,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((not in(person4, plane3)))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (refuel_plane2)\n26.0: (board_person5_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyfast_plane2_city3_city1)\n37.0: (debark_person1_plane3_city1)\n38.0: (flyslow_plane3_city1_city2)\n39.0: (refuel_plane2)\n40.0: (debark_person4_plane2_city1)\n41.0: (flyslow_plane2_city1_city3)\n42.0: (debark_person8_plane1_city2)\n43.0: (board_person8_plane3_city2)\n44.0: (refuel_plane3)\n45.0: (flyslow_plane3_city2_city1)\n46.0: (flyslow_plane2_city3_city0)\n47.0: (board_person3_plane3_city1)\n48.0: (flyslow_plane3_city1_city3)\n49.0: (debark_person5_plane2_city0)\n50.0: (debark_person8_plane3_city3)\n51.0: (debark_person3_plane3_city3)",
+            "planlength": 52,
+            "metric": 71163.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (debark_person3_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (debark_person4_plane2_city1)\n26.0: (board_person2_plane1_city2)\n27.0: (board_person8_plane3_city3)\n28.0: (refuel_plane2)\n29.0: (flyslow_plane2_city1_city4)\n30.0: (debark_person7_plane2_city4)\n31.0: (flyslow_plane2_city4_city0)\n32.0: (board_person6_plane2_city0)\n33.0: (flyslow_plane2_city0_city3)\n34.0: (board_person1_plane3_city3)\n35.0: (flyslow_plane3_city3_city1)\n36.0: (refuel_plane3)\n37.0: (board_person5_plane3_city1)\n38.0: (flyfast_plane3_city1_city3)\n39.0: (debark_person8_plane3_city3)\n40.0: (flyslow_plane3_city3_city1)\n41.0: (refuel_plane3)\n42.0: (board_person3_plane3_city1)\n43.0: (debark_person1_plane3_city1)\n44.0: (flyslow_plane3_city1_city3)\n45.0: (debark_person3_plane3_city3)\n46.0: (flyslow_plane3_city3_city0)\n47.0: (debark_person5_plane3_city0)\n48.0: (debark_person2_plane1_city2)\n49.0: (debark_person6_plane2_city3)",
+            "planlength": 50,
+            "metric": 63326.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyfast(plane1, city2, city1) == 0) and (not located(person7, city3))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (debark_person4_plane2_city1)\n26.0: (board_person2_plane1_city2)\n27.0: (board_person8_plane3_city3)\n28.0: (refuel_plane2)\n29.0: (flyslow_plane2_city1_city4)\n30.0: (debark_person7_plane2_city4)\n31.0: (flyslow_plane2_city4_city0)\n32.0: (board_person6_plane2_city0)\n33.0: (flyslow_plane2_city0_city3)\n34.0: (board_person1_plane3_city3)\n35.0: (flyslow_plane3_city3_city1)\n36.0: (refuel_plane3)\n37.0: (board_person5_plane3_city1)\n38.0: (flyslow_plane3_city1_city3)\n39.0: (debark_person5_plane3_city3)\n40.0: (debark_person8_plane3_city3)\n41.0: (flyslow_plane3_city3_city1)\n42.0: (board_person3_plane3_city1)\n43.0: (debark_person1_plane3_city1)\n44.0: (flyslow_plane3_city1_city3)\n45.0: (refuel_plane1)\n46.0: (refuel_plane3)\n47.0: (debark_person6_plane2_city3)\n48.0: (board_person5_plane3_city3)\n49.0: (debark_person2_plane1_city2)\n50.0: (debark_person3_plane3_city3)\n51.0: (flyslow_plane3_city3_city0)\n52.0: (debark_person5_plane3_city0)",
+            "planlength": 53,
+            "metric": 60634.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not located(person7, city3)) or (n_flyfast(plane2, city0, city2) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) or (onboard(plane1) == 0) or (not located(person7, city3))))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane2)\n20.0: (flyslow_plane2_city1_city3)\n21.0: (refuel_plane1)\n22.0: (flyslow_plane1_city3_city2)\n23.0: (refuel_plane3)\n24.0: (debark_person2_plane3_city2)\n25.0: (flyslow_plane3_city2_city3)\n26.0: (flyslow_plane2_city3_city1)\n27.0: (debark_person4_plane2_city1)\n28.0: (flyslow_plane2_city1_city0)\n29.0: (board_person1_plane3_city3)\n30.0: (flyslow_plane3_city3_city1)\n31.0: (refuel_plane2)\n32.0: (flyslow_plane2_city0_city3)\n33.0: (debark_person3_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person6_plane2_city0)\n36.0: (flyslow_plane2_city0_city3)\n37.0: (refuel_plane3)\n38.0: (board_person4_plane3_city1)\n39.0: (debark_person6_plane2_city3)\n40.0: (refuel_plane2)\n41.0: (flyslow_plane2_city3_city4)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city0)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person4_plane3_city1)\n46.0: (flyslow_plane3_city1_city2)\n47.0: (debark_person8_plane1_city2)\n48.0: (board_person8_plane3_city2)\n49.0: (flyslow_plane3_city2_city3)\n50.0: (debark_person5_plane2_city0)\n51.0: (debark_person8_plane3_city3)",
+            "planlength": 52,
+            "metric": 70446.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((n_flyfast(plane2, city3, city2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((total-fuel-used == 0) and (onboard(plane1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyfast(plane2, city0, city4) == 0) and (not in(person5, plane3))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (refuel_plane2)\n26.0: (board_person5_plane2_city1)\n27.0: (flyslow_plane2_city1_city4)\n28.0: (debark_person7_plane2_city4)\n29.0: (flyslow_plane2_city4_city0)\n30.0: (board_person6_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (flyslow_plane2_city3_city1)\n37.0: (refuel_plane1)\n38.0: (refuel_plane2)\n39.0: (debark_person4_plane2_city1)\n40.0: (board_person3_plane2_city1)\n41.0: (flyslow_plane2_city1_city3)\n42.0: (debark_person3_plane2_city3)\n43.0: (flyslow_plane2_city3_city0)\n44.0: (refuel_plane3)\n45.0: (debark_person5_plane2_city0)\n46.0: (debark_person1_plane3_city1)",
+            "planlength": 47,
+            "metric": 57942.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) or (not in(person6, plane2))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city3)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city0)\n4.0: (flyslow_plane1_city3_city2)\n5.0: (refuel_plane3)\n6.0: (flyslow_plane3_city0_city3)\n7.0: (refuel_plane2)\n8.0: (flyslow_plane2_city4_city1)\n9.0: (refuel_plane3)\n10.0: (board_person5_plane2_city1)\n11.0: (flyslow_plane2_city1_city4)\n12.0: (board_person4_plane2_city4)\n13.0: (flyslow_plane2_city4_city1)\n14.0: (refuel_plane1)\n15.0: (board_person7_plane2_city1)\n16.0: (board_person1_plane3_city3)\n17.0: (refuel_plane2)\n18.0: (flyslow_plane2_city1_city4)\n19.0: (board_person3_plane2_city4)\n20.0: (flyslow_plane2_city4_city1)\n21.0: (debark_person4_plane2_city1)\n22.0: (flyslow_plane2_city1_city0)\n23.0: (board_person2_plane3_city3)\n24.0: (flyfast_plane3_city3_city1)\n25.0: (debark_person1_plane3_city1)\n26.0: (flyslow_plane3_city1_city0)\n27.0: (refuel_plane3)\n28.0: (board_person8_plane3_city0)\n29.0: (flyslow_plane3_city0_city3)\n30.0: (debark_person8_plane3_city3)\n31.0: (flyslow_plane3_city3_city0)\n32.0: (refuel_plane3)\n33.0: (board_person6_plane3_city0)\n34.0: (flyslow_plane3_city0_city3)\n35.0: (debark_person6_plane3_city3)\n36.0: (flyslow_plane3_city3_city2)\n37.0: (refuel_plane2)\n38.0: (debark_person5_plane2_city0)\n39.0: (flyslow_plane2_city0_city4)\n40.0: (debark_person7_plane2_city4)\n41.0: (flyslow_plane2_city4_city3)\n42.0: (debark_person3_plane2_city3)\n43.0: (debark_person2_plane3_city2)",
+            "planlength": 44,
+            "metric": 71386.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city3, city2) == 0) or (n_flyfast(plane1, city2, city3) == 0) or (n_refuel(plane1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane2)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (debark_person7_plane2_city4)\n42.0: (flyslow_plane2_city4_city3)\n43.0: (debark_person2_plane3_city2)\n44.0: (debark_person8_plane1_city2)\n45.0: (board_person8_plane3_city2)\n46.0: (flyslow_plane3_city2_city3)\n47.0: (debark_person6_plane2_city3)\n48.0: (debark_person8_plane3_city3)",
+            "planlength": 49,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((onboard(plane1) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city2)\n2.0: (board_person4_plane2_city4)\n3.0: (refuel_plane3)\n4.0: (flyslow_plane3_city2_city3)\n5.0: (refuel_plane2)\n6.0: (flyslow_plane2_city4_city1)\n7.0: (refuel_plane1)\n8.0: (board_person5_plane2_city1)\n9.0: (debark_person4_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person3_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (board_person2_plane3_city3)\n14.0: (flyslow_plane3_city3_city0)\n15.0: (refuel_plane3)\n16.0: (board_person8_plane3_city0)\n17.0: (flyslow_plane3_city0_city3)\n18.0: (board_person7_plane2_city1)\n19.0: (debark_person8_plane3_city3)\n20.0: (flyslow_plane3_city3_city2)\n21.0: (refuel_plane2)\n22.0: (flyslow_plane2_city1_city3)\n23.0: (debark_person3_plane2_city3)\n24.0: (flyslow_plane2_city3_city0)\n25.0: (flyslow_plane3_city2_city1)\n26.0: (board_person6_plane2_city0)\n27.0: (debark_person5_plane2_city0)\n28.0: (flyslow_plane2_city0_city3)\n29.0: (refuel_plane3)\n30.0: (flyslow_plane3_city1_city2)\n31.0: (board_person1_plane2_city3)\n32.0: (debark_person2_plane3_city2)\n33.0: (debark_person6_plane2_city3)\n34.0: (refuel_plane2)\n35.0: (flyslow_plane2_city3_city1)\n36.0: (debark_person1_plane2_city1)\n37.0: (flyslow_plane2_city1_city4)\n38.0: (debark_person7_plane2_city4)",
+            "planlength": 39,
+            "metric": 54440.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) and (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "AND2",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane2, city4, city1) == 0) and (n_board(person4, plane3, city3) == 0) and (n_flyfast(plane1, city0, city3) == 0)))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city3)\n6.0: (flyslow_plane2_city3_city1)\n7.0: (refuel_plane1)\n8.0: (flyslow_plane1_city0_city3)\n9.0: (refuel_plane3)\n10.0: (flyslow_plane3_city2_city3)\n11.0: (flyslow_plane1_city3_city2)\n12.0: (board_person2_plane3_city3)\n13.0: (flyslow_plane3_city3_city2)\n14.0: (flyslow_plane1_city2_city3)\n15.0: (refuel_plane1)\n16.0: (debark_person8_plane1_city3)\n17.0: (flyfast_plane1_city3_city2)\n18.0: (refuel_plane2)\n19.0: (board_person5_plane2_city1)\n20.0: (board_person7_plane2_city1)\n21.0: (flyfast_plane2_city1_city3)\n22.0: (refuel_plane3)\n23.0: (flyfast_plane3_city2_city1)\n24.0: (refuel_plane2)\n25.0: (flyslow_plane2_city3_city0)\n26.0: (board_person6_plane2_city0)\n27.0: (flyslow_plane2_city0_city3)\n28.0: (debark_person3_plane2_city3)\n29.0: (flyslow_plane2_city3_city0)\n30.0: (refuel_plane1)\n31.0: (refuel_plane2)\n32.0: (debark_person5_plane2_city0)\n33.0: (flyslow_plane2_city0_city3)\n34.0: (board_person1_plane2_city3)\n35.0: (flyslow_plane2_city3_city1)\n36.0: (flyslow_plane3_city1_city2)\n37.0: (refuel_plane3)\n38.0: (refuel_plane2)\n39.0: (debark_person6_plane2_city1)\n40.0: (debark_person1_plane2_city1)\n41.0: (debark_person2_plane3_city2)\n42.0: (flyslow_plane3_city2_city4)\n43.0: (board_person6_plane2_city1)\n44.0: (flyslow_plane2_city1_city3)\n45.0: (board_person4_plane3_city4)\n46.0: (flyslow_plane3_city4_city1)\n47.0: (debark_person6_plane2_city3)\n48.0: (flyslow_plane2_city3_city4)\n49.0: (debark_person7_plane2_city4)\n50.0: (debark_person4_plane3_city1)",
+            "planlength": 51,
+            "metric": 82813.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane2, city0, city4) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city1) == 0) or (total-fuel-used == 0) or (not located(person7, city3))))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_flyslow(plane3, city2, city0) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person7_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person5_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person3_plane2_city1)\n20.0: (flyslow_plane2_city1_city4)\n21.0: (refuel_plane2)\n22.0: (debark_person7_plane2_city4)\n23.0: (flyslow_plane2_city4_city1)\n24.0: (debark_person4_plane2_city1)\n25.0: (flyslow_plane2_city1_city0)\n26.0: (board_person1_plane3_city3)\n27.0: (flyslow_plane3_city3_city1)\n28.0: (board_person8_plane2_city0)\n29.0: (board_person6_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (board_person3_plane3_city1)\n32.0: (debark_person1_plane3_city1)\n33.0: (flyslow_plane3_city1_city3)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (debark_person8_plane2_city3)\n37.0: (flyslow_plane2_city3_city0)\n38.0: (debark_person5_plane2_city0)\n39.0: (debark_person2_plane1_city2)\n40.0: (debark_person3_plane3_city3)",
+            "planlength": 41,
+            "metric": 47714.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city2) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (debark_person2_plane3_city2)\n37.0: (board_person2_plane1_city2)\n38.0: (debark_person1_plane2_city1)\n39.0: (flyslow_plane2_city1_city0)\n40.0: (debark_person8_plane1_city2)\n41.0: (board_person8_plane3_city2)\n42.0: (flyslow_plane3_city2_city3)\n43.0: (debark_person5_plane2_city0)\n44.0: (flyslow_plane2_city0_city4)\n45.0: (refuel_plane2)\n46.0: (debark_person7_plane2_city4)\n47.0: (flyslow_plane2_city4_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person2_plane1_city2)\n50.0: (debark_person8_plane3_city3)",
+            "planlength": 51,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane1, city0, city2) == 0) and (n_debark(person7, plane1, city2) == 0) and (not in(person4, plane3))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person7_plane2_city1)\n12.0: (board_person5_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane2)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (refuel_plane3)\n25.0: (debark_person7_plane2_city3)\n26.0: (debark_person5_plane2_city3)\n27.0: (debark_person2_plane3_city2)\n28.0: (flyslow_plane3_city2_city0)\n29.0: (board_person6_plane3_city0)\n30.0: (flyslow_plane3_city0_city3)\n31.0: (board_person1_plane2_city3)\n32.0: (flyslow_plane2_city3_city1)\n33.0: (debark_person4_plane2_city1)\n34.0: (debark_person1_plane2_city1)\n35.0: (flyslow_plane2_city1_city3)\n36.0: (refuel_plane1)\n37.0: (debark_person6_plane3_city3)\n38.0: (board_person7_plane3_city3)\n39.0: (board_person2_plane1_city2)\n40.0: (refuel_plane3)\n41.0: (board_person5_plane3_city3)\n42.0: (flyslow_plane3_city3_city0)\n43.0: (debark_person5_plane3_city0)\n44.0: (flyslow_plane3_city0_city4)\n45.0: (refuel_plane2)\n46.0: (debark_person2_plane1_city2)\n47.0: (debark_person7_plane3_city4)\n48.0: (board_person6_plane2_city3)\n49.0: (debark_person3_plane2_city3)\n50.0: (board_person8_plane2_city3)\n51.0: (refuel_plane3)\n52.0: (board_person2_plane1_city2)\n53.0: (debark_person8_plane2_city3)\n54.0: (debark_person6_plane2_city3)\n55.0: (debark_person2_plane1_city2)",
+            "planlength": 56,
+            "metric": 54950.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) or (not located(person7, city3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person5, plane3)) or (n_flyfast(plane1, city2, city3) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((n_debark(person7, plane1, city2) == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (refuel_plane3)\n30.0: (debark_person5_plane2_city0)\n31.0: (flyslow_plane2_city0_city3)\n32.0: (refuel_plane2)\n33.0: (debark_person6_plane2_city3)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (board_person8_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (debark_person8_plane2_city3)\n40.0: (debark_person4_plane3_city1)\n41.0: (board_person6_plane2_city3)\n42.0: (debark_person2_plane1_city2)\n43.0: (refuel_plane2)\n44.0: (debark_person1_plane3_city1)\n45.0: (debark_person6_plane2_city3)",
+            "planlength": 46,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane2, city0, city4) == 0) and (n_flyslow(plane2, city4, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city1)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city3)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city0)\n6.0: (flyslow_plane2_city0_city1)\n7.0: (flyfast_plane1_city1_city2)\n8.0: (refuel_plane2)\n9.0: (board_person7_plane2_city1)\n10.0: (board_person5_plane2_city1)\n11.0: (flyslow_plane2_city1_city0)\n12.0: (debark_person5_plane2_city0)\n13.0: (flyslow_plane2_city0_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (board_person3_plane2_city4)\n16.0: (flyslow_plane2_city4_city3)\n17.0: (refuel_plane2)\n18.0: (flyslow_plane2_city3_city1)\n19.0: (refuel_plane3)\n20.0: (board_person2_plane3_city3)\n21.0: (flyfast_plane3_city3_city0)\n22.0: (debark_person4_plane2_city1)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (refuel_plane3)\n25.0: (flyslow_plane3_city0_city2)\n26.0: (refuel_plane1)\n27.0: (refuel_plane2)\n28.0: (board_person1_plane2_city3)\n29.0: (debark_person2_plane3_city2)\n30.0: (flyslow_plane3_city2_city0)\n31.0: (flyslow_plane2_city3_city1)\n32.0: (debark_person1_plane2_city1)\n33.0: (flyslow_plane2_city1_city4)\n34.0: (debark_person7_plane2_city4)\n35.0: (flyslow_plane2_city4_city0)\n36.0: (refuel_plane2)\n37.0: (board_person8_plane2_city0)\n38.0: (board_person6_plane2_city0)\n39.0: (flyslow_plane2_city0_city3)\n40.0: (debark_person6_plane2_city3)\n41.0: (debark_person8_plane2_city3)\n42.0: (board_person5_plane3_city0)\n43.0: (refuel_plane3)\n44.0: (debark_person3_plane2_city3)\n45.0: (debark_person5_plane3_city0)",
+            "planlength": 46,
+            "metric": 65030.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyslow(plane2, city4, city1) == 0) and (not in(person6, plane2))))",
+            "constraint_type": "AND3",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyfast_plane1_city0_city1)\n2.0: (board_person7_plane1_city1)\n3.0: (flyslow_plane1_city1_city3)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city3_city0)\n8.0: (board_person4_plane2_city4)\n9.0: (debark_person7_plane1_city0)\n10.0: (flyslow_plane1_city0_city2)\n11.0: (flyslow_plane3_city1_city3)\n12.0: (flyslow_plane1_city2_city1)\n13.0: (refuel_plane2)\n14.0: (flyslow_plane2_city4_city0)\n15.0: (flyslow_plane1_city1_city2)\n16.0: (refuel_plane3)\n17.0: (board_person7_plane2_city0)\n18.0: (flyslow_plane2_city0_city1)\n19.0: (board_person5_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (refuel_plane2)\n22.0: (board_person8_plane2_city0)\n23.0: (flyslow_plane2_city0_city1)\n24.0: (debark_person4_plane2_city1)\n25.0: (flyslow_plane2_city1_city0)\n26.0: (debark_person5_plane2_city0)\n27.0: (flyslow_plane2_city0_city3)\n28.0: (board_person2_plane3_city3)\n29.0: (flyslow_plane3_city3_city0)\n30.0: (board_person6_plane3_city0)\n31.0: (flyslow_plane3_city0_city3)\n32.0: (board_person1_plane3_city3)\n33.0: (flyslow_plane3_city3_city1)\n34.0: (refuel_plane3)\n35.0: (debark_person1_plane3_city1)\n36.0: (flyslow_plane3_city1_city3)\n37.0: (debark_person6_plane3_city3)\n38.0: (flyslow_plane3_city3_city2)\n39.0: (refuel_plane2)\n40.0: (debark_person8_plane2_city3)\n41.0: (flyslow_plane2_city3_city4)\n42.0: (refuel_plane1)\n43.0: (board_person3_plane2_city4)\n44.0: (debark_person7_plane2_city4)\n45.0: (flyslow_plane2_city4_city3)\n46.0: (debark_person3_plane2_city3)\n47.0: (debark_person2_plane3_city2)",
+            "planlength": 48,
+            "metric": 74051.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not in(person6, plane2)) or (not in(person4, plane3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane3, city2, city0) == 0) or (n_flyfast(plane2, city0, city4) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((not located(person7, city3)))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (debark_person2_plane3_city2)\n26.0: (flyslow_plane3_city2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (debark_person4_plane2_city1)\n29.0: (flyslow_plane2_city1_city0)\n30.0: (board_person1_plane3_city3)\n31.0: (flyslow_plane3_city3_city1)\n32.0: (refuel_plane2)\n33.0: (flyslow_plane2_city0_city3)\n34.0: (debark_person3_plane2_city3)\n35.0: (flyslow_plane2_city3_city0)\n36.0: (board_person6_plane2_city0)\n37.0: (flyslow_plane2_city0_city3)\n38.0: (refuel_plane2)\n39.0: (debark_person6_plane2_city3)\n40.0: (flyslow_plane2_city3_city4)\n41.0: (debark_person5_plane2_city4)\n42.0: (debark_person1_plane3_city1)\n43.0: (flyslow_plane3_city1_city2)\n44.0: (board_person5_plane2_city4)\n45.0: (debark_person7_plane2_city4)\n46.0: (flyslow_plane2_city4_city0)\n47.0: (refuel_plane3)\n48.0: (debark_person8_plane1_city2)\n49.0: (board_person8_plane3_city2)\n50.0: (flyslow_plane3_city2_city3)\n51.0: (debark_person5_plane2_city0)\n52.0: (debark_person8_plane3_city3)",
+            "planlength": 53,
+            "metric": 70446.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_debark(person7, plane1, city2) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person1_plane1_city3)\n3.0: (flyfast_plane1_city3_city1)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane1)\n9.0: (flyfast_plane1_city1_city2)\n10.0: (board_person5_plane2_city1)\n11.0: (board_person7_plane2_city1)\n12.0: (flyslow_plane2_city1_city4)\n13.0: (board_person4_plane2_city4)\n14.0: (flyslow_plane2_city4_city1)\n15.0: (refuel_plane2)\n16.0: (debark_person4_plane2_city1)\n17.0: (flyslow_plane2_city1_city0)\n18.0: (board_person2_plane3_city3)\n19.0: (flyslow_plane3_city3_city2)\n20.0: (refuel_plane1)\n21.0: (board_person6_plane2_city0)\n22.0: (flyslow_plane2_city0_city3)\n23.0: (debark_person6_plane2_city3)\n24.0: (flyslow_plane2_city3_city0)\n25.0: (refuel_plane3)\n26.0: (debark_person2_plane3_city2)\n27.0: (flyslow_plane3_city2_city4)\n28.0: (board_person3_plane3_city4)\n29.0: (flyslow_plane3_city4_city3)\n30.0: (refuel_plane3)\n31.0: (debark_person3_plane3_city3)\n32.0: (flyslow_plane3_city3_city2)\n33.0: (refuel_plane3)\n34.0: (debark_person1_plane1_city2)\n35.0: (board_person1_plane3_city2)\n36.0: (flyslow_plane3_city2_city1)\n37.0: (refuel_plane2)\n38.0: (board_person8_plane2_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (debark_person7_plane2_city4)\n42.0: (flyslow_plane2_city4_city3)\n43.0: (debark_person1_plane3_city1)\n44.0: (debark_person8_plane2_city3)",
+            "planlength": 45,
+            "metric": 65880.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((onboard(plane1) == 0) and (n_flyfast(plane2, city3, city2) == 0) and (n_refuel(plane1) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((total-fuel-used == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (debark_person2_plane3_city2)\n21.0: (flyslow_plane3_city2_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (debark_person4_plane2_city1)\n26.0: (board_person2_plane1_city2)\n27.0: (refuel_plane2)\n28.0: (flyslow_plane2_city1_city4)\n29.0: (debark_person7_plane2_city4)\n30.0: (flyslow_plane2_city4_city0)\n31.0: (board_person6_plane2_city0)\n32.0: (flyslow_plane2_city0_city3)\n33.0: (flyslow_plane3_city3_city0)\n34.0: (refuel_plane2)\n35.0: (debark_person6_plane2_city3)\n36.0: (debark_person2_plane1_city2)\n37.0: (board_person1_plane2_city3)\n38.0: (flyslow_plane2_city3_city1)\n39.0: (refuel_plane3)\n40.0: (flyfast_plane3_city0_city2)\n41.0: (board_person5_plane2_city1)\n42.0: (board_person3_plane2_city1)\n43.0: (flyslow_plane2_city1_city3)\n44.0: (debark_person3_plane2_city3)\n45.0: (flyslow_plane2_city3_city1)\n46.0: (refuel_plane2)\n47.0: (debark_person1_plane2_city1)\n48.0: (flyslow_plane2_city1_city0)\n49.0: (refuel_plane3)\n50.0: (debark_person8_plane1_city2)\n51.0: (board_person8_plane3_city2)\n52.0: (flyslow_plane3_city2_city3)\n53.0: (debark_person5_plane2_city0)\n54.0: (debark_person8_plane3_city3)",
+            "planlength": 55,
+            "metric": 72382.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city0, city3) == 0) or (n_flyfast(plane2, city0, city2) == 0) or (n_flyfast(plane2, city3, city2) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane2)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (refuel_plane3)\n25.0: (debark_person2_plane3_city2)\n26.0: (flyfast_plane3_city2_city0)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (debark_person4_plane2_city1)\n29.0: (flyslow_plane2_city1_city3)\n30.0: (refuel_plane3)\n31.0: (board_person6_plane3_city0)\n32.0: (flyslow_plane3_city0_city3)\n33.0: (refuel_plane2)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (debark_person5_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (board_person1_plane3_city3)\n40.0: (debark_person6_plane3_city3)\n41.0: (flyslow_plane3_city3_city1)\n42.0: (debark_person3_plane2_city3)\n43.0: (debark_person1_plane3_city1)",
+            "planlength": 44,
+            "metric": 64582.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always((total-fuel-used == 0))",
+            "constraint_type": "SIMPLE",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_flyfast(plane1, city2, city3) == 0) and (n_flyfast(plane1, city2, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyslow_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (flyslow_plane1_city3_city2)\n32.0: (refuel_plane2)\n33.0: (board_person6_plane2_city0)\n34.0: (flyslow_plane2_city0_city1)\n35.0: (refuel_plane2)\n36.0: (debark_person1_plane2_city1)\n37.0: (flyslow_plane2_city1_city0)\n38.0: (debark_person5_plane2_city0)\n39.0: (flyslow_plane2_city0_city4)\n40.0: (debark_person7_plane2_city4)\n41.0: (flyslow_plane2_city4_city3)\n42.0: (refuel_plane1)\n43.0: (debark_person2_plane3_city2)\n44.0: (debark_person8_plane1_city2)\n45.0: (board_person8_plane3_city2)\n46.0: (flyslow_plane3_city2_city3)\n47.0: (debark_person6_plane2_city3)\n48.0: (debark_person8_plane3_city3)",
+            "planlength": 49,
+            "metric": 68490.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((total-fuel-used == 0) and (n_board(person4, plane3, city2) == 0) and (n_flyfast(plane2, city0, city2) == 0)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_board(person4, plane3, city2) == 0) or (n_flyslow(plane3, city2, city0) == 0)))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane3)\n20.0: (refuel_plane2)\n21.0: (flyslow_plane2_city1_city3)\n22.0: (refuel_plane1)\n23.0: (flyslow_plane1_city3_city2)\n24.0: (refuel_plane1)\n25.0: (board_person1_plane2_city3)\n26.0: (debark_person3_plane2_city3)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (flyfast_plane1_city2_city3)\n29.0: (debark_person4_plane2_city1)\n30.0: (flyslow_plane2_city1_city0)\n31.0: (refuel_plane1)\n32.0: (flyslow_plane1_city3_city2)\n33.0: (refuel_plane2)\n34.0: (board_person6_plane2_city0)\n35.0: (flyslow_plane2_city0_city1)\n36.0: (refuel_plane1)\n37.0: (debark_person1_plane2_city1)\n38.0: (flyslow_plane2_city1_city0)\n39.0: (debark_person5_plane2_city0)\n40.0: (flyslow_plane2_city0_city4)\n41.0: (refuel_plane2)\n42.0: (debark_person7_plane2_city4)\n43.0: (flyslow_plane2_city4_city3)\n44.0: (debark_person2_plane3_city2)\n45.0: (debark_person8_plane1_city2)\n46.0: (board_person8_plane3_city2)\n47.0: (flyslow_plane3_city2_city3)\n48.0: (debark_person6_plane2_city3)\n49.0: (debark_person8_plane3_city3)",
+            "planlength": 50,
+            "metric": 76932.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane2, city4, city1) == 0) or (n_debark(person7, plane1, city2) == 0) or (n_flyfast(plane1, city2, city3) == 0)))",
+            "constraint_type": "OR3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Timeout"
+        },
+        {
+            "constraint": "Always((not in(person5, plane3)))",
+            "constraint_type": "SIMPLE",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (debark_person3_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane3)\n23.0: (debark_person2_plane3_city2)\n24.0: (flyslow_plane3_city2_city3)\n25.0: (refuel_plane3)\n26.0: (refuel_plane2)\n27.0: (board_person5_plane2_city1)\n28.0: (flyslow_plane2_city1_city4)\n29.0: (debark_person7_plane2_city4)\n30.0: (flyslow_plane2_city4_city0)\n31.0: (board_person6_plane2_city0)\n32.0: (flyslow_plane2_city0_city3)\n33.0: (debark_person4_plane2_city3)\n34.0: (board_person4_plane3_city3)\n35.0: (flyfast_plane3_city3_city1)\n36.0: (refuel_plane2)\n37.0: (debark_person6_plane2_city3)\n38.0: (flyslow_plane2_city3_city0)\n39.0: (board_person3_plane3_city1)\n40.0: (debark_person4_plane3_city1)\n41.0: (flyslow_plane3_city1_city3)\n42.0: (refuel_plane1)\n43.0: (debark_person5_plane2_city0)\n44.0: (board_person2_plane1_city2)\n45.0: (board_person1_plane3_city3)\n46.0: (debark_person3_plane3_city3)\n47.0: (refuel_plane3)\n48.0: (flyslow_plane3_city3_city1)\n49.0: (refuel_plane3)\n50.0: (debark_person1_plane3_city1)\n51.0: (debark_person2_plane1_city2)",
+            "planlength": 52,
+            "metric": 60634.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((not located(person7, city3)) and (n_flyslow(plane2, city4, city1) == 0)))",
+            "constraint_type": "AND2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city1)\n2.0: (refuel_plane3)\n3.0: (flyfast_plane3_city2_city3)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city0)\n6.0: (flyslow_plane2_city0_city1)\n7.0: (flyfast_plane1_city1_city2)\n8.0: (refuel_plane2)\n9.0: (board_person7_plane2_city1)\n10.0: (board_person5_plane2_city1)\n11.0: (flyslow_plane2_city1_city0)\n12.0: (board_person6_plane2_city0)\n13.0: (debark_person5_plane2_city0)\n14.0: (flyslow_plane2_city0_city1)\n15.0: (debark_person6_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (refuel_plane3)\n18.0: (board_person1_plane3_city3)\n19.0: (flyslow_plane3_city3_city1)\n20.0: (debark_person1_plane3_city1)\n21.0: (flyslow_plane3_city1_city3)\n22.0: (board_person2_plane3_city3)\n23.0: (flyslow_plane3_city3_city1)\n24.0: (refuel_plane3)\n25.0: (board_person6_plane3_city1)\n26.0: (flyfast_plane3_city1_city3)\n27.0: (debark_person6_plane3_city3)\n28.0: (flyslow_plane3_city3_city1)\n29.0: (refuel_plane2)\n30.0: (board_person3_plane2_city4)\n31.0: (flyslow_plane2_city4_city3)\n32.0: (debark_person3_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (board_person8_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (board_person4_plane2_city4)\n37.0: (refuel_plane2)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (flyslow_plane2_city3_city1)\n40.0: (refuel_plane3)\n41.0: (flyslow_plane3_city1_city2)\n42.0: (debark_person4_plane2_city1)\n43.0: (flyslow_plane2_city1_city3)\n44.0: (refuel_plane2)\n45.0: (debark_person8_plane2_city3)\n46.0: (flyslow_plane2_city3_city4)\n47.0: (refuel_plane1)\n48.0: (debark_person2_plane3_city2)\n49.0: (debark_person7_plane2_city4)",
+            "planlength": 50,
+            "metric": 74058.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_refuel(plane1) == 0) and (n_flyslow(plane3, city2, city0) == 0) and (fuel(plane3) == 667)))",
+            "constraint_type": "AND3",
+            "result": "failed",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0,
+            "reason": "Unsolvable Problem"
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane2, city4, city1) == 0) or (not in(person5, plane3))))",
+            "constraint_type": "OR2",
+            "result": "success",
+            "plan": "0.0: (refuel_plane1)\n1.0: (flyslow_plane1_city0_city3)\n2.0: (board_person2_plane1_city3)\n3.0: (flyslow_plane1_city3_city2)\n4.0: (refuel_plane3)\n5.0: (flyslow_plane3_city2_city3)\n6.0: (refuel_plane2)\n7.0: (flyslow_plane2_city4_city1)\n8.0: (refuel_plane3)\n9.0: (board_person5_plane2_city1)\n10.0: (flyslow_plane2_city1_city4)\n11.0: (board_person4_plane2_city4)\n12.0: (flyslow_plane2_city4_city1)\n13.0: (refuel_plane1)\n14.0: (refuel_plane2)\n15.0: (board_person7_plane2_city1)\n16.0: (flyslow_plane2_city1_city4)\n17.0: (board_person3_plane2_city4)\n18.0: (flyslow_plane2_city4_city1)\n19.0: (debark_person4_plane2_city1)\n20.0: (flyslow_plane2_city1_city0)\n21.0: (board_person1_plane3_city3)\n22.0: (flyslow_plane3_city3_city1)\n23.0: (board_person6_plane2_city0)\n24.0: (board_person4_plane3_city1)\n25.0: (refuel_plane2)\n26.0: (flyslow_plane2_city0_city3)\n27.0: (debark_person3_plane2_city3)\n28.0: (flyslow_plane2_city3_city0)\n29.0: (board_person8_plane2_city0)\n30.0: (flyslow_plane2_city0_city3)\n31.0: (refuel_plane2)\n32.0: (debark_person8_plane2_city3)\n33.0: (flyslow_plane2_city3_city0)\n34.0: (debark_person5_plane2_city0)\n35.0: (flyslow_plane2_city0_city4)\n36.0: (debark_person7_plane2_city4)\n37.0: (flyslow_plane2_city4_city3)\n38.0: (refuel_plane3)\n39.0: (refuel_plane2)\n40.0: (debark_person1_plane3_city1)\n41.0: (debark_person6_plane2_city3)\n42.0: (debark_person4_plane3_city1)\n43.0: (debark_person2_plane1_city2)",
+            "planlength": 44,
+            "metric": 51166.0,
+            "reason": ""
+        },
+        {
+            "constraint": "Always(((n_flyslow(plane3, city2, city0) == 0) or (n_flyfast(plane1, city0, city3) == 0) or (n_flyslow(plane2, city4, city1) == 0)))",
+            "constraint_type": "OR3",
+            "result": "success",
+            "plan": "0.0: (board_person6_plane1_city0)\n1.0: (board_person3_plane2_city4)\n2.0: (board_person8_plane1_city0)\n3.0: (debark_person6_plane1_city0)\n4.0: (refuel_plane2)\n5.0: (flyslow_plane2_city4_city1)\n6.0: (refuel_plane1)\n7.0: (flyslow_plane1_city0_city3)\n8.0: (refuel_plane3)\n9.0: (flyslow_plane3_city2_city3)\n10.0: (flyslow_plane1_city3_city2)\n11.0: (board_person5_plane2_city1)\n12.0: (board_person7_plane2_city1)\n13.0: (flyslow_plane2_city1_city4)\n14.0: (board_person4_plane2_city4)\n15.0: (flyslow_plane2_city4_city1)\n16.0: (board_person2_plane3_city3)\n17.0: (flyslow_plane3_city3_city2)\n18.0: (flyslow_plane1_city2_city3)\n19.0: (refuel_plane1)\n20.0: (debark_person8_plane1_city3)\n21.0: (flyslow_plane1_city3_city2)\n22.0: (refuel_plane2)\n23.0: (flyslow_plane2_city1_city3)\n24.0: (refuel_plane3)\n25.0: (debark_person2_plane3_city2)\n26.0: (flyfast_plane3_city2_city0)\n27.0: (flyslow_plane2_city3_city1)\n28.0: (debark_person4_plane2_city1)\n29.0: (flyslow_plane2_city1_city3)\n30.0: (refuel_plane3)\n31.0: (board_person6_plane3_city0)\n32.0: (flyslow_plane3_city0_city3)\n33.0: (refuel_plane2)\n34.0: (flyslow_plane2_city3_city0)\n35.0: (debark_person5_plane2_city0)\n36.0: (flyslow_plane2_city0_city4)\n37.0: (debark_person7_plane2_city4)\n38.0: (flyslow_plane2_city4_city3)\n39.0: (board_person1_plane3_city3)\n40.0: (debark_person6_plane3_city3)\n41.0: (flyslow_plane3_city3_city1)\n42.0: (debark_person3_plane2_city3)\n43.0: (debark_person1_plane3_city1)",
+            "planlength": 44,
+            "metric": 64582.0,
+            "reason": ""
+        }
+    ],
+    "elapsed": "0:46:48"
+}

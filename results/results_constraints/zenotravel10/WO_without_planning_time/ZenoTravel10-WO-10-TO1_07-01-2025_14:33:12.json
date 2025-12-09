@@ -1,0 +1,88 @@
+{
+    "timeout": 1,
+    "domain": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraintdomain_with_n.pddl",
+    "problem": "/home/afavier/ws/CAI/PDDL_problems/NTCORE/ZenoTravel-no-constraint/pfile10.pddl",
+    "tests": [
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        },
+        {
+            "all_results": "In progress...",
+            "result": "failed",
+            "reason": "Timeout",
+            "plan": "",
+            "planlength": 0,
+            "metric": 0.0
+        }
+    ],
+    "elapsed": "0:00:10"
+}
