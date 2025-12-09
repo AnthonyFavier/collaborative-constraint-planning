@@ -524,30 +524,30 @@ class ButtonsFrame(customtkinter.CTkFrame):
         }
         
         # Show previous results
-        txt = 'No plan'
         if self.master.plan_frame.previous_results=={}:
-            self.master.plan_frame.printPrevious("None")
+            txt_previous = 'None'
         elif self.master.plan_frame.previous_results['result']=='failed':
-            self.master.plan_frame.printPrevious('Failed to plan: '+self.master.plan_frame.previous_results['fail_reason'])
+            txt_previous = 'Failed to plan: '+self.master.plan_frame.previous_results['fail_reason']
         else:
-            txt = ''
-            txt += 'Plan-Length: ' + str(self.master.plan_frame.previous_results['planlength']) + '\n'
-            txt += 'Metric: ' + str(self.master.plan_frame.previous_results['metric']) + '\n'
-            txt += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.previous_results['time_planning'])
-            self.master.plan_frame.printPrevious(txt)
+            txt_previous = ''
+            txt_previous += 'Plan-Length: ' + str(self.master.plan_frame.previous_results['planlength']) + '\n'
+            txt_previous += 'Metric: ' + str(self.master.plan_frame.previous_results['metric']) + '\n'
+            txt_previous += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.previous_results['time_planning'])
+        self.master.plan_frame.printPrevious(txt_previous)
             
         # Show last results
         if self.master.plan_frame.last_results['result']=='failed':
-            self.master.plan_frame.printMain('Failed to plan: '+self.master.plan_frame.last_results['fail_reason'])
+            txt_main = 'Failed to plan: '+self.master.plan_frame.last_results['fail_reason']
         else:
-            txt = ''
-            txt += 'Plan-Length: ' + str(self.master.plan_frame.last_results['planlength']) + '\n'
-            txt += 'Metric: ' + str(self.master.plan_frame.last_results['metric']) + '\n'
-            txt += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.last_results['time_planning']) + '\n'
-            txt += 'Found Plan:\n' + self.master.plan_frame.last_results['plan']
-            self.master.plan_frame.printMain(txt)
+            txt_main = ''
+            txt_main += 'Plan-Length: ' + str(self.master.plan_frame.last_results['planlength']) + '\n'
+            txt_main += 'Metric: ' + str(self.master.plan_frame.last_results['metric']) + '\n'
+            txt_main += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.last_results['time_planning']) + '\n'
+            txt_main += 'Found Plan:\n' + self.master.plan_frame.last_results['plan']
+        self.master.plan_frame.printMain(txt_main)
+        mprint(txt_main, logonly=True)
         
-        agentic_constraint.g_plan = txt
+        agentic_constraint.g_plan = txt_main
         self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):
