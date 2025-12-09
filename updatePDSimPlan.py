@@ -9,6 +9,9 @@
 PDSIM_INSTANCE_PATH = '/home/nicole/research/PDSim_Scenes_zenotravel/Assets/Scenes/ZenoR/Data/PdSimInstance.asset'
 # PDSIM_INSTANCE_PATH = "/home/afavier/my_pdsim/PDSim/Assets/Scenes/Rover3/Data/PdSimInstance.asset"
 
+from defs import *
+
+
 def createActionStr(name, *parameters):
     
     paramstr = ""
@@ -49,8 +52,13 @@ def convertPlanIntoActionTuples(plan):
 def main(plan):
     # Takes as input directly a list of actions, without any additional text
     
-    with open(PDSIM_INSTANCE_PATH, 'r') as f:
-        pdFileStr = f.read()
+    try:
+        with open(PDSIM_INSTANCE_PATH, 'r') as f:
+            pdFileStr = f.read()
+    except Exception as e:
+        mprint("WARNING: Can't open PDSim file to update simulation plan, check log. [Skipped]")
+        mprint('-> ' + str(e), logonly=True)
+        return None
         
     w = "plan:\n"
     i_plan = pdFileStr.find(w) + len(w)
