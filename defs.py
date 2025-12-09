@@ -89,16 +89,17 @@ SHELL_PRINTS = False
 GUI_PROMPT = True
 
 myprint = lambda x: None
-def mprint(txt, end="\n"):
+def mprint(txt, end="\n", logonly=False):
     if SHELL_PRINTS:
         print(txt, end=end)
     if GUI_PROMPT:
         logger.info(txt)
-        myprint(txt, end=end)
+        if not logonly:
+            myprint(txt, end=end)
 def setPrintFunction(print_function):
     global myprint
     myprint = print_function
-    
+
 myreplaceprint = lambda x: None
 def mrprint(txt, end='\n'):
     if SHELL_PRINTS:
