@@ -1,10 +1,9 @@
-import CAI
-import GUI_agentic
-from defs import *
+from CAI_pkg import CAI
+from CAI_pkg import GUI_agentic
+from CAI_pkg.defs import *
+from CAI_pkg.ablation import AblationSetting
 import click
-import sys
 import faulthandler
-from ablation import AblationSetting
 
 #########################################################################################################
 
@@ -20,11 +19,11 @@ def main(problem_name, planning_mode, timeout):
     faulthandler.enable()
         
     # FOR ABLATION 
-    # AblationSetting.apply(AblationSetting.DIRECT)
+    AblationSetting.apply(AblationSetting.REGULAR)
     
     # Logging
     setupLogger()
-    
+
     # Init CAI 
     CAI.init(problem_name, planning_mode, timeout)
     # CAI.CM.load('validated.json)

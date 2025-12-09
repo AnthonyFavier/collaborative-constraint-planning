@@ -3,7 +3,7 @@ import os
 import signal
 import subprocess
 import click
-from defs import *
+from CAI_pkg.defs import *
 
 def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=None):
     """

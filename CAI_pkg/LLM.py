@@ -1,6 +1,14 @@
+"""
+Module managing LLM calls directly with Anthropic and OpenAI.
+Now DEPRECATED as everything is handled through langgraph in another module.
+Only exception is the suggestion() function, not thouroughly tested.
+But explaning why this module is still here.
+Eventually, should be integrated in the langgraph scheme.
+"""
+
 import time
-from defs import *
-import tools
+from CAI_pkg.defs import *
+import CAI_pkg.tools as tools
 import os                                                                                                                                                                                                          
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path

@@ -2,17 +2,17 @@ from datetime import datetime
 import customtkinter
 from customtkinter import filedialog
 from tkinter import Menu
-from defs import *
-import CAI
+from CAI_pkg.defs import *
+from CAI_pkg import CAI
 from PIL import Image, ImageTk
-from updatePDSimPlan import main as updatePDSimPlan
+from CAI_pkg.updatePDSimPlan import main as updatePDSimPlan
 import time
 import threading
 import pyperclip
 import ctypes
 import json
 import jsonpickle
-import agentic_constraint
+import CAI_pkg.agentic_constraint as agentic_constraint
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -418,13 +418,6 @@ class ButtonsFrame(customtkinter.CTkFrame):
         else:
             mprint("\nUser: " + c )
             t_input = time.time() - t_input
-            # try:
-            #     constraint = CAI.createConstraint(c, t_input)
-            #     CAI.decompose(constraint)
-            #     self.deactivateE2NLButton()
-            #     CAI.encode(constraint)
-            #     constraint.time_total += time.time() - time_total
-            #     CAI.CM.dump(CAI.g_problem_name)
 
             try: # Agentic:
                 encodings = agentic_constraint.TranslateUserInput(c)
@@ -547,7 +540,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.plan_frame.printMain(txt_main)
         mprint(txt_main, logonly=True)
         
-        agentic_constraint.g_plan = txt_main
+        CAI.g_plan = txt_main
         self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):

@@ -1,4 +1,4 @@
-from defs import *
+from CAI_pkg.defs import *
 from datetime import datetime
 import jsonpickle
 

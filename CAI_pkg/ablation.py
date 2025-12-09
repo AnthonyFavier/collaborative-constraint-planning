@@ -1,5 +1,5 @@
 from enum import auto, Enum
-import CAI
+from CAI_pkg import CAI
 
 class AblationSetting(Enum):
     """
@@ -19,6 +19,7 @@ class AblationSetting(Enum):
     DECOMP =            (False,       True,             True,           False)
     DECOMP_CONFIRM =    (False,       True,             True,           True)
     DECOMP_E2NL =       (True,        True,             True,           True)
+    REGULAR =           (True,        True,             True,           True)
     
     def apply(setting):
         CAI.WITH_E2NL, CAI.WITH_VERIFIER, CAI.WITH_DECOMP, CAI.WITH_DECOMP_CONFIRM = setting.value
