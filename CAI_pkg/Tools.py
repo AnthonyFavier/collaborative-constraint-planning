@@ -100,34 +100,3 @@ def parse_pddl3_str(domain, updatedProblem):
     quantitative_constrants = parser_extensions.constraints
     return ntcore_parsing_ext.PDDL3QuantitativeProblem(problem, quantitative_constrants)
 
-def checkTag(tag, txt):
-    opening_tag = txt.find(f'<{tag}>')!=-1
-    closing_tag = txt.find(f'</{tag}>')!=-1
-    
-    if not opening_tag and not closing_tag:
-        return 'missing_both'
-    elif not opening_tag:
-        return 'missing_opening'
-    elif not closing_tag:
-        return 'missing_closing'
-    else:
-        return 'ok'
-
-def extractTag(tag, txt):
-    i_1 = txt.find(f"<{tag}>")
-    if i_1==-1:
-        raise Exception(f"Can't find tag <{tag}>")
-    
-    i_2 = txt.find(f"</{tag}>")
-    if i_2==-1:
-        raise Exception(f"Can't find closing tag </{tag}>")
-    
-    txt = txt[ i_1 + len(f"<{tag}>") : i_2 ]
-    
-    if txt[0]=='\n':
-        txt = txt[1:]
-    if txt[-1]=='\n':
-        txt = txt[:-1]
-    
-    return txt
-

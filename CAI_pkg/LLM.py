@@ -6,8 +6,8 @@ But explaning why this module is still here.
 Eventually, should be integrated in the langgraph scheme.
 """
 
-from .Globals import mprint
-from . import Tools
+from .Helpers import mprint
+from . import Helpers 
 
 import time
 import os                                                                                                                                                                                                          
@@ -224,7 +224,7 @@ def setSystemMessage(domain, problem):
         }]
 
 def checkTagUpdateConv(answer, tag, conv):
-    check = Tools.checkTag(tag, answer)
+    check = Helpers.checkTag(tag, answer)
     if 'ok'==check:
         return True
     else:
@@ -269,7 +269,7 @@ def suggestions():
             
         tagsOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
 
-    suggestions = Tools.extractTag(tag, assistant_replies[-1])
+    suggestions = Helpers.extractTag(tag, assistant_replies[-1])
     return suggestions
 
 # DECOMPOSE
@@ -329,9 +329,9 @@ The user will give as input a constraint in natural language. This constraint mu
         tags2OK = checkTagUpdateConv(assistant_replies[-1], tag2, conv)
         
     # Remove format 
-    constraints = Tools.extractTag(tag1, assistant_replies[-1])
+    constraints = Helpers.extractTag(tag1, assistant_replies[-1])
     constraints = removeFormating(constraints)
-    explanation = Tools.extractTag(tag2, assistant_replies[-1])
+    explanation = Helpers.extractTag(tag2, assistant_replies[-1])
     return constraints, explanation
 def redecompose(feedback, conv):
     conv.add_turn_user(feedback)
@@ -351,9 +351,9 @@ def redecompose(feedback, conv):
         tags2OK = checkTagUpdateConv(assistant_replies[-1], tag2, conv)
     
     # Remove format 
-    constraints = Tools.extractTag(tag1, assistant_replies[-1])
+    constraints = Helpers.extractTag(tag1, assistant_replies[-1])
     constraints = removeFormating(constraints)
-    explanation = Tools.extractTag(tag2, assistant_replies[-1])
+    explanation = Helpers.extractTag(tag2, assistant_replies[-1])
     return constraints, explanation
 
 # MODICIFICATION
@@ -410,7 +410,7 @@ The user will give as input a natural language constraint that must be translate
             
         tagOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
         
-    encoding = Tools.extractTag(tag, assistant_replies[-1])
+    encoding = Helpers.extractTag(tag, assistant_replies[-1])
     return encoding
 
 def reencodePrefs(feedback, conv):
@@ -427,7 +427,7 @@ def reencodePrefs(feedback, conv):
         
         tagOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
             
-    encoding = Tools.extractTag(tag, assistant_replies[-1])
+    encoding = Helpers.extractTag(tag, assistant_replies[-1])
     return encoding
 
 # E2NL
@@ -474,7 +474,7 @@ The user will give as input PDDL3.0 constraints that must be translated in natur
             
         tagOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
     
-    e2nl = Tools.extractTag(tag, assistant_replies[-1])
+    e2nl = Helpers.extractTag(tag, assistant_replies[-1])
     e2nl = e2nl.replace('\n', '')
     return e2nl
 
@@ -520,7 +520,7 @@ The problem being addressed is described by the PDDL domain and problem given ab
             
         tagOK = checkTagUpdateConv(assistant_replies[-1], tag, conv)
         
-    suggestions = Tools.extractTag(tag, assistant_replies[-1])
+    suggestions = Helpers.extractTag(tag, assistant_replies[-1])
     return suggestions
 
 # MAIN

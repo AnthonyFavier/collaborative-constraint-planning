@@ -12,7 +12,7 @@ from .Planner import planner
 from .. import LLM
 from .. import Tools
 from .. import Globals as G
-from ..Globals import mprint, startTimer, stopTimer
+from ..Helpers import mprint, startTimer, stopTimer
 from ..Verifier import Verifier
 
 ## ADD CONSTRAINT ##

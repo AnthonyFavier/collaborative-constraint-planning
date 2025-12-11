@@ -3,7 +3,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 from . import Globals as G
-from .Globals import mprint, minput
+from .Helpers import mprint, minput
+from . import Helpers
 
 #######################
 #### LOAD API KEYS ####
@@ -964,7 +965,7 @@ def Encode(state: EncodingState):
     msg = call(llm, state['e_messages'])
     answer = extractAITextAnswer(msg)
     try:
-        encoding = Tools.extractTag('pddl', answer)
+        encoding = Helpers.extractTag('pddl', answer)
         encoding = Tools.initialFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
@@ -1694,7 +1695,7 @@ def draw_graph():
 #############
 #### RUN ####
 #############
-def setup_agentic():
+def init_agentic():
     """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
     global retriever
     global translation_subgraph, encoding_subgraph, failure_detection_subgraph, chat_subgraph, new_risk_subgraph, main_graph
@@ -1802,7 +1803,7 @@ if __name__=='__main__':
     SHELL_PRINTS = True
     GUI_PROMPT = False
     DRAW_GRAPH = True
-    setup_agentic()
+    init_agentic()
     # retriever = set_up_rag()
     # translation_subgraph = build_translation_subgraph()
     # encoding_subgraph = build_encoding_subgraph()

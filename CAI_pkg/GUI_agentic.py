@@ -1,5 +1,6 @@
 from . import Globals as G
-from .Globals import mprint, minput
+from .Helpers import mprint, minput
+from . import Helpers
 from .ConstraintPlanning import CAI
 from .UpdatePDSimPlan import main as updatePDSimPlan
 from . import Agentic_constraint
@@ -1224,11 +1225,11 @@ class App(customtkinter.CTk):
         
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
-        G.setPrintFunction(self.display_frame.prompt)
-        G.setInputFunction(self.display_frame.getFromEntry)
-        G.setReplacePrintFunction(self.display_frame.replace_last_line)
-        G.setStartTimer(self.display_frame.startTimer)
-        G.setStopTimer(self.display_frame.stopTimer)
+        Helpers.setPrintFunction(self.display_frame.prompt)
+        Helpers.setInputFunction(self.display_frame.getFromEntry)
+        Helpers.setReplacePrintFunction(self.display_frame.replace_last_line)
+        Helpers.setStartTimer(self.display_frame.startTimer)
+        Helpers.setStopTimer(self.display_frame.stopTimer)
 
         if UpdatePDSimPlan.PDSIM_instance_found:
             mprint('Found PDSim instance.\n')

@@ -1,4 +1,4 @@
-from ..Globals import mprint
+from ..Helpers import mprint
 
 from datetime import datetime
 import jsonpickle

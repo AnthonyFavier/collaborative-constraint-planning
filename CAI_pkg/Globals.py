@@ -1,35 +1,11 @@
 import logging
-from datetime import datetime
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
 from pathlib import Path
 from enum import Enum
 
-
-# ABLATION_FLAGS #
-WITH_E2NL = True
-WITH_VERIFIER = True # Not used..
-WITH_DECOMP = True # Not used..
-WITH_DECOMP_CONFIRM = True # Not used..
-SETTING_NAME = 'DEFAULT' # Not used..
-
-# Problem related, constants after init
-PROBLEM_NAME = None
-DOMAIN_PDDL = None # PDDL domain content
-PROBLEM_PDDL = None # PDDL problem content
-DOMAIN_PATH = None
-PROBLEM_PATH = None
-
-# Settings
-planning_mode = None
-timeout = None
-
-# Changing 
-current_plan = None
-suggestions = None
-CM  = None
-verifier = None
+#########################################################################################################
+# PDDL Problems
 
 class PDDLProblems:
     def __init__(self):
@@ -120,6 +96,37 @@ class PDDLProblems:
         return self.known_problems_str
 PROBLEMS = PDDLProblems()
 
+#########################################################################################################
+# Global variables
+
+# Problem related, constants after init
+PROBLEM_NAME = None
+DOMAIN_PDDL = None # PDDL domain content
+PROBLEM_PDDL = None # PDDL problem content
+DOMAIN_PATH = None
+PROBLEM_PATH = None
+
+# Settings
+planning_mode = None
+timeout = None
+
+# Changing 
+current_plan = None
+suggestions = None
+
+# TODO: To remove
+CM  = None
+verifier = None
+
+SHELL_PRINTS = False
+GUI_PROMPT = True
+
+# ABLATION_FLAGS #
+WITH_E2NL = True
+WITH_VERIFIER = True # Not used..
+WITH_DECOMP = True # Not used..
+WITH_DECOMP_CONFIRM = True # Not used..
+SETTING_NAME = 'DEFAULT' # Not used..
 class AblationSetting(Enum):
     """
     [S1] Direct LLM translation                : WITH_E2NL=False,   WITH_VERIFIER=False,    WITH_DECOMP=False,    WITH_DECOMP_CONFIRM=False, 
@@ -144,6 +151,9 @@ def applyAblation(setting):
     global WITH_E2NL, WITH_VERIFIER, WITH_DECOMP, WITH_DECOMP_CONFIRM, SETTING_NAME
     WITH_E2NL, WITH_VERIFIER, WITH_DECOMP, WITH_DECOMP_CONFIRM = setting.value
     SETTING_NAME = setting.name
+
+#########################################################################################################
+# Constants
 
 class color:
    PURPLE = '\033[95m'
@@ -180,80 +190,7 @@ class NtcoreStrategy:
     DELTA = 'delta'
     
     
-def startWith(s1, s2):
-    return s1[:len(s2)]==s2
+ 
+
+
     
-SHELL_PRINTS = False
-GUI_PROMPT = True
-
-myprint = lambda x: None
-def mprint(txt, end="\n", logonly=False):
-    if SHELL_PRINTS:
-        print(txt, end=end)
-    if GUI_PROMPT:
-        logger.info(txt)
-        if not logonly:
-            myprint(txt, end=end)
-def setPrintFunction(print_function):
-    global myprint
-    myprint = print_function
-
-myreplaceprint = lambda x: None
-def mrprint(txt, end='\n'):
-    if SHELL_PRINTS:
-        print('\r' + txt, end)
-    if GUI_PROMPT:
-        myreplaceprint(txt, end=end)
-def setReplacePrintFunction(replace_print_function):
-    global myreplaceprint
-    myreplaceprint = replace_print_function
-    
-myinput = lambda x: None
-def minput(txt=""):
-    if GUI_PROMPT:
-        logger.info(txt)
-        return myinput(txt=txt)
-    elif SHELL_PRINTS:
-        return input(txt)
-def setInputFunction(input_function):
-    global myinput
-    myinput = input_function
-
-mstartTimer = None
-def setStartTimer(f):
-    global mstartTimer
-    mstartTimer = f
-def startTimer():
-    mstartTimer()
-
-mstopTimer = None
-def setStopTimer(f):
-    global mstopTimer
-    mstopTimer = f
-def stopTimer():
-    mstopTimer()
-
-class ModuleFilter(logging.Filter):
-    def __init__(self, allowed_modules):
-        super().__init__()
-        self.allowed = allowed_modules
-
-    def filter(self, record):
-        return record.name in self.allowed
-    
-def setupLogger():
-    # log filename
-    date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-    filename = f'tmp/logs/log__{date}.log' 
-    
-    # Only log agentic_constraint, tools and defs modules
-    allowed_modules = ["agentic_constraint", "tools", "defs"]
-    handler = logging.FileHandler(filename, encoding='utf-8')
-    handler.setLevel(logging.INFO)
-    handler.addFilter(ModuleFilter(allowed_modules))
-
-    # Remove other handlers if present
-    root_logger = logging.getLogger()
-    root_logger.handlers = []
-    root_logger.addHandler(handler)
-    root_logger.setLevel(logging.INFO)
