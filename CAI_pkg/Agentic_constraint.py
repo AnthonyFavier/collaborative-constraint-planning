@@ -5,6 +5,7 @@ logger.setLevel(logging.INFO)
 from . import Globals as G
 from .Helpers import mprint, minput
 from . import Helpers
+from .ConstraintPlanning.PDDLHandler import verifier
 
 #######################
 #### LOAD API KEYS ####
@@ -17,10 +18,6 @@ load_dotenv(find_dotenv())
 ####################
 #### PDDL FILES ####
 ####################
-from . import Tools
-
-from pathlib import Path
-import os
 import time
 
 import threading
@@ -966,7 +963,7 @@ def Encode(state: EncodingState):
     answer = extractAITextAnswer(msg)
     try:
         encoding = Helpers.extractTag('pddl', answer)
-        encoding = Tools.initialFixes(encoding)
+        encoding = verifier.initialEncodingFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
     
@@ -984,8 +981,7 @@ def Verifier(state: EncodingState):
         logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
-    updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, [encoding])
-    result = G.verifier.checkEncoding(updatedProblem, G.DOMAIN_PDDL, encoding)
+    result = verifier.checkEncoding(encoding)
     
     encodingOK = result=='OK'
     

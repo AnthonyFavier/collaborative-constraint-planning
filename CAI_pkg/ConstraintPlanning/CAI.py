@@ -10,10 +10,9 @@ from NumericTCORE.bin.ntcore import main as ntcore
 from .Constraints import ConstraintManager
 from .Planner import planner
 from .. import LLM
-from .. import Tools
+from . import PDDLHandler
 from .. import Globals as G
 from ..Helpers import mprint, startTimer, stopTimer
-from ..Verifier import Verifier
 
 ## ADD CONSTRAINT ##
 def createConstraint(nl_constraint, input_time=0):
@@ -43,7 +42,7 @@ def planWithConstraints():
     else:
         problem_name = G.PlanFiles.COMPILED
         
-        updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, activated_encodings)
+        updatedProblem = PDDLHandler.getProblemWithConstraints(activated_encodings)
         
         # Save updated problem in a file
         with open(G.UPDATED_PROBLEM_PATH, "w") as f:
@@ -139,7 +138,7 @@ def init(problem_name, planning_mode, timeout):
     
     # Try parsing the initial problem
     try:
-        parsed = Tools.parse_pddl3(G.DOMAIN_PATH, G.PROBLEM_PATH)
+        parsed = PDDLHandler.parse_pddl3(G.DOMAIN_PATH, G.PROBLEM_PATH)
     except Exception as e:
         print("ERROR", e)
         raise Exception(f"Unable to parse the initial problem.")
@@ -149,7 +148,7 @@ def init(problem_name, planning_mode, timeout):
         raise Exception(f"There are already constraints in the initial problem.\n{parsed.problem.trajectory_constraints}")
 
     # Create Verifier
-    G.verifier = Verifier(parsed.problem)
+    PDDLHandler.init_verifier(parsed.problem)
     
     # Open initial problem
     with open(G.DOMAIN_PATH, "r") as f:
@@ -167,7 +166,7 @@ def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
     activated_encodings = [c.encoding for k,c in G.CM.decomposed_constraints.items() if c.isActivated()]
     encodingsStr = "\n".join(activated_encodings)
-    updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, activated_encodings)
+    updatedProblem = PDDLHandler.getProblemWithConstraints(G.PROBLEM_PDDL, activated_encodings)
     with open(G.UPDATED_PROBLEM_PATH, "w") as f:
         f.write(updatedProblem)
     reader = PDDLReader()
