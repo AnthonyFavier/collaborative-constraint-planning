@@ -1,10 +1,13 @@
+from datetime import datetime
+import click
+import faulthandler
+
 from CAI_pkg.Globals import *
 from CAI_pkg import GUI_agentic
 from CAI_pkg.ConstraintPlanning import CAI
-from CAI_pkg.Agentic_constraint import setup_agentic
+from CAI_pkg.Agentic_constraint import init_agentic
+from CAI_pkg.Logger import init_logger
 
-import click
-import faulthandler
 
 #########################################################################################################
 
@@ -18,24 +21,22 @@ import faulthandler
 @click.option('-t', '--timeout', 'timeout', default=15.0, help="Timeout for planning")
 def main(problem_name, planning_mode, timeout):
     faulthandler.enable()
-        
-    # FOR ABLATION 
-    applyAblation(AblationSetting.REGULAR)
-    
-    # Logging
-    setupLogger()
 
-    # Init CAI 
+    init_logger([
+        'agentic_constraint',
+        'tools',
+        'defs',
+    ])
+
+    applyAblation(AblationSetting.REGULAR)
+
     CAI.init(problem_name, planning_mode, timeout)
     # CAI.load_constraints('validated.json')
     
-    # Init agentic 
-    setup_agentic()
+    init_agentic()
 
-    # Create main GUI app
     app = GUI_agentic.App()
     
-    # Show settings
     CAI.showSettings()
     
     app.mainloop()
