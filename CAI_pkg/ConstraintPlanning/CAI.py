@@ -7,7 +7,7 @@ import click
 
 from NumericTCORE.bin.ntcore import main as ntcore
 
-from . import Constraints
+from .Constraints import ConstraintManager
 from .Planner import planner
 from .. import LLM
 from .. import Tools
@@ -132,7 +132,7 @@ def init(problem_name, planning_mode, timeout):
             print('WARNING: Timeout disabled with Anytime planning mode!')
     timeout_str = f', TO={G.timeout}' if G.timeout is not None else ''
     
-    G.CM = Constraints.ConstraintManager(G.PROBLEM_NAME)
+    G.CM = ConstraintManager(G.PROBLEM_NAME)
     
     # Show selected problem
     print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {G.DOMAIN_PATH}\n\t- {G.PROBLEM_PATH}")
