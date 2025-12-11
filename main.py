@@ -27,7 +27,7 @@ def main(problem_name, planning_mode, timeout):
 
     # Init CAI 
     CAI.init(problem_name, planning_mode, timeout)
-    # CAI.CM.load('validated.json)
+    # CAI.load_constraints('validated.json')
     
     # Init agentic 
     setup_agentic()

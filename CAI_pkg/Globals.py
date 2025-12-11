@@ -114,9 +114,6 @@ timeout = None
 current_plan = None
 suggestions = None
 
-# TODO: To remove
-CM  = None
-
 SHELL_PRINTS = False
 GUI_PROMPT = True
 

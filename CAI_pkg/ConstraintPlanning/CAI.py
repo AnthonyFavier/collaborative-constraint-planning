@@ -14,11 +14,16 @@ from . import PDDLHandler
 from .. import Globals as G
 from ..Helpers import mprint, startTimer, stopTimer
 
+constraint_manager = None
+
 ## ADD CONSTRAINT ##
 def createConstraint(nl_constraint, input_time=0):
-    r = G.CM.createRaw(nl_constraint)
+    r = constraint_manager.createRaw(nl_constraint)
     r.time_input += input_time
     return r
+
+def load_constraints(filename):
+    constraint_manager.load(filename)
 
 ## PLAN ##
 def planWithConstraints():
@@ -31,7 +36,7 @@ def planWithConstraints():
     
     # Get activated constraints
     activated_encodings = []
-    for k,c in G.CM.decomposed_constraints.items():
+    for k,c in constraint_manager.decomposed_constraints.items():
         if c.isActivated():
             activated_encodings.append(c.encoding)
         
@@ -131,7 +136,8 @@ def init(problem_name, planning_mode, timeout):
             print('WARNING: Timeout disabled with Anytime planning mode!')
     timeout_str = f', TO={G.timeout}' if G.timeout is not None else ''
     
-    G.CM = ConstraintManager(G.PROBLEM_NAME)
+    global constraint_manager
+    constraint_manager = ConstraintManager(G.PROBLEM_NAME)
     
     # Show selected problem
     print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {G.DOMAIN_PATH}\n\t- {G.PROBLEM_PATH}")
@@ -164,7 +170,7 @@ def init(problem_name, planning_mode, timeout):
 from unified_planning.io import PDDLReader
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
-    activated_encodings = [c.encoding for k,c in G.CM.decomposed_constraints.items() if c.isActivated()]
+    activated_encodings = [c.encoding for k,c in constraint_manager.decomposed_constraints.items() if c.isActivated()]
     encodingsStr = "\n".join(activated_encodings)
     updatedProblem = PDDLHandler.getProblemWithConstraints(G.PROBLEM_PDDL, activated_encodings)
     with open(G.UPDATED_PROBLEM_PATH, "w") as f:

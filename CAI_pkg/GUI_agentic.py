@@ -70,13 +70,13 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         
         i_self_row = 0
         
-        if G.CM.constraints == {}:
+        if CAI.constraint_manager.constraints == {}:
             label = customtkinter.CTkLabel(self, text="No constraints", font = App.font)
             label.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
             i_self_row += 1
         else:
-            # for k,r in G.CM.raw_constraints.items():
-            for i,(id,r) in enumerate(G.CM.raw_constraints.items()):
+            # for k,r in CAI.constraint_manager.raw_constraints.items():
+            for i,(id,r) in enumerate(CAI.constraint_manager.raw_constraints.items()):
                 
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
                 frame.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
@@ -180,7 +180,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             
         for symbol in self.constraint_labels:
             l = self.constraint_labels[symbol]
-            c = G.CM.constraints[symbol]
+            c = CAI.constraint_manager.constraints[symbol]
             if c.isActivated():
                 l.configure(text=activated_str + l.cget("text"))
             else:
@@ -203,8 +203,8 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                 checked = self.checkboxes[symbol].get()==1
         
         # If raw
-        if checkbox in G.CM.raw_constraints:
-            for child in G.CM.raw_constraints[checkbox].children:
+        if checkbox in CAI.constraint_manager.raw_constraints:
+            for child in CAI.constraint_manager.raw_constraints[checkbox].children:
                 if checked:
                     # Then check all children 
                     self.checkboxes[child.symbol].select()
@@ -213,8 +213,8 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                     self.checkboxes[child.symbol].deselect()
                 
         # If decomposed
-        elif checkbox in G.CM.decomposed_constraints:
-            parent = G.CM.constraints[checkbox].parent
+        elif checkbox in CAI.constraint_manager.decomposed_constraints:
+            parent = CAI.constraint_manager.constraints[checkbox].parent
             
             if checked:
                 # If all decomposed of associated raw are checked then check raw
@@ -247,7 +247,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             cb.grid_remove()
     def selectActivatedCheckboxes(self):
         for symbol,cb in self.checkboxes.items():
-            if G.CM.constraints[symbol].isActivated():
+            if CAI.constraint_manager.constraints[symbol].isActivated():
                 cb.select()
             else:
                 cb.deselect()
@@ -429,11 +429,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 constraint.time_total += time.time() - time_total
                 activated_encodings = []
                 for e in encodings:
-                    child_constraint = G.CM.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
+                    child_constraint = CAI.constraint_manager.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
                     child_constraint.encoding = e.encoding.encoding
                     activated_encodings.append(e.encoding.encoding)
 
-                G.CM.dump(G.PROBLEM_NAME)
+                CAI.constraint_manager.dump(G.PROBLEM_NAME)
                 
             except Exception as err:
                 if err.args[0]=='abort':
@@ -472,7 +472,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
         if selection!=[]:
             # Delete selected constraints
-            G.CM.deleteConstraints(selection)
+            CAI.constraint_manager.deleteConstraints(selection)
             self.master.constraints_frame.updateFrame()
         
         # self.hideConfirmButton()
@@ -490,9 +490,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def activateConfirm(self):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
-                G.CM.constraints[k].activate()
+                CAI.constraint_manager.constraints[k].activate()
             else:
-                G.CM.constraints[k].deactivate()
+                CAI.constraint_manager.constraints[k].deactivate()
                 
         self.master.display_frame.deactivateConfirm()
         self.master.enableAllButtons()
@@ -890,7 +890,7 @@ class PlanFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
         if isinstance(filename, str) and filename!='':
-            G.CM.load(filename)
+            CAI.constraint_manager.load(filename)
             self.master.constraints_frame.updateFrame()
         self.master.enableAllButtons()
     
@@ -929,7 +929,7 @@ class PlanFrame(customtkinter.CTkFrame):
             'encoding_validation_time': 0,
             'e2nl_reencoding_time': 0,
         }
-        for idr,r in G.CM.raw_constraints.items():
+        for idr,r in CAI.constraint_manager.raw_constraints.items():
             if r.isActivated() or r.isPartiallyActivated():
                 data['detailed_translation_times']['total_time'] += r.time_total
                 data['detailed_translation_times']['input_time'] += r.time_input
@@ -1000,7 +1000,7 @@ class PlanFrame(customtkinter.CTkFrame):
         can_parse = 1 if result else 0
         nb_h_interventions = -1
         comments = ""
-        for k, d in G.CM.decomposed_constraints.items(): 
+        for k, d in CAI.constraint_manager.decomposed_constraints.items(): 
             for t in d.encoding_conv.turns:
                 if t['role']=='user':
                     nb_h_interventions+=1
@@ -1167,7 +1167,7 @@ class App(customtkinter.CTk):
         
         constraintsmenu = Menu(menubar, tearoff=0)
         constraintsmenu.add_command(label="Load Constraints", command=self.plan_frame.loadConstraints)
-        constraintsmenu.add_command(label="Dump Constraints", command=lambda: G.CM.dump(G.PROBLEM_NAME))
+        constraintsmenu.add_command(label="Dump Constraints", command=lambda: CAI.constraint_manager.dump(G.PROBLEM_NAME))
         constraintsmenu.add_separator()
         constraintsmenu.add_command(label="Delete", command=self.buttons_frame.delete)
         constraintsmenu.add_command(label="Activate/Deactivate", command=self.buttons_frame.activate)
