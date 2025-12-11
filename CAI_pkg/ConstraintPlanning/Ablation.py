@@ -1,5 +1,6 @@
 from enum import auto, Enum
-from CAI_pkg import CAI
+
+from . import CAI
 
 class AblationSetting(Enum):
     """

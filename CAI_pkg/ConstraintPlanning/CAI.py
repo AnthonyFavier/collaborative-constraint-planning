@@ -1,12 +1,14 @@
-from CAI_pkg import LLM
-from CAI_pkg import tools
-from CAI_pkg.Verifier import Verifier
-from CAI_pkg.planner import planner
-from CAI_pkg.defs import *
-from CAI_pkg import Constraints
-from CAI_pkg.agentic_constraint import setup_agentic
-import time
+from . import Constraints
+from .Planner import planner
+from .. import LLM
+from .. import Tools
+from ..Verifier import Verifier
+from ..defs import *
+from ..Agentic_constraint import setup_agentic
+
 from NumericTCORE.bin.ntcore import main as ntcore
+
+import time
 import click
         
 # ABLATION_FLAGS #
@@ -52,7 +54,7 @@ def planWithConstraints():
     else:
         problem_name = PlanFiles.COMPILED
         
-        updatedProblem = tools.updateProblem(g_problem, activated_encodings)
+        updatedProblem = Tools.updateProblem(g_problem, activated_encodings)
         
         # Save updated problem in a file
         with open(UPDATED_PROBLEM_PATH, "w") as f:
@@ -159,7 +161,7 @@ def init(problem_name, planning_mode, timeout):
     
     # Try parsing the initial problem
     try:
-        parsed = tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+        parsed = Tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
     except Exception as e:
         print("ERROR", e)
         raise Exception(f"Unable to parse the initial problem.")
@@ -189,7 +191,7 @@ def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
     activated_encodings = [c.encoding for k,c in CM.decomposed_constraints.items() if c.isActivated()]
     encodingsStr = "\n".join(activated_encodings)
-    updatedProblem = tools.updateProblem(g_problem, activated_encodings)
+    updatedProblem = Tools.updateProblem(g_problem, activated_encodings)
     with open(UPDATED_PROBLEM_PATH, "w") as f:
         f.write(updatedProblem)
     reader = PDDLReader()

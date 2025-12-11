@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-from CAI_pkg import tools
+from . import Tools
 
 from numeric_tcore.parsing_extensions import PDDL3QuantitativeProblem
 
@@ -114,7 +114,7 @@ class Verifier:
                 
         # Parsing test #
         try:
-            tools.parse_pddl3_str(domain, updatedProblem)
+            Tools.parse_pddl3_str(domain, updatedProblem)
         except Exception as err:
             return "There is a syntax error."
         

@@ -1,7 +1,8 @@
-from CAI_pkg import CAI
 from CAI_pkg import GUI_agentic
 from CAI_pkg.defs import *
-from CAI_pkg.ablation import AblationSetting
+from CAI_pkg.ConstraintPlanning import CAI
+from CAI_pkg.ConstraintPlanning.Ablation import AblationSetting
+
 import click
 import faulthandler
 

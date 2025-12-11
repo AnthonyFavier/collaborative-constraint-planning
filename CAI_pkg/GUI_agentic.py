@@ -1,19 +1,21 @@
+from .defs import *
+from .ConstraintPlanning import CAI
+from .UpdatePDSimPlan import main as updatePDSimPlan
+from . import Agentic_constraint
+from . import UpdatePDSimPlan
+
 from datetime import datetime
 import customtkinter
 from customtkinter import filedialog
 from tkinter import Menu
-from CAI_pkg.defs import *
-from CAI_pkg import CAI
 from PIL import Image, ImageTk
-from CAI_pkg.updatePDSimPlan import main as updatePDSimPlan
-import CAI_pkg.updatePDSimPlan
 import time
 import threading
 import pyperclip
 import ctypes
 import json
 import jsonpickle
-import CAI_pkg.agentic_constraint as agentic_constraint
+
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -410,7 +412,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         time_total = time.time()
         
         t_input = time.time()
-        mprint(agentic_constraint.chat_separator)
+        mprint(Agentic_constraint.chat_separator)
         c = minput(txt="Enter your constraint: ")
         
         if c in ['', 'abort']:
@@ -421,7 +423,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             t_input = time.time() - t_input
 
             try: # Agentic:
-                encodings = agentic_constraint.TranslateUserInput(c)
+                encodings = Agentic_constraint.TranslateUserInput(c)
                 constraint = CAI.createConstraint(c, t_input)
                 constraint.time_total += time.time() - time_total
                 activated_encodings = []
@@ -612,11 +614,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
         
     def toggleReviewE2NL(self):
-        agentic_constraint.REVIEW_E2NL = not agentic_constraint.REVIEW_E2NL
+        Agentic_constraint.REVIEW_E2NL = not Agentic_constraint.REVIEW_E2NL
     def activateReviewE2NL(self):
-        agentic_constraint.REVIEW_E2NL = True
+        Agentic_constraint.REVIEW_E2NL = True
     def deactivateReviewE2NL(self):
-        agentic_constraint.REVIEW_E2NL = False
+        Agentic_constraint.REVIEW_E2NL = False
         
     def toggleDecomps(self):
         self.master.constraints_frame.toggleDecomps()
@@ -711,7 +713,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         
         mprint("\n=== CHAT ===")
-        agentic_constraint.Chat()
+        Agentic_constraint.Chat()
         
         self.master.enableAllButtons()
         mprint("\n=== END CHAT ===")
@@ -723,7 +725,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         mprint("\n=== RISK ANALYSIS ===")
         # answer, suggestions = agentic_constraint.RiskAnalysis()
-        agentic_constraint.NewRisk()
+        Agentic_constraint.NewRisk()
         # mprint(agentic_constraint.chat_separator)
         # mprint('AI: final answer\n')
         # mprint('RISKS IDENTIFIED:\n'+answer)
@@ -1204,8 +1206,8 @@ class App(customtkinter.CTk):
         menubar.add_cascade(label="Planning", menu=planmenu)
         
         weathermenu = Menu(menubar, tearoff=0)
-        weathermenu.add_command(label="Activate fake Boston weather", command=agentic_constraint.activateFakeWeather)
-        weathermenu.add_command(label="Deactivate fake Boston weather", command=agentic_constraint.deactivateFakeWeather)
+        weathermenu.add_command(label="Activate fake Boston weather", command=Agentic_constraint.activateFakeWeather)
+        weathermenu.add_command(label="Deactivate fake Boston weather", command=Agentic_constraint.deactivateFakeWeather)
         menubar.add_cascade(label="Weather", menu=weathermenu)
         
         helpmenu = Menu(menubar, tearoff=0)
@@ -1228,11 +1230,11 @@ class App(customtkinter.CTk):
         setStartTimer(self.display_frame.startTimer)
         setStopTimer(self.display_frame.stopTimer)
 
-        if CAI_pkg.updatePDSimPlan.PDSIM_instance_found:
+        if UpdatePDSimPlan.PDSIM_instance_found:
             mprint('Found PDSim instance.\n')
         else:
             mprint("WARNING: Can't find PDSim file to update simulation plan, check log. Simpulation updates will be skipped.")
-            mprint('-> ' + str(CAI_pkg.updatePDSimPlan.PDSIM_INSTANCE_PATH)+'\n')
+            mprint('-> ' + str(UpdatePDSimPlan.PDSIM_INSTANCE_PATH)+'\n')
         
         # agentic_constraint.draw_graph()
     
@@ -1296,8 +1298,8 @@ Time budget: {time_budget}
 """[1:-1]
         text = text.format(
             e2nl = CAI.WITH_E2NL,
-            e2nl_review = agentic_constraint.REVIEW_E2NL,
-            fake_weather = agentic_constraint.FAKE_WEATHER,
+            e2nl_review = Agentic_constraint.REVIEW_E2NL,
+            fake_weather = Agentic_constraint.FAKE_WEATHER,
             show_decomps = self.constraints_frame.show_decomps,
             show_encodings = self.constraints_frame.show_encodings,
             plan_mode = CAI.g_planning_mode,

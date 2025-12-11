@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-from CAI_pkg import CAI
+from .ConstraintPlanning import CAI
 
 #######################
 #### LOAD API KEYS ####
@@ -15,10 +15,11 @@ load_dotenv(find_dotenv())
 ####################
 #### PDDL FILES ####
 ####################
-import CAI_pkg.tools as tools
+from . import Tools
+from .defs import mprint, minput
+
 from pathlib import Path
 import os
-from CAI_pkg.defs import mprint, minput
 import time
 
 import threading
@@ -469,7 +470,7 @@ def retrieve_with_metadata(query: str) -> str:
     logger.info('output: ' + output)
     return output
 
-from CAI_pkg.manual_plan_generation import simulatePlan
+from .Manual_plan_generation import simulatePlan
 @tool
 def simulatePlanTool(plan: str, metric: str) -> str:
     """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
@@ -963,8 +964,8 @@ def Encode(state: EncodingState):
     msg = call(llm, state['e_messages'])
     answer = extractAITextAnswer(msg)
     try:
-        encoding = tools.extractTag('pddl', answer)
-        encoding = tools.initialFixes(encoding)
+        encoding = Tools.extractTag('pddl', answer)
+        encoding = Tools.initialFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
     
@@ -982,7 +983,7 @@ def Verifier(state: EncodingState):
         logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
-    updatedProblem = tools.updateProblem(CAI.g_problem, [encoding])
+    updatedProblem = Tools.updateProblem(CAI.g_problem, [encoding])
     result = CAI.verifier.checkEncoding(updatedProblem, CAI.g_domain, encoding)
     
     encodingOK = result=='OK'
@@ -1725,7 +1726,7 @@ def testTranslation():
     user_input = "Person7 should always be located at boston and plane2 should always be located at washington."
     # user_input = "Person7 should never move."
     # user_input = "Person7 should always be located in their initial city."
-    TranslateUserInput(user_input) # type: list[EncodingE2NL]
+    TranslateUserInput(user_input) 
 
 def testRAG():
     messages = []

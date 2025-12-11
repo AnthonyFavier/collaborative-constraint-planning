@@ -1,7 +1,8 @@
-import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
 def initialFixes(filteredEncoding):
     

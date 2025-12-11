@@ -1,7 +1,6 @@
 from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.shortcuts import *
 from unified_planning.plans import ActionInstance, SequentialPlan
-
     
 def simulatePlan(domain_path, problem_path, txt_plan, metric_name):
     txt = ''

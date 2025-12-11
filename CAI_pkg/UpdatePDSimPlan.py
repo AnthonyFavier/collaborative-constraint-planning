@@ -1,5 +1,6 @@
+from .defs import *
+
 from pathlib import Path
-from CAI_pkg.defs import *
 
 PDSIM_INSTANCE_PATH = (Path().home()/'ws'/'PDSim_Scenes_zenotravel'/'Assets'/'Scenes'/'ZenoR'/'Data'/'PdSimInstance.asset').resolve()
 PDSIM_instance_found = PDSIM_INSTANCE_PATH.exists()
