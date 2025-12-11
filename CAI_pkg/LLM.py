@@ -6,7 +6,7 @@ But explaning why this module is still here.
 Eventually, should be integrated in the langgraph scheme.
 """
 
-from .defs import *
+from .Globals import mprint
 from . import Tools
 
 import time
@@ -211,12 +211,12 @@ def removeFormating(text):
 
 # SYSTEM MESSAGE 
 system_message = None
-g_domain = None
-g_problem = None
+DOMAIN_PDDL = None
+PROBLEM_PDDL = None
 def setSystemMessage(domain, problem):
-    global system_message, g_domain, g_problem
-    g_domain = domain
-    g_problem = problem
+    global system_message, DOMAIN_PDDL, PROBLEM_PDDL
+    DOMAIN_PDDL = domain
+    PROBLEM_PDDL = problem
     system_message = [{
             "type": "text",
             "text": "You are a PDDL planning expert and your role is to work with given PDDL problems and follow the user requests and instructions.",
@@ -245,10 +245,10 @@ def suggestions():
     conv.add_turn_user(f"""
 <documents>
 <pddl_domain>
-{g_domain}
+{DOMAIN_PDDL}
 </pddl_domain>
 <pddl_problem>
-{g_problem}
+{PROBLEM_PDDL}
 </pddl_problem>
 </documents> 
 
@@ -281,10 +281,10 @@ def decompose(constraint, conv):
     conv.add_turn_user(f"""
 <documents>
 <pddl_domain>
-{g_domain}
+{DOMAIN_PDDL}
 </pddl_domain>
 <pddl_problem>
-{g_problem}
+{PROBLEM_PDDL}
 </pddl_problem>
 </documents> 
 
@@ -377,10 +377,10 @@ def encodePrefs(constraint, conv):
     conv.add_turn_user(f"""
 <documents>
 <pddl_domain>
-{g_domain}
+{DOMAIN_PDDL}
 </pddl_domain>
 <pddl_problem>
-{g_problem}
+{PROBLEM_PDDL}
 </pddl_problem>
 </documents> 
 
@@ -439,10 +439,10 @@ def E2NL(constraint):
     conv.add_turn_user(f"""
 <documents>
 <pddl_domain>
-{g_domain}
+{DOMAIN_PDDL}
 </pddl_domain>
 <pddl_problem>
-{g_problem}
+{PROBLEM_PDDL}
 </pddl_problem>
 </documents> 
 
@@ -487,10 +487,10 @@ def planImprovementSuggestions(plan):
     conv.add_turn_user(f"""
 <documents>
 <pddl_domain>
-{g_domain}
+{DOMAIN_PDDL}
 </pddl_domain>
 <pddl_problem>
-{g_problem}
+{PROBLEM_PDDL}
 </pddl_problem>
 
 </documents> 

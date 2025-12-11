@@ -5,6 +5,30 @@ logger.setLevel(logging.INFO)
 
 from pathlib import Path
 
+# ABLATION_FLAGS #
+WITH_E2NL = True
+WITH_VERIFIER = True # Not used..
+WITH_DECOMP = True # Not used..
+WITH_DECOMP_CONFIRM = True # Not used..
+SETTING_NAME = 'DEFAULT' # Not used..
+
+# Problem related, constants after init
+PROBLEM_NAME = None
+DOMAIN_PDDL = None # PDDL domain content
+PROBLEM_PDDL = None # PDDL problem content
+DOMAIN_PATH = None
+PROBLEM_PATH = None
+
+# Settings
+planning_mode = None
+timeout = None
+
+# Changing 
+current_plan = None
+suggestions = None
+CM  = None
+verifier = None
+
 class PDDLProblems:
     def __init__(self):
         base_problems_path = Path() / 'PDDL_problems'
@@ -92,7 +116,6 @@ class PDDLProblems:
     
     def get_known_problems(self):
         return self.known_problems_str
-    
 PROBLEMS = PDDLProblems()
 
 class color:

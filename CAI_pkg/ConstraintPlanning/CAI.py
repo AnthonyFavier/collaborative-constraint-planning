@@ -1,34 +1,23 @@
+"""
+Docstring for CAI_pkg.ConstraintPlanning.CAI
+"""
+
+import time
+import click
+
+from NumericTCORE.bin.ntcore import main as ntcore
+
 from . import Constraints
 from .Planner import planner
 from .. import LLM
 from .. import Tools
+from .. import Globals as G
+from ..Globals import mprint, startTimer, stopTimer
 from ..Verifier import Verifier
-from ..defs import *
-from ..Agentic_constraint import setup_agentic
-
-from NumericTCORE.bin.ntcore import main as ntcore
-
-import time
-import click
-        
-# ABLATION_FLAGS #
-WITH_E2NL = True
-WITH_VERIFIER = True
-WITH_DECOMP = True
-WITH_DECOMP_CONFIRM = True
-SETTING_NAME = 'DEFAULT'
-
-global g_problem_name, g_domain, g_problem
-global g_planning_mode, g_timeout
-global g_plan
-global g_suggestions
-global DOMAIN_PATH, PROBLEM_PATH
-global CM # Constraint Manager
-global verifier
 
 ## ADD CONSTRAINT ##
 def createConstraint(nl_constraint, input_time=0):
-    r = CM.createRaw(nl_constraint)
+    r = G.CM.createRaw(nl_constraint)
     r.time_input += input_time
     return r
 
@@ -43,34 +32,34 @@ def planWithConstraints():
     
     # Get activated constraints
     activated_encodings = []
-    for k,c in CM.decomposed_constraints.items():
+    for k,c in G.CM.decomposed_constraints.items():
         if c.isActivated():
             activated_encodings.append(c.encoding)
         
     if not len(activated_encodings):
         mprint("\nNo active constraints: Planning without constraints")
-        problem_name = g_problem_name
+        problem_name = G.PROBLEM_NAME
         time_compilation = 0
     else:
-        problem_name = PlanFiles.COMPILED
+        problem_name = G.PlanFiles.COMPILED
         
-        updatedProblem = Tools.updateProblem(g_problem, activated_encodings)
+        updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, activated_encodings)
         
         # Save updated problem in a file
-        with open(UPDATED_PROBLEM_PATH, "w") as f:
+        with open(G.UPDATED_PROBLEM_PATH, "w") as f:
             f.write(updatedProblem)
         
         # Compile the updated problem
         mprint("\nCompiling ... ", end="")
         time_compilation = time.time()
-        ntcore(DOMAIN_PATH, UPDATED_PROBLEM_PATH, "tmp/pddl_files/", achiever_strategy=NtcoreStrategy.DELTA, verbose=False)
+        ntcore(G.DOMAIN_PATH, G.UPDATED_PROBLEM_PATH, "tmp/pddl_files/", achiever_strategy=G.NtcoreStrategy.DELTA, verbose=False)
         time_compilation = time.time() - time_compilation
         mprint(f"OK [{time_compilation:.2f}s]")
         
     # Plan
-    mprint(f"Planning ({g_planning_mode}{'' if g_timeout==None else f', TO={g_timeout}s'}) ... ", end="" )
+    mprint(f"Planning ({G.planning_mode}{'' if G.timeout==None else f', TO={G.timeout}s'}) ... ", end="" )
     time_planning = time.time()
-    result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=g_planning_mode, hide_plan=True, timeout=g_timeout)
+    result, plan, planlength, metric, fail_reason = planner(problem_name, plan_mode=G.planning_mode, hide_plan=True, timeout=G.timeout)
     time_planning = time.time()-time_planning
     
     if result=='success':
@@ -80,26 +69,22 @@ def planWithConstraints():
     return result, plan, planlength, metric, fail_reason, time_compilation, time_planning
 
 ## SUGGESTIONS ##
-g_suggestions = "* No suggestions *"
-def suggestions(show=True):
-    global g_suggestions
+def generate_suggestions(show=True):
     d = time.time()
     startTimer()
     mprint("\nElaborating strategies suggestions ... ", end="")
-    suggestions = LLM.suggestions()
+    G.suggestions = LLM.suggestions()
     # remove empty lines
-    suggestions = suggestions.splitlines()
+    G.suggestions = G.suggestions.splitlines()
     while True:
-        try: suggestions.remove('')
+        try: G.suggestions.remove('')
         except ValueError: break
-    suggestions = '\n'.join(suggestions)
-    # save
-    g_suggestions = suggestions
+    G.suggestions = '\n'.join(G.suggestions)
     stopTimer()
     d = time.time() - d
     mprint(f"OK [{d:.1f}s]")
     if show:
-        mprint(g_suggestions)
+        mprint(G.suggestions)
 
 ## INIT ##
 def init(problem_name, planning_mode, timeout):
@@ -122,46 +107,39 @@ def init(problem_name, planning_mode, timeout):
     Initialize LLM module (Only used for 'suggestions')
     Setup agentic part (Setup RAG and build Langgraph graph)
     """
-
-    global g_problem_name, g_domain, g_problem
-    global g_plan
-    global g_planning_mode, g_timeout
-    global DOMAIN_PATH, PROBLEM_PATH
-    global CM
-    global verifier
     
-    if not PROBLEMS.exists(problem_name):
-        click.echo("Unknown problem.\n" + PROBLEMS.get_known_problems())
+    if not G.PROBLEMS.exists(problem_name):
+        click.echo("Unknown problem.\n" + G.PROBLEMS.get_known_problems())
         exit()
         
-    g_problem_name = problem_name
-    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(g_problem_name)
+    G.PROBLEM_NAME = problem_name
+    G.DOMAIN_PATH, G.PROBLEM_PATH = G.PROBLEMS.get_paths(G.PROBLEM_NAME)
 
 
-    g_planning_mode = planning_mode
+    G.planning_mode = planning_mode
     
-    g_timeout = float(timeout) if timeout!=None else None
-    if g_timeout==0.0:
-        g_timeout=None
+    G.timeout = float(timeout) if timeout!=None else None
+    if G.timeout==0.0:
+        G.timeout=None
         
     try:
         t = float(timeout)
         assert t>0
-        g_timeout = t
-    except:
-        g_timeout = None
-        if g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+        G.timeout = t
+    except AssertionError:
+        G.timeout = None
+        if G.planning_mode in [G.PlanMode.ANYTIME, G.PlanMode.ANYTIMEAUTO]:
             print('WARNING: Timeout disabled with Anytime planning mode!')
-    timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
+    timeout_str = f', TO={G.timeout}' if G.timeout is not None else ''
     
-    CM = Constraints.ConstraintManager(g_problem_name)
+    G.CM = Constraints.ConstraintManager(G.PROBLEM_NAME)
     
     # Show selected problem
-    print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+    print(f"Planning mode: {planning_mode}{timeout_str}\nProblem ({problem_name}):\n\t- {G.DOMAIN_PATH}\n\t- {G.PROBLEM_PATH}")
     
     # Try parsing the initial problem
     try:
-        parsed = Tools.parse_pddl3(DOMAIN_PATH, PROBLEM_PATH)
+        parsed = Tools.parse_pddl3(G.DOMAIN_PATH, G.PROBLEM_PATH)
     except Exception as e:
         print("ERROR", e)
         raise Exception(f"Unable to parse the initial problem.")
@@ -171,38 +149,35 @@ def init(problem_name, planning_mode, timeout):
         raise Exception(f"There are already constraints in the initial problem.\n{parsed.problem.trajectory_constraints}")
 
     # Create Verifier
-    verifier = Verifier(parsed.problem)
+    G.verifier = Verifier(parsed.problem)
     
     # Open initial problem
-    with open(DOMAIN_PATH, "r") as f:
-        g_domain = f.read()
-    with open(PROBLEM_PATH, "r") as f:
-        g_problem = f.read()
-    g_plan = "No plan"
+    with open(G.DOMAIN_PATH, "r") as f:
+        DOMAIN_PDDL = f.read()
+    with open(G.PROBLEM_PATH, "r") as f:
+        G.PROBLEM_PDDL = f.read()
+    G.current_plan = "No plan"
+    G.suggestions = "* No suggestions *"
 
     # Init LLM system message with domain and problem
-    LLM.setSystemMessage(g_domain, g_problem)
+    LLM.setSystemMessage(DOMAIN_PDDL, G.PROBLEM_PDDL)
         
-    # Set up agentic part:
-    setup_agentic()
-
 from unified_planning.io import PDDLReader
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
-    activated_encodings = [c.encoding for k,c in CM.decomposed_constraints.items() if c.isActivated()]
+    activated_encodings = [c.encoding for k,c in G.CM.decomposed_constraints.items() if c.isActivated()]
     encodingsStr = "\n".join(activated_encodings)
-    updatedProblem = Tools.updateProblem(g_problem, activated_encodings)
-    with open(UPDATED_PROBLEM_PATH, "w") as f:
+    updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, activated_encodings)
+    with open(G.UPDATED_PROBLEM_PATH, "w") as f:
         f.write(updatedProblem)
     reader = PDDLReader()
     try:
-        pb = reader.parse_problem(DOMAIN_PATH, UPDATED_PROBLEM_PATH)
+        pb = reader.parse_problem(G.DOMAIN_PATH, G.UPDATED_PROBLEM_PATH)
         return True, encodingsStr, None
     except Exception as err:
         return False, encodingsStr, err
         
 def showSettings():
-    timeout_str = f', TO={g_timeout}' if g_timeout!=None else ''
-    DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(g_problem_name)
-    mprint(f"Setting: {SETTING_NAME}")
-    mprint(f"Planning mode: {g_planning_mode}{timeout_str}\nProblem ({g_problem_name}):\n\t- {DOMAIN_PATH}\n\t- {PROBLEM_PATH}")
+    timeout_str = f', TO={G.timeout}' if G.timeout!=None else ''
+    mprint(f"Setting: {G.SETTING_NAME}")
+    mprint(f"Planning mode: {G.planning_mode}{timeout_str}\nProblem ({G.PROBLEM_NAME}):\n\t- {G.DOMAIN_PATH}\n\t- {G.PROBLEM_PATH}")

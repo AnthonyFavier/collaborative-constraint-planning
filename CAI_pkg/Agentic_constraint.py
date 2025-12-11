@@ -2,7 +2,8 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-from .ConstraintPlanning import CAI
+from . import Globals as G
+from .Globals import mprint, minput
 
 #######################
 #### LOAD API KEYS ####
@@ -16,7 +17,6 @@ load_dotenv(find_dotenv())
 #### PDDL FILES ####
 ####################
 from . import Tools
-from .defs import mprint, minput
 
 from pathlib import Path
 import os
@@ -84,11 +84,11 @@ def set_up_rag():
     # PDDL Files
     files += [
         {
-            "path": CAI.DOMAIN_PATH,
+            "path": G.DOMAIN_PATH,
             "description": "PDDL domain of the addressed problem. Describe the objects types, state description, and actions.",
         },
         {
-            "path": CAI.PROBLEM_PATH,
+            "path": G.PROBLEM_PATH,
             "description": "PDDL problem. Describe the object instances present in this specific problem, the initial state and goal state.",
         },
     ]
@@ -477,7 +477,7 @@ def simulatePlanTool(plan: str, metric: str) -> str:
     print('    Tool call: simulatePlanTool')
     logger.info('    Tool call: simulatePlanTool')
     logger.info('inputs:\n-plan: ' + str(plan) + '\n-metric: ' + str(metric))
-    feedback = simulatePlan(CAI.DOMAIN_PATH, CAI.PROBLEM_PATH, plan, metric)
+    feedback = simulatePlan(G.DOMAIN_PATH, G.PROBLEM_PATH, plan, metric)
     logger.info('output: ' + feedback)
     return feedback
 
@@ -568,7 +568,7 @@ def GenerateRAGQuery(state: FailureDetectionState):
         "{pddl_plan}\n"
         "</current_solution_plan>\n"
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.CAI.g_domain, pddl_problem=CAI.CAI.g_problem, pddl_plan=CAI.CAI.g_plan))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL, pddl_plan=G.current_plan))
         
     RAG_QUERY_GENERATION_PROMPT = (
         "Generate a RAG query to look for potential risk of failure of the given PDDL plan. "
@@ -623,7 +623,7 @@ def AdditionalRetrieval(state: FailureDetectionState):
         "{pddl_plan}\n"
         "</current_solution_plan>\n"
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem, pddl_plan=CAI.g_plan))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL, pddl_plan=G.current_plan))
     
     ADD_RETRIEVAL_PROMPT = (
         "You are conducting an analysis of risk of failure for the addressed problem. "
@@ -749,7 +749,7 @@ def RiskRetrieval(state: FailureDetectionState):
         "{pddl_plan}\n"
         "</current_solution_plan>\n"
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem, pddl_plan=CAI.g_plan))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL, pddl_plan=G.current_plan))
     
     ADD_RETRIEVAL_PROMPT = (
         "What are the most important constraint/risks to the current problem and plan based on external data? "
@@ -944,7 +944,7 @@ def Encode(state: EncodingState):
         "Remember that PDDL3.0 constraints are state-based. They can only refer to existing predicates, fluents or objects; not to actions. "
         "Your PDDL3.0 answer must be given between the tags <pddl> and </pddl>. "
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL))
     
     
     if state.get('e2nl_user_validation') and not state['e2nl_user_validation'].e2nl_user_ok:
@@ -983,8 +983,8 @@ def Verifier(state: EncodingState):
         logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
-    updatedProblem = Tools.updateProblem(CAI.g_problem, [encoding])
-    result = CAI.verifier.checkEncoding(updatedProblem, CAI.g_domain, encoding)
+    updatedProblem = Tools.updateProblem(G.PROBLEM_PDDL, [encoding])
+    result = G.verifier.checkEncoding(updatedProblem, G.DOMAIN_PDDL, encoding)
     
     encodingOK = result=='OK'
     
@@ -1029,7 +1029,7 @@ def BackTranslation(state: EncodingState):
         "Your translation should closely match the PDDL3.0 input, without additional deductions or reasoning. "
         "So, your answer should be concise with just a straight translation. "
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL))
     
     
     llm = e2nl_llm.with_structured_output(E2NL)
@@ -1098,7 +1098,7 @@ def UserReviewE2NL(state: EncodingState):
         "The extracted feedback will be used to generate a new PDDL3.0 translation. "
     )
       
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL))
         
     messages = [
         sys_msg,
@@ -1189,7 +1189,7 @@ def RefineUserIntent(state: DecompositionState):
     
     # structured_llm = llm.with_structured_output(UserIntent)
     llm = g_llm.bind_tools([ask_clarifying_question])
-    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem))] + state['messages']
+    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL))] + state['messages']
     msg = call(llm, messages)
     return {"messages": [msg]}
     
@@ -1243,7 +1243,7 @@ def Decompose(state: DecompositionState):
         "## Refined user intent\n"
         "{user_intent}"
     )
-    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem))
+    sys_msg = SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL))
     
     
     
@@ -1324,7 +1324,7 @@ def VerifyDecomposition(state: DecompositionState):
     decomposition_str += "Decomposition explanation:\n" + state["decomposition"].explanation
         
     messages = [
-        SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem)),
+        SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL)),
         HumanMessage(content=USER_PROMPT.format(user_input=state['user_input'], user_intent=state['refined_user_intent'], decomposition=decomposition_str)),
     ]
     msg = call(llm, messages)
@@ -1432,7 +1432,7 @@ def UserReviewDecomposition(state: DecompositionState):
     )
     
     messages = [
-        SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem)),
+        SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL)),
         HumanMessage(content=user_review)
     ]
     msg = call(llm, messages)
@@ -1582,7 +1582,7 @@ def ChatAnswer(state: ChatState):
     )
     
     llm = g_llm.bind_tools(chat_tools)
-    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem, pddl_plan=CAI.g_plan))] + state['messages']
+    messages = [SystemMessage(content=SYSTEM_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL, pddl_plan=G.current_plan))] + state['messages']
     
     mprint('\n' + chat_separator + '\n')
     mprint("AI: ", end='')
@@ -1748,7 +1748,7 @@ def testRAG():
         "It should includes keywords such as 'restriction', 'failure', 'risk', 'danger', 'limitation'. "
         "The query should also include any relevant keyword regarding the current problem being solve. "
     )
-    messages += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=CAI.g_domain, pddl_problem=CAI.g_problem, pddl_plan=CAI.g_plan))]
+    messages += [HumanMessage(content= RAG_QUERY_GENREATION_PROMPT.format(pddl_domain=G.DOMAIN_PDDL, pddl_problem=G.PROBLEM_PDDL, pddl_plan=G.current_plan))]
     
     RAG_query = 'ZenoTravel domain plan risk analysis fuel limitations aircraft capacity restrictions potential failure points in multi-aircraft passenger transportation plan with distance and fuel consumption constraints'    
     result = retrieve_with_metadata.invoke({'query': RAG_query})

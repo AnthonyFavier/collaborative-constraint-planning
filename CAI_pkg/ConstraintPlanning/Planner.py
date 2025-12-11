@@ -1,4 +1,4 @@
-from ..defs import *
+from .. import Globals as G
 
 import sys
 import os
@@ -6,7 +6,7 @@ import signal
 import subprocess
 import click
 
-def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=None):
+def planner(problem_name, plan_mode=G.PlanMode.DEFAULT, hide_plan=False, timeout=None):
     """
     Inputs:
     - problem_name: one of the names provided in defs.py
@@ -25,20 +25,20 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
         metric = -1
         return result, plan, planlength, metric, fail_reason
     
-    if problem_name==PlanFiles.COMPILED:
-        DOMAIN_PATH, PROBLEM_PATH = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
+    if problem_name==G.PlanFiles.COMPILED:
+        DOMAIN_PATH, PROBLEM_PATH = G.COMPILED_DOMAIN_PATH, G.COMPILED_PROBLEM_PATH
     else:
-        DOMAIN_PATH, PROBLEM_PATH = PROBLEMS.get_paths(problem_name)
+        DOMAIN_PATH, PROBLEM_PATH = G.PROBLEMS.get_paths(problem_name)
         
-    if PlanMode.OPTIMAL==plan_mode:
-        mode = [f'-planner', f'{PlanMode.OPTIMAL}']
-    elif PlanMode.SATISFICING==plan_mode:
-        mode = ['-planner', f'{PlanMode.SATISFICING}']
-    elif PlanMode.ANYTIME==plan_mode:
+    if G.PlanMode.OPTIMAL==plan_mode:
+        mode = [f'-planner', f'{G.PlanMode.OPTIMAL}']
+    elif G.PlanMode.SATISFICING==plan_mode:
+        mode = ['-planner', f'{G.PlanMode.SATISFICING}']
+    elif G.PlanMode.ANYTIME==plan_mode:
         mode = ['-anytime']
-    elif PlanMode.ANYTIMEAUTO==plan_mode:
+    elif G.PlanMode.ANYTIMEAUTO==plan_mode:
         mode = ['-anytime', '-autoanytime']
-    elif PlanMode.DEFAULT==plan_mode:
+    elif G.PlanMode.DEFAULT==plan_mode:
         mode = []
     else:
         mode = ['-planner', plan_mode]
@@ -106,34 +106,34 @@ def planner(problem_name, plan_mode=PlanMode.DEFAULT, hide_plan=False, timeout=N
                 
     return result, plan, planlength, metric, fail_reason
 
-@click.command(help=f"{PROBLEMS.get_known_problems()}")
+@click.command(help=f"{G.PROBLEMS.get_known_problems()}")
 @click.argument('problem_name')
-@click.option('--original', 'files', flag_value=PlanFiles.ORIGINAL, default=True, help="Use the original problem files (default)")
-@click.option('-c', '--compiled', 'files', flag_value=PlanFiles.COMPILED, help="Use the last compiled problem files. PROBLEM_NAME not used")
-@click.option('-p', '--path', 'files', flag_value=PlanFiles.PATH, help="Use the domain and problem paths given. PROBLEM_NAME not used")
-@click.option('-a', '--anytime', 'planning_mode', flag_value=PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
-@click.option('-aa', '--anytimeauto', 'planning_mode', flag_value=PlanMode.ANYTIMEAUTO, help="Set the planning mode to 'AnytimeAuto'")
-@click.option('-d', '--default', 'planning_mode', flag_value=PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
-@click.option('-o', '--optimal', 'planning_mode', flag_value=PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
-@click.option('-s', '--satisficing', 'planning_mode', flag_value=PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
+@click.option('--original', 'files', flag_value=G.PlanFiles.ORIGINAL, default=True, help="Use the original problem files (default)")
+@click.option('-c', '--compiled', 'files', flag_value=G.PlanFiles.COMPILED, help="Use the last compiled problem files. PROBLEM_NAME not used")
+@click.option('-p', '--path', 'files', flag_value=G.PlanFiles.PATH, help="Use the domain and problem paths given. PROBLEM_NAME not used")
+@click.option('-a', '--anytime', 'planning_mode', flag_value=G.PlanMode.ANYTIME, default=True, help="Set the planning mode to 'Anytime' (default)")
+@click.option('-aa', '--anytimeauto', 'planning_mode', flag_value=G.PlanMode.ANYTIMEAUTO, help="Set the planning mode to 'AnytimeAuto'")
+@click.option('-d', '--default', 'planning_mode', flag_value=G.PlanMode.DEFAULT, help="Set the planning mode to 'Default'")
+@click.option('-o', '--optimal', 'planning_mode', flag_value=G.PlanMode.OPTIMAL, help="Set the planning mode to 'Optimal'")
+@click.option('-s', '--satisficing', 'planning_mode', flag_value=G.PlanMode.SATISFICING, help="Set the planning mode to 'Satisficing'")
 @click.option('--custommode', 'custom_planning_mode', default="", help="Custom planning mode")
 @click.option('--domain', 'domain_path', help="Path of domain")
 @click.option('--problem', 'problem_path', help="Path of problem")
 @click.option('--hide-plan', 'hide_plan', is_flag=True, default=False, help="Hide plan")
 @click.option('-t', '--timeout', 'timeout', default=None, help="Timeout for planning")
 def main(problem_name, files, planning_mode, custom_planning_mode, domain_path, problem_path, hide_plan, timeout):    
-    if files==PlanFiles.COMPILED:
-        d, p = COMPILED_DOMAIN_PATH, COMPILED_PROBLEM_PATH
-        problem_name = PlanFiles.COMPILED
-    elif files==PlanFiles.ORIGINAL:
-        if not PROBLEMS.exists(problem_name):
-            click.echo("Unknown problem.\n" + PROBLEMS.get_known_problems())
+    if files==G.PlanFiles.COMPILED:
+        d, p = G.COMPILED_DOMAIN_PATH, G.COMPILED_PROBLEM_PATH
+        problem_name = G.PlanFiles.COMPILED
+    elif files==G.PlanFiles.ORIGINAL:
+        if not G.PROBLEMS.exists(problem_name):
+            click.echo("Unknown problem.\n" + G.PROBLEMS.get_known_problems())
             exit()
-        d, p = PROBLEMS.get_paths(problem_name)
-    if files==PlanFiles.PATH:
+        d, p = G.PROBLEMS.get_paths(problem_name)
+    if files==G.PlanFiles.PATH:
         d, p = domain_path, problem_path
-        PROBLEMS.add_problem(PlanFiles.PATH, d, p)
-        problem_name = PlanFiles.PATH
+        G.PROBLEMS.add_problem(G.PlanFiles.PATH, d, p)
+        problem_name = G.PlanFiles.PATH
         
     if custom_planning_mode!="":
         planning_mode = custom_planning_mode

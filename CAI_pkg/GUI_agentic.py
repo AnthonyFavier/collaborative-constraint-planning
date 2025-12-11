@@ -1,4 +1,5 @@
-from .defs import *
+from . import Globals as G
+from .Globals import mprint, minput
 from .ConstraintPlanning import CAI
 from .UpdatePDSimPlan import main as updatePDSimPlan
 from . import Agentic_constraint
@@ -15,7 +16,6 @@ import pyperclip
 import ctypes
 import json
 import jsonpickle
-
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -69,13 +69,13 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
         
         i_self_row = 0
         
-        if CAI.CM.constraints == {}:
+        if G.CM.constraints == {}:
             label = customtkinter.CTkLabel(self, text="No constraints", font = App.font)
             label.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
             i_self_row += 1
         else:
-            # for k,r in CAI.CM.raw_constraints.items():
-            for i,(id,r) in enumerate(CAI.CM.raw_constraints.items()):
+            # for k,r in G.CM.raw_constraints.items():
+            for i,(id,r) in enumerate(G.CM.raw_constraints.items()):
                 
                 frame = customtkinter.CTkFrame(self, fg_color="transparent")
                 frame.grid(row=i_self_row, column=0, padx=0, pady=0, sticky="w")
@@ -179,7 +179,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             
         for symbol in self.constraint_labels:
             l = self.constraint_labels[symbol]
-            c = CAI.CM.constraints[symbol]
+            c = G.CM.constraints[symbol]
             if c.isActivated():
                 l.configure(text=activated_str + l.cget("text"))
             else:
@@ -202,8 +202,8 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                 checked = self.checkboxes[symbol].get()==1
         
         # If raw
-        if checkbox in CAI.CM.raw_constraints:
-            for child in CAI.CM.raw_constraints[checkbox].children:
+        if checkbox in G.CM.raw_constraints:
+            for child in G.CM.raw_constraints[checkbox].children:
                 if checked:
                     # Then check all children 
                     self.checkboxes[child.symbol].select()
@@ -212,8 +212,8 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
                     self.checkboxes[child.symbol].deselect()
                 
         # If decomposed
-        elif checkbox in CAI.CM.decomposed_constraints:
-            parent = CAI.CM.constraints[checkbox].parent
+        elif checkbox in G.CM.decomposed_constraints:
+            parent = G.CM.constraints[checkbox].parent
             
             if checked:
                 # If all decomposed of associated raw are checked then check raw
@@ -246,7 +246,7 @@ class ConstraintsFrame(customtkinter.CTkScrollableFrame):
             cb.grid_remove()
     def selectActivatedCheckboxes(self):
         for symbol,cb in self.checkboxes.items():
-            if CAI.CM.constraints[symbol].isActivated():
+            if G.CM.constraints[symbol].isActivated():
                 cb.select()
             else:
                 cb.deselect()
@@ -338,7 +338,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons["Activate"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
-        self.buttons["E2NL"] = customtkinter.CTkButton(self.frame_always_column, text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
+        self.buttons["E2NL"] = customtkinter.CTkButton(self.frame_always_column, text="Activate\nE2NL" if not G.WITH_E2NL else "Deactivate\nE2NL", width=buttons_width, fg_color=color_constraints, command=self.toggleE2NL)
         self.buttons["E2NL"].grid(row=i_row, column=1, padx=10, pady=3)
         i_row+=1
         
@@ -428,11 +428,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 constraint.time_total += time.time() - time_total
                 activated_encodings = []
                 for e in encodings:
-                    child_constraint = CAI.CM.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
+                    child_constraint = G.CM.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
                     child_constraint.encoding = e.encoding.encoding
                     activated_encodings.append(e.encoding.encoding)
 
-                CAI.CM.dump(CAI.g_problem_name)
+                G.CM.dump(G.PROBLEM_NAME)
                 
             except Exception as err:
                 if err.args[0]=='abort':
@@ -471,7 +471,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 
         if selection!=[]:
             # Delete selected constraints
-            CAI.CM.deleteConstraints(selection)
+            G.CM.deleteConstraints(selection)
             self.master.constraints_frame.updateFrame()
         
         # self.hideConfirmButton()
@@ -489,9 +489,9 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def activateConfirm(self):
         for k,x in self.master.constraints_frame.checkboxes.items():
             if x.get()==1:
-                CAI.CM.constraints[k].activate()
+                G.CM.constraints[k].activate()
             else:
-                CAI.CM.constraints[k].deactivate()
+                G.CM.constraints[k].deactivate()
                 
         self.master.display_frame.deactivateConfirm()
         self.master.enableAllButtons()
@@ -543,7 +543,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.master.plan_frame.printMain(txt_main)
         mprint(txt_main, logonly=True)
         
-        CAI.g_plan = txt_main
+        G.current_plan = txt_main
         self.master.plan_frame.updateSimButton()
         
     def changePlanModeT(self):
@@ -551,8 +551,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
     def changePlanMode(self):
         self.master.disableAllButtons()
         
-        mprint(f"\nCurrent planning mode: {CAI.g_planning_mode}")
-        mprint(f"Select a planning mode:\n\t1 - {PlanMode.ANYTIME}\n\t2 - {PlanMode.ANYTIMEAUTO}\n\t3 - {PlanMode.DEFAULT}\n\t4 - {PlanMode.OPTIMAL}\n\t5 - {PlanMode.SATISFICING}")
+        mprint(f"\nCurrent planning mode: {G.planning_mode}")
+        mprint(f"Select a planning mode:\n\t1 - {G.PlanMode.ANYTIME}\n\t2 - {G.PlanMode.ANYTIMEAUTO}\n\t3 - {G.PlanMode.DEFAULT}\n\t4 - {G.PlanMode.OPTIMAL}\n\t5 - {G.PlanMode.SATISFICING}")
         
         c = minput()
         
@@ -560,19 +560,19 @@ class ButtonsFrame(customtkinter.CTkFrame):
         if c in ['1', '2', '3', '4', '5']:
             mprint("> " + c )
             if c=='1':
-                CAI.g_planning_mode=PlanMode.ANYTIME
+                G.planning_mode=G.PlanMode.ANYTIME
             if c=='2':
-                CAI.g_planning_mode=PlanMode.ANYTIMEAUTO
+                G.planning_mode=G.PlanMode.ANYTIMEAUTO
             if c=='3':
-                CAI.g_planning_mode=PlanMode.DEFAULT
+                G.planning_mode=G.PlanMode.DEFAULT
             if c=='4':
-                CAI.g_planning_mode=PlanMode.OPTIMAL
+                G.planning_mode=G.PlanMode.OPTIMAL
             if c=='5':
-                CAI.g_planning_mode=PlanMode.SATISFICING
+                G.planning_mode=G.PlanMode.SATISFICING
             
-            mprint(f"\nPlanning mode set to: {CAI.g_planning_mode}")
+            mprint(f"\nPlanning mode set to: {G.planning_mode}")
             
-            if CAI.g_timeout==None and CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+            if G.timeout==None and G.planning_mode in [G.PlanMode.ANYTIME, G.PlanMode.ANYTIMEAUTO]:
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
         else: 
             if c=='':
@@ -583,18 +583,18 @@ class ButtonsFrame(customtkinter.CTkFrame):
     
     def changeTimeout(self):
         self.master.disableAllButtons()
-        x = customtkinter.CTkInputDialog(title='Enter Timeout', text=f"Current Timeout: {CAI.g_timeout}s\nEnter a new timeout\n(Leave empty to disable timeout): ")
+        x = customtkinter.CTkInputDialog(title='Enter Timeout', text=f"Current Timeout: {G.timeout}s\nEnter a new timeout\n(Leave empty to disable timeout): ")
         c = x.get_input()
         
         try:
             t = float(c)
             assert t>0
-            CAI.g_timeout = t
-            mprint(f'Timeout updated: {CAI.g_timeout}')
+            G.timeout = t
+            mprint(f'Timeout updated: {G.timeout}')
         except:
-            CAI.g_timeout = None
+            G.timeout = None
             mprint(f'Timeout disabled')
-            if CAI.g_planning_mode in [PlanMode.ANYTIME, PlanMode.ANYTIMEAUTO]:
+            if G.planning_mode in [G.PlanMode.ANYTIME, G.PlanMode.ANYTIMEAUTO]:
                 mprint('WARNING: Timeout disabled with Anytime planning mode!')
 
         self.master.enableAllButtons()
@@ -604,14 +604,14 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons['ToggleEncodings'].configure(text="Show\nEncodings" if not self.master.constraints_frame.show_encodings else "Hide\nEncodings")
         
     def toggleE2NL(self):
-        CAI.WITH_E2NL = not CAI.WITH_E2NL
-        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+        G.WITH_E2NL = not G.WITH_E2NL
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not G.WITH_E2NL else "Deactivate\nE2NL")        
     def activateE2NL(self):
-        CAI.WITH_E2NL = True
-        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+        G.WITH_E2NL = True
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not G.WITH_E2NL else "Deactivate\nE2NL")        
     def deactivateE2NL(self):
-        CAI.WITH_E2NL = False
-        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not CAI.WITH_E2NL else "Deactivate\nE2NL")        
+        G.WITH_E2NL = False
+        self.buttons['E2NL'].configure(text="Activate\nE2NL" if not G.WITH_E2NL else "Deactivate\nE2NL")        
         
     def toggleReviewE2NL(self):
         Agentic_constraint.REVIEW_E2NL = not Agentic_constraint.REVIEW_E2NL
@@ -878,18 +878,18 @@ class PlanFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.generateSuggestions).start()
     def generateSuggestions(self):
         self.master.disableAllButtons()
-        CAI.suggestions()
+        CAI.generate_suggestions()
         self.master.enableAllButtons()
         
     def printSuggestions(self):
         mprint("\nSuggestions:")
-        mprint(CAI.g_suggestions)
+        mprint(G.suggestions)
     
     def loadConstraints(self):
         self.master.disableAllButtons()
         filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
         if isinstance(filename, str) and filename!='':
-            CAI.CM.load(filename)
+            G.CM.load(filename)
             self.master.constraints_frame.updateFrame()
         self.master.enableAllButtons()
     
@@ -913,7 +913,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         data = {}
         
-        data['problem_name'] = CAI.g_problem_name
+        data['problem_name'] = G.PROBLEM_NAME
         data['detailed_translation_times'] = {
             'total_time': 0,
             'input_time': 0,
@@ -928,7 +928,7 @@ class PlanFrame(customtkinter.CTkFrame):
             'encoding_validation_time': 0,
             'e2nl_reencoding_time': 0,
         }
-        for idr,r in CAI.CM.raw_constraints.items():
+        for idr,r in G.CM.raw_constraints.items():
             if r.isActivated() or r.isPartiallyActivated():
                 data['detailed_translation_times']['total_time'] += r.time_total
                 data['detailed_translation_times']['input_time'] += r.time_input
@@ -987,7 +987,7 @@ class PlanFrame(customtkinter.CTkFrame):
 
         
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
-        filename = f'export_results/{CAI.g_problem_name}_{date}.json' 
+        filename = f'export_results/{G.PROBLEM_NAME}_{date}.json' 
         
         result, encodingsStr, err = CAI.checkIfUpdatedProblemIsParsable()
         pyperclip.copy(encodingsStr)
@@ -999,13 +999,13 @@ class PlanFrame(customtkinter.CTkFrame):
         can_parse = 1 if result else 0
         nb_h_interventions = -1
         comments = ""
-        for k, d in CAI.CM.decomposed_constraints.items(): 
+        for k, d in G.CM.decomposed_constraints.items(): 
             for t in d.encoding_conv.turns:
                 if t['role']=='user':
                     nb_h_interventions+=1
                     # if nb_h_interventions!=0:
                     #     comments += '> ' + t['content'][0]['text'] + '\n'
-        nb_h_interventions -= CAI.nb_encoding_retry
+        nb_h_interventions -= CAI.nb_encoding_retry # Now must be retreived from Agentic_Constraint? From each constraint in CM?
         nb_h_reviews = nb_h_interventions+1
         input_t, inter_t, decomp_t, enco_t, trans_t = data['input_time'],data['interaction_time'],data['decomposition_time'],data['encoding_time'],data['translation_time']
         
@@ -1024,7 +1024,7 @@ class PlanFrame(customtkinter.CTkFrame):
         with open('test.csv', 'a') as f:
             f.write(txtCSV)
             
-        data_CM = (data, CAI.CM)
+        data_CM = (data, G.CM)
         json_string= jsonpickle.encode(data_CM, indent=4)
         with open(filename, 'w') as f:
             f.write(json_string)
@@ -1166,7 +1166,7 @@ class App(customtkinter.CTk):
         
         constraintsmenu = Menu(menubar, tearoff=0)
         constraintsmenu.add_command(label="Load Constraints", command=self.plan_frame.loadConstraints)
-        constraintsmenu.add_command(label="Dump Constraints", command=lambda: CAI.CM.dump(CAI.g_problem_name))
+        constraintsmenu.add_command(label="Dump Constraints", command=lambda: G.CM.dump(G.PROBLEM_NAME))
         constraintsmenu.add_separator()
         constraintsmenu.add_command(label="Delete", command=self.buttons_frame.delete)
         constraintsmenu.add_command(label="Activate/Deactivate", command=self.buttons_frame.activate)
@@ -1224,11 +1224,11 @@ class App(customtkinter.CTk):
         
         # self.bind("beef", lambda x: print("ooh yummy!"))
         
-        setPrintFunction(self.display_frame.prompt)
-        setInputFunction(self.display_frame.getFromEntry)
-        setReplacePrintFunction(self.display_frame.replace_last_line)
-        setStartTimer(self.display_frame.startTimer)
-        setStopTimer(self.display_frame.stopTimer)
+        G.setPrintFunction(self.display_frame.prompt)
+        G.setInputFunction(self.display_frame.getFromEntry)
+        G.setReplacePrintFunction(self.display_frame.replace_last_line)
+        G.setStartTimer(self.display_frame.startTimer)
+        G.setStopTimer(self.display_frame.stopTimer)
 
         if UpdatePDSimPlan.PDSIM_instance_found:
             mprint('Found PDSim instance.\n')
@@ -1297,13 +1297,13 @@ Plan mode: {plan_mode}
 Time budget: {time_budget}
 """[1:-1]
         text = text.format(
-            e2nl = CAI.WITH_E2NL,
+            e2nl = G.WITH_E2NL,
             e2nl_review = Agentic_constraint.REVIEW_E2NL,
             fake_weather = Agentic_constraint.FAKE_WEATHER,
             show_decomps = self.constraints_frame.show_decomps,
             show_encodings = self.constraints_frame.show_encodings,
-            plan_mode = CAI.g_planning_mode,
-            time_budget = CAI.g_timeout,
+            plan_mode = G.planning_mode,
+            time_budget = G.timeout,
         )
         StatusWindow(title='Status', text=text)
                 

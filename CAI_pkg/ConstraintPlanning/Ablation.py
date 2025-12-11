@@ -1,6 +1,6 @@
-from enum import auto, Enum
+from enum import Enum
 
-from . import CAI
+from .. import Globals as G
 
 class AblationSetting(Enum):
     """
@@ -23,5 +23,5 @@ class AblationSetting(Enum):
     REGULAR =           (True,        True,             True,           True)
     
     def apply(setting):
-        CAI.WITH_E2NL, CAI.WITH_VERIFIER, CAI.WITH_DECOMP, CAI.WITH_DECOMP_CONFIRM = setting.value
-        CAI.SETTING_NAME = setting.name
+        G.WITH_E2NL, G.WITH_VERIFIER, G.WITH_DECOMP, G.WITH_DECOMP_CONFIRM = setting.value
+        G.SETTING_NAME = setting.name

@@ -1,4 +1,4 @@
-from ..defs import *
+from ..Globals import mprint
 
 from datetime import datetime
 import jsonpickle
@@ -63,10 +63,7 @@ class RawConstraint(Constraint):
         print(self.strWithChildren())
         
     def __repr__(self):
-        symbol_str = self.symbol 
-        if self.isActivated():
-            symbol_str = symbol_str
-        return f"{symbol_str} - {self.nl_constraint}"
+        return f"{self.symbol} - {self.nl_constraint}"
     
 class DecomposedConstraint(Constraint):
     def __init__(self, parent, nl_constraint):

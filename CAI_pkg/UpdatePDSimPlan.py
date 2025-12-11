@@ -1,5 +1,3 @@
-from .defs import *
-
 from pathlib import Path
 
 PDSIM_INSTANCE_PATH = (Path().home()/'ws'/'PDSim_Scenes_zenotravel'/'Assets'/'Scenes'/'ZenoR'/'Data'/'PdSimInstance.asset').resolve()

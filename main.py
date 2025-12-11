@@ -1,7 +1,8 @@
+from CAI_pkg.Globals import *
 from CAI_pkg import GUI_agentic
-from CAI_pkg.defs import *
 from CAI_pkg.ConstraintPlanning import CAI
 from CAI_pkg.ConstraintPlanning.Ablation import AblationSetting
+from CAI_pkg.Agentic_constraint import setup_agentic
 
 import click
 import faulthandler
@@ -29,6 +30,9 @@ def main(problem_name, planning_mode, timeout):
     CAI.init(problem_name, planning_mode, timeout)
     # CAI.CM.load('validated.json)
     
+    # Init agentic 
+    setup_agentic()
+
     # Create main GUI app
     app = GUI_agentic.App()
     
