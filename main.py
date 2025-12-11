@@ -1,7 +1,6 @@
 from CAI_pkg.Globals import *
 from CAI_pkg import GUI_agentic
 from CAI_pkg.ConstraintPlanning import CAI
-from CAI_pkg.ConstraintPlanning.Ablation import AblationSetting
 from CAI_pkg.Agentic_constraint import setup_agentic
 
 import click
@@ -21,7 +20,7 @@ def main(problem_name, planning_mode, timeout):
     faulthandler.enable()
         
     # FOR ABLATION 
-    AblationSetting.apply(AblationSetting.REGULAR)
+    applyAblation(AblationSetting.REGULAR)
     
     # Logging
     setupLogger()
