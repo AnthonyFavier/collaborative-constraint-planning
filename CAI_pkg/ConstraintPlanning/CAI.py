@@ -1,5 +1,6 @@
 """
-Docstring for CAI_pkg.ConstraintPlanning.CAI
+Centralize functionnalities for planning with constraints
+Storing constraints, checking generated PDDL, compile PDDL3, solve with planner
 """
 
 import time
@@ -16,12 +17,6 @@ from ..Helpers import mprint, startTimer, stopTimer
 
 constraint_manager = None
 
-## ADD CONSTRAINT ##
-def createConstraint(nl_constraint, input_time=0):
-    r = constraint_manager.createRaw(nl_constraint)
-    r.time_input += input_time
-    return r
-
 def load_constraints(filename):
     constraint_manager.load(filename)
 
@@ -29,8 +24,8 @@ def load_constraints(filename):
 def planWithConstraints():
     # get activated constraints
     # update problem with activated constraints
-    # compile problem
-    # Solve it
+    # compile problem with NTCORE
+    # Solve it with planner
     
     mprint("\n=== PLANNING ===")
     
@@ -167,17 +162,13 @@ def init(problem_name, planning_mode, timeout):
     # Init LLM system message with domain and problem
     LLM.setSystemMessage(DOMAIN_PDDL, G.PROBLEM_PDDL)
         
-from unified_planning.io import PDDLReader
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
     activated_encodings = [c.encoding for k,c in constraint_manager.decomposed_constraints.items() if c.isActivated()]
     encodingsStr = "\n".join(activated_encodings)
-    updatedProblem = PDDLHandler.getProblemWithConstraints(G.PROBLEM_PDDL, activated_encodings)
-    with open(G.UPDATED_PROBLEM_PATH, "w") as f:
-        f.write(updatedProblem)
-    reader = PDDLReader()
+    updatedProblem = PDDLHandler.getProblemWithConstraints(activated_encodings)
     try:
-        pb = reader.parse_problem(G.DOMAIN_PATH, G.UPDATED_PROBLEM_PATH)
+        PDDLHandler.parse_pddl3_str(G.DOMAIN_PDDL, updatedProblem)
         return True, encodingsStr, None
     except Exception as err:
         return False, encodingsStr, err

@@ -17,7 +17,7 @@ import numeric_tcore.parsing_extensions as ntcore_parsing_ext
 
 def parse_pddl3(domain_path, problem_path):
     return ntcore_parsing_ext.parse_pddl3(domain_path, problem_path)
-def parse_pddl3_str(domain, updatedProblem):
+def parse_pddl3_str(domain, problem):
     """
     Adapted from NTCORE parsing_extensions to take string as input instead of file_paths
     """
@@ -28,7 +28,7 @@ def parse_pddl3_str(domain, updatedProblem):
     reader._trajectory_constraints["hold-after"] = parser_extensions.parse_holdafter
     reader._trajectory_constraints["hold-during"] = parser_extensions.parse_holdduring
     reader._trajectory_constraints["always-within"] = parser_extensions.parse_alwayswithin
-    problem = reader.parse_problem_string(domain, updatedProblem)
+    problem = reader.parse_problem_string(domain, problem)
     quantitative_constrants = parser_extensions.constraints
     return ntcore_parsing_ext.PDDL3QuantitativeProblem(problem, quantitative_constrants)
 

@@ -1,3 +1,8 @@
+"""
+Graphical User Interface 
+Takes user input + commands and calls agentic module to generate answers or create constraints
+"""
+
 from . import Globals as G
 from .Helpers import mprint, minput
 from . import Helpers
@@ -425,7 +430,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
 
             try: # Agentic:
                 encodings = Agentic_constraint.TranslateUserInput(c)
-                constraint = CAI.createConstraint(c, t_input)
+                constraint = CAI.constraint_manager.createRaw(c)
+                constraint.time_input = t_input
                 constraint.time_total += time.time() - time_total
                 activated_encodings = []
                 for e in encodings:
@@ -989,6 +995,7 @@ class PlanFrame(customtkinter.CTkFrame):
         
         date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")
         filename = f'export_results/{G.PROBLEM_NAME}_{date}.json' 
+        
         
         result, encodingsStr, err = CAI.checkIfUpdatedProblemIsParsable()
         pyperclip.copy(encodingsStr)
