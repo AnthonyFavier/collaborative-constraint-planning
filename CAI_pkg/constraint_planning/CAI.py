@@ -18,6 +18,9 @@ constraint_manager = None
 def load_constraints(filename):
     constraint_manager.load(filename)
 
+def get_constraint_manager():
+    return constraint_manager
+
 ## PLAN ##
 def planWithConstraints():
     # get activated constraints

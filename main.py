@@ -12,7 +12,7 @@ import faulthandler
 
 from CAI_pkg.Globals import *
 from CAI_pkg import GUI_agentic
-from CAI_pkg.ConstraintPlanning import CAI
+from CAI_pkg import constraint_planning
 from CAI_pkg import agentic
 from CAI_pkg.Logger import init_logger
 
@@ -33,14 +33,14 @@ def main(problem_name, planning_mode, timeout):
 
     applyAblation(AblationSetting.REGULAR)
 
-    CAI.init(problem_name, planning_mode, timeout)
+    constraint_planning.init(problem_name, planning_mode, timeout)
     # CAI.load_constraints('validated.json')
 
     agentic.init()
 
     app = GUI_agentic.App()
     
-    CAI.showSettings()
+    constraint_planning.showSettings()
     
     app.mainloop()
 if __name__ == '__main__':

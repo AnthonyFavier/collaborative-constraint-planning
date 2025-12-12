@@ -16,7 +16,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from .. import Globals as G
 from ..Helpers import mprint, minput
 from .. import Helpers
-from ..ConstraintPlanning import PDDLHandler
+from .. import constraint_planning
 from . import ToolsLLM
 from . import Models
 
@@ -191,7 +191,7 @@ def Encode(state: EncodingState):
     logger.info(answer)
     try:
         encoding = Helpers.extractTag('pddl', answer)
-        encoding = PDDLHandler.verifier.initialEncodingFixes(encoding)
+        encoding = constraint_planning.initialEncodingFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
     
@@ -209,7 +209,7 @@ def Verifier(state: EncodingState):
         logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
-    result = PDDLHandler.verifier.checkEncoding(encoding)
+    result = constraint_planning.checkEncoding(encoding)
     
     encodingOK = result=='OK'
     
