@@ -13,7 +13,7 @@ import faulthandler
 from CAI_pkg.Globals import *
 from CAI_pkg import GUI_agentic
 from CAI_pkg.ConstraintPlanning import CAI
-from CAI_pkg.Agentic_constraint import init_agentic
+from CAI_pkg import agentic
 from CAI_pkg.Logger import init_logger
 
 #########################################################################################################
@@ -36,7 +36,7 @@ def main(problem_name, planning_mode, timeout):
     CAI.init(problem_name, planning_mode, timeout)
     # CAI.load_constraints('validated.json')
 
-    init_agentic()
+    agentic.init()
 
     app = GUI_agentic.App()
     

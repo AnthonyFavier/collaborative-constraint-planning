@@ -2,8 +2,8 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-from . import Globals as G
-from .Helpers import mprint, minput
+from .. import Globals as G
+from ..Helpers import mprint, minput
 
 import requests
 import json 

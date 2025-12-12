@@ -22,7 +22,7 @@ from . import Helpers
 from .ConstraintPlanning import CAI
 from .UpdatePDSimPlan import main as updatePDSimPlan
 from . import UpdatePDSimPlan
-from . import Agentic_constraint
+from . import agentic
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -432,7 +432,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             try: 
                 # Use agentic part to translate NL input (c) into 
                 # a set of PDDL3 constraints, stored in 'encodings'
-                encodings = Agentic_constraint.TranslateUserInput(c)
+                encodings = agentic.TranslateUserInput(c)
                 t_total = time.time() - t_total
 
                 # Update the constraint manager with results
@@ -727,7 +727,7 @@ class DisplayFrame(customtkinter.CTkFrame):
         self.master.disableAllButtons()
         
         mprint("\n=== CHAT ===")
-        Agentic_constraint.Chat()
+        agentic.Chat()
         
         self.master.enableAllButtons()
         mprint("\n=== END CHAT ===")
@@ -738,13 +738,7 @@ class DisplayFrame(customtkinter.CTkFrame):
     def riskAnalysis(self):
         self.master.disableAllButtons()
         mprint("\n=== RISK ANALYSIS ===")
-        # answer, suggestions = agentic_constraint.RiskAnalysis()
-        Agentic_constraint.NewRisk()
-        # mprint(agentic_constraint.G.CHAT_SEPARATOR)
-        # mprint('AI: final answer\n')
-        # mprint('RISKS IDENTIFIED:\n'+answer)
-        # mprint(agentic_constraint.G.CHAT_SEPARATOR)
-        # mprint('SUGGESTIONS:\n'+answer)
+        agentic.NewRisk()
         
         self.master.enableAllButtons()
         mprint("\n=== END RISK ANALYSIS ===")
@@ -892,7 +886,7 @@ class PlanFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.generateSuggestions).start()
     def generateSuggestions(self):
         self.master.disableAllButtons()
-        Agentic_constraint.Suggestions()
+        agentic.Suggestions()
         self.master.enableAllButtons()
         
     def printSuggestions(self):
@@ -1020,7 +1014,7 @@ class PlanFrame(customtkinter.CTkFrame):
                     nb_h_interventions+=1
                     # if nb_h_interventions!=0:
                     #     comments += '> ' + t['content'][0]['text'] + '\n'
-        nb_h_interventions -= CAI.nb_encoding_retry # Now must be retreived from Agentic_Constraint? From each constraint in CM?
+        nb_h_interventions -= CAI.nb_encoding_retry 
         nb_h_reviews = nb_h_interventions+1
         input_t, inter_t, decomp_t, enco_t, trans_t = data['input_time'],data['interaction_time'],data['decomposition_time'],data['encoding_time'],data['translation_time']
         
@@ -1220,8 +1214,8 @@ class App(customtkinter.CTk):
         menubar.add_cascade(label="Planning", menu=planmenu)
         
         weathermenu = Menu(menubar, tearoff=0)
-        weathermenu.add_command(label="Activate fake Boston weather", command=Agentic_constraint.ToolsLLM.activateFakeWeather)
-        weathermenu.add_command(label="Deactivate fake Boston weather", command=Agentic_constraint.ToolsLLM.deactivateFakeWeather)
+        weathermenu.add_command(label="Activate fake Boston weather", command=agentic.activateFakeWeather)
+        weathermenu.add_command(label="Deactivate fake Boston weather", command=agentic.deactivateFakeWeather)
         menubar.add_cascade(label="Weather", menu=weathermenu)
         
         helpmenu = Menu(menubar, tearoff=0)
@@ -1250,8 +1244,6 @@ class App(customtkinter.CTk):
             mprint("WARNING: Can't find PDSim file to update simulation plan, check log. Simpulation updates will be skipped.")
             mprint('-> ' + str(UpdatePDSimPlan.PDSIM_INSTANCE_PATH)+'\n')
         
-        # agentic_constraint.draw_graph()
-    
     def askChangeConstraintsWidth(self):
         dialog = customtkinter.CTkInputDialog(text=f"Enter constrains_frame width weight:\n(Current weight: {self.constraints_frame_weight_width}):")
         x = dialog.get_input()

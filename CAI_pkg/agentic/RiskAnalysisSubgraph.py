@@ -10,8 +10,8 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
 
-from . import Globals as G
-from .Helpers import mprint, minput
+from .. import Globals as G
+from ..Helpers import mprint, minput
 from . import ToolsLLM
 from . import Models
 

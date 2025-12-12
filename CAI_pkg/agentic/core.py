@@ -4,7 +4,7 @@ logger.setLevel(logging.INFO)
 
 from langchain_core.messages import HumanMessage
 
-from .Helpers import mprint
+from ..Helpers import mprint
 from . import ToolsLLM
 from . import ChatSubgraph
 from . import RiskAnalysisSubgraph
@@ -31,7 +31,7 @@ def draw_graphs():
 #### RUN ####
 #############
 
-def init_agentic():
+def init():
     """Set up the agentic constraint system with the given PDDL domain, problem and plan."""
     ToolsLLM.set_up_rag()
     
