@@ -153,14 +153,14 @@ def init(problem_name, planning_mode, timeout):
     
     # Open initial problem
     with open(G.DOMAIN_PATH, "r") as f:
-        DOMAIN_PDDL = f.read()
+        G.DOMAIN_PDDL = f.read()
     with open(G.PROBLEM_PATH, "r") as f:
         G.PROBLEM_PDDL = f.read()
     G.current_plan = "No plan"
     G.suggestions = "* No suggestions *"
 
     # Init LLM system message with domain and problem
-    LLM.setSystemMessage(DOMAIN_PDDL, G.PROBLEM_PDDL)
+    LLM.setSystemMessage(G.DOMAIN_PDDL, G.PROBLEM_PDDL)
         
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
