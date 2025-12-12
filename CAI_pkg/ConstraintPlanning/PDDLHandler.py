@@ -223,9 +223,10 @@ class Verifier:
                 
         # Parsing test #
         try:
-            updatedProblem = getProblemWithConstraints(G.PROBLEM_PDDL, encoding)
+            updatedProblem = getProblemWithConstraints([encoding])
             parse_pddl3_str(G.DOMAIN_PDDL, updatedProblem)
         except Exception as err:
+            print("checkEncoding: exception: ", err)
             return "There is a syntax error."
         
         # encodingOk, error_description
