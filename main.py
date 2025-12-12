@@ -10,11 +10,7 @@ load_dotenv(find_dotenv())
 import click
 import faulthandler
 
-from CAI_pkg.Globals import *
-from CAI_pkg import GUI_agentic
-from CAI_pkg import constraint_planning
-from CAI_pkg import agentic
-from CAI_pkg.Logger import init_logger
+from CAI_pkg import *
 
 #########################################################################################################
 
