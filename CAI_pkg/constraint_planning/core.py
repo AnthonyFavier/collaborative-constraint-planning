@@ -5,7 +5,6 @@ Storing constraints, checking generated PDDL, compile PDDL3, solve with planner
 
 import time
 import click
-from NumericTCORE.bin.ntcore import main as ntcore
 
 from .Constraints import ConstraintManager
 from .Planner import planner
@@ -43,18 +42,10 @@ def planWithConstraints():
         problem_name = G.PROBLEM_NAME
         time_compilation = 0
     else:
-        problem_name = G.PlanFiles.COMPILED
-        
-        updatedProblem = PDDLHandler.getProblemWithConstraints(activated_encodings)
-        
-        # Save updated problem in a file
-        with open(G.UPDATED_PROBLEM_PATH, "w") as f:
-            f.write(updatedProblem)
-        
-        # Compile the updated problem
         mprint("\nCompiling ... ", end="")
+        problem_name = G.PlanFiles.COMPILED
         time_compilation = time.time()
-        ntcore(G.DOMAIN_PATH, G.UPDATED_PROBLEM_PATH, "tmp/pddl_files/", achiever_strategy=G.NtcoreStrategy.DELTA, verbose=False)
+        PDDLHandler.compile_pddl3(activated_encodings)
         time_compilation = time.time() - time_compilation
         mprint(f"OK [{time_compilation:.2f}s]")
         

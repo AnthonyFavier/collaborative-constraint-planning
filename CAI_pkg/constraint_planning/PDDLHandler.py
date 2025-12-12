@@ -1,16 +1,24 @@
 
 """
-Manipulates PDDL parts: parsing, checking PDDL3 constraints, generating PDDL3 problem
+Manipulates PDDL parts: 
+- parsing
+- compiling PDDL3
+- checking PDDL3 constraints
+- generating PDDL3 problem
 """
 
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-from .. import Globals as G
-
 from numeric_tcore.parsing_extensions import PDDL3QuantitativeProblem
 import numeric_tcore.parsing_extensions as ntcore_parsing_ext
+from NumericTCORE.bin.ntcore import main as ntcore
+import time
+
+from .. import Globals as G
+from ..Helpers import mprint
+
 
 ###################################################
 # Functions to parse and update problem
@@ -51,6 +59,17 @@ def getProblemWithConstraints(encodings):
     updatedProblem = G.PROBLEM_PDDL[:i_insert] + "\n(:constraints\n" + encodings_str + '\n)\n' + G.PROBLEM_PDDL[i_insert:]
     
     return updatedProblem
+
+def compile_pddl3(activated_encodings):
+
+    updatedProblem = getProblemWithConstraints(activated_encodings)
+    
+    # Save updated problem in a file
+    with open(G.UPDATED_PROBLEM_PATH, "w") as f:
+        f.write(updatedProblem)
+    
+    # Compile the updated problem
+    ntcore(G.DOMAIN_PATH, G.UPDATED_PROBLEM_PATH, "tmp/pddl_files/", achiever_strategy=G.NtcoreStrategy.DELTA, verbose=False)
 
 ###################################################
 # Verifier fixing and checking encodings
