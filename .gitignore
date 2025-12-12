@@ -1,4 +1,5 @@
 *.pyc
-
 env_cai/
 .env
+
+docker/requirements.txt
