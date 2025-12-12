@@ -415,7 +415,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
         # startTimer()
         
         mprint("\n=== ADDING CONSTRAINT ===")
-        time_total = time.time()
+        t_total = time.time()
         
         t_input = time.time()
         mprint(Agentic_constraint.chat_separator)
@@ -428,16 +428,21 @@ class ButtonsFrame(customtkinter.CTkFrame):
             mprint("\nUser: " + c )
             t_input = time.time() - t_input
 
-            try: # Agentic:
+            try: 
+                # Use agentic part to translate NL input (c) into 
+                # a set of PDDL3 constraints, stored in 'encodings'
                 encodings = Agentic_constraint.TranslateUserInput(c)
-                constraint = CAI.constraint_manager.createRaw(c)
-                constraint.time_input = t_input
-                constraint.time_total += time.time() - time_total
-                activated_encodings = []
+                t_total = time.time() - t_total
+
+                # Update the constraint manager with results
+                parent_constraint = CAI.constraint_manager.createRaw(c, \
+                                                                time_input=t_input, \
+                                                                time_total=t_total)
                 for e in encodings:
-                    child_constraint = CAI.constraint_manager.createDecomposedAndE2NL(constraint, e.constraint, e.e2nl.e2nl)
-                    child_constraint.encoding = e.encoding.encoding
-                    activated_encodings.append(e.encoding.encoding)
+                    child_constraint = CAI.constraint_manager.createDecomposedAndE2NL(parent_constraint, \
+                                                                                    e.constraint, \
+                                                                                    e.encoding.encoding, \
+                                                                                    e.e2nl.e2nl)
 
                 CAI.constraint_manager.dump(G.PROBLEM_NAME)
                 

@@ -107,8 +107,10 @@ class ConstraintManager:
         self.raw_constraints = {} # symbol: Constraint
         self.decomposed_constraints = {} # symbol: DecomposedConstraint
         
-    def createRaw(self, nl_constraint):
+    def createRaw(self, nl_constraint, time_input, time_total):
         c = RawConstraint(nl_constraint)
+        self.time_input = time_input
+        self.time_total = time_total
         self.constraints[c.symbol] = c
         self.raw_constraints[c.symbol] = c
         return c
@@ -120,10 +122,11 @@ class ConstraintManager:
         self.decomposed_constraints[c.symbol] = c
         return c
     
-    def createDecomposedAndE2NL(self, parent, nl_constraint, e2nl):
+    def createDecomposedAndE2NL(self, parent, nl_constraint, encoding, e2nl):
         c = DecomposedConstraint(parent, nl_constraint)
-        c.e2nl = e2nl
         parent.children.append(c)
+        c.encoding = encoding
+        c.e2nl = e2nl
         self.constraints[c.symbol] = c
         self.decomposed_constraints[c.symbol] = c
         return c
