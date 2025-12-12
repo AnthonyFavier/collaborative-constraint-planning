@@ -5,7 +5,7 @@ logger.setLevel(logging.INFO)
 from . import Globals as G
 from .Helpers import mprint, minput
 from . import Helpers
-from .ConstraintPlanning.PDDLHandler import verifier
+from .ConstraintPlanning import PDDLHandler
 
 #######################
 #### LOAD API KEYS ####
@@ -1013,7 +1013,7 @@ def Encode(state: EncodingState):
     answer = extractAITextAnswer(msg)
     try:
         encoding = Helpers.extractTag('pddl', answer)
-        encoding = verifier.initialEncodingFixes(encoding)
+        encoding = PDDLHandler.verifier.initialEncodingFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
     
@@ -1031,7 +1031,7 @@ def Verifier(state: EncodingState):
         logger.info('Node: Verifier')
     
     encoding = state["encodingE2NL"].encoding.encoding
-    result = verifier.checkEncoding(encoding)
+    result = PDDLHandler.verifier.checkEncoding(encoding)
     
     encodingOK = result=='OK'
     
