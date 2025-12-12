@@ -899,7 +899,7 @@ class PlanFrame(customtkinter.CTkFrame):
     
     def loadConstraints(self):
         self.master.disableAllButtons()
-        filename = filedialog.askopenfilename(initialdir='dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
+        filename = filedialog.askopenfilename(initialdir='tmp/dumps_CM/', title='Select a File', filetypes=(('JSON files', '*.json'), ('all files', '*.*')))
         if isinstance(filename, str) and filename!='':
             CAI.constraint_manager.load(filename)
             self.master.constraints_frame.updateFrame()
