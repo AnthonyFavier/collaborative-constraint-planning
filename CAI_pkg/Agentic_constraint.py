@@ -468,7 +468,57 @@ def retrieve_with_metadata(query: str) -> str:
     logger.info('output: ' + output)
     return output
 
-from .Manual_plan_generation import simulatePlan
+from unified_planning.io import PDDLReader, PDDLWriter
+from unified_planning.shortcuts import *
+from unified_planning.plans import ActionInstance, SequentialPlan
+    
+def simulatePlan(domain_path, problem_path, txt_plan, metric_name):
+    txt = ''
+    reader = PDDLReader()
+    problem = reader.parse_problem(domain_path, problem_path)
+    
+    # convert plan
+    txt_plan = txt_plan.split('\n')
+    actions = []
+    for l in txt_plan:
+        if ''.join(l.split())=='':
+            continue
+        l = l[l.find("(")+1 : l.find(")") ]
+        l = ' '.join(l.split('_'))
+        l = l.split(' ')
+        name = l[0]
+        params = l[1:]
+        actions.append( (name, *params) )
+    up_plan = []
+    for a in actions:
+        name, *params = a
+        up_action = problem.action(name)
+        up_params = [problem.object(p.lower()) for p in params]
+        up_plan.append(ActionInstance(up_action, up_params))
+    up_plan = SequentialPlan(up_plan)
+    
+    # Simulate
+    with SequentialSimulator(problem) as simulator:
+        metric = FluentExp(problem.fluent(metric_name))
+        state = simulator.get_initial_state()
+        for ai in up_plan.actions:
+            new_state = simulator.apply(state, ai)
+            if new_state==None:
+                break
+            state = new_state
+            
+        if new_state==None:
+            txt += 'Plan is invalid.\n'
+            txt += f"Action {ai} isn't applicable.\n"
+        elif not simulator.is_goal(state):
+            txt += 'Plan is invalid.\n'
+            txt += "The final state doesn't satisfy the goal.\n"
+        else:
+            txt += 'Plan is valid.\n'
+        txt += f"Initial value {metric_name} = {simulator.get_initial_state().get_value(metric)}\n"
+        txt += f"Final value {metric_name} = {state.get_value(metric)}\n"
+        
+    return txt
 @tool
 def simulatePlanTool(plan: str, metric: str) -> str:
     """Simulate the given plan execution, checking its validity and computing its cost given the name of the metric of measure."""
