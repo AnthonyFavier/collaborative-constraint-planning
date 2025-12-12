@@ -690,6 +690,7 @@ def AdditionalRetrieval(state: FailureDetectionState):
     msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -713,6 +714,7 @@ def GenerateAnswer(state: FailureDetectionState):
     
     msg = call(g_llm, state['messages'])
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -734,6 +736,7 @@ def MakeSuggestions(state: FailureDetectionState):
     
     msg = call(g_llm, state['messages'])
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -812,6 +815,7 @@ def RiskRetrieval(state: FailureDetectionState):
     msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -879,6 +883,7 @@ def RiskQuestion(state: FailureDetectionState):
     msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -904,6 +909,7 @@ def RiskDeeperAnalysis(state: FailureDetectionState):
     msg = call(llm, state['messages'])
     
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(chat_separator)
         mprint("AI: " + answer) 
@@ -1011,6 +1017,7 @@ def Encode(state: EncodingState):
     llm = reasonning_llm
     msg = call(llm, state['e_messages'])
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     try:
         encoding = Helpers.extractTag('pddl', answer)
         encoding = PDDLHandler.verifier.initialEncodingFixes(encoding)
@@ -1040,6 +1047,7 @@ def Verifier(state: EncodingState):
         encodingValidation.encoding_nb_retry += 1
         if encodingValidation.encoding_nb_retry > 5:
             print("WARNING: Exceeding 5 encoding attempts")
+            raise Exception("Stopped ....") # TODO: catch this error..
     else:
         encodingValidation = EncodingValidation()
 
@@ -1635,6 +1643,7 @@ def ChatAnswer(state: ChatState):
     mprint("AI: ", end='')
     msg = call(llm, messages)
     answer = extractAITextAnswer(msg)
+    logger.info(answer)
     if answer:
         mprint(answer)
 
@@ -1753,7 +1762,6 @@ def init_agentic():
     new_risk_subgraph = build_new_risk_subgraph()
     main_graph = build_main_graph()
     # draw_graph()
-    
 
 def TranslateUserInput(user_input):
     input_state = DecompositionState({"messages": [HumanMessage(content=user_input)], "user_input": user_input})
