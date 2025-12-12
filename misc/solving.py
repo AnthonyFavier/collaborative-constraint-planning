@@ -2,10 +2,10 @@ import click
 from unified_planning.io import PDDLReader, PDDLWriter
 import unified_planning 
 from unified_planning.shortcuts import *
-from CAI_pkg.defs import *
+from collab_planning.defs import *
 import random
 from NumericTCORE.bin.ntcore import main as ntcore
-from CAI_pkg.planner import planner
+from collab_planning.planner import planner
 import json
 from progress.bar import IncrementalBar
 from datetime import datetime

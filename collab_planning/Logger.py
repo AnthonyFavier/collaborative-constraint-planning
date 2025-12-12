@@ -5,7 +5,7 @@ logger.setLevel(logging.INFO)
 from datetime import datetime
 import pkgutil
 
-import CAI_pkg
+import collab_planning
 
 class ModuleFilter(logging.Filter):
     def __init__(self, allowed_modules):
@@ -16,7 +16,7 @@ class ModuleFilter(logging.Filter):
         return record.name in self.allowed
 
 def init_logger():
-    allowed_modules = [m.name for m in pkgutil.walk_packages(CAI_pkg.__path__, CAI_pkg.__name__ + ".")]
+    allowed_modules = [m.name for m in pkgutil.walk_packages(collab_planning.__path__, collab_planning.__name__ + ".")]
 
     # log filename
     date = datetime.now().strftime("%m-%d-%Y_%H:%M:%S")

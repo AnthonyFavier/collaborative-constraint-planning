@@ -1,5 +1,5 @@
 import time
-from CAI_pkg.defs import *
+from collab_planning.defs import *
 import os                                                                                                                                                                                                          
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path

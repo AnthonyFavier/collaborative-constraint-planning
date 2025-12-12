@@ -10,7 +10,7 @@ load_dotenv(find_dotenv())
 import click
 import faulthandler
 
-from CAI_pkg import *
+from collab_planning import *
 
 #########################################################################################################
 
@@ -34,7 +34,7 @@ def main(problem_name, planning_mode, timeout):
 
     agentic.init()
 
-    app = GUI_agentic.App()
+    app = GUI.App()
     
     constraint_planning.showSettings()
     
