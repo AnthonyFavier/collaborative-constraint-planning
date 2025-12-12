@@ -3,14 +3,6 @@ Graphical User Interface
 Takes user input + commands and calls agentic module to generate answers or create constraints
 """
 
-from . import Globals as G
-from .Helpers import mprint, minput
-from . import Helpers
-from .ConstraintPlanning import CAI
-from .UpdatePDSimPlan import main as updatePDSimPlan
-from . import Agentic_constraint
-from . import UpdatePDSimPlan
-
 from datetime import datetime
 import customtkinter
 from customtkinter import filedialog
@@ -22,6 +14,14 @@ import pyperclip
 import ctypes
 import json
 import jsonpickle
+
+from . import Globals as G
+from .Helpers import mprint, minput
+from . import Helpers
+from .ConstraintPlanning import CAI
+from .UpdatePDSimPlan import main as updatePDSimPlan
+from . import UpdatePDSimPlan
+from . import Agentic_constraint
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
