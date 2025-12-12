@@ -1,6 +1,7 @@
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
 from pathlib import Path
 from enum import Enum
 
@@ -116,6 +117,14 @@ suggestions = None
 
 SHELL_PRINTS = False
 GUI_PROMPT = True
+PRINT_AGENTIC_NODES = True
+
+import threading
+AGENTIC_USER_INTERACTION_LOCK = threading.Lock()
+
+CHAT_SEPARATOR = "-----------------------------"
+
+REVIEW_E2NL = True
 
 # ABLATION_FLAGS #
 WITH_E2NL = True

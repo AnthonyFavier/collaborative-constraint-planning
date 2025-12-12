@@ -8,13 +8,13 @@ def startWith(s1, s2):
     return s1[:len(s2)]==s2
 
 myprint = lambda x: None
-def mprint(txt, end="\n", logonly=False):
+def mprint(txt, end="\n", no_log=False):
     if G.SHELL_PRINTS:
         print(txt, end=end)
     if G.GUI_PROMPT:
-        logger.info(txt)
-        if not logonly:
-            myprint(txt, end=end)
+        myprint(txt, end=end)
+        if not no_log:
+            logger.info(txt)
 def setPrintFunction(print_function):
     global myprint
     myprint = print_function

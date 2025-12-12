@@ -2,6 +2,9 @@
 Graphical User Interface 
 Takes user input + commands and calls agentic module to generate answers or create constraints
 """
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 from datetime import datetime
 import customtkinter
@@ -11,8 +14,6 @@ from PIL import Image, ImageTk
 import time
 import threading
 import pyperclip
-import ctypes
-import json
 import jsonpickle
 
 from . import Globals as G
@@ -414,11 +415,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         
         # startTimer()
         
-        mprint("\n=== ADDING CONSTRAINT ===")
+        mprint("\n=== TRANSLATING ===")
         t_total = time.time()
         
         t_input = time.time()
-        mprint(Agentic_constraint.chat_separator)
+        mprint(G.CHAT_SEPARATOR)
         c = minput(txt="Enter your constraint: ")
         
         if c in ['', 'abort']:
@@ -462,7 +463,8 @@ class ButtonsFrame(customtkinter.CTkFrame):
             
             
         # stopTimer()
-        
+
+        mprint("\n=== END TRANSLATING ===")
             
         
     def delete(self):
@@ -553,7 +555,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
             txt_main += 'Planning time: ' + '{:.2f}'.format(self.master.plan_frame.last_results['time_planning']) + '\n'
             txt_main += 'Found Plan:\n' + self.master.plan_frame.last_results['plan']
         self.master.plan_frame.printMain(txt_main)
-        mprint(txt_main, logonly=True)
+        logger.info(txt_main)
         
         G.current_plan = txt_main
         self.master.plan_frame.updateSimButton()
@@ -626,11 +628,11 @@ class ButtonsFrame(customtkinter.CTkFrame):
         self.buttons['E2NL'].configure(text="Activate\nE2NL" if not G.WITH_E2NL else "Deactivate\nE2NL")        
         
     def toggleReviewE2NL(self):
-        Agentic_constraint.REVIEW_E2NL = not Agentic_constraint.REVIEW_E2NL
+        G.REVIEW_E2NL = not G.REVIEW_E2NL
     def activateReviewE2NL(self):
-        Agentic_constraint.REVIEW_E2NL = True
+        G.REVIEW_E2NL = True
     def deactivateReviewE2NL(self):
-        Agentic_constraint.REVIEW_E2NL = False
+        G.REVIEW_E2NL = False
         
     def toggleDecomps(self):
         self.master.constraints_frame.toggleDecomps()
@@ -738,10 +740,10 @@ class DisplayFrame(customtkinter.CTkFrame):
         mprint("\n=== RISK ANALYSIS ===")
         # answer, suggestions = agentic_constraint.RiskAnalysis()
         Agentic_constraint.NewRisk()
-        # mprint(agentic_constraint.chat_separator)
+        # mprint(agentic_constraint.G.CHAT_SEPARATOR)
         # mprint('AI: final answer\n')
         # mprint('RISKS IDENTIFIED:\n'+answer)
-        # mprint(agentic_constraint.chat_separator)
+        # mprint(agentic_constraint.G.CHAT_SEPARATOR)
         # mprint('SUGGESTIONS:\n'+answer)
         
         self.master.enableAllButtons()
@@ -890,7 +892,7 @@ class PlanFrame(customtkinter.CTkFrame):
         threading.Thread(target=self.generateSuggestions).start()
     def generateSuggestions(self):
         self.master.disableAllButtons()
-        CAI.generate_suggestions()
+        Agentic_constraint.Suggestions()
         self.master.enableAllButtons()
         
     def printSuggestions(self):
@@ -1218,8 +1220,8 @@ class App(customtkinter.CTk):
         menubar.add_cascade(label="Planning", menu=planmenu)
         
         weathermenu = Menu(menubar, tearoff=0)
-        weathermenu.add_command(label="Activate fake Boston weather", command=Agentic_constraint.activateFakeWeather)
-        weathermenu.add_command(label="Deactivate fake Boston weather", command=Agentic_constraint.deactivateFakeWeather)
+        weathermenu.add_command(label="Activate fake Boston weather", command=Agentic_constraint.ToolsLLM.activateFakeWeather)
+        weathermenu.add_command(label="Deactivate fake Boston weather", command=Agentic_constraint.ToolsLLM.deactivateFakeWeather)
         menubar.add_cascade(label="Weather", menu=weathermenu)
         
         helpmenu = Menu(menubar, tearoff=0)
@@ -1310,8 +1312,8 @@ Time budget: {time_budget}
 """[1:-1]
         text = text.format(
             e2nl = G.WITH_E2NL,
-            e2nl_review = Agentic_constraint.REVIEW_E2NL,
-            fake_weather = Agentic_constraint.FAKE_WEATHER,
+            e2nl_review = G.REVIEW_E2NL,
+            fake_weather = Agentic_constraint.ToolsLLM.FAKE_WEATHER,
             show_decomps = self.constraints_frame.show_decomps,
             show_encodings = self.constraints_frame.show_encodings,
             plan_mode = G.planning_mode,

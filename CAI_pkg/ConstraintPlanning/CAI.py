@@ -5,15 +5,13 @@ Storing constraints, checking generated PDDL, compile PDDL3, solve with planner
 
 import time
 import click
-
 from NumericTCORE.bin.ntcore import main as ntcore
 
 from .Constraints import ConstraintManager
 from .Planner import planner
-from .. import LLM
 from . import PDDLHandler
 from .. import Globals as G
-from ..Helpers import mprint, startTimer, stopTimer
+from ..Helpers import mprint
 
 constraint_manager = None
 
@@ -30,6 +28,8 @@ def planWithConstraints():
     mprint("\n=== PLANNING ===")
     
     # Get activated constraints
+    #TODO: Move compilation to PDDLHandler
+    
     activated_encodings = []
     for k,c in constraint_manager.decomposed_constraints.items():
         if c.isActivated():
@@ -66,24 +66,6 @@ def planWithConstraints():
     else:
         mprint(f"Failed {fail_reason} [{time_planning:.2f}s]")
     return result, plan, planlength, metric, fail_reason, time_compilation, time_planning
-
-## SUGGESTIONS ##
-def generate_suggestions(show=True):
-    d = time.time()
-    startTimer()
-    mprint("\nElaborating strategies suggestions ... ", end="")
-    G.suggestions = LLM.suggestions()
-    # remove empty lines
-    G.suggestions = G.suggestions.splitlines()
-    while True:
-        try: G.suggestions.remove('')
-        except ValueError: break
-    G.suggestions = '\n'.join(G.suggestions)
-    stopTimer()
-    d = time.time() - d
-    mprint(f"OK [{d:.1f}s]")
-    if show:
-        mprint(G.suggestions)
 
 ## INIT ##
 def init(problem_name, planning_mode, timeout):
@@ -159,9 +141,6 @@ def init(problem_name, planning_mode, timeout):
     G.current_plan = "No plan"
     G.suggestions = "* No suggestions *"
 
-    # Init LLM system message with domain and problem
-    LLM.setSystemMessage(G.DOMAIN_PDDL, G.PROBLEM_PDDL)
-        
 def checkIfUpdatedProblemIsParsable():
     # Get activated constraints
     activated_encodings = [c.encoding for k,c in constraint_manager.decomposed_constraints.items() if c.isActivated()]
