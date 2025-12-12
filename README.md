@@ -5,7 +5,7 @@ CAI
 
 ## OVERVIEW
 
-![plot](./rsc/overview.jpg "Overview")
+![plot](./misc/rsc/overview.jpg "Overview")
 
 ## INSTALLATION
 

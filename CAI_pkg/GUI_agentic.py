@@ -1147,8 +1147,7 @@ class App(customtkinter.CTk):
         self.title("CAI - Alpha Version")
         self.geometry("3400x1912")
         
-        # self.iconbitmap("rsc/icon.ico")
-        im = Image.open('rsc/icon.png')
+        im = Image.open('misc/rsc/icon.png')
         photo = ImageTk.PhotoImage(im)
         self.wm_iconphoto(True, photo)
         
