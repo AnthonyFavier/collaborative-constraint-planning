@@ -29,12 +29,7 @@ from CAI_pkg.Logger import init_logger
 def main(problem_name, planning_mode, timeout):
     faulthandler.enable()
 
-    init_logger([
-        'CAI_pkg.Agentic_constraint',
-        'CAI_pkg.ConstraintPlanning.PDDLHandler',
-        'CAI_pkg.Globals',
-        'CAI_pkg.Helpers',
-    ])
+    init_logger()
 
     applyAblation(AblationSetting.REGULAR)
 
