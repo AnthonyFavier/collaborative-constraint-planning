@@ -43,6 +43,9 @@ Run the docker image:
 $ ./run_docker.sh
 ```
 
+**Note**: Might need to run `xhost +local:docker` to enable display from docker
+
+
 ## Manual Detailed Approach
 
 Tested on Ubuntu 24.04
