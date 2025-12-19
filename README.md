@@ -5,54 +5,12 @@ CAI
 
 ## OVERVIEW
 
-![plot](./misc/rsc/overview.jpg "Overview")
+<img src="./misc/rsc/overview.jpg" width="600">
 
 ## INSTALLATION
 
-Tested on Ubuntu 24.04
+See [INSTALL.md](INSTALL.md).
 
-### 1. Install dependencies and Python3.10
-
-Rely on **Python3.10** so it might be required to install this specific version through: `apt` or `deadsnake`
-```
-$ sudo apt-get install -y python3.10 python3.10-tk
-```
-
-```
-$ sudo apt-get -y install openjdk-17-jdk unifont
-```
-
-### 2. Create a python3.10 virtual environment 
-
-**IMPORTANT**: Currently only supporting **Venv** (<u>not</u> **Conda**) due to later manual patching of the packages `unified-planning` and `customtkinter`.
-
-```
-$ python3.10 -m venv env_cai
-$ source env_cai/bin/activate
-```
-**Note**: to deactivate the python environment simply run: `deactivate`
-
-
-### 3. Install package
-
-Make sure the virutal environment is activated.
-
-Easiest way is to run the installation script:
-```
-$ ./install.sh
-```
-
-Look at the detailed install below for more insight.
-
-### 4. LLM APIs
-
-Create a `.env` file in root folder to store API keys in the form:
-```
-ANTHROPIC_API_KEY = 'REPLACE_WITH_YOUR_KEY'
-OPENAI_API_KEY = 'REPLACE_WITH_YOUR_KEY'
-```
-
-Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
 
 
 ## RUN

@@ -2,10 +2,12 @@
 import sys
 
 from pathlib import Path
-path = Path() / 'env_cai' / 'lib' / 'python3.10' / 'site-packages' / 'unified_planning' / 'io' / 'pddl_reader.py'
 
-def main():
+def main(venv_path):
     print("patching [unified_planning] default values in problem init for real and int")
+    
+    path = venv_path / 'lib' / 'python3.10' / 'site-packages' / 'unified_planning' / 'io' / 'pddl_reader.py'
+    assert path.exists()
     
     with open(path, 'r') as f:
         txt = f.read()
@@ -51,4 +53,5 @@ def main():
         print("\tunpatched!")    
 
 if __name__ == "__main__":
-    main()
+    venv_path = Path(sys.argv[1])
+    main(venv_path)

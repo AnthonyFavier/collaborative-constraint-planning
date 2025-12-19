@@ -3,9 +3,6 @@ import sys
 
 from pathlib import Path
 
-path = Path() / 'env_cai' / 'lib' / 'python3.10' / 'site-packages' / 'customtkinter' / 'windows' / 'widgets' / 'ctk_scrollable_frame.py'
-
-
 new_txt = """
 from typing import Union, Tuple, Optional, Any
 try:
@@ -676,8 +673,12 @@ class CTkScrollableFrame(tkinter.Frame, CTkAppearanceModeBaseClass, CTkScalingBa
         self._parent_frame.lower(belowThis)
 """[1:-1]
 
-def main():
+def main(venv_path):
+
     print("patching [customtkinter] scrollableFrame both orientation")
+    
+    path = venv_path / 'lib' / 'python3.10' / 'site-packages' / 'customtkinter' / 'windows' / 'widgets' / 'ctk_scrollable_frame.py'
+    assert path.exists()
     
     with open(path, 'r') as f:
         txt = f.read()
@@ -700,4 +701,5 @@ def main():
         print("\tunpatched!")    
 
 if __name__ == "__main__": 
-    main()
+    venv_path = Path(sys.argv[1])
+    main(venv_path)

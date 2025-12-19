@@ -8,11 +8,11 @@ echo $PWD
 docker run --privileged --network host \
            --env="DISPLAY=$DISPLAY" \
            --env="QT_X11_NO_MITSHM=1" \
-           --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" \
            --env XAUTHORITY=$HOME/.Xauthority \
-           --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-           --volume="$PWD/../:$PWD/../" \
+           -v $HOME/.Xauthority:$HOME/.Xauthority:rw \
+           -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
            -v /dev/dri:/dev/dri \
            -v /dev/bus/usb:/dev/bus/usb \
            -v /dev/input:/dev/input \
+           -v $PWD/../:$PWD/../ \
            --rm -it ${image_name}
