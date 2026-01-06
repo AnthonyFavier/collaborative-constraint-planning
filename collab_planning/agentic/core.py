@@ -3,6 +3,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 from langchain_core.messages import HumanMessage
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from ..Helpers import mprint
 from . import ToolsLLM
@@ -11,20 +12,24 @@ from . import RiskAnalysisSubgraph
 from . import TranslationSubgraph
 from . import SuggestionsSubgraph
 
+
+
 ####################
 #### DRAW GRAPH ####
 ####################
 def draw_graphs():
+    print('Drawing langgraph graphs ... ', end='', flush=True)
     with open('translation_subgraph.png', 'wb') as png:
-        png.write(translation_subgraph.get_graph().draw_mermaid_png())
+        png.write(translation_subgraph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER))
     with open('encoding_subgraph.png', 'wb') as png:
-        png.write(encoding_subgraph.get_graph().draw_mermaid_png())
+        png.write(encoding_subgraph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER))
     with open('new_risk_subgraph.png', 'wb') as png:
-        png.write(new_risk_subgraph.get_graph().draw_mermaid_png())
+        png.write(new_risk_subgraph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER))
     with open('chat_subgraph.png', 'wb') as png:
-        png.write(chat_subgraph.get_graph().draw_mermaid_png())
+        png.write(chat_subgraph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER))
     with open('suggestions_subgraph.png', 'wb') as png:
-        png.write(suggestions_subgraph.get_graph().draw_mermaid_png())
+        png.write(suggestions_subgraph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER))
+    print('OK')
 
 
 #############

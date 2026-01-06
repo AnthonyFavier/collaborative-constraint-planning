@@ -15,6 +15,7 @@ jsonpickle
 langgraph
 langchain_tavily
 langchain_openai
+pyppeteer
 
 aiofiles                 
 aiohappyeyeballs         
