@@ -38,13 +38,15 @@ Build the docker image:
 $ ./build_docker.sh
 ```
 
+Enable display from docker:
+```
+$ xhost +local:docker
+```
+
 Run the docker image:
 ```
 $ ./run_docker.sh
 ```
-
-**Note**: Might need to run `xhost +local:docker` to enable display from docker
-
 
 ## Manual Detailed Approach
 
@@ -74,14 +76,14 @@ $ source env_cai/bin/activate
 
 #### Install python requirements
 ```
-pip install --upgrade pip -r requirements.txt --no-cache-dir
+$ pip install --upgrade pip -r requirements.txt --no-cache-dir
 ```
 
 #### Manual patch
 
 Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
 ```
-python patches.py 
+$ python patches.py 
 ```
 
 #### NTCORE: Numeric constraints compilation
@@ -90,16 +92,16 @@ python patches.py
 
 Install the package:
 ```
-cd NumericTCORE/
-pip install .
+$ cd NumericTCORE/
+$ pip install .
 ```
 
 #### ENHSP: Compile planner 
 
 Compile the planner by running:
 ```
-cd ENHSP-Public
-./compile
+$ cd ENHSP-Public
+$ ./compile
 ```
 
 Ignore the two _Note:_ lines.
