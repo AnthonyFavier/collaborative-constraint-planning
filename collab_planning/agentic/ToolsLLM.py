@@ -5,6 +5,7 @@ logger.setLevel(logging.INFO)
 from .. import Globals as G
 from ..Helpers import mprint, minput
 
+import os
 import requests
 import json 
 from langchain_community.document_loaders import TextLoader, PyPDFLoader    
@@ -219,7 +220,7 @@ def get_current_weather_city(city: str):
     category = 'city'
     params = {'name': city, 'country': 'US'}
     api_url = buildURL(category, params)
-    response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
+    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API City Info: "+response.text)
         response = json.loads(response.text)
@@ -235,7 +236,7 @@ def get_current_weather_city(city: str):
         'lon': response[0]['longitude'],
     }
     api_url = buildURL(category, params)
-    response = requests.get(api_url, headers={'X-Api-Key': 'CqS0SVW7lQvWu65I+k2ZbA==auC23H2B4w9ij0yq'})
+    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API loc weather: " + response.text)
         weather = json.loads(response.text)

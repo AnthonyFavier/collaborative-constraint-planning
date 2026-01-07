@@ -6,9 +6,12 @@ Create a `.env` file in root folder to store API keys in the form:
 ```
 ANTHROPIC_API_KEY = 'REPLACE_WITH_YOUR_KEY'
 OPENAI_API_KEY = 'REPLACE_WITH_YOUR_KEY'
+API-NINJA_API_KEY = 'REPLACE_WITH_YOUR_KEY'
 ```
 
 Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
+
+API-NINJA is free [link](https://api-ninjas.com/)
 
 ## PDSim Simulator [*Optional*]
 
