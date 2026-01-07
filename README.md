@@ -7,11 +7,17 @@ CAI
 
 <img src="./misc/rsc/overview.jpg" width="600">
 
+
+## PAPER
+
+- *Favier, A., La, N., Verma, P., & Shah, J.* (2025). **A Collaborative Numeric Task Planning Framework based on Constraint Translations using LLMs**. In: ICAPS 2025 Workshops on Human-Aware and Explainable Planning and LM4Plan. [PDF](https://openreview.net/pdf?id=rRjEMmavbR)
+ <!-- ![DOI:10.1007/978-3-031-21438-7_60](https://zenodo.org/badge/DOI/10.1007/978-3-319-76207-4_15.svg)](https://doi.org/10.1007/978-3-031-21438-7_60) -->
+
+- *Favier, A., La, N., Verma, P., & Shah, J. A.* (2025). **An LLM-powered Collaborative Task Planning Framework**. In: ICAPS 2025 Demo Track. [PDF](https://icaps25.icaps-conference.org/program/demos-pdfs/ICAPS25-Demo_paper_6.pdf)
+
 ## INSTALLATION
 
 See [INSTALL.md](INSTALL.md).
-
-
 
 ## RUN
 
@@ -67,36 +73,7 @@ The planning mode used (i.e. optimal, satisficing, default) can be used using th
 
 ---
 
-### [Alternative] Detailed install
+## Acknowledgments
 
-#### Install python requirements
-```
-pip install --upgrade pip -r requirements.txt --no-cache-dir
-```
-
-#### Manual patch
-
-Run a small patch for unified_planning and customtkinter. Respectivelly allow to handle default _real_ and _int_ values and use ScrollableFrame with both bars.
-```
-python patches.py 
-```
-
-#### NTCORE: Numeric constraints compilation
-
-**Note**: Conflicting command line management in `NumericTCORE/bin/ntcore.py`, already solved by commenting `@click.command()`.
-
-Install the package:
-```
-cd NumericTCORE/
-pip install .
-```
-
-#### ENHSP: Compile planner 
-
-Compile the planner by running:
-```
-cd ENHSP-Public
-./compile
-```
-
-Ignore the two _Note:_ lines.
+This work was in part supported by the Office of Naval Re-
+search (ONR) under grant N000142312883.
