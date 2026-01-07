@@ -16,7 +16,6 @@ See [INSTALL.md](INSTALL.md).
 ## RUN
 
 Activate virtual environment: `source env_cai/bin/activate`
-(Not needed if running in docker)
 
 Run the system:
 ```
