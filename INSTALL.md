@@ -12,7 +12,8 @@ Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
 
 ## PDSim Simulator [*Optional*]
 
-The framework can optionally simulate plans with PDSim. 
+The framework can simulate plans with PDSim. 
+This is optinal. If the simulator is not installed or linked, the framework will still work and plan, only a warning will be shown when starting.
 
 ### Follow the PDSim instructions
 
@@ -22,21 +23,21 @@ https://github.com/AnthonyFavier/PDSim_Scenes_zenotravel
 
 ### Link with framework
 
+Set the path of the PDInstance file `PDSIM_INSTANCE_PATH` line 3 in [UpdatePDSimPlan.py](collab_planning/UpdatePDSimPlan.py)
 
-Set the path of the PDInstance file `PDSIM_INSTANCE_PATH` line 3 in [UpdatePDSimPlan.py](collab_planning/UpdatePDSimPlan.py
+*REPO_LOCATION*/PDSim_Scenes_zenotravel/Assets/Scenes/ZenoR/Data/PdSimProblem.asset
 
+By default, it assumes the repo has been cloned in home/UNAME/ws/
 
 ## Docker Approach [*Recommended*]
 
-Move to the `docker` folder: 
+Move to the `docker` folder and run the building script: 
 ```
 $ cd docker/
-```
-
-Build the docker image:
-```
 $ ./build_docker.sh
 ```
+
+See [README.md](README.md) for running instructions.
 
 ## Manual Detailed Approach
 

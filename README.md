@@ -29,11 +29,10 @@ $ cd docker/
 $ ./run_docker.sh
 ```
 
-Activate virtual environment: `source env_cai/bin/activate`
-
-Run the system:
+Activate virtual environment and run the system with default problem (zenoreal):
 ```
-python main.py [OPTIONS] PROBLEM_NAME
+$ source env_cai/bin/activate
+$ python main.py
 ```
 
 Problems and options can be listed using `python main.py --help`.
@@ -45,7 +44,7 @@ Problems and options can be listed using `python main.py --help`.
 
 ### Adding new problems
 
-To add to new problems open `defs.py` and add a new key to the `PROBLEMS` dictionary such as: 
+To add to new problems open [Globals.py](collab_planning/Globals.py) and add a new key to the `PROBLEMS` dictionary such as: 
 ```
 PROBLEMS = {
     ...
