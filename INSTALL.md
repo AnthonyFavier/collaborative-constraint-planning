@@ -38,16 +38,6 @@ Build the docker image:
 $ ./build_docker.sh
 ```
 
-Enable display from docker:
-```
-$ xhost +local:docker
-```
-
-Run the docker image:
-```
-$ ./run_docker.sh
-```
-
 ## Manual Detailed Approach
 
 Tested on Ubuntu 24.04

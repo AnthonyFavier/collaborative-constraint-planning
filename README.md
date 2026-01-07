@@ -15,6 +15,14 @@ See [INSTALL.md](INSTALL.md).
 
 ## RUN
 
+
+**When using docker**: Allow display, and run the image:
+```
+$ xhost +local:docker
+$ cd docker/
+$ ./run_docker.sh
+```
+
 Activate virtual environment: `source env_cai/bin/activate`
 
 Run the system:
