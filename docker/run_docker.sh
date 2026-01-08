@@ -4,6 +4,9 @@ image_name=cai_ubuntu_24_04
 echo "Starting docker cai_ubuntu_24 container..."
 echo $PWD
 
+xhost +local:docker
+
+source ../.env
 
 docker run --privileged --network host \
            --env="DISPLAY=$DISPLAY" \
@@ -15,4 +18,5 @@ docker run --privileged --network host \
            -v /dev/bus/usb:/dev/bus/usb \
            -v /dev/input:/dev/input \
            -v $PWD/../:$PWD/../ \
+           -v $PDSIM_INSTANCE_PATH:$PDSIM_INSTANCE_PATH \
            --rm -it ${image_name}

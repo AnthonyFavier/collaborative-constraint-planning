@@ -4,9 +4,9 @@
 
 Create a `.env` file in root folder to store API keys in the form:
 ```
-ANTHROPIC_API_KEY = 'REPLACE_WITH_YOUR_KEY'
-OPENAI_API_KEY = 'REPLACE_WITH_YOUR_KEY'
-API-NINJA_API_KEY = 'REPLACE_WITH_YOUR_KEY'
+ANTHROPIC_API_KEY='REPLACE_WITH_YOUR_KEY'
+OPENAI_API_KEY='REPLACE_WITH_YOUR_KEY'
+API_NINJA_API_KEY='REPLACE_WITH_YOUR_KEY'
 ```
 
 Replace `REPLACE_WITH_YOUR_KEY` with your respective API keys.
@@ -26,11 +26,12 @@ https://github.com/AnthonyFavier/PDSim_Scenes_zenotravel
 
 ### Link with framework
 
-Set the path of the PDInstance file `PDSIM_INSTANCE_PATH` line 3 in [UpdatePDSimPlan.py](collab_planning/UpdatePDSimPlan.py)
+In the same `.env` file, add the following line:
+```
+PDSIM_INSTANCE_PATH='REPLACE_WITH_ABSOLUTE_REPO_PATH/PDSim_Scenes_zenotravel/Assets/Scenes/ZenoR/Data/PdSimInstance.asset'
+```
 
-*REPO_LOCATION*/PDSim_Scenes_zenotravel/Assets/Scenes/ZenoR/Data/PdSimProblem.asset
-
-By default, it assumes the repo has been cloned in home/UNAME/ws/
+Replace `REPLACE_WITH_ABSOLUTE_REPO_PATH` with the absolute path to the cloned `PDSIM_Scenes_zenotravel` repo.
 
 ## Docker Approach [*Recommended*]
 

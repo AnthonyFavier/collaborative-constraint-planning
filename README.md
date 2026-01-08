@@ -22,9 +22,8 @@ See [INSTALL.md](INSTALL.md).
 ## RUN
 
 
-**When using docker**: Allow display, and run the image:
+**When using docker**: Run the image:
 ```
-$ xhost +local:docker
 $ cd docker/
 $ ./run_docker.sh
 ```

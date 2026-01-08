@@ -220,7 +220,7 @@ def get_current_weather_city(city: str):
     category = 'city'
     params = {'name': city, 'country': 'US'}
     api_url = buildURL(category, params)
-    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-NINJA_API_KEY")})
+    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API_NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API City Info: "+response.text)
         response = json.loads(response.text)
@@ -236,7 +236,7 @@ def get_current_weather_city(city: str):
         'lon': response[0]['longitude'],
     }
     api_url = buildURL(category, params)
-    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-NINJA_API_KEY")})
+    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-API_NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API loc weather: " + response.text)
         weather = json.loads(response.text)

@@ -1,6 +1,8 @@
 from pathlib import Path
+import os
 
-PDSIM_INSTANCE_PATH = (Path().home()/'ws'/'PDSim_Scenes_zenotravel'/'Assets'/'Scenes'/'ZenoR'/'Data'/'PdSimInstance.asset').resolve()
+PDSIM_INSTANCE_PATH = os.getenv("PDSIM_INSTANCE_PATH")
+PDSIM_INSTANCE_PATH = Path(PDSIM_INSTANCE_PATH).resolve()
 PDSIM_instance_found = PDSIM_INSTANCE_PATH.exists()
 
 def createActionStr(name, *parameters):
