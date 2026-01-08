@@ -212,6 +212,7 @@ def get_current_weather_city(city: str):
     # FAKE weather
     faked_weather_cities = ['Boston']
     if FAKE_WEATHER and city in faked_weather_cities:
+        logger.info('fake weather activated')
         weather_text = fake_weather(city)
         logger.info('output: ' + weather_text)
         return weather_text
@@ -220,6 +221,7 @@ def get_current_weather_city(city: str):
     category = 'city'
     params = {'name': city, 'country': 'US'}
     api_url = buildURL(category, params)
+    logger.info('getting city location...')
     response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API_NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API City Info: "+response.text)
@@ -228,6 +230,7 @@ def get_current_weather_city(city: str):
             return "Unknown city name."
     else:
         mprint("Error:", response.status_code, response.text)
+    logger.info(response)
         
     # get weather at loc
     category = 'weather'
@@ -236,7 +239,8 @@ def get_current_weather_city(city: str):
         'lon': response[0]['longitude'],
     }
     api_url = buildURL(category, params)
-    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API-API_NINJA_API_KEY")})
+    logger.info('getting location weather...')
+    response = requests.get(api_url, headers={'X-Api-Key': os.environ.get("API_NINJA_API_KEY")})
     if response.status_code == requests.codes.ok:
         # mprint("API loc weather: " + response.text)
         weather = json.loads(response.text)
@@ -248,8 +252,9 @@ Current weather at {city}:
 - Wind direction: {weather['wind_degrees']}°
 """[1:-1]
     else:
-        mprint("Error:", response.status_code, response.text)
+        mprint(f"Error:  {response.status_code} {response.text}")
         weather_text = "Failed to retrieve weather."
+    logger.info(weather_text)
         
     logger.info('output: ' + weather_text)
     return weather_text
