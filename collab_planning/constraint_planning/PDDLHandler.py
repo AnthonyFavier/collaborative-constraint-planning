@@ -257,9 +257,9 @@ def init_verifier(problem: PDDL3QuantitativeProblem):
 
 def initialEncodingFixes(encoding):
     global verifier
-    verifier.initialEncodingFixes(encoding)
+    return verifier.initialEncodingFixes(encoding)
 
 def checkEncoding(encoding):
     global verifier
-    verifier.checkEncoding(encoding)
+    return verifier.checkEncoding(encoding)
 
