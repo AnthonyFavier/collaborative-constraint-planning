@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 image_name=cai_ubuntu_24_04
 
+xhost +local:docker
+
+echo " "
+
 echo "Starting docker cai_ubuntu_24 container..."
 echo $PWD
 
-xhost +local:docker
-
 source ../.env
+
+echo " "
 
 docker run --privileged --network host \
            --env="DISPLAY=$DISPLAY" \
