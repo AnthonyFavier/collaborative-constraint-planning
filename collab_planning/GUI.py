@@ -447,7 +447,7 @@ class ButtonsFrame(customtkinter.CTkFrame):
                 constraint_planning.get_constraint_manager().dump(G.PROBLEM_NAME)
                 
             except Exception as err:
-                if err.args[0]=='abort':
+                if len(err.args) and err.args[0]=='abort':
                     mprint('Aborted\n')
                 else:
                     self.master.quit()
