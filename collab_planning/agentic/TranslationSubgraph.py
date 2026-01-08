@@ -188,12 +188,14 @@ def Encode(state: EncodingState):
     llm = Models.reasonning_llm
     msg = Models.call(llm, state['e_messages'])
     answer = Models.extractAITextAnswer(msg)
-    logger.info(answer)
+    logger.info("Constraint being encoded: " + state['encodingE2NL'].constraint + '\nAI Answer: ' + answer)
     try:
         encoding = Helpers.extractTag('pddl', answer)
         encoding = constraint_planning.initialEncodingFixes(encoding)
     except Exception as err:
         encoding = err.args[0]
+    
+    logger.info("Extracted encoding: " + encoding)
     
     encodingE2NL = state["encodingE2NL"]
     encodingE2NL.encoding = Encoding(encoding=encoding)
@@ -427,9 +429,9 @@ def SaveUserIntentClearMessages(state: DecompositionState):
         
     refined_user_intent = state['messages'][-1].content
     
-    mprint(G.CHAT_SEPARATOR)
-    mprint('AI: Refined user intent Below\n')
-    mprint(refined_user_intent)
+    logger.info(G.CHAT_SEPARATOR)
+    logger.info('AI: Refined user intent Below\n')
+    logger.info(refined_user_intent)
     
     messages_to_remove = state["messages"]
     remove_instructions = [RemoveMessage(id=m.id) for m in messages_to_remove]
