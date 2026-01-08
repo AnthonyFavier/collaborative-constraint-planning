@@ -36,6 +36,7 @@ class PDDLProblems:
             "zeno13":       (zeno_path / "domain.pddl",         zeno_path / "pfile13.pddl"),
             "zeno13_n":     (zeno_path / "domain_with_n.pddl",  zeno_path / "pfile13.pddl"),
             "zenoreal":     (zeno_path / "domain_with_n.pddl",  zeno_path / "zenoreal.pddl"),
+            "zenoreal_no_n":(zeno_path / "domain.pddl",         zeno_path / "zenoreal.pddl"),
             "zeno14":       (zeno_path / "domain.pddl",         zeno_path / "pfile14.pddl"),
             "zeno15":       (zeno_path / "domain.pddl",         zeno_path / "pfile15.pddl"),
             "zeno16":       (zeno_path / "domain.pddl",         zeno_path / "pfile16.pddl"),
