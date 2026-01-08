@@ -40,7 +40,7 @@ $ cd docker/
 $ ./build_docker.sh
 ```
 
-See [README.md](README.md) for running instructions.
+See [README.md](README.md#run) for running instructions.
 
 ## Manual Detailed Approach
 

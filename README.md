@@ -74,5 +74,4 @@ The planning mode used (i.e. optimal, satisficing, default) can be used using th
 
 ## Acknowledgments
 
-This work was in part supported by the Office of Naval Re-
-search (ONR) under grant N000142312883.
+This work was in part supported by the Office of Naval Research (ONR) under grant N000142312883.
