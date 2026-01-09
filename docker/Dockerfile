@@ -22,8 +22,7 @@ RUN apt-get install -y python3.10-dev
 # RUN echo "${UNAME}:${UNAME}" | chpasswd
 # RUN usermod -aG sudo ${UNAME}
 
-WORKDIR /home/${UNAME}/ws/CAI/
-
+WORKDIR ${REPO_PATH}
 
 # USER ${UNAME}
 
