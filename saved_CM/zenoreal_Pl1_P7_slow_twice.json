@@ -1,0 +1,496 @@
+{
+    "py/object": "collab_planning.constraint_planning.Constraints.ConstraintManager",
+    "problem_name": "zenoreal",
+    "constraints": {
+        "R0": {
+            "py/object": "collab_planning.constraint_planning.Constraints.RawConstraint",
+            "symbol": "R0",
+            "nl_constraint": "Only use plane1",
+            "children": [
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D1",
+                    "nl_constraint": "plane2 must always remain located at Washington throughout the entire plan",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (located plane2 Washington))",
+                    "e2nl": "Plane2 is always located in Washington.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D2",
+                    "nl_constraint": "plane3 must always remain located at Seattle throughout the entire plan",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (located plane3 Seattle))",
+                    "e2nl": "Plane3 is always located in Seattle.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D3",
+                    "nl_constraint": "plane2 must never have any passengers on board (onboard count must always remain 0)",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (= (onboard plane2) 0))",
+                    "e2nl": "Plane2 must never have any passengers onboard at any time.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D4",
+                    "nl_constraint": "plane3 must never have any passengers on board (onboard count must always remain 0)",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (= (onboard plane3) 0))",
+                    "e2nl": "Plane3 must never have any passengers onboard at any time.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D5",
+                    "nl_constraint": "plane2's fuel level must always remain at 1469 throughout the entire plan",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (= (fuel plane2) 1469))",
+                    "e2nl": "The fuel level of plane2 is always 1469.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D6",
+                    "nl_constraint": "plane3's fuel level must always remain at 1532 throughout the entire plan",
+                    "parent": {
+                        "py/id": 2
+                    },
+                    "encoding": "(always (= (fuel plane3) 1532))",
+                    "e2nl": "The fuel level of plane3 is always 1532.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                }
+            ],
+            "decomp_conv": null,
+            "time_total": 0,
+            "time_input": 0,
+            "time_initial_decomp": 0,
+            "time_decomp_validation": 0,
+            "time_redecomp": 0,
+            "time_initial_encoding": 0
+        },
+        "D1": {
+            "py/id": 4
+        },
+        "D2": {
+            "py/id": 5
+        },
+        "D3": {
+            "py/id": 6
+        },
+        "D4": {
+            "py/id": 7
+        },
+        "D5": {
+            "py/id": 8
+        },
+        "D6": {
+            "py/id": 9
+        },
+        "R7": {
+            "py/object": "collab_planning.constraint_planning.Constraints.RawConstraint",
+            "symbol": "R7",
+            "nl_constraint": "Person7 should never move",
+            "children": [
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D8",
+                    "nl_constraint": "Person7 must always be located in Denver",
+                    "parent": {
+                        "py/id": 10
+                    },
+                    "encoding": "(always (located person7 Denver))",
+                    "e2nl": "Person7 is always located in Denver.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                }
+            ],
+            "decomp_conv": null,
+            "time_total": 0,
+            "time_input": 0,
+            "time_initial_decomp": 0,
+            "time_decomp_validation": 0,
+            "time_redecomp": 0,
+            "time_initial_encoding": 0
+        },
+        "D8": {
+            "py/id": 12
+        },
+        "R9": {
+            "py/object": "collab_planning.constraint_planning.Constraints.RawConstraint",
+            "symbol": "R9",
+            "nl_constraint": "Planes should only fly slowly",
+            "children": [
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D10",
+                    "nl_constraint": "plane1 must never use the flyfast action",
+                    "parent": {
+                        "py/id": 13
+                    },
+                    "encoding": "(always (forall (?c1 ?c2 - city)\n    (= (n_flyfast plane1 ?c1 ?c2) 0)\n  ))",
+                    "e2nl": "Plane1 never flies fast between any two cities.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D11",
+                    "nl_constraint": "plane2 must never use the flyfast action",
+                    "parent": {
+                        "py/id": 13
+                    },
+                    "encoding": "(always (forall (?c1 ?c2 - city)\n    (= (n_flyfast plane2 ?c1 ?c2) 0)\n  ))",
+                    "e2nl": "Plane2 never flies fast between any pair of cities, including flights from a city to itself.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D12",
+                    "nl_constraint": "plane3 must never use the flyfast action",
+                    "parent": {
+                        "py/id": 13
+                    },
+                    "encoding": "(always \n        (forall (?c1 ?c2 - city) \n            (= (n_flyfast plane3 ?c1 ?c2) 0)\n        )\n    )",
+                    "e2nl": "Plane3 never flies fast between any two cities.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                }
+            ],
+            "decomp_conv": null,
+            "time_total": 0,
+            "time_input": 0,
+            "time_initial_decomp": 0,
+            "time_decomp_validation": 0,
+            "time_redecomp": 0,
+            "time_initial_encoding": 0
+        },
+        "D10": {
+            "py/id": 15
+        },
+        "D11": {
+            "py/id": 16
+        },
+        "D12": {
+            "py/id": 17
+        },
+        "R13": {
+            "py/object": "collab_planning.constraint_planning.Constraints.RawConstraint",
+            "symbol": "R13",
+            "nl_constraint": "Plane1 should never fly to a same city more than twice",
+            "children": [
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D14",
+                    "nl_constraint": "Plane1 must never be located in Denver more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always (<= (+ (n_flyslow plane1 Dallas Denver)\n           (n_flyslow plane1 Washington Denver)\n           (n_flyslow plane1 Seattle Denver)\n           (n_flyslow plane1 Boston Denver)\n           (n_flyslow plane1 LosAngeles Denver)\n           (n_flyfast plane1 Dallas Denver)\n           (n_flyfast plane1 Washington Denver)\n           (n_flyfast plane1 Seattle Denver)\n           (n_flyfast plane1 Boston Denver)\n           (n_flyfast plane1 LosAngeles Denver)) 2))",
+                    "e2nl": "At all times, the total number of flights by plane1 to Denver from Dallas, Washington, Seattle, Boston, and LosAngeles, whether flying slow or fast, is at most 2.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D15",
+                    "nl_constraint": "Plane1 must never be located in Dallas more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always \n    (<= \n      (+ \n        (n_flyslow plane1 Denver Dallas)\n        (n_flyfast plane1 Denver Dallas)\n        (n_flyslow plane1 Washington Dallas)\n        (n_flyfast plane1 Washington Dallas)\n        (n_flyslow plane1 Seattle Dallas)\n        (n_flyfast plane1 Seattle Dallas)\n        (n_flyslow plane1 Boston Dallas)\n        (n_flyfast plane1 Boston Dallas)\n        (n_flyslow plane1 LosAngeles Dallas)\n        (n_flyfast plane1 LosAngeles Dallas)\n      )\n      2\n    )\n  )",
+                    "e2nl": "At all times, the total number of flights by plane1 from Denver, Washington, Seattle, Boston, and LosAngeles to Dallas, whether flying slow or fast, must be at most 2.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D16",
+                    "nl_constraint": "Plane1 must never be located in Washington more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always (<= (+ \n    (n_flyslow plane1 Denver Washington)\n    (n_flyslow plane1 Dallas Washington)\n    (n_flyslow plane1 Seattle Washington)\n    (n_flyslow plane1 Boston Washington)\n    (n_flyslow plane1 LosAngeles Washington)\n    (n_flyfast plane1 Denver Washington)\n    (n_flyfast plane1 Dallas Washington)\n    (n_flyfast plane1 Seattle Washington)\n    (n_flyfast plane1 Boston Washington)\n    (n_flyfast plane1 LosAngeles Washington)\n) 2))",
+                    "e2nl": "At all times, the total number of flights by plane1 to Washington from Denver, Dallas, Seattle, Boston, and LosAngeles, whether flying slow or fast, must be at most 2.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D17",
+                    "nl_constraint": "Plane1 must never be located in Seattle more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always\n    (<=\n      (+ (n_flyslow plane1 Denver Seattle)\n         (n_flyslow plane1 Dallas Seattle)\n         (n_flyslow plane1 Washington Seattle)\n         (n_flyslow plane1 Boston Seattle)\n         (n_flyslow plane1 LosAngeles Seattle)\n         (n_flyfast plane1 Denver Seattle)\n         (n_flyfast plane1 Dallas Seattle)\n         (n_flyfast plane1 Washington Seattle)\n         (n_flyfast plane1 Boston Seattle)\n         (n_flyfast plane1 LosAngeles Seattle))\n      2))",
+                    "e2nl": "At all times, the total number of flights by plane1 to Seattle from Denver, Dallas, Washington, Boston, and LosAngeles, whether flying slow or fast, must be at most 2.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D18",
+                    "nl_constraint": "Plane1 must never be located in Boston more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always (<= (+ (n_flyslow plane1 Denver Boston)\n               (n_flyslow plane1 Dallas Boston)\n               (n_flyslow plane1 Washington Boston)\n               (n_flyslow plane1 Seattle Boston)\n               (n_flyslow plane1 LosAngeles Boston)\n               (n_flyfast plane1 Denver Boston)\n               (n_flyfast plane1 Dallas Boston)\n               (n_flyfast plane1 Washington Boston)\n               (n_flyfast plane1 Seattle Boston)\n               (n_flyfast plane1 LosAngeles Boston))\n            2))",
+                    "e2nl": "At all times, the total number of flights by plane1 to Boston, whether flying slow or fast from Denver, Dallas, Washington, Seattle, or LosAngeles, is at most 2.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                },
+                {
+                    "py/object": "collab_planning.constraint_planning.Constraints.DecomposedConstraint",
+                    "symbol": "D19",
+                    "nl_constraint": "Plane1 must never be located in LosAngeles more than twice during plan execution (excluding initial position)",
+                    "parent": {
+                        "py/id": 18
+                    },
+                    "encoding": "(always (<= (+ (n_flyslow plane1 Denver LosAngeles)\n           (n_flyslow plane1 Dallas LosAngeles)\n           (n_flyslow plane1 Washington LosAngeles)\n           (n_flyslow plane1 Seattle LosAngeles)\n           (n_flyslow plane1 Boston LosAngeles)\n           (n_flyfast plane1 Denver LosAngeles)\n           (n_flyfast plane1 Dallas LosAngeles)\n           (n_flyfast plane1 Washington LosAngeles)\n           (n_flyfast plane1 Seattle LosAngeles)\n           (n_flyfast plane1 Boston LosAngeles)) \n        2))",
+                    "e2nl": "Plane1 must never fly to LosAngeles more than twice in total, counting both slow and fast flights from Denver, Dallas, Washington, Seattle, and Boston.",
+                    "_activated": true,
+                    "encoding_conv": null,
+                    "nb_retries": 0,
+                    "nb_e2nl_retries": 0,
+                    "time_encoding": 0,
+                    "time_verifier": 0,
+                    "time_reencoding": 0,
+                    "time_e2nl": 0,
+                    "time_e2nl_validation": 0,
+                    "time_e2nl_reencoding": 0
+                }
+            ],
+            "decomp_conv": null,
+            "time_total": 0,
+            "time_input": 0,
+            "time_initial_decomp": 0,
+            "time_decomp_validation": 0,
+            "time_redecomp": 0,
+            "time_initial_encoding": 0
+        },
+        "D14": {
+            "py/id": 20
+        },
+        "D15": {
+            "py/id": 21
+        },
+        "D16": {
+            "py/id": 22
+        },
+        "D17": {
+            "py/id": 23
+        },
+        "D18": {
+            "py/id": 24
+        },
+        "D19": {
+            "py/id": 25
+        }
+    },
+    "raw_constraints": {
+        "R0": {
+            "py/id": 2
+        },
+        "R7": {
+            "py/id": 10
+        },
+        "R9": {
+            "py/id": 13
+        },
+        "R13": {
+            "py/id": 18
+        }
+    },
+    "decomposed_constraints": {
+        "D1": {
+            "py/id": 4
+        },
+        "D2": {
+            "py/id": 5
+        },
+        "D3": {
+            "py/id": 6
+        },
+        "D4": {
+            "py/id": 7
+        },
+        "D5": {
+            "py/id": 8
+        },
+        "D6": {
+            "py/id": 9
+        },
+        "D8": {
+            "py/id": 12
+        },
+        "D10": {
+            "py/id": 15
+        },
+        "D11": {
+            "py/id": 16
+        },
+        "D12": {
+            "py/id": 17
+        },
+        "D14": {
+            "py/id": 20
+        },
+        "D15": {
+            "py/id": 21
+        },
+        "D16": {
+            "py/id": 22
+        },
+        "D17": {
+            "py/id": 23
+        },
+        "D18": {
+            "py/id": 24
+        },
+        "D19": {
+            "py/id": 25
+        }
+    },
+    "time_input": 8.339191198348999,
+    "time_total": 144.78265404701233
+}
