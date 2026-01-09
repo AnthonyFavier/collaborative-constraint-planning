@@ -11,6 +11,10 @@ echo $PWD
 source ../.env
 
 echo " "
+echo "Activate the virtual environment:"
+echo "$ source env_cai/bin/activate"
+echo " "
+
 
 docker run --privileged --network host \
            --env="DISPLAY=$DISPLAY" \
