@@ -149,4 +149,4 @@ def checkIfUpdatedProblemIsParsable():
 def showSettings():
     timeout_str = f', TO={G.timeout}' if G.timeout!=None else ''
     mprint(f"Setting: {G.SETTING_NAME}")
-    mprint(f"Planning mode: {G.planning_mode}{timeout_str}\nProblem ({G.PROBLEM_NAME}):\n\t- {G.DOMAIN_PATH}\n\t- {G.PROBLEM_PATH}")
+    mprint(f"Planning mode: {G.planning_mode}{timeout_str}\nProblem ({G.PROBLEM_NAME})")
